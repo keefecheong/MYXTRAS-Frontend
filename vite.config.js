@@ -9,7 +9,7 @@ const redirectIndexPlugin = {
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
       if (req.url === '/') {
-        req.url = '/index.html';
+        req.url = '/feed.html';
       }
       next();
     })

@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "bootstrap5": "^1.1.9",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
