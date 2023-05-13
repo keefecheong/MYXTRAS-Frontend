@@ -2,15 +2,27 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
-            <div class="flex flex-wrap my-15 justify-center pink-header-search"> 
+            <div class="col-md-6 pink-header-search"> 
                 <input class="search-bar" type="text" placeholder="search">
             </div>
-            <h1>test</h1>
-            <p>this is a test</p>
-            
+            <h1>Following</h1>
             <div class="blog-container">
-                <div class="">
-
+                <div class="blog-content col-md-12">
+                    <div class="row">
+                        <span>
+                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                            <p>Joshua Tan
+                            </p>
+                        </span>
+                        <span>
+                            <p>
+                                Posted 6 days ago
+                            </p>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <img class="blog-image" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                    </div>
                 </div>
             </div>
 

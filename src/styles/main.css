@@ -1,31 +1,58 @@
 @font-face {
     font-family: 'Quicksand';
-    src: url('../fonts/Quicksand-Regular.ttf') format('ttf');
+    src: url('../fonts/Quicksand-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
-body{
-    font-family: 'Quicksand', sans-serif;
+:root {
+    --primary: #E53A73;
+    --dark: #133B5B;
+}
+body {
+    font-family: 'Quicksand' !important;
     font-size: 16px;
 }
 
 h1 {
-    font-family: 'Quicksand', sans-serif;
+    text-align: center;
 }
-.pink-header-search{
+.pink-header-search {
     padding-top: 50px;
     padding-bottom: 50px;
-    background-color: #E53A73;
+    background-color: var(--primary);
 }
-.search-bar{
-    display: block;
+.search-bar {
+    display: flex;
     margin-left: auto;
     margin-right: auto;
-    padding: 6px;
+    padding: 10px;
     border: none;
-    margin-top: 8px;
-    margin-right: 16px;
-    font-size: 17px;
-    width: 880px;
+    width: 50vw;
+}
+
+.blog-container {
+    display: flex;
+    border: #133B5B;
+    border-style: solid 1rem;
+    height: 50vw;
+    width: 50vw;
+    margin: auto;
+}
+.blog-content {
+    display: flex;
+    justify-content: space-between;
+}
+.profilepic {
+    overflow: hidden;
+    float: left;
+    width: 48px;
+    height: 48px;
+    margin-right: 20px;
+    border-radius: 50%;
+
+}
+.blog-image {
+    width: 10vw;
+    height: 10vw;
 }

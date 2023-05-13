@@ -137,7 +137,6 @@
         position: relative;
         display: flex;
         flex-direction: row;
-        column-gap: 15px;
     }
 
     #main-content {
@@ -157,11 +156,11 @@
     }
 
     .compensateMaximizedSidebar {
-        margin-left: 205px
+        margin-left: 100px
     }
 
     .compensateMinimizedSidebar {
-        margin-left: 85px;
+        margin-left: 70px;
     }
 
     /* material symbol styles */
