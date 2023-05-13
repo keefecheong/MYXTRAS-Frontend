@@ -8,7 +8,11 @@
             <h1>test</h1>
             <p>this is a test</p>
             
+            <div class="blog-container">
+                <div class="">
 
+                </div>
+            </div>
 
 
         </div>
