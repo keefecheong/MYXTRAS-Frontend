@@ -37,12 +37,12 @@ h1 {
 .blog-container {
     border: #133B5B;
     border-style: solid 1rem;
-    height: 100%;
-    width: 50vw;
+    width: 50%;
     margin: auto;
     box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);;
     border-radius: 2%;
     padding: 50px;
+    margin-bottom: 100px;
 }
 .profilepic {
     overflow: hidden;
