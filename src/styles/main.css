@@ -29,7 +29,7 @@ h1 {
     margin-right: auto;
     padding: 10px;
     border: none;
-    width: 50vw;
+    width: 45vw;
 }
 
 .blog-container {
@@ -53,4 +53,10 @@ h1 {
 }
 .blog-image {
     height: 35vw;
+}
+
+#headerprofilepic{
+    max-width: 5vw;
+    max-height: 5vw;
+    border-radius: 50%;
 }

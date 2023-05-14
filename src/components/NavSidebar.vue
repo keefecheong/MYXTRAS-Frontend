@@ -28,31 +28,31 @@
         
             <a href="/feed.html" :class="{current: checkCurrent('/feed.html')}">
                 <span class="material-symbols-outlined">group</span>
-                <p>Feed</p>
+                <p class="menu-text">Feed</p>
             </a>
             <a href="/forum.html" :class="{current: checkCurrent('/forum.html')}">
                 <span class="material-symbols-outlined">forum</span>
-                <p>Forum</p>
+                <p class="menu-text">Forum</p>
             </a>
             <a href="/chat.html" :class="{current: checkCurrent('/chat.html')}">
                 <span class="material-symbols-outlined">chat</span>
-                <p>Chat</p>
+                <p class="menu-text">Chat</p>
             </a>
             <a href="/explore.html" :class="{current: checkCurrent('/explore.html')}">
                 <span class="material-symbols-outlined">emoji_objects</span>
-                <p>Xplore</p>
+                <p class="menu-text">Xplore</p>
             </a>
             <a href="/events.html" :class="{current: checkCurrent('/events.html')}">
                 <span class="material-symbols-outlined">campaign</span>
-                <p>Events</p>
+                <p class="menu-text">Events</p>
             </a>
             <a href="/checkin.html" :class="{current: checkCurrent('/checkin.html')}">
                 <span class="material-symbols-outlined">event_available</span>
-                <p>Check in</p>
+                <p class="menu-text">Check in</p>
             </a> 
             <a href="/about.html" :class="{current: checkCurrent('/about.html')}">
                 <span class="material-symbols-outlined">question_mark</span>
-                <p>About us</p>
+                <p class="menu-text">About us</p>
             </a>
         
         </div>
@@ -133,10 +133,14 @@
         margin: 0;
     }
 
+    .menu-text {
+        padding-bottom: 50px;
+    }
     #main-container {
         position: relative;
         display: flex;
         flex-direction: row;
+        column-gap: 12px;
     }
 
     #main-content {
@@ -160,7 +164,7 @@
     }
 
     .compensateMinimizedSidebar {
-        margin-left: 70px;
+        margin-left: 80px;
     }
 
     /* material symbol styles */
@@ -204,6 +208,7 @@
 
     /* sidebar link styles */
     a {
+        text-decoration: none !important;
         height: fit-content;
         width: match-parent;
         text-decoration: none;

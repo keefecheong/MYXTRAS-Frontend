@@ -2,9 +2,19 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
-            <div class="col-md-12 pink-header-search"> 
-                <input class="search-bar" type="text" placeholder="search">
+            <div class="row pink-header-search">
+                <div class="col-md-3"></div>
+                <div class="col-md-6 "> 
+                    <input class="search-bar" type="text" placeholder="search">
+                </div>
+                <div class="col-md-3 d-flex justify-content-end">
+                    <!-- check for identity after authentication -->
+                    <p class="username-text">Are you a Ngee Ann Polytechnic student? Log In!</p>
+                    <p class="school-text"></p>
+                    <img id="headerprofilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                </div>
             </div>
+            
             <h1>Following</h1>
             <div class="blog-container">
                 <div class="row">
@@ -19,7 +29,7 @@
                             </div>
                         </span>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 d-flex justify-content-end">
                         <span>
                             <p>
                                 Posted 6 days ago
@@ -29,6 +39,16 @@
                 </div>
                 <div class="row">
                     <img class="blog-image" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                </div>
+                <div class="row">
+                    <p>
+
+                    </p>
+                </div>
+                <div class="row">
+                    <p class="blog-caption">
+                        
+                    </p>
                 </div>
             </div>
 
