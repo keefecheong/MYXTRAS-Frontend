@@ -9,13 +9,14 @@
                 </div>
                 <div class="col-md-3 d-flex justify-content-end">
                     <!-- check for identity after authentication -->
-                    <p class="username-text">Are you a Ngee Ann Polytechnic student? Log In!</p>
-                    <p class="school-text"></p>
+                    <p class="username">Are you a Ngee Ann Polytechnic student? Log In!</p>
+                    <p class="school"></p>
                     <img id="headerprofilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
                 </div>
             </div>
-            
+            <br>
             <h1>Following</h1>
+            <br>
             <div class="blog-container">
                 <div class="row">
                     <div class="col-6">
@@ -47,8 +48,14 @@
                 </div>
                 <div class="row">
                     <p class="blog-caption">
-                        
+                        Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
                     </p>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <!-- Retrieve number of comments -->
+                    <div class="p-2">
+                        <button>View 13 comments</button>
+                    </div>
                 </div>
             </div>
 

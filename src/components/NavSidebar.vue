@@ -125,7 +125,7 @@
     }
 
     #maximized {
-        width: 160px;
+        width: 15vw;
     }
 
     /* styles to be inherited by pages that use NavSidebar */
