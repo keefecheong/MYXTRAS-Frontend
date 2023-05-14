@@ -54,9 +54,12 @@ h1 {
 
 }
 .blog-image {
+    border-radius: 3%;
     height: 35vw;
 }
-
+.blog-caption {
+    text-align: justify;
+}
 #headerprofilepic{
     max-width: 5vw;
     max-height: 5vw;
