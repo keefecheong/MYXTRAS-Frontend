@@ -27,23 +27,26 @@ h1 {
 }
 .search-bar {
     display: flex;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 10px;
+    align-items: center;
+    margin: auto !important;
+    padding: 15px;
+    padding-left: 30px;
     border: none;
+    border-radius: 30px;
     width: 100%;
 }
 
 .blog-container {
     border: #133B5B;
     border-style: solid 1rem;
-    width: 50%;
     margin: auto;
+    width: 45% !important;
     box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);;
-    border-radius: 2%;
+    border-radius: 30px;
     padding: 50px;
     margin-bottom: 100px;
 }
+
 .profilepic {
     overflow: hidden;
     float: left;
@@ -57,8 +60,9 @@ h1 {
     height: 35vw;
 }
 
-#headerprofilepic{
-    max-width: 5vw;
-    max-height: 5vw;
+.headerprofilepic{
+    width: 8rem;
+    height: 6rem;
+    border: #133B5B 0.5rem solid;
     border-radius: 50%;
 }
