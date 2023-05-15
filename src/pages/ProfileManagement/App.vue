@@ -19,18 +19,72 @@
           </div>
         </div>
 
-        <div class="name">
+        
+        <div class="mb-3 row" id="position">
+          <label for="inputUsername" class="col-md-1 offset-md-4 col-form-label">Username: @</label>
+          <div class="col-sm-4">
+            <input type="username" class="form-control" id="inputUsername" placeholder="Username">
+          </div>
+        </div>
+
+        <div class="mb-3 row" id="position">
+          <label for="inputBio" class="col-md-1 offset-md-4 col-form-label">Bio: </label>
+          <div class="col-sm-4">
+            <input type="biography" class="form-control" id="inputBio" placeholder="Biography">
+          </div>
+        </div>
+
+        <div class="mb-3 row" id="position">
+          <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
+          <div class="col-sm-4">
+            <span class="badge bg-primary">Primary</span>
+            <span class="badge bg-secondary">Secondary</span>
+            <span class="badge bg-success">Success</span>
+            <button class="btn rounded-circle custom-btn"><i class="bi bi-plus"></i></button>
+          </div>
+          
+        </div>
+
+        <div style="margin: 30px;" id="profile">
+          <div class="warningbox col-md-4 offset-md-1">
+            <p><b>Personal Information</b> - This will only be recorded for user analytics. This will not be shown to the public.</p>
+          </div>
+        </div>
+
+        <div class="mb-3 row" id="position">
+          <label for="inputGender" class="col-md-1 offset-md-4 col-form-label">Gender: </label>
+          <div class="col-sm-4">
+            <input type="gender" class="form-control" id="inputGender" placeholder="Gender">
+          </div>
+        </div>
+
+        <div class="mb-3 row" id="position">
+          <label for="inputEmail" class="col-md-1 offset-md-4 col-form-label">Secondary Email: </label>
+          <div class="col-sm-4">
+            <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+          </div>
+        </div>
+
+        <div class="submitbutton" style="margin: 30px;" id="profile">
+          <button class="submit-button">Get Started!</button>
+        </div>
+
+        <!-- <div class="name">
           <h1 style="font-size: 33px; justify-content: center; display: flex; margin: 20px;">Lee Ji Eun</h1>
         </div>
 
         <div class="username" style="margin: 30px;" id="profile">
-          <p style="margin-right: 20px; margin-top: 10px;">Username: @</p>
-          <input type="text" placeholder="Username" size="55">
+          <label for="username">Username: @</label>
+          <div style="flex-direction: column;">
+            <input class="col-md-3" type="text" placeholder="Username" size="55">
+          </div>
         </div>
 
         <div class="biography" style="margin: 30px;" id="profile">
           <p style="margin-right: 20px; margin-top: 10px;">Bio: </p>
-          <input type="text" placeholder="Biography" size="55">
+          <div style="flex-direction: column;">
+            <input class="col-md-3" type="text" placeholder="Biography" size="55">
+          </div>
         </div>
 
         <div class="interests" style="margin: 30px;" id="profile">
@@ -46,17 +100,17 @@
 
         <div class="gender" style="margin: 30px;" id="profile">
           <p style="margin-right: 20px; margin-top: 10px;">Gender: </p>
-          <input type="text" placeholder="Gender" size="55">
+          <input class="col-md-3" type="text" placeholder="Gender" size="55">
         </div>
 
         <div class="email" style="margin: 30px;" id="profile">
           <p style="margin-right: 20px; margin-top: 10px;">Secondary Email: </p>
-          <input type="text" placeholder="Secondary Email" size="55">
+          <input class="col-md-3" type="text" placeholder="Secondary Email" size="55">
         </div>
 
         <div class="submitbutton" style="margin: 30px;" id="profile">
           <button class="submit-button">Get Started!</button>
-        </div>
+        </div> -->
 
       </div>
         
@@ -165,7 +219,8 @@ export default {
     #profile{
       margin: 20px;
       justify-content: center; 
-      display: flex
+      display: flex;
+      align-items: center;
     }
 
     .warningbox{
@@ -177,6 +232,13 @@ export default {
       font-size: 15px;
     }
 
-  
+    #position{
+      margin: 50px 0px; 
+    }
+
+    .custom-btn{
+      background-color: red;
+      color: #E53A73;
+    }
 
 </style>
