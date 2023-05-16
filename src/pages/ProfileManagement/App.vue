@@ -4,18 +4,20 @@
       <NavSidebar />
       <div id="main-content">
         <div class="banner">
+          <img :src="banner" alt="Banner" id="banner-picture"/>
             <div class="content">
-              <p>{{ message }}</p>
-            <!--div class="button-container"-->
-              <button class="banner-button">Customize banner</button>
-            <!--/div-->
+              <input ref="bannerInput" type="file" @change="upload($event, 'banner')" style="display: none">
+              <button class="banner-button"  @click="chooseFile('banner')">Customize banner</button>
             </div>
         </div>
 
         <div class="profilepicture">
           <div class="content">
-            <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" id="ngee-ann-logo"/>   
-            <button class="profile-button">Change Profile Picture</button>  
+            <div class="image-container">
+              <img :src="profilePicture" alt="Profile Picture"  id="profile-picture"/>
+            </div>
+            <input ref="fileInput" type="file" @change="upload($event, 'profilePicture')" style="display: none">
+            <button class="profile-button" @click="chooseFile('profilePicture')">Change Profile Picture</button>  
           </div>
         </div>
 
@@ -37,10 +39,25 @@
         <div class="mb-3 row" id="position">
           <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
           <div class="col-sm-4">
-            <span class="badge bg-primary">Primary</span>
-            <span class="badge bg-secondary">Secondary</span>
-            <span class="badge bg-success">Success</span>
-            <button class="btn rounded-circle custom-btn"><i class="bi bi-plus"></i></button>
+            <div style="display: inline-block;">
+              <span class="badge bg-primary" id="interest-badge">Kpop</span>
+              <span class="badge bg-secondary" id="interest-badge">Games</span>
+              <span class="badge bg-success" id="interest-badge">Technology</span>
+            </div>
+            <button class="btn rounded-circle btn-sm" id="custom-btn" @click="handleClick"><i class="bi bi-plus"></i></button>
+
+            <div v-if="showPopup" class="popup-container">
+              <div class="popup-content">
+                <h2>Popup Content</h2>
+                <p>Choose something:</p>
+                <button v-for="option in options" @click="handleChoice(option)">{{ option }}</button>
+
+                <div class="button-container">
+                  <button @click="cancelSelection">Cancel</button>
+                  <!-- <button @click="submitSelection">Submit</button> -->
+                </div>
+              </div>
+            </div>
           </div>
           
         </div>
@@ -121,15 +138,73 @@
   
 <script>
 import NavSidebar from '@/components/NavSidebar.vue'
+import ngeeann from '@/assets/NgeeAnnLogo.png'
+import banner from '@/assets/CustomBanner.png'
 
 export default {
   components: {
-    NavSidebar
+    NavSidebar,
+    ngeeann,
+    banner,
   },
 
   data() {
     return {
-      message: 'Awesome background'
+      showPopup: false,
+      selectedOption: '',
+      profilePicture: ngeeann,
+      banner: banner,
+      // selectedBanner: "banner",
+      // selectedProfilePic: "profilePicture",
+      options:[
+        'Kpop',
+        'Games',
+        'Technology',
+        'Sports',
+        'Dancing',
+        'JPOP',
+        'Coding',
+        'Lifestyle'
+      ],
+    }
+  },
+
+  methods:{
+    handleClick(){
+      console.log("CLicked");
+      this.showPopup = true;
+    },
+
+    handleChoice(option){
+      this.selectedOption = option;
+      this.showPopup = false;
+    },
+
+    cancelSelection(){
+      this.selectedOption = null;
+      this.showPopup = false;
+    },
+
+    chooseFile(imageType){
+      console.log(imageType);
+      if (imageType === "profilePicture") {
+        this.$refs.fileInput.click();
+      } 
+      else {
+        this.$refs.bannerInput.click();
+      }
+    },
+
+    upload(event, imageType){
+      console.log(imageType);
+      const file = event.target.files[0];
+      if (imageType === "profilePicture"){
+        this.profilePicture = URL.createObjectURL(file);
+      }
+      else{
+        this.banner = URL.createObjectURL(file);
+      }
+      
     }
   },
 }
@@ -141,17 +216,38 @@ export default {
       padding: 0;
     }
 
+    .popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
     .banner {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100px;
+      height: 150px;
       width: 100%;
       background-color: #f1f1f1;
-      color: #333;
-      margin: 0;
-      padding: 0;
+    }
+
+    #banner-picture{
+      height: 150px;
+      width: 100%;
     }
 
     .content {
@@ -180,6 +276,8 @@ export default {
       border-radius: 10px;
       margin-top: 50px;
       font-weight: bold;
+      position: absolute;
+      top: 85px;
     }
 
     .profile-button {
@@ -190,7 +288,7 @@ export default {
       font-size: 10px;
       border-radius: 10px;
       position: absolute;
-      top: 260px;
+      top: 355px;
       font-weight: bold;
       border-color: #E53A73;
     }
@@ -207,13 +305,15 @@ export default {
       font-weight: bold;
     }
 
-    #ngee-ann-logo {
+    #profile-picture {
       margin: 30px auto;
       text-align: center;
       display: block;
-      margin-top: 30px;
+      margin-top: 78px;
       border-radius: 50%;
       border: 1px solid black;
+      height: 142px;
+      width: 142px;
     }
 
     #profile{
@@ -236,9 +336,16 @@ export default {
       margin: 50px 0px; 
     }
 
-    .custom-btn{
-      background-color: red;
+    #custom-btn{
       color: #E53A73;
+      border-color: #E53A73; 
+      border-width: 2px;
+      margin-left: 10px;
+    }
+
+    #interest-badge{
+      margin: 5px;
+      padding: 10px;
     }
 
 </style>
