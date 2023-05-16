@@ -91,7 +91,7 @@
     export default {
         data() {
             return {
-                maximized: false
+                
             }
         },
         methods: {
@@ -160,7 +160,7 @@
     }
 
     .compensateMaximizedSidebar {
-        margin-left: 100px
+        margin-left: 15vw;
     }
 
     .compensateMinimizedSidebar {
