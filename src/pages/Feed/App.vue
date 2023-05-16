@@ -4,9 +4,7 @@
         <div id="main-content">
             <div class="row pink-header-search">
                 <div class="col-md-3"></div>
-                <div class="col-md-6 " style="display: flex; align-items: center;"> 
-                    <input class="search-bar" type="text" placeholder="Search">
-                </div>
+                <SearchBar/>
                 <div class="col-md-3 d-flex justify-content-end">
                     <!-- check for identity after authentication -->
                     <p class="username"><br></p>
@@ -142,13 +140,48 @@
 </template>
 <style>
 @import url('../../styles/main.css');
+
+.blog-container {
+    border: #133B5B;
+    border-style: solid 1rem;
+    margin: auto;
+    width: 45% !important;
+    box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);;
+    border-radius: 30px;
+    padding: 50px;
+    margin-bottom: 100px;
+}
+
+.profilepic {
+    overflow: hidden;
+    float: left;
+    width: 48px;
+    height: 48px;
+    margin-right: 20px;
+    border-radius: 50%;
+
+}
+.blog-image {
+    border-radius: 3%;
+    height: 35vw;
+}
+.blog-caption {
+    text-align: justify;
+}
+#headerprofilepic{
+    max-width: 5vw;
+    max-height: 5vw;
+    border-radius: 50%;
+}
 </style>
 <script>
 import NavSidebar from '../../components/NavSidebar.vue';
+import SearchBar from '../../components/SearchBar.vue';
 
 export default {
     components: {
-        NavSidebar
+        NavSidebar,
+        SearchBar
     }
 }
 </script>
