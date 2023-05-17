@@ -107,7 +107,13 @@ input:focus{
     border: none;
     background: linear-gradient(45deg,#FF6363, #E53A73);
 }
-
+#registerBtn:hover {
+    background: transparent;
+    color: var(--primary);
+    font-weight: bolder;
+    border: solid;
+    border-color: var(--primary);
+}
 .inputField {
     padding-bottom: 10px;
 }

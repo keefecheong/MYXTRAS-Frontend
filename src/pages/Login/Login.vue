@@ -25,7 +25,7 @@
             </div>
         </div>
     </div>
-
+    <!-- https://vuejs.org/guide/essentials/component-basics.html#listening-to-events -->
 </template>
   
 <style>
