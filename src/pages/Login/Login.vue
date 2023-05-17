@@ -11,7 +11,7 @@
                         <div class="underline"></div>
                         <br/>
                         <input type="text" placeholder="Password" id="passwordField">
-                        <span class="material-symbols-outlined">visibility_off</span>
+                        <span class="material-symbols-outlined overlay-button">visibility_off</span>
                         <br/>
                         <button @click="" id="loginBtn">
                             Log in
@@ -97,7 +97,7 @@ input:focus{
     white-space: nowrap;
     direction: ltr;
     color: black;
-    transform: translateY(-50%);
+    transform: translateX(-100%);
 
 }
 .buttonContainer {
@@ -121,6 +121,14 @@ input:focus{
 #registerBtn:hover{
     border-bottom: #E53A73;
 }
+#emailField,
+#passwordField {
+    padding-bottom: 10px;
+}
+#passwordField {
+    transform: translatex(2.3%);
+}
+
 </style>
 <script>
 export default {
