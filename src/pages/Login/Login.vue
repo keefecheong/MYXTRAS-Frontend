@@ -8,10 +8,9 @@
                     <div class="whitebox">
                         <h1>Log in</h1>
                         <input type="text" placeholder="Email Address" id="emailField">
-                        <div class="underline"></div>
                         <br/>
                         <input type="text" placeholder="Password" id="passwordField">
-                        <span class="material-symbols-outlined overlay-button">visibility_off</span>
+                        <button class="material-symbols-outlined overlay-button" @click="">visibility_off</button>
                         <br/>
                         <button @click="" id="loginBtn">
                             Log in
@@ -37,6 +36,9 @@ body {
     background-repeat: no-repeat;
     overflow: hidden;
 }
+h1 {
+    margin-bottom: 5vh !important;
+}
 #ngeeAnnBanner {
     opacity: 0.75;
     width: 100%;
@@ -56,6 +58,7 @@ body {
 }
 .whitebox {
     background-color: white;
+    position: relative;
     width: 100%;
     height: 100%;
     padding-top: 5vh;
@@ -86,22 +89,6 @@ input:focus{
     outline: none;
 }
 
-.material-symbols-outlined {
-    font-family: 'Material Symbols Outlined';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-    color: black;
-    transform: translateX(-100%);
-
-}
 .buttonContainer {
     display: flex;
     justify-content: center;
@@ -113,24 +100,51 @@ input:focus{
     width: 10em;
     height: 3em;
     color: white;
+    margin-top: 5vh;
     border: none;
     background: linear-gradient(45deg,#FF6363, #E53A73);
 }
 #registerBtn {
-    border: none;
-    background-color: white;
+    color: black;
+    text-decoration: none;
+    position: absolute;
+    bottom: 15px; /* Adjust the distance from the bottom as needed */
+    left: 50%;
+    transform: translateX(-50%);
+}
+#registerBtn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(45deg,#FF6363, #E53A73);
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+#registerBtn:hover::after {
+  transform: scaleX(1);
 }
 #registerBtn:hover{
-    border-bottom: #E53A73;
+    color: var(--primary);
 }
 #emailField,
 #passwordField {
     padding-bottom: 10px;
 }
 #passwordField {
-    transform: translatex(2.3%);
+    transform: translatex(2.7vh);
 }
-
+.overlay-button {
+    border: none;
+    transform: translateX(-100%);
+    background-color: transparent;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    outline: none;
+}
 </style>
 <script>
 export default {
@@ -141,6 +155,6 @@ export default {
         },
     }
     
-// document.getElementById('ngeeAnnBanner').setAttribute('draggable', false);
+//document.getElementById('ngeeAnnBanner').setAttribute('draggable', false);
 </script>
 
