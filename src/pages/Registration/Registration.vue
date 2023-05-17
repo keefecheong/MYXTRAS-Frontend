@@ -9,6 +9,15 @@
                         <h1>Register Now!</h1>
                         <input type="text" placeholder="Email Address" id="emailField" class="inputField">
                         <input type="text" placeholder="Phone Number" id="numberField" class="inputField">
+                        <Dropdown
+                            :options="[{ id: 1, name: 'Option 1'}, { id: 2, name: 'Option 2'}]"
+                            v-on:selected="validateSelection"
+                            v-on:filter="getDropdownValues"
+                            :disabled="false"
+                            name="zipcode"
+                            :maxItem="10"
+                            placeholder="Please select an option">
+                        </Dropdown>
                         <input type="text" placeholder="Discipline" id="disciplineDropdown" class="inputField">
                         <input type="text" placeholder="Password" id="passwordField" class="inputField">
                         <button class="material-symbols-outlined overlay-button" @click="">visibility_off</button>
@@ -115,6 +124,8 @@ input:focus{
 }
 </style>
 <script>
+import Dropdown from 'vue-simple-search-dropdown';
+
 export default {
         data() {
             return {

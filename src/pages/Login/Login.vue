@@ -104,6 +104,13 @@ input:focus{
     border: none;
     background: linear-gradient(45deg,#FF6363, #E53A73);
 }
+#loginBtn:hover {
+    background: transparent;
+    color: var(--primary);
+    font-weight: bolder;
+    border: solid;
+    border-color: var(--primary);
+}
 #registerBtn {
     color: black;
     text-decoration: none;
