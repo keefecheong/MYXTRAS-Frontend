@@ -34,6 +34,8 @@
 body {
     background: linear-gradient(45deg,#FF6363, #E53A73);
     height: 100vh;
+    background-repeat: no-repeat;
+    overflow: hidden;
 }
 #ngeeAnnBanner {
     opacity: 0.75;
