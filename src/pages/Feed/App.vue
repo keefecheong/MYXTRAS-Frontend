@@ -236,7 +236,7 @@
 
 /* Position the "next button" to the right */
 .next {
-    right: 10px;
+    right: 0.75rem;
     border-radius: 3px 0 0 3px;
 }
 
