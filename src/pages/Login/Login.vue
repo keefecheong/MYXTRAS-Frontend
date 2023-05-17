@@ -138,8 +138,9 @@ export default {
             return {
                 
             }
-        }
+        },
     }
-document.getElementById('ngeeAnnBanner').setAttribute('draggable', false);
+    
+// document.getElementById('ngeeAnnBanner').setAttribute('draggable', false);
 </script>
 
