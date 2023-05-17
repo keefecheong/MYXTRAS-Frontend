@@ -2,7 +2,11 @@
     <div id="main-container">
         <div id="main-content">
             <div class="row">
-                <div class="col-md-1"></div>
+                <div class="col-md-1">
+                    <a href="/feed.html">
+                        <span class="material-symbols-outlined" style="color: white; margin: 15px 0 0 15px">home</span>
+                    </a>
+                </div>
                 <div class="col-md-10 loginContainer">
                     <img src="../../assets/ngeeannxtras.jpg" id="ngeeAnnBanner">
                     <div class="whitebox">
@@ -34,7 +38,6 @@ body {
     background: linear-gradient(45deg,#FF6363, #E53A73);
     height: 100vh;
     background-repeat: no-repeat;
-    overflow: hidden;
 }
 h1 {
     margin-bottom: 5vh !important;
@@ -89,13 +92,6 @@ input:focus{
     outline: none;
 }
 
-.buttonContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
 #loginBtn {
     width: 10em;
     height: 3em;
@@ -115,7 +111,7 @@ input:focus{
     color: black;
     text-decoration: none;
     position: absolute;
-    bottom: 15px; /* Adjust the distance from the bottom as needed */
+    bottom: 20px; /* Adjust the distance from the bottom as needed */
     left: 50%;
     transform: translateX(-50%);
 }

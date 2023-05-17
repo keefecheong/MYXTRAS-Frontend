@@ -2,28 +2,26 @@
     <div id="main-container">
         <div id="main-content">
             <div class="row">
-                <div class="col-md-1"></div>
+                <div class="col-md-1">
+                    <a href="/feed.html">
+                        <span class="material-symbols-outlined" style="color: white; margin: 15px 0 0 15px">home</span>
+                    </a>
+                </div>
                 <div class="col-md-10 loginContainer">
                     <img src="../../assets/ngeeannxtras.jpg" id="ngeeAnnBanner">
                     <div class="whitebox">
                         <h1>Register Now!</h1>
                         <input type="text" placeholder="Email Address" id="emailField" class="inputField">
                         <input type="text" placeholder="Phone Number" id="numberField" class="inputField">
-                        <Dropdown
-                            :options="[{ id: 1, name: 'Option 1'}, { id: 2, name: 'Option 2'}]"
-                            v-on:selected="validateSelection"
-                            v-on:filter="getDropdownValues"
-                            :disabled="false"
-                            name="zipcode"
-                            :maxItem="10"
-                            placeholder="Please select an option">
-                        </Dropdown>
                         <input type="text" placeholder="Discipline" id="disciplineDropdown" class="inputField">
                         <input type="text" placeholder="Password" id="passwordField" class="inputField">
                         <button class="material-symbols-outlined overlay-button" @click="">visibility_off</button>
                         <button @click="" id="registerBtn">
                             Register
                         </button>
+                        <a href="/login.html" id="loginBtn">
+                            Already have an account? Login Now!
+                        </a>
                         <br>
                     </div>
                 </div>
@@ -40,7 +38,6 @@ body {
     background: linear-gradient(45deg,#FF6363, #E53A73);
     height: 100vh;
     background-repeat: no-repeat;
-    overflow: hidden;
 }
 h1 {
     margin-bottom: 5vh !important;
@@ -92,12 +89,6 @@ input:focus{
     margin-bottom: 30px;
     width: 80%;
 }
-.buttonContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
 
 #registerBtn {
     width: 10em;
@@ -128,10 +119,35 @@ input:focus{
     cursor: pointer;
     outline: none;
 }
+
+#loginBtn {
+    color: black;
+    text-decoration: none;
+    position: absolute;
+    bottom: 20px; /* Adjust the distance from the bottom as needed */
+    left: 50%;
+    transform: translateX(-50%);
+}
+#loginBtn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(45deg,#FF6363, #E53A73);
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+#loginBtn:hover::after {
+  transform: scaleX(1);
+}
+#loginBtn:hover{
+    color: var(--primary);
+}
 </style>
 <script>
-import Dropdown from 'vue-simple-search-dropdown';
-
 export default {
         data() {
             return {
