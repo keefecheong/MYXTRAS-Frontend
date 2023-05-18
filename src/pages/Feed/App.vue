@@ -46,6 +46,7 @@
                         </div>
                         <div class="row">
                             <p>
+                                <p></p>
                                 <div style="text-align:center">
                                     <span class="dot1" @click="currentSlide(1, 0)"></span>
                                     <span class="dot1" @click="currentSlide(2, 0)"></span>
@@ -110,6 +111,7 @@
                         </div>
                         <div class="row">
                             <p>
+                                <p></p>
                                 <div style="text-align:center">
                                     <span class="dot2" @click="currentSlide(1, 1)"></span>
                                     <span class="dot2" @click="currentSlide(2, 1)"></span>
@@ -200,14 +202,14 @@
     font-weight: bold;
     font-size: 18px;
     transition: 0.6s ease;
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 10px 10px 0 !important;
     user-select: none;
 }
 
 /* Position the "next button" to the right */
 .next {
     right: 0.75rem;
-    border-radius: 3px 0 0 3px;
+    border-radius: 10px 0 0 10px !important;
 }
 
 /* On hover, add a black background color with a little bit see-through */
