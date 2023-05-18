@@ -10,7 +10,7 @@
                     <p class="username"><br></p>
                     <p class="school"></p>
                     <img class="headerprofilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                    <button type="button" class="btn btn-light">Log in</button>
+                    <a href="/login.html"><button type="button" class="btn btn-light">Log in</button></a>
                 </div>
             </div>
             <br>
@@ -65,19 +65,6 @@
                         </div>
                         <div class="row">
                             <p class="blog-caption">
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol                         
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
-                                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
                                 Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
                                 Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
                                 Went to the playground with my baby cousn today!! Here are some photos of him. #lol 

@@ -8,13 +8,13 @@
                     </a>
                 </div>
                 <div class="col-md-10 loginContainer">
-                    <img src="../../assets/ngeeannxtras.jpg" id="ngeeAnnBanner">
+                    <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
                     <div class="whitebox">
                         <h1>Log in</h1>
-                        <input type="text" placeholder="Email Address" id="emailField">
+                        <input type="email" placeholder="Email Address" id="emailField">
                         <br/>
-                        <input type="text" placeholder="Password" id="passwordField">
-                        <button class="material-symbols-outlined overlay-button" @click="">visibility_off</button>
+                        <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField">
+                        <button class="material-symbols-outlined overlay-button" @click="hidePassword">visibility_off</button>
                         <br/>
                         <button @click="" id="loginBtn">
                             Log in
@@ -58,6 +58,7 @@ h1 {
 #passwordField{
     margin-bottom: 20px;
     width: 80%;
+    transform: translatex(2.7vh);
 }
 .whitebox {
     background-color: white;
@@ -79,7 +80,9 @@ h1 {
     vertical-align:middle;
 }
 
-input[type=text] {
+input[type=text],
+input[type=email],
+input[type=password] {
   border: none;
   border-bottom: 2px solid transparent;
   background-image: linear-gradient(45deg,#FF6363, #E53A73);
@@ -137,9 +140,6 @@ input:focus{
 #passwordField {
     padding-bottom: 10px;
 }
-#passwordField {
-    transform: translatex(2.7vh);
-}
 .overlay-button {
     border: none;
     transform: translateX(-100%);
@@ -153,8 +153,16 @@ input:focus{
 export default {
         data() {
             return {
-                
+                isDraggable: false,
+                emailAddress: '',
+                password: '',
+                showPassword: false,
             }
+        },
+        methods: {
+            hidePassword() {
+                this.showPassword = !this.showPassword;
+            },
         },
     }
     
