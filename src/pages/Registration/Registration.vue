@@ -8,21 +8,26 @@
                     </a>
                 </div>
                 <div class="col-md-10 loginContainer">
-                    <img src="../../assets/ngeeannxtras.jpg" id="ngeeAnnBanner">
+                    <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
                     <div class="whitebox">
-                        <h1>Register Now!</h1>
-                        <input type="text" placeholder="Email Address" id="emailField" class="inputField">
-                        <input type="text" placeholder="Phone Number" id="numberField" class="inputField">
-                        <input type="text" placeholder="Discipline" id="disciplineDropdown" class="inputField">
-                        <input type="text" placeholder="Password" id="passwordField" class="inputField">
-                        <button class="material-symbols-outlined overlay-button" @click="">visibility_off</button>
-                        <button @click="" id="registerBtn">
-                            Register
-                        </button>
-                        <a href="/login.html" id="loginBtn">
-                            Already have an account? Login Now!
-                        </a>
-                        <br>
+                        <form onsubmit="return false">
+                            <h1>Register Now!</h1>
+                            <input type="email" placeholder="Email Address" id="emailField" >
+                            <input type="text" v-model="phoneNumber" placeholder="Phone Number" id="numberField" @input="filterNumber">
+                            <br>
+                            <button id="sendOtpBtn">Send OTP</button>
+                            <br>
+                            <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField">
+                            <!-- :class="{ 'password-visible': showPassword }" -->
+                            <button class="material-symbols-outlined overlay-button" @click="hidePassword">visibility_off</button>
+                            
+                            <button @click="checkDetails()" id="registerBtn">
+                                Register
+                            </button>
+                            <a href="/login.html" id="loginBtn">
+                                Already have an account? Login Now!
+                            </a>
+                        </form>
                     </div>
                 </div>
                 <div class="col-md-1"></div>
@@ -38,6 +43,7 @@ body {
     background: linear-gradient(45deg,#FF6363, #E53A73);
     height: 100vh;
     background-repeat: no-repeat;
+    font-size: calc(.5em + 0.5vw) !important;
 }
 h1 {
     margin-bottom: 5vh !important;
@@ -51,10 +57,9 @@ h1 {
     border-radius: 1000px !important;
     margin-top: 11vh !important;
 }
-
 .whitebox {
     background-color: white;
-    position: relative;
+    position: relative; /* for the register btn to stick to the bottom */
     width: 100%;
     height: 100%;
     padding-top: 5vh;
@@ -72,29 +77,44 @@ h1 {
     vertical-align:middle;
 }
 
-input[type=text] {
+input[type=text],
+input[type=password],
+input[type=email] {
   border: none;
   border-bottom: 2px solid transparent;
   background-image: linear-gradient(45deg,#FF6363, #E53A73);
   background-position: 0 100%;
   background-repeat: no-repeat;
   background-size: 100% 2px;
+  margin-bottom: 30px;
+  width: 80%;
+  padding-bottom: 10px;
 }
 input:focus{
     background-size: 0% 2px;
     outline: none;
 }
 
-.inputField {
-    margin-bottom: 30px;
-    width: 80%;
+#sendOtpBtn {
+    width: 6em;
+    height: 2em;
+    color: white;
+    margin-top: calc(.5em + 0.1vw);
+    border: none;
+    background: linear-gradient(45deg,#FF6363, #E53A73);
 }
-
+#sendOtpBtn:hover {
+    background: transparent;
+    color: var(--primary);
+    font-weight: bolder;
+    border: solid;
+    border-color: var(--primary);
+}
 #registerBtn {
     width: 10em;
     height: 3em;
     color: white;
-    margin-top: 5vh;
+    margin-top: calc(.5em + 0.1vw);
     border: none;
     background: linear-gradient(45deg,#FF6363, #E53A73);
 }
@@ -104,9 +124,6 @@ input:focus{
     font-weight: bolder;
     border: solid;
     border-color: var(--primary);
-}
-.inputField {
-    padding-bottom: 10px;
 }
 #passwordField {
     transform: translatex(2.7vh);
@@ -149,13 +166,27 @@ input:focus{
 </style>
 <script>
 export default {
-        data() {
-            return {
-                
-            }
+    data() {
+        return {
+            isDraggable: false,
+            emailAddress: '',
+            phoneNumber: '',
+            password: '',
+            showPassword: false,
+        }
+    },
+    methods: {
+        hidePassword() {
+                this.showPassword = !this.showPassword;
+            },
+        checkDetails() {
+        location.href = "/setupprofile.html";
         },
-    }
-    
-//document.getElementById('ngeeAnnBanner').setAttribute('draggable', false);
+        filterNumber() {
+        // Remove any non-numeric characters except the minus sign at the beginning
+        this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
+        },
+    },
+}
 </script>
 
