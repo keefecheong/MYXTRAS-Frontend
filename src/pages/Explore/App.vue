@@ -3,7 +3,9 @@
         <NavSidebar/>
         <div id="main-content">
             <SearchBar/>
+            <br>
             <h1>Explore</h1>
+            <br>
         </div>
     </div>
 
