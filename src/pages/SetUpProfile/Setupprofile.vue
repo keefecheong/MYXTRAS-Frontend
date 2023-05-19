@@ -6,6 +6,7 @@
                 <div class="col-md-6 whitebox">
                     <input type="text" v-model="realname" placeholder="Real Name" id="name">
                     <input type="text" v-model="username" placeholder="Username" id="username">
+                    
                 </div>
                 <div class="col-md-3"></div>
             </div>
@@ -32,6 +33,25 @@ body {
     text-align: center;
     margin-top: 5vh !important;
     padding: 10vh 0;
+    
+}
+
+input[type=text],
+input[type=password],
+input[type=email] {
+  border: none;
+  border-bottom: 2px solid transparent;
+  background-image: linear-gradient(45deg,#FF6363, #E53A73);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+  margin-bottom: 30px;
+  width: 80%;
+  padding-bottom: 10px;
+}
+input:focus{
+    background-size: 0% 2px;
+    outline: none;
 }
 </style>
 
