@@ -2,17 +2,7 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
-            <div class="row pink-header-search">
-                <div class="col-md-3"></div>
-                <SearchBar/>
-                <div class="col-md-3 d-flex justify-content-end">
-                    <!-- check for identity after authentication -->
-                    <p class="username"><br></p>
-                    <p class="school"></p>
-                    <img class="headerprofilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                    <a href="/login.html"><button type="button" class="btn btn-light">Log in</button></a>
-                </div>
-            </div>
+            <SearchBar/>
             <br>
             <h1>Following</h1>
             <br>
@@ -56,6 +46,7 @@
                         </div>
                         <div class="row">
                             <p>
+                                <p></p>
                                 <div style="text-align:center">
                                     <span class="dot1" @click="currentSlide(1, 0)"></span>
                                     <span class="dot1" @click="currentSlide(2, 0)"></span>
@@ -120,6 +111,7 @@
                         </div>
                         <div class="row">
                             <p>
+                                <p></p>
                                 <div style="text-align:center">
                                     <span class="dot2" @click="currentSlide(1, 1)"></span>
                                     <span class="dot2" @click="currentSlide(2, 1)"></span>
@@ -187,13 +179,6 @@
     text-align: justify;
 }
 
-.headerprofilepic {
-    width: 7rem;
-    height: 6rem;
-    border: #133B5B 0.5rem solid;
-    border-radius: 100%;
-}
-
 /* Slideshow container */
 .slideshow-container {
     max-width: 1000px;
@@ -217,14 +202,14 @@
     font-weight: bold;
     font-size: 18px;
     transition: 0.6s ease;
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 10px 10px 0 !important;
     user-select: none;
 }
 
 /* Position the "next button" to the right */
 .next {
     right: 0.75rem;
-    border-radius: 3px 0 0 3px;
+    border-radius: 10px 0 0 10px !important;
 }
 
 /* On hover, add a black background color with a little bit see-through */
