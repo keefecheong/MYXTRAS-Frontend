@@ -113,7 +113,7 @@
 </template>
 
 <script>
-  import NavSidebar from '@/components/NavSidebar.vue'
+  import NavSidebar from '../../components/NavSidebar.vue'
 
   export default {
     components: {

@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import App from './Setupprofile.vue'
+import App from './SetupProfile.vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 // Vuetify
