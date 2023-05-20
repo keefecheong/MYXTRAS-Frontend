@@ -38,6 +38,8 @@ body {
     background: linear-gradient(45deg,#FF6363, #E53A73);
     height: 100vh;
     background-repeat: no-repeat;
+    animation: gradientAnimation 2s infinite linear;
+    background-size: 400% 400%;
 }
 h1 {
     margin-bottom: 5vh !important;
@@ -147,6 +149,17 @@ input:focus{
     background-repeat: no-repeat;
     cursor: pointer;
     outline: none;
+}
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
 }
 </style>
 <script>
