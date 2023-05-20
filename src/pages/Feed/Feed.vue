@@ -204,6 +204,7 @@
     transition: 0.6s ease;
     border-radius: 0 10px 10px 0 !important;
     user-select: none;
+    text-decoration:none;
 }
 
 /* Position the "next button" to the right */

@@ -8,7 +8,7 @@
             <!-- check for identity after authentication -->
             <p class="username"><br></p>
             <p class="school"></p>
-            <img v-if="false" class="headerprofilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+            <img v-if="login" class="headerprofilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
             <a v-else href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
     </div>
@@ -94,3 +94,13 @@
     height: 100%;
 }
 </style>
+
+<script>
+export default {
+    data() {
+        return {
+            login: false
+        }
+    },
+}
+</script>
