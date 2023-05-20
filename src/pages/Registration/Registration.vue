@@ -193,7 +193,7 @@ export default {
                 this.showPassword = !this.showPassword;
             },
         checkDetails() {
-        location.href = "/setupProfile.html";
+        location.href = "/setupprofile.html";
         },
         filterNumber() {
         // Remove any non-numeric characters except the minus sign at the beginning
