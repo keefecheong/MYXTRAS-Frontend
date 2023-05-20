@@ -62,25 +62,25 @@
             <button class="material-symbols-outlined" @click="toggleSidebar()">keyboard_double_arrow_right</button>
             
             <a href="/feed.html" class="sidebar-link">
-                <span class="material-symbols-outlined">group</span>
+                <span class="material-symbols-outlined" title="Feed">group</span>
             </a>
             <a href="/forum.html" class="sidebar-link">
-                <span class="material-symbols-outlined">forum</span>
+                <span class="material-symbols-outlined" title="Forum">forum</span>
             </a>
             <a href="/chat.html" class="sidebar-link">
-                <span class="material-symbols-outlined">chat</span>
+                <span class="material-symbols-outlined" title="Chat">chat</span>
             </a>
             <a href="/explore.html" class="sidebar-link">
-                <span class="material-symbols-outlined">emoji_objects</span>
+                <span class="material-symbols-outlined" title="Xplore">emoji_objects</span>
             </a>
             <a href="/events.html" class="sidebar-link">
-                <span class="material-symbols-outlined">campaign</span>
+                <span class="material-symbols-outlined" title="Events">campaign</span>
             </a>
             <a href="/checkin.html" class="sidebar-link">
-                <span class="material-symbols-outlined">event_available</span>
+                <span class="material-symbols-outlined" title="Check In">event_available</span>
             </a> 
             <a href="/about.html" class="sidebar-link">
-                <span class="material-symbols-outlined">question_mark</span>
+                <span class="material-symbols-outlined" title="About">question_mark</span>
             </a>
         </div>
     </nav>
