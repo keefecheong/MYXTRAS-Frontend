@@ -8,9 +8,33 @@
                         <h2 id="header">Set up your profile</h2>
                         <input type="text" placeholder="Name" id="realnameField" v-model="realname" required>
                         <input type="text" placeholder="Username" id="usernameField" v-model="username" required>
-                        <textarea placeholder="Bio (Max 100 words)" id="bioField" required></textarea>
-                        <p>Interests: </p>
-    
+                        <textarea placeholder="Bio (Max 100 words)" id="bioField" required style="appearance: none;"></textarea>
+                        <div class="interest-container">  
+                            <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
+                            <div id="interest-badges">
+                                <span class="badge bg-primary" id="interest-badge">Kpop</span>
+                                <span class="badge bg-secondary" id="interest-badge">Games</span>
+                                <span class="badge bg-success" id="interest-badge">Technology</span>
+                                <span v-if="selectedOption" class="badge bg-info">{{ selectedOption }}</span>
+                            </div>
+                            <button class="btn rounded-circle btn-sm" id="custom-btn" @click="handleClick"><i class="bi bi-plus"></i></button>
+                            
+                        </div>
+                        <div v-if="showPopup" class="popup-container">
+                            <div class="popup-content">
+                                <h2>Popup Content</h2>
+                                <p>Choose something:</p>
+                                <button v-for="option in options" id="interest-badge" style="border-radius: 20px; background-color: lightblue;" @click="handleChoice(option)">{{ option }}</button>
+
+                                <div class="button-container">
+                                <button @click="cancelSelection">Cancel</button>
+                                <!-- <button @click="submitSelection">Submit</button> -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+
                         <!-- <div class="text-center">
                             <v-select
                                 v-model="selectedSchool"
@@ -79,7 +103,8 @@ body {
 }
 
 input[type=text],
-select{
+select,
+textarea{
   border: none;
   border-bottom: 2px solid transparent;
   background-image: linear-gradient(90deg,#FF6363, #E53A73);
@@ -92,7 +117,8 @@ select{
   appearance: none;
 }
 
-input:focus {
+input:focus,
+textarea{
     background-size: 0% 2px;
     outline: none;
 }
@@ -120,6 +146,53 @@ input:focus {
     padding: 20px 25px;
 }
 
+#interest-badge{
+    margin: 5px;
+    padding: 10px;
+}
+
+.interest-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.interest-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.interest-container label {
+  margin-right: 10px;
+}
+
+#custom-btn{
+    color: #E53A73;
+    border-color: #E53A73; 
+    border-width: 2px;
+    margin-left: 10px;
+}
+
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 @keyframes gradientAnimation {
   0% {
     background-position: 0 50%;
@@ -130,6 +203,8 @@ input:focus {
   100% {
     background-position: 0 50%;
   }
+
+  
 }
 </style>
 
@@ -147,13 +222,26 @@ export default {
             username: "",
             selectedSchool: '',
             selectedCourse: '',
+            showPopup: false,
+            selectedOption: '',
             // schools: ['ICT','HS','FMS','BMS'],
             courses: {
                 ICT: ['CSF', 'IM', 'CICT'],
                 HS: ['CHEM', 'BIO'],
                 FMS: ['FILM', 'MEDIA'],
                 BS: ['MARKETING', 'HR']
-            }
+            },
+            options:[
+                'Kpop',
+                'Games',
+                'Technology',
+                'Sports',
+                'Dancing',
+                'JPOP',
+                'Coding',
+                'Lifestyle'
+            ],
+
             
         };
     },
@@ -165,7 +253,24 @@ export default {
     methods: {
         checkDetails() {
             
-        }
+        },
+
+        handleClick(){
+            console.log("CLicked");
+            this.showPopup = true;
+        },
+
+        handleChoice(option){
+            console.log(option);
+            this.selectedOption = option;
+            this.showPopup = false;
+        },
+
+        cancelSelection(){
+            this.selectedOption = null;
+            this.showPopup = false;
+        },
+
     }
 }
 </script>
