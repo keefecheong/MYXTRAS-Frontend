@@ -6,29 +6,43 @@
                 <div class="col-md-6 whitebox">
                     <form>
                         <h2 id="header">Set up your profile</h2>
-                        <input type="text" placeholder="Name" id="realnameField" v-model="realname" required>
-                        <input type="text" placeholder="Username" id="usernameField" v-model="username" required>
-                        <textarea placeholder="Bio (Max 100 words)" id="bioField" required style="appearance: none;"></textarea>
+                        <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup">
+                        <input type="text" placeholder="Username" id="usernameField" v-model="username" :required="!showPopup">
+                        <textarea placeholder="Bio (Max 100 words)" id="bioField" :required="!showPopup" style="appearance: none;"></textarea>
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
                             <div id="interest-badges">
-                                <span class="badge bg-primary" id="interest-badge">Kpop</span>
+                                <!-- <span class="badge bg-primary" id="interest-badge">Kpop</span>
                                 <span class="badge bg-secondary" id="interest-badge">Games</span>
-                                <span class="badge bg-success" id="interest-badge">Technology</span>
-                                <span v-if="selectedOption" class="badge bg-info">{{ selectedOption }}</span>
+                                <span class="badge bg-success" id="interest-badge">Technology</span> -->
+                                <!-- <div id="interest-badges" :class="getBadgeClass(option)" v-for="option in selectedOption" :key="option">
+                                    <span class="badge" :class="getBadgeColor(option)">{{ option }}</span> -->
+                                    <span v-for="option in selectedOption" id="interest-badge" :class="getBadgeClass(option)">{{ option }}</span>
+                                <!-- </div> -->
                             </div>
-                            <button class="btn rounded-circle btn-sm" id="custom-btn" @click="handleClick"><i class="bi bi-plus"></i></button>
+                            <button type="button" class="btn rounded-circle btn-sm" id="custom-btn" @click="handleClick"><i class="bi bi-plus"></i></button>
                             
                         </div>
+                        <!-- <modal :show="showPopup" @close="closeModal">
+                            <h2>Popup Content</h2>
+                            <p>Choose something:</p>
+                            <button v-for="option in options" :key="option" @click="handleChoice(option)">{{ option }}</button>
+
+                            <div class="button-container">
+                            <button @click="cancelSelection">Cancel</button>
+                            <button @click="confirmSelection">Confirm</button>
+                            </div>
+                        </modal> -->
                         <div v-if="showPopup" class="popup-container">
                             <div class="popup-content">
-                                <h2>Popup Content</h2>
-                                <p>Choose something:</p>
-                                <button v-for="option in options" id="interest-badge" style="border-radius: 20px; background-color: lightblue;" @click="handleChoice(option)">{{ option }}</button>
+                                <h2>Interests</h2>
+                                <p>Please select the interest(s) that suit you best:</p>
+                                <button v-for="option in options" :class="getBadgeClass(option)" type="button" id="interest-badge" style="border-radius: 20px;" @click="handleChoice(option)">{{ option }}</button>
 
                                 <div class="button-container">
                                 <button @click="cancelSelection">Cancel</button>
-                                <!-- <button @click="submitSelection">Submit</button> -->
+                                <button @click="confirmSelection()">Confirm</button>
+    
                                 </div>
                             </div>
                         </div>
@@ -50,7 +64,7 @@
                             ></v-select>
                         </div> -->
 
-                        <select v-model="selectedSchool" required>
+                        <select v-model="selectedSchool" :required="!showPopup">
                             <option value="" disabled>Select a school</option>
                             <option value="ICT">School of ICT</option>
                             <option value="HS">School of HS</option>
@@ -59,7 +73,7 @@
                         </select>
                         <br>
                         <br>
-                        <select v-model="selectedCourse" required>
+                        <select v-model="selectedCourse" :required="!showPopup">
                             <option value="" disabled>Select a course</option>
                             <option v-for="course in filteredCourses" :value="course">{{ course }}</option>
                         </select>
@@ -193,6 +207,38 @@ textarea{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.badge-kpop {
+    background-color: #FF7BE2;
+}
+
+.badge-games {
+    background-color: #6FE5FF;
+}
+
+.badge-technology {
+    background-color: #6FFFA8;
+}
+
+.badge-sports{
+    background-color: #FFE27B;
+}
+
+.badge-dancing{
+    background-color: #7B88FF;
+}
+
+.badge-jpop{
+    background-color: #FFAB6F;
+}
+
+.badge-coding{
+    background-color: #6F74FF;
+}
+
+.badge-lifestyle{
+    background-color: #FC5454;
+}
+
 @keyframes gradientAnimation {
   0% {
     background-position: 0 50%;
@@ -223,7 +269,7 @@ export default {
             selectedSchool: '',
             selectedCourse: '',
             showPopup: false,
-            selectedOption: '',
+            selectedOption: [],
             // schools: ['ICT','HS','FMS','BMS'],
             courses: {
                 ICT: ['CSF', 'IM', 'CICT'],
@@ -262,14 +308,76 @@ export default {
 
         handleChoice(option){
             console.log(option);
-            this.selectedOption = option;
-            this.showPopup = false;
+            const index = this.selectedOption.indexOf(option);
+            if (this.selectedOption.includes(option)) {
+                // Option is already selected, remove it from the array
+                this.selectedOption = this.selectedOption.filter(item => item !== option);
+            } else {
+                // Option is not selected, add it to the array
+                this.selectedOption.push(option);
+            }
+    //         this.selectedOption = option;
+    //         this.showPopup = false;
         },
 
         cancelSelection(){
-            this.selectedOption = null;
+            this.selectedOption = [];
             this.showPopup = false;
         },
+
+        confirmSelection() {
+            // Perform any necessary actions with the selected options here
+            console.log("Selected options:", this.selectedOption);
+            this.showPopup = false;
+        },
+
+        getBadgeClass(option) {
+            // Return a class name based on the selected option
+            switch (option) {
+            case 'Kpop':
+                return 'badge badge-kpop';
+            case 'Games':
+                return 'badge badge-games';
+            case 'Technology':
+                return 'badge badge-technology';
+            case 'Sports':
+                return 'badge badge-sports'
+            case 'Dancing':
+                return 'badge badge-dancing'
+            case 'JPOP':
+                return 'badge badge-jpop'
+            case 'Coding':
+                return 'badge badge-coding'
+            case 'Lifestyle':
+                return 'badge badge-lifestyle'
+            }
+            return `badge-${bg-info}`;
+        },
+
+        // getBadgeColor(option) {
+        //     // Return a class name for the badge color based on the selected option
+        //     switch (option) {
+        //     case 'Kpop':
+        //         return 'bg-primary';
+        //     case 'Games':
+        //         return 'bg-secondary';
+        //     case 'Technology':
+        //         return 'bg-success';
+        //     default:
+        //         return 'bg-info';
+        //     }
+
+
+        //     'Kpop',
+        //         'Games',
+        //         'Technology',
+        //         'Sports',
+        //         'Dancing',
+        //         'JPOP',
+        //         'Coding',
+        //         'Lifestyle'
+        // },
+
 
     }
 }
