@@ -6,7 +6,7 @@
                 <div class="col-md-6 whitebox">
                     <form>
                         <h2 id="header">Set up your profile</h2>
-                        <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup">
+                        <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" @input="noIntegers">
                         <input type="text" placeholder="Username" id="usernameField" v-model="username" :required="!showPopup">
                         <textarea placeholder="Bio (Max 500 characters)" id="bioField" :required="!showPopup" style="appearance: none;" v-model="textareaValue" @input="limitCharacters"></textarea>
                         <div class="interest-container">  
@@ -384,7 +384,9 @@ export default {
         //         'Lifestyle'
         // },
 
-
+        noIntegers() {
+            this.realname = this.realname.replace(/[0-9]/g, '');
+        }
     }
 }
 </script>
