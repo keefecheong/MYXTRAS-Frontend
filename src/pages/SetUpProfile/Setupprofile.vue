@@ -8,7 +8,7 @@
                         <h2 id="header">Set up your profile</h2>
                         <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup">
                         <input type="text" placeholder="Username" id="usernameField" v-model="username" :required="!showPopup">
-                        <textarea placeholder="Bio (Max 100 words)" id="bioField" :required="!showPopup" style="appearance: none;"></textarea>
+                        <textarea placeholder="Bio (Max 500 characters)" id="bioField" :required="!showPopup" style="appearance: none;" v-model="textareaValue" @input="limitCharacters"></textarea>
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
                             <div id="interest-badges">
@@ -268,6 +268,8 @@ export default {
             username: "",
             selectedSchool: '',
             selectedCourse: '',
+            textareaValue: '',
+            maxCharacters: 500,
             showPopup: false,
             selectedOption: [],
             // schools: ['ICT','HS','FMS','BMS'],
@@ -300,12 +302,16 @@ export default {
         checkDetails() {
             
         },
-
+        limitCharacters() {
+        if (this.textareaValue.length > this.maxCharacters) {
+            // If the number of characters exceeds the limit
+            this.textareaValue = this.textareaValue.slice(0, this.maxCharacters); // Truncate the input value to the maximum number of characters
+            }
+        },
         handleClick(){
             console.log("CLicked");
             this.showPopup = true;
         },
-
         handleChoice(option){
             console.log(option);
             const index = this.selectedOption.indexOf(option);

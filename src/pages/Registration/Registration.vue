@@ -10,18 +10,18 @@
                 <div class="col-md-10 loginContainer">
                     <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
                     <div class="whitebox">
-                        <form onsubmit="return false">
+                        <form @submit.prevent="login">
                             <h1>Register Now!</h1>
-                            <input type="email" placeholder="Email Address" id="emailField" >
-                            <input type="text" v-model="phoneNumber" placeholder="Phone Number" id="numberField" @input="filterNumber">
+                            <input v-model="emailAddress" type="email" placeholder="Email Address" id="emailField" required>
+                            <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required>
                             <br>
                             <button id="sendOtpBtn">Send OTP</button>
                             <br>
-                            <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField">
+                            <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" required>
                             <!-- :class="{ 'password-visible': showPassword }" -->
-                            <button class="material-symbols-outlined overlay-button" @click="hidePassword">visibility_off</button>
+                            <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword">visibility_off</button>
                             
-                            <button @click="checkDetails()" id="registerBtn">
+                            <button @click="register()" id="registerBtn">
                                 Register
                             </button>
                             <a href="/login.html" id="loginBtn">
@@ -138,7 +138,9 @@ input:focus{
     cursor: pointer;
     outline: none;
 }
-
+.pressed {
+    color: gray;
+}
 #loginBtn {
     color: black;
     text-decoration: none;
@@ -182,6 +184,7 @@ export default {
     data() {
         return {
             isDraggable: false,
+            isPressed: false,
             emailAddress: '',
             phoneNumber: '',
             password: '',
@@ -191,14 +194,26 @@ export default {
     methods: {
         hidePassword() {
                 this.showPassword = !this.showPassword;
+                this.isPressed = !this.isPressed;
             },
-        checkDetails() {
-        location.href = "/setupprofile.html";
-        },
         filterNumber() {
         // Remove any non-numeric characters except the minus sign at the beginning
         this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
         },
+        register() {
+            fetch("", {
+                methods: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    emailaddress: this.emailAddress,
+                    phonenumber: this.phoneNumber,
+                    password: this.password,
+                })
+            });
+            location.href = "/setupprofile.html";
+        }
     },
 }
 </script>
