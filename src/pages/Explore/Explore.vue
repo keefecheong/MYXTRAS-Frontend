@@ -36,8 +36,13 @@
                         </div>
                     </div>
                 </div>
-                <div v-else class="col-md-10" style="padding-left: 250px;">
-                    asd
+                <div v-else class="row">
+                    <div class="col-md-3" style="padding-left: 250px;">
+                        asdfasf
+                    </div>
+                    <div class="col-md-2" style="right: 0;">
+                        asdfasfd
+                    </div>
                 </div>
             </div>
         </div>
