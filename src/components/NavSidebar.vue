@@ -337,7 +337,6 @@
                 }
 
                 const sidebar = document.getElementById('sidebar-wrapper');
-                console.log(sidebar);
 
                 if (sidebar.style.position != 'absolute' && sidebar.style.position != 'fixed') {
                     return;
@@ -359,18 +358,6 @@
 </script>
 
 <style>
-    /* variables for dynamic margin for content when maximised sidebar */
-    :root {
-        --compensateMaximizedSidebarMargin: calc(15vw + 42px);
-        --compensateMaximizedSidebarMinimum: 202px;
-    }
-
-    @media screen and (max-width: 1066px) {
-        :root {
-            --compensateMaximizedSidebarMargin: var(--compensateMaximizedSidebarMinimum);
-        }
-    }
-
     /* container styles */
     /* normal sidebar */
     #sidebar-wrapper {
@@ -454,7 +441,7 @@
     }
 
     .compensateMaximizedSidebar {
-        margin-left: var(--compensateMaximizedSidebarMargin);
+        margin-left: max(202px, 15vw + 42px);
     }
 
     .compensateMinimizedSidebar {

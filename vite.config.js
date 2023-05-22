@@ -3,6 +3,8 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
+require('dotenv').config();
+
 // custom plugin to redirect / requests to /index.html
 const redirectIndexPlugin = {
   name: 'redirect-index',
@@ -23,5 +25,8 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {
+    port: process.env.PORT
   }
 })
