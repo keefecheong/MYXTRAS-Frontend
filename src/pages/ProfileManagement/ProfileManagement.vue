@@ -40,9 +40,7 @@
           <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
           <div class="col-sm-4">
             <div style="display: inline-block;">
-              <span class="badge bg-primary" id="interest-badge">Kpop</span>
-              <span class="badge bg-secondary" id="interest-badge">Games</span>
-              <span class="badge bg-success" id="interest-badge">Technology</span>
+              <span v-for="option in selectedOption" id="interest-badge" :class="getBadgeClass(option)">{{ option }}</span>
             </div>
             <button class="btn rounded-circle btn-sm" id="custom-btn" @click="handleClick"><i class="bi bi-plus"></i></button>
 
@@ -50,10 +48,11 @@
               <div class="popup-content">
                 <h2>Popup Content</h2>
                 <p>Choose something:</p>
-                <button v-for="option in options" @click="handleChoice(option)">{{ option }}</button>
+                <button v-for="option in options" :class="getBadgeClass(option)" type="button" id="interest-badge" style="border-radius: 20px;" @click="handleChoice(option)">{{ option }}</button>
 
                 <div class="button-container">
                   <button @click="cancelSelection">Cancel</button>
+                  <button @click="confirmSelection()">Confirm</button>
                   <!-- <button @click="submitSelection">Submit</button> -->
                 </div>
               </div>
@@ -151,7 +150,7 @@ export default {
   data() {
     return {
       showPopup: false,
-      selectedOption: '',
+      selectedOption: [],
       profilePicture: ngeeann,
       banner: banner,
       // selectedBanner: "banner",
@@ -171,18 +170,27 @@ export default {
 
   methods:{
     handleClick(){
-      console.log("CLicked");
-      this.showPopup = true;
-    },
+            console.log("CLicked");
+            this.showPopup = true;
+        },
 
     handleChoice(option){
-      this.selectedOption = option;
-      this.showPopup = false;
+        console.log(option);
+        const index = this.selectedOption.indexOf(option);
+        if (this.selectedOption.includes(option)) {
+            // Option is already selected, remove it from the array
+            this.selectedOption = this.selectedOption.filter(item => item !== option);
+        } else {
+            // Option is not selected, add it to the array
+            this.selectedOption.push(option);
+        }
+//         this.selectedOption = option;
+//         this.showPopup = false;
     },
 
     cancelSelection(){
-      this.selectedOption = null;
-      this.showPopup = false;
+        this.selectedOption = [];
+        this.showPopup = false;
     },
 
     chooseFile(imageType){
@@ -205,7 +213,36 @@ export default {
         this.banner = URL.createObjectURL(file);
       }
       
-    }
+    },
+
+    confirmSelection() {
+            // Perform any necessary actions with the selected options here
+            console.log("Selected options:", this.selectedOption);
+            this.showPopup = false;
+        },
+
+        getBadgeClass(option) {
+            // Return a class name based on the selected option
+            switch (option) {
+            case 'Kpop':
+                return 'badge badge-kpop';
+            case 'Games':
+                return 'badge badge-games';
+            case 'Technology':
+                return 'badge badge-technology';
+            case 'Sports':
+                return 'badge badge-sports'
+            case 'Dancing':
+                return 'badge badge-dancing'
+            case 'JPOP':
+                return 'badge badge-jpop'
+            case 'Coding':
+                return 'badge badge-coding'
+            case 'Lifestyle':
+                return 'badge badge-lifestyle'
+            }
+            return `badge-${bg-info}`;
+        },
   },
 }
 </script>
@@ -347,5 +384,37 @@ export default {
       margin: 5px;
       padding: 10px;
     }
+
+    .badge-kpop {
+    background-color: #FF7BE2;
+}
+
+.badge-games {
+    background-color: #6FE5FF;
+}
+
+.badge-technology {
+    background-color: #6FFFA8;
+}
+
+.badge-sports{
+    background-color: #FFE27B;
+}
+
+.badge-dancing{
+    background-color: #7B88FF;
+}
+
+.badge-jpop{
+    background-color: #FFAB6F;
+}
+
+.badge-coding{
+    background-color: #6F74FF;
+}
+
+.badge-lifestyle{
+    background-color: #FC5454;
+}
 
 </style>

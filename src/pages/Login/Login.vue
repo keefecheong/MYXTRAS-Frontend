@@ -11,10 +11,10 @@
                     <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
                     <div class="whitebox">
                         <h1>Log in</h1>
-                        <input type="email" placeholder="Email Address" id="emailField">
+                        <input type="email" placeholder="Email Address" id="emailField" required>
                         <br/>
-                        <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField">
-                        <button class="material-symbols-outlined overlay-button" @click="hidePassword">visibility_off</button>
+                        <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" required>
+                        <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword">visibility_off</button>
                         <br/>
                         <button @click="" id="loginBtn">
                             Log in
@@ -150,6 +150,9 @@ input:focus{
     cursor: pointer;
     outline: none;
 }
+.pressed {
+    color: gray;
+}
 @keyframes gradientAnimation {
   0% {
     background-position: 0 50%;
@@ -167,6 +170,7 @@ export default {
         data() {
             return {
                 isDraggable: false,
+                isPressed: false,
                 emailAddress: '',
                 password: '',
                 showPassword: false,
@@ -175,6 +179,7 @@ export default {
         methods: {
             hidePassword() {
                 this.showPassword = !this.showPassword;
+                this.isPressed = !this.isPressed;
             },
         },
     }
