@@ -21,6 +21,7 @@
         <div id="maximized" v-if="maximized">  <!-- maximized sidebar shown when "maximized" is true -->
             <div id="maximized-header-wrapper">
                 <h1 id="maximized-header">MyXtras</h1>
+                <!-- <button class="material-symbols-outlined" id="close-sidebar" @click="toggleSidebar()">keyboard_double_arrow_left</button> -->
                 <label class="switch">
                     <input type="checkbox" class="chk" @change="toggleSidebar()" checked>
                     <span class="slider"></span>
@@ -62,6 +63,7 @@
 
         <!-- minimized sidebar implementation -->
         <div id="minimized" v-if="!maximized">  <!-- minimized sidebar shown when "maximized" is false -->
+            <!-- <button class="material-symbols-outlined" @click="toggleSidebar()">keyboard_double_arrow_right</button> -->
             <div style="text-align: center;">
                 <label class="switch">
                     <input type="checkbox" class="chk" @change="toggleSidebar()" >
@@ -178,7 +180,7 @@
             return {
                 maximized: false,
                 expanded: false,
-                narrow: true,
+                narrow: false,
                 currentLocation: 0
             }
         },
@@ -346,7 +348,7 @@
 
                 const sidebar = document.getElementById('sidebar-wrapper');
 
-                if (sidebar.style.position != 'absolute' && sidebar.style.position != 'fixed') {
+                if (sidebar.style.position != 'absolute' && !sidebar.classList.contains('fixToBottom')) {
                     return;
                 }
 
