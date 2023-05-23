@@ -63,6 +63,74 @@
             </div>
         </div>
     </div>
+    <div class="blog-container">
+        <div class="row">
+            <div class="col-md-6">
+                <span class="row">
+                    <div class="col-md-2">
+                        <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                    </div>
+                    <div class="col-md-10">
+                        <p>Joshua Tan</p>
+                        <p style="margin-top: -20px;">@youdontknowme</p>
+                    </div>
+                </span>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
+                <span>
+                    <p>
+                        Posted 6 days ago
+                    </p>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="slideshow-container">
+                <div class="mySlides2">
+                    <img class="blog-image" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                </div>
+                <div class="mySlides2">
+                    <img class="blog-image" src="https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
+                </div>
+                <div class="mySlides2">
+                    <img class="blog-image" src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg">
+                </div>
+                <a class="prev" @click="plusSlides(-1, 1)">&#10094;</a>
+                <a class="next" @click="plusSlides(1, 1)">&#10095;</a>
+            </div>
+        </div>
+        <div class="row">
+            <p>
+                <p></p>
+                <div style="text-align:center">
+                    <span class="dot2" @click="currentSlide(1, 1)"></span>
+                    <span class="dot2" @click="currentSlide(2, 1)"></span>
+                    <span class="dot2" @click="currentSlide(3, 1)"></span>
+                </div>
+            </p>
+        </div>
+        <div class="row">
+            <p class="blog-caption">
+                Went to the playground with my baby cousn today!! Here are some photos of him. #lol                         Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
+                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
+                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
+                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
+                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
+                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
+                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
+                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
+                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
+                Went to the playground with my baby cousn today!! Here are some photos of him. #lol 
+
+            </p>
+        </div>
+        <div class="d-flex justify-content-end">
+            <!-- Retrieve number of comments -->
+            <div class="p-2">
+                <button>View 13 comments</button>
+            </div>
+        </div>
+    </div>
 </template>
 <style>
 @import url('../styles/main.css');
