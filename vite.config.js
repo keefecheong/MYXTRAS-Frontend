@@ -1,16 +1,14 @@
 import { fileURLToPath, URL } from 'node:url'
 
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-require('dotenv').config();
-
-// custom plugin to redirect / requests to /index.html
+// custom plugin to redirect / requests to /feed.html
 const redirectIndexPlugin = {
   name: 'redirect-index',
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
-      if (req.url === '/') {
+      if (req.url === '/' || req.url === '/create') {
         req.url = '/feed.html';
       }
       next();
@@ -19,14 +17,13 @@ const redirectIndexPlugin = {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [vue(), redirectIndexPlugin],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+export default defineConfig(({command, mode}) => {
+  const env = loadEnv(mode, process.cwd(), '');
+
+  return {
+    plugins: [vue(), redirectIndexPlugin],
+    server: {
+      port: env.VITE_PORT
     }
-  },
-  server: {
-    port: process.env.PORT
   }
 })
