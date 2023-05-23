@@ -21,7 +21,7 @@
                             <!-- :class="{ 'password-visible': showPassword }" -->
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword">visibility_off</button>
                             
-                            <button @click="register()" id="registerBtn">
+                            <button @click="registerUser()" id="registerBtn">
                                 Register
                             </button>
                             <a href="/login.html" id="loginBtn">
@@ -200,20 +200,28 @@ export default {
         // Remove any non-numeric characters except the minus sign at the beginning
         this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
         },
-        register() {
-            fetch("", {
-                methods: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    emailaddress: this.emailAddress,
-                    phonenumber: this.phoneNumber,
-                    password: this.password,
+        registerUser() {
+            const userData = {
+                emailAddress: this.emailAddress,
+                
+                password: this.password
+            }
+            axios.post('http://localhost:3000/api/users', userData)
+                .then(response => {
+                    // Handle the response from the server
+                    console.log(response.data);
                 })
-            });
+                .catch(error => {
+                    // Handle any errors
+                    console.error(error);
+                });
+                
             location.href = "/setupprofile.html";
-        }
+        },
+        
+    },
+    mounted() {
+        this.fetchUsers();
     },
 }
 </script>
