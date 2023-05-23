@@ -21,6 +21,7 @@
         <div id="maximized" v-if="maximized">  <!-- maximized sidebar shown when "maximized" is true -->
             <div id="maximized-header-wrapper">
                 <h1 id="maximized-header">MyXtras</h1>
+                <!-- <button class="material-symbols-outlined" id="close-sidebar" @click="toggleSidebar()">keyboard_double_arrow_left</button> -->
                 <label class="switch">
                     <input type="checkbox" class="chk" @change="toggleSidebar()" checked>
                     <span class="slider"></span>
@@ -62,6 +63,7 @@
 
         <!-- minimized sidebar implementation -->
         <div id="minimized" v-if="!maximized">  <!-- minimized sidebar shown when "maximized" is false -->
+            <!-- <button class="material-symbols-outlined" @click="toggleSidebar()">keyboard_double_arrow_right</button> -->
             <div style="text-align: center;">
                 <label class="switch">
                     <input type="checkbox" class="chk" @change="toggleSidebar()" >
@@ -178,7 +180,7 @@
             return {
                 maximized: false,
                 expanded: false,
-                narrow: true,
+                narrow: false,
                 currentLocation: 0
             }
         },
@@ -345,9 +347,8 @@
                 }
 
                 const sidebar = document.getElementById('sidebar-wrapper');
-                console.log(sidebar);
 
-                if (sidebar.style.position != 'absolute' && sidebar.style.position != 'fixed') {
+                if (sidebar.style.position != 'absolute' && !sidebar.classList.contains('fixToBottom')) {
                     return;
                 }
 
@@ -367,18 +368,6 @@
 </script>
 
 <style>
-    /* variables for dynamic margin for content when maximised sidebar */
-    :root {
-        --compensateMaximizedSidebarMargin: calc(15vw + 42px);
-        --compensateMaximizedSidebarMinimum: 202px;
-    }
-
-    @media screen and (max-width: 1066px) {
-        :root {
-            --compensateMaximizedSidebarMargin: var(--compensateMaximizedSidebarMinimum);
-        }
-    }
-
     /* container styles */
     /* normal sidebar */
     #sidebar-wrapper {
@@ -462,7 +451,7 @@
     }
 
     .compensateMaximizedSidebar {
-        margin-left: var(--compensateMaximizedSidebarMargin);
+        margin-left: max(202px, 15vw + 42px);
     }
 
     .compensateMinimizedSidebar {

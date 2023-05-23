@@ -17,7 +17,7 @@
                                 <span class="badge bg-success" id="interest-badge">Technology</span> -->
                                 <!-- <div id="interest-badges" :class="getBadgeClass(option)" v-for="option in selectedOption" :key="option">
                                     <span class="badge" :class="getBadgeColor(option)">{{ option }}</span> -->
-                                    <span v-for="option in selectedOption" id="interest-badge" :class="getBadgeClass(option)">{{ option }}</span>
+                                    <span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span>
                                 <!-- </div> -->
                             </div>
                             <button type="button" class="btn rounded-circle btn-sm" id="custom-btn" @click="handleClick"><i class="bi bi-plus"></i></button>
@@ -37,11 +37,11 @@
                             <div class="popup-content">
                                 <h2>Interests</h2>
                                 <p>Please select the interest(s) that suit you best:</p>
-                                <button v-for="option in options" :class="getBadgeClass(option)" type="button" id="interest-badge" style="border-radius: 20px;" @click="handleChoice(option)">{{ option }}</button>
+                                <button v-for="option in options" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]" type="button" id="interest-badge" style="border-radius: 20px;" @click="handleChoice(option)">{{ option }}</button>
 
                                 <div class="button-container">
-                                <button @click="cancelSelection">Cancel</button>
-                                <button @click="confirmSelection()">Confirm</button>
+                                <!-- <button @click="cancelSelection">Cancel</button> -->
+                                <button @click="confirmSelection()" id="confirmBtn">Confirm</button>
     
                                 </div>
                             </div>
@@ -160,6 +160,16 @@ textarea{
     padding: 20px 25px;
 }
 
+#confirmBtn{
+    width: 10em;
+    color: white;
+    margin-top: 50px;
+    border: none;
+    background: linear-gradient(45deg,#FF6363, #E53A73);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
 #interest-badge{
     margin: 5px;
     padding: 10px;
@@ -239,6 +249,10 @@ textarea{
     background-color: #FC5454;
 }
 
+.selected {
+    border: 3px solid;
+}
+
 @keyframes gradientAnimation {
   0% {
     background-position: 0 50%;
@@ -272,6 +286,7 @@ export default {
             maxCharacters: 500,
             showPopup: false,
             selectedOption: [],
+            selectedButton: null,
             // schools: ['ICT','HS','FMS','BMS'],
             courses: {
                 ICT: ['CSF', 'IM', 'CICT'],
@@ -318,12 +333,12 @@ export default {
             if (this.selectedOption.includes(option)) {
                 // Option is already selected, remove it from the array
                 this.selectedOption = this.selectedOption.filter(item => item !== option);
+                this.selectedButton = null;
             } else {
                 // Option is not selected, add it to the array
                 this.selectedOption.push(option);
+                this.selectedButton = option;
             }
-    //         this.selectedOption = option;
-    //         this.showPopup = false;
         },
 
         cancelSelection(){
@@ -336,8 +351,15 @@ export default {
             console.log("Selected options:", this.selectedOption);
             this.showPopup = false;
         },
-
+        
         getBadgeClass(option) {
+            if (this.selectedOption.includes(option)) {
+                return `badge ${this.getBadgeColor(option)} selected`;
+            }
+            return `badge ${this.getBadgeColor(option)}`;
+        },
+
+        getBadgeColor(option) {
             // Return a class name based on the selected option
             switch (option) {
             case 'Kpop':

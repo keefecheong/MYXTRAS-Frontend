@@ -216,7 +216,7 @@ export default {
                     console.error(error);
                 });
                 
-            location.href = "/setupprofile.html";
+            location.href = "/setupProfile.html";
         },
         
     },

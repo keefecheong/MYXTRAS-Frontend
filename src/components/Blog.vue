@@ -63,7 +63,6 @@
             </div>
         </div>
     </div>
-    
     <div class="blog-container">
         <div class="row">
             <div class="col-md-6">
