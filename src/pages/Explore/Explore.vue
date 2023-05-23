@@ -43,15 +43,15 @@
                     <div class="col-md-3" style="right: 0;">
                         <div class="popular-community">
                             <h1 class="pop-header">Popular Communities</h1>
-                            <h4 class="cat" @click="openForum(1)">Interest 1<div class="triangle-down"></div></h4>
+                            <h4 class="cat" @click="openForum(1)">Interest 1<div class="triangle-down" id="1"></div></h4>
                             <div class="dropdown-content" id="dc1">
-                                <a href="#" class="forum1-1">Link 1</a>
+                                <a href="#" class="forum1-1"><img class="forumpic" src="https://upload.wikimedia.org/wikipedia/commons/5/51/Mr._Smiley_Face.svg">Link 1</a>
                                 <a href="#" class="forum1-2">Link 2</a>
                                 <a href="#" class="forum1-3">Link 3</a>
                                 <a href="#" class="forum1-4">Link 4</a>
                                 <a href="#" class="forum1-5">Link 5</a>
                             </div>
-                            <h4 class="cat" @click="openForum(2)">Interest 2<div class="triangle-down"></div></h4>
+                            <h4 class="cat" @click="openForum(2)">Interest 2<div class="triangle-down" id="2"></div></h4>
                             <div class="dropdown-content" id="dc2">
                                 <a href="#" class="forum2-1">Link 1</a>
                                 <a href="#" class="forum2-2">Link 2</a>
@@ -59,7 +59,7 @@
                                 <a href="#" class="forum2-4">Link 4</a>
                                 <a href="#" class="forum2-5">Link 5</a>
                             </div>
-                            <h4 class="cat" @click="openForum(3)">Interest 3<div class="triangle-down"></div></h4>
+                            <h4 class="cat" @click="openForum(3)">Interest 3<div class="triangle-down" id="3"></div></h4>
                             <div class="dropdown-content" id="dc3">
                                 <a href="#" class="forum3-1">Link 1</a>
                                 <a href="#" class="forum3-2">Link 2</a>
@@ -67,7 +67,7 @@
                                 <a href="#" class="forum3-4">Link 4</a>
                                 <a href="#" class="forum3-5">Link 5</a>
                             </div>
-                            <h4 class="cat" @click="openForum(4)">Interest 4<div class="triangle-down"></div></h4>
+                            <h4 class="cat" @click="openForum(4)">Interest 4<div class="triangle-down" id="4"></div></h4>
                             <div class="dropdown-content" id="dc4">
                                 <a href="#" class="forum4-1">Link 1</a>
                                 <a href="#" class="forum4-2">Link 2</a>
@@ -75,7 +75,7 @@
                                 <a href="#" class="forum4-4">Link 4</a>
                                 <a href="#" class="forum4-5">Link 5</a>
                             </div>
-                            <h4 class="cat" @click="openForum(5)">Interest 5<div class="triangle-down"></div></h4>
+                            <h4 class="cat" @click="openForum(5)">Interest 5<div class="triangle-down" id="5"></div></h4>
                             <div class="dropdown-content" id="dc5">
                                 <a href="#" class="forum5-1">Link 1</a>
                                 <a href="#" class="forum5-2">Link 2</a>
@@ -236,9 +236,9 @@ a {
 .triangle-up {
 	width: 0;
 	height: 0;
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-bottom: 20px solid #ffffff;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 15px solid #ffffff;
     margin-left: 40px !important;
     cursor: pointer;
 }
@@ -255,6 +255,18 @@ a {
 
 .active2 {
     display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.forumpic {
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+    margin-right: 20px; 
 }
 </style>
 
@@ -284,8 +296,14 @@ export default {
             document.getElementById("blogs").className = "sub-navigation";
         },
         openForum(no) {
-            console.log("dc"+no);
-            document.getElementsById("dc"+no).className += " active2";
+            var x = document.getElementById(no).className;
+            if (x == "triangle-down") {
+                document.getElementById("dc"+no).className += " active2";
+                document.getElementById(no).className = "triangle-up";
+            } else {
+                document.getElementById("dc"+no).className = "dropdown-content";
+                document.getElementById(no).className = "triangle-down";
+            }
         }
     }
 }
