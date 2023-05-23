@@ -212,7 +212,7 @@ export default {
                     password: this.password,
                 })
             });
-            location.href = "/setupprofile.html";
+            location.href = "/setupProfile.html";
         }
     },
 }
