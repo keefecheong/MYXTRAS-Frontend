@@ -252,26 +252,27 @@ export default {
                     return response.json().then(data => {
                     if (data.error === 'Email already exists') {
                         alert("Email already exists");
+                        throw new Error('Email already exists')
                     }
                     else if (data.error === 'Phone Number already exists') {
                         alert("Phone Number already exists");
+                        throw new Error('Email already exists')
                     }
                     else {
                         throw new Error('Error: ' + response.status);
                     }
-                    return response.json();
                     });
                 }
                 })
                 .then(data => {
                     console.log('Success:', data);
-                    location.href = "/setupprofile.html";
+                    //location.href = "/setupprofile.html";
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
                 
-            console.log(this.userObject);
+            //console.log(this.userObject);
         },
         
     },
