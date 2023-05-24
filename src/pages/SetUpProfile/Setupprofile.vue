@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-md-3"></div>
                 <div class="col-md-6 whitebox">
-                    <form>
+                    <form @submit.prevent="login">
                         <h2 id="header">Set up your profile</h2>
                         <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" @input="noIntegers">
                         <input type="text" placeholder="Username" id="usernameField" v-model="username" :required="!showPopup">
@@ -82,7 +82,7 @@
                         <p class="warning">Warning: Discipline and course cannot be modified in a later date. Ensure that <br> 
                             you have chosen the most accurate description of your course of study</p>
                         <br>
-                        <button @click="checkDetails()" id="getStartedBtn">
+                        <button @click="setupprofile()" id="getStartedBtn">
                             Get Started
                         </button>
                     </form>
@@ -269,20 +269,20 @@ textarea{
 </style>
 
 <script>
-import DropDown from '@/components/DropDown.vue'
+// import DropDown from '../../components/DropDown.vue '
 
 export default {
     components: {
-        DropDown,
+        // DropDown,
   },
 
     data() {
         return {
-            realname: "",
-            username: "",
-            selectedSchool: '',
-            selectedCourse: '',
-            textareaValue: '',
+            realname: null,
+            username: null,
+            selectedSchool: null,
+            selectedCourse: null,
+            textareaValue: "",
             maxCharacters: 500,
             showPopup: false,
             selectedOption: [],
@@ -314,9 +314,7 @@ export default {
         }
     },
     methods: {
-        checkDetails() {
-            
-        },
+        
         limitCharacters() {
         if (this.textareaValue.length > this.maxCharacters) {
             // If the number of characters exceeds the limit
@@ -382,33 +380,53 @@ export default {
             return `badge-${bg-info}`;
         },
 
-        // getBadgeColor(option) {
-        //     // Return a class name for the badge color based on the selected option
-        //     switch (option) {
-        //     case 'Kpop':
-        //         return 'bg-primary';
-        //     case 'Games':
-        //         return 'bg-secondary';
-        //     case 'Technology':
-        //         return 'bg-success';
-        //     default:
-        //         return 'bg-info';
-        //     }
+        setupprofile() {
+            // const dataObject = JSON.parse(localStorage.getItem('dataObject'));
+            // console.log(dataObject); // Access the received data object
 
-
-        //     'Kpop',
-        //         'Games',
-        //         'Technology',
-        //         'Sports',
-        //         'Dancing',
-        //         'JPOP',
-        //         'Coding',
-        //         'Lifestyle'
-        // },
+            var detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse, this.selectedOption];
+            console.log(detailsList);
+            if (this.password !== this.repeatedPassword){
+                alert("Password mismatch");
+                return;
+            }
+            if (detailsList.some(item => item === null)){
+                alert("Please enter all fields");
+                return;
+            }
+            else {
+                this.userObject = {
+                'emailAddress': this.emailAddress,
+                'phoneNumber': this.phoneNumber,
+                'password': this.password
+                }
+            }
+            
+            fetch(`http://localhost:8081/api/users/${usersId}`, {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify(this.userObject)
+            }) .then(response => {
+                    if (!response.ok) {
+                    throw new Error('Error: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });;
+                
+            console.log(this.userObject);
+        },
 
         noIntegers() {
             this.realname = this.realname.replace(/[0-9]/g, '');
-        }
+        },
     }
 }
 </script>
