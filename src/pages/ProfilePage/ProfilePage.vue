@@ -28,8 +28,10 @@
                     </div>
 
                     <div class="col-md-2 offset-md-2" style="margin-top: 30px;">
-                        <h3 style="margin-left: 100px;"><i class="bi bi-pencil"></i></h3>
-    
+                        <a href="/profileManagement.html">
+                            <h3 style="margin-left: 100px; color: black;"><i class="bi bi-pencil"></i></h3>
+                        </a>
+       
                         <div style="display: flex; align-items: center; margin-left: 50px; margin-top: 31px; color: #dd1217">
                             <h6><i class="bi bi-box-arrow-right" style="margin-left: 2px;"></i></h6>
                             <h6 style="margin-left: 15px; margin-top:-1px;"><b>Sign out</b></h6>
@@ -42,7 +44,12 @@
                     <div class="col-md-6" v-for="image in images" :key="image">
                         <img class="blog-image" :src="image">
                     </div>
-                </div>             
+                </div>    
+                <div class="content-wrapper">
+                    <div class="floating-button" @click="createBlog">
+                        <i style="color: white" class="bi bi-plus plus-icon"></i>
+                    </div>
+                </div>         
             </div>
 
             <div id="right-content" class="col-md-3">
@@ -102,9 +109,9 @@
 </template>
 
 <script>
-import NavSidebar from '@/components/NavSidebar.vue'
-import profilePicture from '@/assets/NgeeAnnLogo.png'
-import banner from '@/assets/CustomBanner.png'
+import NavSidebar from '../../components/NavSidebar.vue'
+import profilePicture from '../../assets/NgeeAnnLogo.png'
+import banner from '../..//assets/CustomBanner.png'
 
 export default {
   components: {
@@ -250,5 +257,42 @@ export default {
         font-weight: medium;
 
     }
+
+    #main-container {
+        position: relative;
+        min-height: 100vh;
+    }
+
+    #left-content {
+        position: relative;
+    }
+
+    .content-wrapper {
+        position: sticky;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        justify-content: flex-end;
+        z-index: 1;
+    }
+
+    .floating-button {
+        background-color: #E53A73;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .plus-icon{
+        font-size: 24px;
+    }
+
+
+
+
 
 </style>
