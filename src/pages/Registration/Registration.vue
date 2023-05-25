@@ -238,25 +238,28 @@ export default {
             // const dataObject = this.userObject;
             // localStorage.setItem('dataObject', JSON.stringify(dataObject));
 
-            fetch(`http://localhost:8081/api/users`, {
+            fetch(`http://127.0.0.1:8081/api/users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: JSON.stringify(this.userObject)
             }) .then(response => {
+                console.log(response);
                 if (response.ok) {
-                    // User created successfully
-                    return response.json();
+                    if (response.redirected) {
+                        // Redirect to the specified page
+                        window.location.href = response.url;
+                    }
                 } else if (response.status === 409){
-                    return response.json().then(data => {
+                    response.json().then(data => {
                     if (data.error === 'Email already exists') {
                         alert("Email already exists");
                         throw new Error('Email already exists')
                     }
                     else if (data.error === 'Phone Number already exists') {
                         alert("Phone Number already exists");
-                        throw new Error('Email already exists')
+                        throw new Error('Phone Number already exists')
                     }
                     else {
                         throw new Error('Error: ' + response.status);
@@ -266,7 +269,7 @@ export default {
                 })
                 .then(data => {
                     console.log('Success:', data);
-                    //location.href = "/setupprofile.html";
+                    window.location.href = "/setupprofile.html";
                 })
                 .catch(error => {
                     console.error('Error:', error);
