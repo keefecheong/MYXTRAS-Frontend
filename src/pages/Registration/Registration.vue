@@ -18,10 +18,13 @@
                             <button id="sendOtpBtn">Send OTP</button>
                             <br>
                             <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" required>
+                            <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword(1)">visibility_off</button>
+                            <br>
+                            <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword" placeholder="Confirm Password" id="repeatPasswordField" required>
                             <!-- :class="{ 'password-visible': showPassword }" -->
-                            <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword">visibility_off</button>
+                            <button class="material-symbols-outlined overlay-button" :class="{ 'pressedrepeated': isPressedrepeated }" @click="hidePassword(2)">visibility_off</button>
                             
-                            <button @click="register()" id="registerBtn">
+                            <button @click="registerUser()" id="registerBtn">
                                 Register
                             </button>
                             <a href="/login.html" id="loginBtn">
@@ -127,7 +130,7 @@ input:focus{
     border: solid;
     border-color: var(--primary);
 }
-#passwordField {
+#passwordField, #repeatPasswordField {
     transform: translatex(2.7vh);
 }
 .overlay-button {
@@ -138,7 +141,7 @@ input:focus{
     cursor: pointer;
     outline: none;
 }
-.pressed {
+.pressed,.pressedrepeated {
     color: gray;
 }
 #loginBtn {
@@ -185,35 +188,96 @@ export default {
         return {
             isDraggable: false,
             isPressed: false,
-            emailAddress: '',
-            phoneNumber: '',
-            password: '',
+            isPressedrepeated: false,
+            emailAddress: null,
+            phoneNumber: null,
+            password: null,
+            repeatedPassword: null,
             showPassword: false,
+            showPasswordrepeated: false,
+            userObject: null,
         }
     },
     methods: {
-        hidePassword() {
-                this.showPassword = !this.showPassword;
-                this.isPressed = !this.isPressed;
-            },
+        hidePassword(num) {
+            switch (num){
+                case(1):
+                    this.showPassword = !this.showPassword;
+                    this.isPressed = !this.isPressed;
+                    break;
+                case(2):
+                    this.showPasswordrepeated = !this.showPasswordrepeated;
+                    this.isPressedrepeated = !this.isPressedrepeated;
+                    break;
+            }
+                
+        },
         filterNumber() {
         // Remove any non-numeric characters except the minus sign at the beginning
         this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
         },
-        register() {
-            fetch("", {
-                methods: "POST",
+        
+        async registerUser() {
+            var userDetailsList = [this.emailAddress, this.phoneNumber, this.password];
+
+            if (this.password !== this.repeatedPassword){
+                alert("Password mismatch");
+                return;
+            }
+            if (userDetailsList.some(item => item === null)){
+                alert("Please enter all fields");
+                return;
+            }
+            else {
+                this.userObject = {
+                'emailAddress': this.emailAddress,
+                'phoneNumber': this.phoneNumber,
+                'password': this.password
+                }
+            }
+            // const dataObject = this.userObject;
+            // localStorage.setItem('dataObject', JSON.stringify(dataObject));
+
+            fetch(`http://127.0.0.1:8081/api/users`, {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json"
+                    'Content-Type': 'application/json; charset=UTF-8',
                 },
-                body: JSON.stringify({
-                    emailaddress: this.emailAddress,
-                    phonenumber: this.phoneNumber,
-                    password: this.password,
+                body: JSON.stringify(this.userObject)
+            }) .then(response => {
+                console.log(response);
+                if (response.ok) {
+                    if (response.redirected) {
+                        // Redirect to the specified page
+                        window.location.href = response.url;
+                    }
+                } else if (response.status === 409){
+                    response.json().then(data => {
+                    if (data.error === 'Email already exists') {
+                        alert("Email already exists");
+                        throw new Error('Email already exists')
+                    }
+                    else if (data.error === 'Phone Number already exists') {
+                        alert("Phone Number already exists");
+                        throw new Error('Phone Number already exists')
+                    }
+                    else {
+                        throw new Error('Error: ' + response.status);
+                    }
+                    });
+                }
                 })
-            });
-            location.href = "/setupprofile.html";
-        }
+                .then(data => {
+                    console.log('Success:', data);
+                    window.location.href = "/setupprofile.html";
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+                
+            //console.log(this.userObject);
+        },
+        
     },
 }
 </script>
