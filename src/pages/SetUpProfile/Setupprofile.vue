@@ -269,11 +269,10 @@ textarea{
 </style>
 
 <script>
-import DropDown from '@/components/DropDown.vue'
 
 export default {
     components: {
-        DropDown,
+       
   },
 
     data() {
@@ -381,30 +380,6 @@ export default {
             }
             return `badge-${bg-info}`;
         },
-
-        // getBadgeColor(option) {
-        //     // Return a class name for the badge color based on the selected option
-        //     switch (option) {
-        //     case 'Kpop':
-        //         return 'bg-primary';
-        //     case 'Games':
-        //         return 'bg-secondary';
-        //     case 'Technology':
-        //         return 'bg-success';
-        //     default:
-        //         return 'bg-info';
-        //     }
-
-
-        //     'Kpop',
-        //         'Games',
-        //         'Technology',
-        //         'Sports',
-        //         'Dancing',
-        //         'JPOP',
-        //         'Coding',
-        //         'Lifestyle'
-        // },
 
         noIntegers() {
             this.realname = this.realname.replace(/[0-9]/g, '');
