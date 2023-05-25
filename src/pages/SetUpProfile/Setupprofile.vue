@@ -269,7 +269,6 @@ textarea{
 </style>
 
 <script>
-import DropDown from '../../components/DropDown.vue'
 
 export default {
     components: {
