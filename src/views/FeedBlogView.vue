@@ -4,11 +4,11 @@
 </template>
 
 <script>
-    import BlogLayout from '../components/BlogLayout.vue';
+import BlogLayout from '../components/BlogLayout.vue';
 
-    export default {
+export default {
 
-    }
+}
 </script>
 
 <style>

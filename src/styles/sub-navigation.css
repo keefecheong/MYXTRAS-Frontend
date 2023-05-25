@@ -1,0 +1,50 @@
+/* styles for sub navigation */
+/* 
+usage:
+    <div class="sub-navigation-container">
+        <div class="sub-navigation-links">
+            <router-link to="/path" class="sub-navigation"></router-link>
+            ...
+        </div>
+    </div>
+*/
+
+.sub-navigation-container {
+    height: fit-content;
+    position: sticky;
+    top: 0;
+}
+
+.sub-navigation-links {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 5px;
+}
+
+.sub-navigation {
+    background-color: #ffffff;
+    border: #e53a73 solid 3.5px;
+    border-radius: 10px;
+    color: black;
+    height: 4rem;
+    width: 8.5rem;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+    text-decoration: none;
+    text-align: center;
+    
+}
+
+.sub-navigation:hover {
+    background-color: #e53a73;
+    color: white;
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
