@@ -275,7 +275,6 @@ export default {
                 })
                 .then(data => {
                     console.log('Success:', data);
-                    //window.location.href = "/setupprofile.html";
                 })
                 .catch(error => {
                     console.error('Error:', error);
