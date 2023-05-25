@@ -403,7 +403,7 @@ export default {
             }
             
             fetch(`http://localhost:8081/api/users/${usersId}`, {
-                method: 'POST', 
+                method: 'PATCH', 
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },

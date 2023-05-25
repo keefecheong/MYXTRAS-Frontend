@@ -238,19 +238,25 @@ export default {
             // const dataObject = this.userObject;
             // localStorage.setItem('dataObject', JSON.stringify(dataObject));
 
-            fetch(`http://127.0.0.1:8081/api/users`, {
+            fetch(`http://127.0.0.1:8081/api/users/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
+                credentials: "include",
                 body: JSON.stringify(this.userObject)
             }) .then(response => {
-                console.log(response);
+                // console.log("The header is", authHeader);
+                // const token = authHeader.split(' ')[1]
+                // console.log("The token is", token);
+                // if (token) {
+                //     // Set the cookie with the received token
+                //     document.cookie = `token=${token}; path=/; httpOnly;`;
+                //     console.log(token);
+                // }
                 if (response.ok) {
-                    if (response.redirected) {
-                        // Redirect to the specified page
-                        window.location.href = response.url;
-                    }
+                    return response.json()
+
                 } else if (response.status === 409){
                     response.json().then(data => {
                     if (data.error === 'Email already exists') {
@@ -269,7 +275,7 @@ export default {
                 })
                 .then(data => {
                     console.log('Success:', data);
-                    window.location.href = "/setupprofile.html";
+                    //window.location.href = "/setupprofile.html";
                 })
                 .catch(error => {
                     console.error('Error:', error);
