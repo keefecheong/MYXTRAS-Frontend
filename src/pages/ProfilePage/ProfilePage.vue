@@ -102,9 +102,9 @@
 </template>
 
 <script>
-import NavSidebar from '@/components/NavSidebar.vue'
-import profilePicture from '@/assets/NgeeAnnLogo.png'
-import banner from '@/assets/CustomBanner.png'
+import NavSidebar from '../../components/NavSidebar.vue'
+import profilePicture from '../../assets/NgeeAnnLogo.png'
+import banner from '../../assets/CustomBanner.png'
 
 export default {
   components: {

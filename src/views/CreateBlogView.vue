@@ -1,5 +1,5 @@
 <template>
-    <h1>Create New Blog</h1>
+    <h1>Create New Post</h1>
 
     <form @submit.prevent="submitForm">
         <input type="file" id="uploadImages" multiple />

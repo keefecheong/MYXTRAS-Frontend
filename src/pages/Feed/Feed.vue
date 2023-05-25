@@ -5,7 +5,7 @@
             <SearchBar/>
             <br>
 
-            <div class="blog-container container-fluid">
+            <div class="feed-container container-fluid">
                 <div class="row">
                     <div class="col-2 col-md-3 sub-navigation-container">
                         <div class="sub-navigation-links">
@@ -17,19 +17,11 @@
                             </router-link>
                         </div>
                     </div>
-                    <div class="blog-content col-10 col-md-9 justify-content-center">
+                    <div class="feed-content col-10 col-md-9 justify-content-center">
                         <router-view />
                     </div>
                 </div>
             </div>
-
-            <!-- <h1>Following</h1>
-            <br>
-            <div class="container">
-                <div class="row">
-                    <BlogLayout/>
-                </div>
-            </div> -->
         </div>
     </div>
 
@@ -37,6 +29,10 @@
 <style>
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
+
+.feed-container {
+    max-width: 70%;
+}
 </style>
 
 <script>
