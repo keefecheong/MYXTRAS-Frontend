@@ -281,6 +281,9 @@ export default {
                 })
                 .then(data => {
                     console.log('Success:', data);
+                    // const userId = data.userId;
+                    // localStorage.setItem('userID', userId);
+                    localStorage.setItem('email', this.emailAddress);
                     this.redirectUser();
                     })
                 .catch(error => {

@@ -8,7 +8,7 @@
                         <h2 id="header">Set up your profile</h2>
                         <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" @input="noIntegers">
                         <input type="text" placeholder="Username" id="usernameField" v-model="username" :required="!showPopup">
-                        <textarea placeholder="Bio (Max 500 characters)" id="bioField" :required="!showPopup" style="appearance: none;" v-model="textareaValue" @input="limitCharacters"></textarea>
+                        <textarea placeholder="Bio (Max 500 characters)" id="bioField" :required="!showPopup" style="appearance: none;" v-model="biography" @input="limitCharacters"></textarea>
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
                             <div id="interest-badges">
@@ -281,7 +281,7 @@ export default {
             username: null,
             selectedSchool: null,
             selectedCourse: null,
-            textareaValue: "",
+            biography: "",
             maxCharacters: 500,
             showPopup: false,
             selectedOption: [],
@@ -312,20 +312,19 @@ export default {
             return this.courses[this.selectedSchool] || [];
         }
     },
+
     methods: {
         
         limitCharacters() {
-        if (this.textareaValue.length > this.maxCharacters) {
+        if (this.biography.length > this.maxCharacters) {
             // If the number of characters exceeds the limit
-            this.textareaValue = this.textareaValue.slice(0, this.maxCharacters); // Truncate the input value to the maximum number of characters
+            this.biography = this.biography.slice(0, this.maxCharacters); // Truncate the input value to the maximum number of characters
             }
         },
         handleClick(){
-            console.log("CLicked");
             this.showPopup = true;
         },
         handleChoice(option){
-            console.log(option);
             const index = this.selectedOption.indexOf(option);
             if (this.selectedOption.includes(option)) {
                 // Option is already selected, remove it from the array
@@ -345,7 +344,6 @@ export default {
 
         confirmSelection() {
             // Perform any necessary actions with the selected options here
-            console.log("Selected options:", this.selectedOption);
             this.showPopup = false;
         },
         
@@ -378,30 +376,47 @@ export default {
             }
             return `badge-${bg-info}`;
         },
+        redirectUser(){
+            fetch("http://localhost:8081/api/users/feed", {
+                        method: "GET"
+                })
+                .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+                else if (!response.ok){
+                    response.error()
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
 
-        setupprofile() {
+
+        async setupprofile() {
             // const dataObject = JSON.parse(localStorage.getItem('dataObject'));
             // console.log(dataObject); // Access the received data object
-
-            var detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse, this.selectedOption];
+            const emailAddress = localStorage.getItem('email');
+            var detailsList = [this.realname, this.username, this.biography, this.selectedSchool, this.selectedCourse, this.selectedOption];
             console.log(detailsList);
-            if (this.password !== this.repeatedPassword){
-                alert("Password mismatch");
-                return;
-            }
             if (detailsList.some(item => item === null)){
                 alert("Please enter all fields");
                 return;
             }
             else {
                 this.userObject = {
-                'emailAddress': this.emailAddress,
-                'phoneNumber': this.phoneNumber,
-                'password': this.password
+                'emailAddress': emailAddress,
+                'realName': this.realname,
+                'userName': this.username,
+                'biography': this.biography,
+                'selectedSchool': this.selectedSchool,
+                'selectedCourse': this.selectedCourse,
+                'selectedInterests': this.selectedOption
                 }
             }
-            
-            fetch(`http://localhost:8081/api/users/${usersId}`, {
+            // fetch(`http://localhost:8081/api/users/${usersId}`, {
+            fetch(`http://127.0.0.1:8081/api/users/setup`, {
                 method: 'PATCH', 
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -415,12 +430,13 @@ export default {
                 })
                 .then(data => {
                     console.log('Success:', data);
+                    this.redirectUser();
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });;
                 
-            console.log(this.userObject);
+            // console.log(this.userObject);
         },
 
         noIntegers() {
