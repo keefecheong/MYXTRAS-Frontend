@@ -40,6 +40,33 @@ export default {
     components: {
         NavSidebar,
         SearchBar
+    },
+    data() {
+        return {
+            blogs: true,
+        }
+    },
+    methods: {
+        toggleBlogs() {
+            this.blogs = true;
+            document.getElementById("blogs").className += " active";
+            document.getElementById("forums").className = "sub-navigation";
+        },
+        toggleForums() {
+            this.blogs = false;
+            document.getElementById("forums").className += " active";
+            document.getElementById("blogs").className = "sub-navigation";
+        },
+        openForum(no) {
+            var x = document.getElementById(no).className;
+            if (x == "triangle-down") {
+                document.getElementById("dc"+no).className += " active2";
+                document.getElementById(no).className = "triangle-up";
+            } else {
+                document.getElementById("dc"+no).className = "dropdown-content";
+                document.getElementById(no).className = "triangle-down";
+            }
+        }
     }
 }
 </script>

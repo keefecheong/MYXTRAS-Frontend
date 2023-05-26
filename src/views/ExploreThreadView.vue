@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-9">
-            asdfasf
+            <ForumLayout/>
         </div>
         <div class="col-md-3">
             <div class="popular-community">
@@ -52,7 +52,11 @@
 </template>
 
 <script>
+    import ForumLayout from '../components/ForumLayout.vue';
     export default {
+        components: {
+            ForumLayout
+        },
         methods: {
             openForum(id) {
                 const status = document.getElementById(id).className;
@@ -70,6 +74,8 @@
 </script>
 
 <style>
+    @import url('../styles/main.css');
+    
     .popular-community {
         border: #e53a73 solid 3.5px;
         border-radius: 13px;

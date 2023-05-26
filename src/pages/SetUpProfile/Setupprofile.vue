@@ -12,27 +12,14 @@
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
                             <div id="interest-badges">
-                                <!-- <span class="badge bg-primary" id="interest-badge">Kpop</span>
-                                <span class="badge bg-secondary" id="interest-badge">Games</span>
-                                <span class="badge bg-success" id="interest-badge">Technology</span> -->
-                                <!-- <div id="interest-badges" :class="getBadgeClass(option)" v-for="option in selectedOption" :key="option">
-                                    <span class="badge" :class="getBadgeColor(option)">{{ option }}</span> -->
-                                    <span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span>
-                                <!-- </div> -->
+                                
+                                <span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span>
+                                
                             </div>
                             <button type="button" class="btn rounded-circle btn-sm" id="custom-btn" @click="handleClick"><i class="bi bi-plus"></i></button>
                             
                         </div>
-                        <!-- <modal :show="showPopup" @close="closeModal">
-                            <h2>Popup Content</h2>
-                            <p>Choose something:</p>
-                            <button v-for="option in options" :key="option" @click="handleChoice(option)">{{ option }}</button>
-
-                            <div class="button-container">
-                            <button @click="cancelSelection">Cancel</button>
-                            <button @click="confirmSelection">Confirm</button>
-                            </div>
-                        </modal> -->
+                        
                         <div v-if="showPopup" class="popup-container">
                             <div class="popup-content">
                                 <h2>Interests</h2>
@@ -47,25 +34,8 @@
                             </div>
                         </div>
                         
-                        
-
-                        <!-- <div class="text-center">
-                            <v-select
-                                v-model="selectedSchool"
-                                :items="schools"
-                                label="Discipline"
-                            ></v-select>
-                        </div>
-                        <div class="text-center">
-                            <v-select
-                                v-model="selectedCourse"
-                                :items="courses[selectedSchool]"
-                                label="Course"
-                            ></v-select>
-                        </div> -->
-
                         <select v-model="selectedSchool" :required="!showPopup">
-                            <option value="" disabled>Select a school</option>
+                            <option value="" disabled selected hidden>Select a school</option>
                             <option value="ICT">School of ICT</option>
                             <option value="HS">School of HS</option>
                             <option value="FMS">School of FMS</option>
@@ -74,8 +44,8 @@
                         <br>
                         <br>
                         <select v-model="selectedCourse" :required="!showPopup">
-                            <option value="" disabled>Select a course</option>
-                            <option v-for="course in filteredCourses" :value="course">{{ course }}</option>
+                            <option value="" disabled selected hidden>Select a course</option>
+                            <option v-for="course in filteredCourses" :value="course" :disabled="course === 'Select a school first'">{{ course }}</option>
                         </select>
                         <br>
                         <br>
@@ -277,17 +247,18 @@ export default {
 
     data() {
         return {
-            realname: null,
-            username: null,
-            selectedSchool: null,
-            selectedCourse: null,
-            textareaValue: "",
+            realname: '',
+            username: '',
+            selectedSchool: '',
+            selectedCourse: '',
+            textareaValue: '',
             maxCharacters: 500,
             showPopup: false,
             selectedOption: [],
             selectedButton: null,
             // schools: ['ICT','HS','FMS','BMS'],
             courses: {
+                '': ["Select a school first"],
                 ICT: ['CSF', 'IM', 'CICT'],
                 HS: ['CHEM', 'BIO'],
                 FMS: ['FILM', 'MEDIA'],
@@ -313,7 +284,6 @@ export default {
         }
     },
     methods: {
-        
         limitCharacters() {
         if (this.textareaValue.length > this.maxCharacters) {
             // If the number of characters exceeds the limit
@@ -389,7 +359,7 @@ export default {
                 alert("Password mismatch");
                 return;
             }
-            if (detailsList.some(item => item === null)){
+            if (detailsList.some(item => item === '')){
                 alert("Please enter all fields");
                 return;
             }
