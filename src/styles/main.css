@@ -14,7 +14,10 @@ body {
     font-family: 'Montserrat', sans-serif !important;
     font-size: calc(.5em + 0.5vw) !important;
     overflow-x: hidden;
-    
+}
+
+a {
+    text-decoration: none;
 }
 
 h1 {
