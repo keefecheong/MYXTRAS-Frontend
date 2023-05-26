@@ -216,7 +216,22 @@ export default {
         // Remove any non-numeric characters except the minus sign at the beginning
         this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
         },
-        
+        redirectUser(){
+            fetch("http://localhost:8081/api/users/setupprofile", {
+                        method: "GET"
+                })
+                .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+                else if (!response.ok){
+                    response.error()
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
         async registerUser() {
             var userDetailsList = [this.emailAddress, this.phoneNumber, this.password];
 
@@ -246,17 +261,8 @@ export default {
                 credentials: "include",
                 body: JSON.stringify(this.userObject)
             }) .then(response => {
-                // console.log("The header is", authHeader);
-                // const token = authHeader.split(' ')[1]
-                // console.log("The token is", token);
-                // if (token) {
-                //     // Set the cookie with the received token
-                //     document.cookie = `token=${token}; path=/; httpOnly;`;
-                //     console.log(token);
-                // }
                 if (response.ok) {
-                    return response.json()
-
+                    //return response.json()
                 } else if (response.status === 409){
                     response.json().then(data => {
                     if (data.error === 'Email already exists') {
@@ -275,7 +281,8 @@ export default {
                 })
                 .then(data => {
                     console.log('Success:', data);
-                })
+                    this.redirectUser();
+                    })
                 .catch(error => {
                     console.error('Error:', error);
                 });
