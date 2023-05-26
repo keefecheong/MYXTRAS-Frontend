@@ -1,5 +1,5 @@
 <template>
-    <div class="blog-container" :id="uniqueId">
+    <div class="blog-container" :id="uniqueId" v-if="!deleted">
         <!-- heading - contains creator's profile pic, username, and time posted -->
         <div class="row blog-header">
             <!-- creator profile pic -->
@@ -45,16 +45,38 @@
 
         <!-- actions - contains like and comment -->
         <div class="row blog-actions">
-            <!-- like button -->
-            <div class="like-blog col" :class="{liked: liked}" @click="toggleLike">
-                <span class="material-symbols-outlined">favorite</span>
+            <!-- actions for all users -->
+            <div class="blog-normal-actions row">
+                <!-- like button -->
+                <div class="like-blog col" :class="{liked: liked}" @click="toggleLike">
+                    <span class="material-symbols-outlined">favorite</span>
+                </div>
+                
+                <!-- comments button -->
+                <div class="blog-comments col">
+                    <span class="material-symbols-outlined">comment</span>
+                </div>
             </div>
-            
-            <!-- comments button -->
-            <div class="blog-comments col">
-                <span class="material-symbols-outlined">comment</span>
+
+            <!-- only if the blog is posted by the current user -->
+            <div class="blog-privilege-actions row">
+                <!-- edit button -->
+                <div class="blog-edit col">
+                    <router-link to="/edit" @click="editPost">
+                        <span class="material-symbols-outlined">edit</span>
+                    </router-link>
+                </div>
+
+                <!-- delete button -->
+                <div class="blog-delete col">
+                    <span class="material-symbols-outlined" @click="deletePost">delete</span>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div class="blog-container" v-if="deleted">
+        <p>Post deleted.</p>
     </div>
 </template>
 
@@ -169,34 +191,54 @@
 }
 
 /* blog action styles */
-.blog-actions div {
-    flex: 0 0 0%;
+.blog-actions {
+    position: relative;
 }
 
-.blog-actions div .material-symbols-outlined {
+.blog-actions .row {
+    width: fit-content;
+}
+
+.blog-privilege-actions {
+    position: absolute;
+    right: 0;
+}
+
+.blog-actions .material-symbols-outlined {
     color: black;
     font-variation-settings: 'FILL' 0;
     user-select: none;
 }
 
+/* set liked favorite icon to filled red */
 .like-blog.liked .material-symbols-outlined {
     color: red;
     font-variation-settings: 'FILL' 1;
 }
+
+.blog-edit a {
+    text-decoration: none;
+}
 </style>
 
 <script>
-import { v4 as uuidv4 } from 'uuid';
+import { RouterLink } from 'vue-router';
+import { useBlogStore } from '../stores/BlogStore.js';
 
 export default {
     data() {
         return {
             dateCreated: '',
-            uniqueId: 'a' + uuidv4(),
+            uniqueId: 'a' + this.blog._id,
             currentId: 1,
             showPrev: false,
-            showNext: false
+            showNext: false,
+            deleted: false,
+            updating: true
         }; 
+    },
+    components: {
+        'router-link': RouterLink
     },
     props: [
         'blog'
@@ -204,7 +246,6 @@ export default {
     mounted() {
         this.calcDateDifference();
         this.toggleControls();
-        console.log(this.blog.content_links);
     },
     updated() {
         this.toggleControls();
@@ -276,19 +317,80 @@ export default {
             else {
                 const monthDifference = Math.floor(dayDifference / 30);
 
-                if (monthDifference < 11) {
+                if (monthDifference < 12) {
                     this.dateCreated = `${monthDifference} month${monthDifference > 1 ? 's' : ''} ago`;
                 }
                 else {
                     const yearDifference = Math.floor(monthDifference / 12);
                     this.dateCreated = `${yearDifference} year${yearDifference > 1 ? 's' : ''} ago`;
                 }
-
             }
         },
         // toggle liking of blog
-        toggleLike() {
+        async toggleLike() {
             // send request to update liked status
+            if (this.liked) {
+                // TODO add current user id to the end of request url
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like/`, {
+                    mode: 'cors',
+                    method: 'DELETE'
+                }).then((res) => {
+                    if (res.status == 204) {
+                        console.log('Removed like.');
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
+            else {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like`, {
+                    mode: 'cors',
+                    method: 'POST',
+                    body: JSON.stringify({
+                        // TODO get current user id and pass as creator_id
+                        // creator_id: 
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then((res) => {
+                    if (res.status == 201) {
+                        console.log('Liked.');
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                })
+            }
+        },
+        // handle deleting post
+        async deletePost() {
+            // ask for confirmation
+            const confirmDelete = confirm('Are you sure you want to delete this post?\n\nNote: This action is irreversible!');
+
+            if (!confirmDelete) {
+                return;
+            }
+
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}`, {
+                mode: 'cors',
+                method: 'DELETE'
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    if (res.status == 200) {
+                        this.deleted = true;
+                    }
+
+                    alert(data.message);
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        // handle edit post
+        editPost() {
+            // update the store to hold the current blog to edit
+            const store = useBlogStore();
+            store.blogToEdit = this.blog;
         }
     },
     computed: {
@@ -300,8 +402,7 @@ export default {
         liked() {
             return false;  // dummy data until current user credentials can be checked
 
-            // get current user id and check in list of users who liked the post
-            return this.blog.likes.indexOf() != -1
+            // TODO get current user id and check in list of users who liked the post
         }
     }
 }

@@ -9,12 +9,12 @@ const routes = [
   },
   {
     path: '/blogs',
-    name: 'Blogs',
+    name: 'blogs',
     component: ExploreBlogView
   },
   {
     path: '/threads',
-    name: 'Threads',
+    name: 'threads',
     component: ExploreThreadView
   }
 ];
