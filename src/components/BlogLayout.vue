@@ -132,6 +132,7 @@
         </div>
     </div>
 </template>
+
 <style>
 @import url('../styles/main.css');
 .blog-container {

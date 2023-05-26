@@ -4,7 +4,7 @@
         <div id="main-content">
             <SearchBar/>
             <br>
-
+            <BlogLayout/>
             <div class="blog-container container-fluid">
                 <div class="row">
                     <div class="blog-nav col-2 col-md-3 align-items-center">

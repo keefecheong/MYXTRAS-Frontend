@@ -38,7 +38,7 @@
                 </div>
                 <div v-else class="row">
                     <div class="col-md-9" style="padding-left: 250px;">
-                        asdfasf
+                        <ForumLayout/>
                     </div>
                     <div class="col-md-3" style="right: 0;">
                         <div class="popular-community">
@@ -273,11 +273,13 @@ a {
 <script>
 import NavSidebar from '../../components/NavSidebar.vue';
 import SearchBar from '../../components/SearchBar.vue';
+import ForumLayout from '../../components/ForumLayout.vue';
 
 export default {
     components: {
         NavSidebar,
-        SearchBar
+        SearchBar,
+        ForumLayout
     },
     data() {
         return {
