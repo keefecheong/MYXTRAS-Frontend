@@ -243,6 +243,7 @@
                     sidebar.classList.remove('fixToBottom');
                     sidebar.style.position = 'absolute';
                     sidebar.style.top = `${Math.abs(sidebar.getBoundingClientRect().top) - (sidebar.offsetHeight - window.innerHeight)}px`;
+                    sidebar.style.left = '0';
 
                     return;
                 }
@@ -276,6 +277,7 @@
                     sidebar.classList.remove('stickToTop');
                     sidebar.style.position = 'absolute';
                     sidebar.style.top = `${Math.abs(sidebar.getBoundingClientRect().top)}px`;
+                    sidebar.style.left = '0';
 
                     if (document.getElementById('minimized')) {
                         mainContent.classList.add('compensateMinimizedSidebar');

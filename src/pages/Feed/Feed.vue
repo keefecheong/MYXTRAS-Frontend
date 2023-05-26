@@ -4,8 +4,7 @@
         <div id="main-content">
             <SearchBar/>
             <br>
-            <BlogLayout/>
-            <div class="blog-container container-fluid">
+            <div class="feed-container container-fluid">
                 <div class="row">
                     <div class="col-2 col-md-3 sub-navigation-container">
                         <div class="sub-navigation-links">

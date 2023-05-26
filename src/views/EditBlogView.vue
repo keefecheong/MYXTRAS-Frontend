@@ -1,8 +1,12 @@
 <template>
-    <h1>Create New Post</h1>
+    <h1>Edit Post</h1>
+
+    <div v-if="!initialized">
+        <p>Loading...</p>
+    </div>
 
     <!-- form to upload images -->
-    <form @submit.prevent="submitForm">
+    <form @submit.prevent="submitForm" v-if="initialized">
         <div id="upload-image-container" class="container-fluid">
             <div class="row">
                 <!-- input to select images -->
@@ -43,21 +47,40 @@
             1. there are no files selected
             2. there are files selected but contains errors
         -->
-        <input type="submit" value="Create!" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0)" />
+        <input type="submit" value="Update" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0)" />
     </form>
 </template>
 
 <script>
+import { useBlogStore } from '../stores/BlogStore.js';
+
 export default {
     data() {
         return {
+            blog: {},
             files: [],
             errors: [],
             selectedLinks: [],
-            invalidFiles: []
+            invalidFiles: [],
+            initialized: false,
+            toInitFiles: true,
+            dataTransfer: new DataTransfer()
         }
     },
     methods: {
+        // initialize data
+        async initData() {
+            // get blog data
+            const store = useBlogStore();
+            this.blog = store.blogToEdit;
+
+            // set links
+            this.selectedLinks = this.blog.content_links;
+
+            await this.downloadExistingImages();
+
+            this.initialized = true;
+        },
         // to handle form submission
         async submitForm(e) {
             // check if the user has uploaded any files
@@ -79,14 +102,10 @@ export default {
                 formData.append('selectedImages', this.files[i]);
             }
 
-            // TODO implement account management to get user id
-            // add creator_id (current user's id) to formData
-            formData.append('creator_id', '6021fde84705d830b8e458ab');
-
             // send request to backend server with data
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}`, {
                 mode: 'cors',
-                method: 'POST',
+                method: 'PATCH',
                 body: formData
             }).then((res) => {
                 // reset form
@@ -95,6 +114,7 @@ export default {
 
                 res.json().then((data) => {
                     alert(data.message);
+                    location.href = '/feed.html';
                 });
             }).catch((error) => {
                 console.log(error);
@@ -104,7 +124,8 @@ export default {
         fileChanged(e) {
             // set files
             this.files = e.target.files;
-            // clear errors and invalidFiles
+            // clear selectedLinks, errors and invalidFiles
+            this.selectedLinks = [];
             this.errors = [];
             this.invalidFiles = [];
 
@@ -175,6 +196,44 @@ export default {
                     }
                 }
             }
+        },
+        // download images and save as files
+        async downloadExistingImages() {
+            const imagePromises = this.selectedLinks.map(async (link) => {
+                await fetch(link).then(async (res) => {
+                    if (res.status == 200) {
+                        await res.blob().then((blob) => {
+                            const imageName = `${link.split('%2F')[2].split('?')[0]}.${blob.type.split('/')[1]}`;
+                            const image = new File([blob], imageName);
+
+                            this.files.push(image);
+                            this.dataTransfer.items.add(image);
+                        });
+                    }
+                    else {
+                        console.log('Failed to retrieve image.');
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                });
+            });
+
+            await Promise.all(imagePromises).catch((error) => {
+                console.log(error);
+            });
+        }
+    },
+    async created() {
+        // initialize data
+        await this.initData();
+    },
+    updated() {
+        // check if need to init files of file input
+        // if true then set the existing files and set toInitFiles to false
+        if (this.toInitFiles) {
+            document.getElementById('upload-image').files = this.dataTransfer.files;
+
+            this.toInitFiles = false;
         }
     }
 }

@@ -28,7 +28,6 @@ export default {
                 method: 'GET'
             }).then(async (res) => {
                 await res.json().then((data) => {
-                    console.log(data[0]);
                     this.blogs = data;
                 });
             }).catch((error) => {

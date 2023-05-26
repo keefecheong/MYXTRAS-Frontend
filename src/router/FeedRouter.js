@@ -1,17 +1,31 @@
-import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import FeedBlogView from '../views/FeedBlogView.vue';
 import CreateBlogView from '../views/CreateBlogView.vue';
+import EditBlogView from '../views/EditBlogView.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'Feed',
+    name: 'view-feed',
     component: FeedBlogView
   },
   {
     path: '/create',
-    name: 'Create Blog',
+    name: 'create-blog',
     component: CreateBlogView
+  },
+  {
+    path: '/edit',
+    name: 'edit-blog',
+    component: EditBlogView,
+    // only allow going to edit page from view feed page
+    beforeEnter: (to, from, next) => {
+      if (from.name != 'view-feed') {
+        next('/');
+      }
+
+      next();
+    }
   }
 ];
 

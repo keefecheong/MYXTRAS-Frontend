@@ -262,7 +262,7 @@ export default {
                 body: JSON.stringify(this.userObject)
             }) .then(response => {
                 if (response.ok) {
-                    //return response.json()
+                    this.redirectUser();
                 } else if (response.status === 409){
                     response.json().then(data => {
                     if (data.error === 'Email already exists') {
