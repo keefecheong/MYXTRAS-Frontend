@@ -232,6 +232,11 @@
             scrollUp() {
                 const sidebar = document.getElementById('sidebar-wrapper');
                 const mainContent = document.getElementById('main-content');
+                
+                // if main content is shorter than sidebar then don't do anything
+                if (mainContent.offsetHeight <= sidebar.offsetHeight) {
+                    return;
+                }
 
                 // release sidebar when it is fixed to the bottom, set it to position: absolute at its current position so the sidebar scrolls normally
                 if (sidebar.classList.contains('fixToBottom')) {
@@ -260,6 +265,11 @@
             scrollDown() {
                 const sidebar = document.getElementById('sidebar-wrapper');
                 const mainContent = document.getElementById('main-content');
+                
+                // if main content is shorter than sidebar then don't do anything
+                if (mainContent.offsetHeight <= sidebar.offsetHeight) {
+                    return;
+                }
 
                 // release sidebar when it sticks to the top, set it to position: absolute at its current position so the sidebar scrolls normally
                 if (sidebar.classList.contains('stickToTop')) {

@@ -136,9 +136,9 @@
 
   
 <script>
-import NavSidebar from '@/components/NavSidebar.vue'
-import ngeeann from '@/assets/NgeeAnnLogo.png'
-import banner from '@/assets/CustomBanner.png'
+import NavSidebar from '../../components/NavSidebar.vue'
+import ngeeann from '../../assets/NgeeAnnLogo.png'
+import banner from '../../assets/CustomBanner.png'
 
 export default {
   components: {
