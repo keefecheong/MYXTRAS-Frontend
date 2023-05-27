@@ -1,7 +1,11 @@
 import { defineStore } from 'pinia';
+import { useLocalStorage } from '@vueuse/core';
 
 export const useBlogStore = defineStore('blogStore', {
     state: () => {
-        blogToEdit: {}
+        return {
+            // use localstorage to persist  blog data over refresh
+            blogToEdit: useLocalStorage('blogToEdit', {})
+        }
     }
 })

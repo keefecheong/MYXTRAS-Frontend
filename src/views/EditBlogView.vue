@@ -224,6 +224,13 @@ export default {
         }
     },
     async created() {
+        // check if store is empty
+        // go back to feed if store is empty
+        const store = useBlogStore();
+        if (store.blogToEdit == {}) {
+            location.href = '/feed.html';
+        }
+
         // initialize data
         await this.initData();
     },
@@ -235,7 +242,12 @@ export default {
 
             this.toInitFiles = false;
         }
-    }
+    },
+    unmounted() {
+        // clear blog store
+        const store = useBlogStore();
+        store.blogToEdit = {};
+    }  
 }
 </script>
 
