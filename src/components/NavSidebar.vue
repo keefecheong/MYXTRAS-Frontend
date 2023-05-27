@@ -16,7 +16,7 @@
 <template>
 
     <!-- sidebar wrapper for medium to large screens -->
-    <nav id="sidebar-wrapper" v-if="!narrow">
+    <nav id="sidebar-wrapper" v-if="!narrow" class="stickToTop">
         <!-- maximized sidebar implementation -->
         <div id="maximized" v-if="maximized">  <!-- maximized sidebar shown when "maximized" is true -->
             <div id="maximized-header-wrapper">
@@ -250,16 +250,12 @@
                 // stick sidebar to the top if the top of the sidebar touches the top of the window
                 else {
                     if (sidebar.getBoundingClientRect().top >= 0) {
+                        sidebar.classList.add('stickToTop');
                         sidebar.style.position = '';
                         sidebar.style.top = '';
-                        sidebar.classList.add('stickToTop');
+                        sidebar.style.left = '';
                         mainContent.classList.remove('compensateMaximizedSidebar', 'compensateMinimizedSidebar');
                     }
-                }
-
-                // remove styles from sidebar when scrolled to the top of the page
-                if (window.scrollY == 0) {
-                    sidebar.classList.remove('stickToTop');
                 }
             },
             // to be called upon scroll down
@@ -293,9 +289,10 @@
                 // fix sidebar at the bottom if the bottom of the sidebar touches the bottom of the window
                 else {
                     if ((Math.abs(sidebar.getBoundingClientRect().top) + window.innerHeight) >= sidebar.offsetHeight) {
+                        sidebar.classList.add('fixToBottom');
                         sidebar.style.position = '';
                         sidebar.style.top = '';
-                        sidebar.classList.add('fixToBottom');
+                        sidebar.style.left = '';
 
                         if (document.getElementById('minimized')) {
                             mainContent.classList.add('compensateMinimizedSidebar');
@@ -313,7 +310,7 @@
                 const links = document.querySelectorAll('.sidebar-link, .navbar-link');
                 for (var i = 0; i < links.length; i++) {
                     const link = links[i];
-                    if (link.getAttribute('href') == window.location.pathname) {
+                    if (link.getAttribute('href').split('/')[1] == window.location.pathname.split('/')[1]) {
                         link.classList.add('current');
                     }
                     else {

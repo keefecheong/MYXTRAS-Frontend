@@ -2,7 +2,7 @@
     <h1>Create New Post</h1>
 
     <!-- form to upload images -->
-    <form @submit.prevent="submitForm">
+    <form id="create-blog-form" @submit.prevent="submitForm">
         <div id="upload-image-container" class="container-fluid">
             <div class="row">
                 <!-- input to select images -->
@@ -181,7 +181,7 @@ export default {
 </script>
 
 <style>
-form {
+#create-blog-form {
     padding: 40px;
     border-style: solid;
     border-color: black;

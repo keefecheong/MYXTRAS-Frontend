@@ -6,7 +6,7 @@
     </div>
 
     <!-- form to upload images -->
-    <form @submit.prevent="submitForm" v-if="initialized">
+    <form id="edit-blog-form" @submit.prevent="submitForm" v-if="initialized">
         <div id="upload-image-container" class="container-fluid">
             <div class="row">
                 <!-- input to select images -->
@@ -252,7 +252,7 @@ export default {
 </script>
 
 <style>
-form {
+#edit-blog-form {
     padding: 40px;
     border-style: solid;
     border-color: black;
