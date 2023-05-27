@@ -1,20 +1,40 @@
 <template>
     <div class="row pink-header-search">
         <div class="col-md-3"></div>
-        <div class="col-md-6 " style="display: flex; align-items: center;"> 
+        <div class="col-md-6" style="display: flex; align-items: center;"> 
             <input class="search-bar" type="text" placeholder="Search">
         </div>
-        <div class="col-md-3 d-flex justify-content-end">
+        <div class="col-md-3 d-flex justify-content-end profileContainter">
             <!-- check for identity after authentication -->
-            <p class="username"><br></p>
-            <p class="school"></p>
-            <img v-if="login" class="headerprofilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-            <a v-else href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
+            <div v-if="login" class="col-md-4 margin-top">
+                <p class="realname">{{ realname }}</p>
+                <p class="school">{{ school + '/' + course }}</p>
+            </div>
+            <a v-if="login" href="/profilePage.html"><p class="headerprofilepic"></p></a>
+            
+            <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
+        
     </div>
 </template>
 
 <style>
+.profileContainter {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.margin-top {
+    margin: 1.5em 0 0 0!important;
+}
+.realname {
+    display: block;
+    color: white;
+    margin: 0;
+}
+.school {
+    display: block;
+    color: white;
+}
 .search-bar {
     display: flex;
     align-items: center;
@@ -34,10 +54,11 @@
 }
 
 .headerprofilepic {
-    width: 7rem;
+    width: 6rem;
     height: 6rem;
     border: #133B5B 0.5rem solid;
     border-radius: 100%;
+    margin-right: 3em;
 }
 
 /* Login button CSS */
@@ -99,8 +120,44 @@
 export default {
     data() {
         return {
-            login: false
+            login: false,
+            pfplink: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png',
+            realname: '',
+            school: '',
+            course: ''
         }
     },
+    mounted() {
+        this.checkAuth();
+    },
+    methods: {
+        checkAuth() {
+            fetch("http://127.0.0.1:8081/api/users", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        console.log(data)
+                        this.realname = data.realname;
+                        this.school = data.school;
+                        this.course = data.course;
+                        this.login = true;
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }
 }
 </script>
