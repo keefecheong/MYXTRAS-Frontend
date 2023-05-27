@@ -33,8 +33,10 @@
                         </a>
        
                         <div style="display: flex; align-items: center; margin-left: 50px; margin-top: 31px; color: #dd1217">
-                            <h6><i class="bi bi-box-arrow-right" style="margin-left: 2px;"></i></h6>
-                            <h6 style="margin-left: 15px; margin-top:-1px;"><b>Sign out</b></h6>
+                            <div @click="signOut()">
+                                <h6><i class="bi bi-box-arrow-right" style="margin-left: 2px;"></i></h6>
+                                <h6 style="margin-left: 15px; margin-top:-1px;"><b>Sign out</b></h6>
+                            </div>
                         </div>
                     </div>
                     
@@ -141,6 +143,21 @@ export default {
             { name: 'muggingclub', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' }
       ],
     }
+  },
+  methods:{
+    signOut(){
+        fetch("http://127.0.0.1:8081/api/users/redirect-login", {
+                method: 'GET',
+                credentials: 'include'
+            }) .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    console.log("Error: Failed to log out")
+                    console.log(response)
+                }
+            });
+    },
   }
 
 }

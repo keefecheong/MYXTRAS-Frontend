@@ -1,29 +1,35 @@
 <template>
     <div class="row pink-header-search">
         <div class="col-md-3"></div>
-        <div class="col-md-6 " style="display: flex; align-items: center;"> 
+        <div class="col-md-6" style="display: flex; align-items: center;"> 
             <input class="search-bar" type="text" placeholder="Search">
         </div>
-        <div class="col-md-3 d-flex justify-content-end margin-top">
+        <div class="col-md-3 d-flex justify-content-end profileContainter">
             <!-- check for identity after authentication -->
-            <div class="col-md-4">
-                <p v-if="login" class="realname">{{ realname }}</p>
-                <p v-if="login" class="school">{{ school + '/' + course }}</p>
+            <div v-if="login" class="col-md-4 margin-top">
+                <p class="realname">{{ realname }}</p>
+                <p class="school">{{ school + '/' + course }}</p>
             </div>
-            <p v-if="login" class="headerprofilepic"></p>
-            <a v-else href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
+            <a v-if="login" href="/profilePage.html"><p class="headerprofilepic"></p></a>
+            
+            <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
         
     </div>
 </template>
 
 <style>
+.profileContainter {
+    margin: 0 !important;
+    padding: 0 !important;
+}
 .margin-top {
-    margin-top: 1em !important;
+    margin: 1.5em 0 0 0!important;
 }
 .realname {
     display: block;
     color: white;
+    margin: 0;
 }
 .school {
     display: block;
@@ -48,7 +54,7 @@
 }
 
 .headerprofilepic {
-    width: 7rem;
+    width: 6rem;
     height: 6rem;
     border: #133B5B 0.5rem solid;
     border-radius: 100%;

@@ -4,18 +4,12 @@
         <div class="row blog-header">
             <!-- creator profile pic -->
             <div class="profile-pic-container col">
-                <!-- change to creator profile pic when implemented -->
-                <!-- <img class="profile-pic" :src="this.blog.creator_id.profile_pic_link"/> -->
-
-                <img class="profile-pic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png" />
+                <img class="profile-pic" :src="blog.creator_id.profile_pic_link"/>
             </div>
 
             <!-- creator username -->
             <div class="col-7 hide-overflow-text">
-                <!-- change to creator username when implemented -->
-                <!-- <span>{{ this.blog.creator_id.username }}</span> -->
-
-                <span>Bob</span>
+                <span>{{ blog.creator_id.username }}</span>
             </div>
 
             <!-- creation time (time difference) -->
@@ -48,13 +42,15 @@
             <!-- actions for all users -->
             <div class="blog-normal-actions row">
                 <!-- like button -->
-                <div class="like-blog col" :class="{liked: liked}" @click="toggleLike">
-                    <span class="material-symbols-outlined">favorite</span>
+                <div class="like-blog col align-items-center justify-content-center" :class="{liked: liked}">
+                    <span class="material-symbols-outlined" @click="toggleLike">favorite</span>
+                    <span>({{ blog.likes.length }})</span>
                 </div>
                 
                 <!-- comments button -->
-                <div class="blog-comments col">
-                    <span class="material-symbols-outlined">comment</span>
+                <div class="col align-items-center justify-content-center">
+                    <span class="material-symbols-outlined" @click="toggleComments">comment</span>
+                    <span>({{ blog.comments.length }})</span>
                 </div>
             </div>
 
@@ -62,9 +58,9 @@
             <div class="blog-privilege-actions row">
                 <!-- edit button -->
                 <div class="blog-edit col">
-                    <router-link to="/edit" @click="editPost">
+                    <RouterLink to="/edit" @click="editPost">
                         <span class="material-symbols-outlined">edit</span>
-                    </router-link>
+                    </RouterLink>
                 </div>
 
                 <!-- delete button -->
@@ -73,9 +69,35 @@
                 </div>
             </div>
         </div>
+
+        <!-- comments - contains the comments posted -->
+        <div v-if="showComments" class="row blog-comments-container">
+            <!-- form to create new comment -->
+            <form class="create-comment-form" @submit.prevent="createComment">
+                <textarea class="create-comment-text" wrap="soft" placeholder="Add a comment..." v-model="commentText"></textarea>
+                <hr />
+                <input class="create-comment-button" type="submit" value="Submit" :disabled="commentText.length <= 0" />
+            </form>
+
+            <hr />
+
+            <div v-if="blog.comments.length <= 0">
+                <p>No comments yet, be the first!</p>
+            </div>
+
+            <div v-else>
+                <div v-if="!commentsLoaded">
+                    <p>Loading...</p>
+                </div>
+
+                <div v-else class="blog-comments-container">
+                    <BlogCommentLayout v-for="comment in commentData.comments" :comment="comment" :postId="commentData._id" />
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="blog-container" v-if="deleted">
+    <div class="blog-container" v-else>
         <p>Post deleted.</p>
     </div>
 </template>
@@ -204,10 +226,16 @@
     right: 0;
 }
 
+.blog-actions .col {
+    display: flex;
+}
+
 .blog-actions .material-symbols-outlined {
     color: black;
     font-variation-settings: 'FILL' 0;
     user-select: none;
+    display: inline;
+    margin-right: 5px;
 }
 
 /* set liked favorite icon to filled red */
@@ -219,11 +247,44 @@
 .blog-edit a {
     text-decoration: none;
 }
+
+/* comment section styles */
+.blog-comments-container {
+    padding: 10px;
+}
+
+.create-comment-form {
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: end;
+}
+
+.create-comment-text {
+    resize: none;
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    
+}
+
+.create-comment-text, .create-comment-text:focus {
+    outline: none;
+    border: none;
+}
+
+.create-comment-button {
+    height: fit-content;
+}
 </style>
 
 <script>
 import { RouterLink } from 'vue-router';
 import { useBlogStore } from '../stores/BlogStore.js';
+import BlogCommentLayout from './BlogCommentLayout.vue';
 
 export default {
     data() {
@@ -234,11 +295,15 @@ export default {
             showPrev: false,
             showNext: false,
             deleted: false,
-            updating: true
+            showComments: false,
+            commentsLoaded: false,
+            commentText: '',
+            commentData: {}
         }; 
     },
     components: {
-        'router-link': RouterLink
+        RouterLink,
+        BlogCommentLayout
     },
     props: [
         'blog'
@@ -249,6 +314,12 @@ export default {
     },
     updated() {
         this.toggleControls();
+        
+        if (this.showComments) {
+            if (!this.commentsLoaded) {
+                this.getComments();
+            }
+        }
     },
     methods: {
         // show the next slide
@@ -391,6 +462,60 @@ export default {
             // update the store to hold the current blog to edit
             const store = useBlogStore();
             store.blogToEdit = this.blog;
+        },
+        // retrieve comments for the post
+        async getComments() {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/comments`, {
+                mode: 'cors',
+                method: 'GET'
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    this.commentData = data;
+
+                    this.commentsLoaded = true;
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        // toggle comments for the post
+        toggleComments() {
+            this.showComments = !this.showComments;
+        },
+        // create comment
+        async createComment() {
+            // do nothing if no content is entered
+            if (this.commentText.length <= 0) {
+                return;
+            }
+
+            // upload comment
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/comments`, {
+                mode: 'cors',
+                method: 'POST',
+                body: JSON.stringify({
+                    // TODO get current user id and set as creator_id
+                    creator_id: "6021fde84705d830b8f458ab",
+                    content: this.commentText
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    alert(data.message);
+
+                    // update comments list to update dom immediately
+                    if (res.status == 200) {
+                        this.blog.comments.push(data.comment._id);
+                        this.commentData.comments.push(data.comment);
+                    }
+
+                    this.commentText = '';
+                });
+            }).catch((error) => {
+                console.log(error);
+            })
         }
     },
     computed: {
