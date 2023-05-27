@@ -6,12 +6,13 @@
         </div>
         <div class="col-md-3 d-flex justify-content-end margin-top">
             <!-- check for identity after authentication -->
-            <div class="col-md-4">
-                <p v-if="login" class="realname">{{ realname }}</p>
-                <p v-if="login" class="school">{{ school + '/' + course }}</p>
+            <div v-if="login" class="col-md-4">
+                <p class="realname">{{ realname }}</p>
+                <p class="school">{{ school + '/' + course }}</p>
             </div>
-            <p v-if="login" class="headerprofilepic"></p>
-            <a v-else href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
+            <a v-if="login" href="/profilePage.html"><p class="headerprofilepic"></p></a>
+            
+            <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
         
     </div>
