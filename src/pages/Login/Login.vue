@@ -11,12 +11,12 @@
                     <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
                     <div class="whitebox">
                         <h1>Log in</h1>
-                        <input type="email" placeholder="Email Address" id="emailField" required>
+                        <input type="email" placeholder="Email Address" v-model="emailAddress" id="emailField" required>
                         <br/>
                         <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" required>
                         <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword">visibility_off</button>
                         <br/>
-                        <button @click="" id="loginBtn">
+                        <button @click="loginUser()" id="loginBtn">
                             Log in
                         </button>
                         <br>
@@ -181,6 +181,64 @@ export default {
                 this.showPassword = !this.showPassword;
                 this.isPressed = !this.isPressed;
             },
+
+            redirectUser(){
+            fetch("http://localhost:8081/api/users/feed", {
+                        method: "GET"
+                })
+                .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+                else if (!response.ok){
+                    response.error()
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
+
+            async loginUser(){
+                var credentialList = [this.emailAddress, this.password];
+                console.log(this.password);
+                if (credentialList.some(item => item === null)){
+                    alert("Please enter all fields");
+                    return;
+                }
+                else {
+                    this.userObject = {
+                    'emailAddress': this.emailAddress,
+                    'password': this.password
+                    }
+                }
+
+                try {
+                    const response = await fetch('http://127.0.0.1:8081/api/users/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(this.userObject)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Success:', data);
+                        this.redirectUser();
+                    } else {
+                        const errorData = await response.json();
+                        console.error('Error:', errorData.message);
+                        // Display the error message on the frontend
+                        alert(errorData.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    // Display a generic error message on the frontend
+                    alert('An error occurred. Please try again later.');
+                }
+            }
         },
     }
     

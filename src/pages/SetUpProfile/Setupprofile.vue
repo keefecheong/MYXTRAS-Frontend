@@ -11,27 +11,7 @@
                         <textarea placeholder="Bio (Max 500 characters)" id="bioField" :required="!showPopup" style="appearance: none;" v-model="biography" @input="limitCharacters"></textarea>
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
-                            <div id="interest-badges">
-                                
-                                <span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span>
-                                
-                            </div>
-                            <button type="button" class="btn rounded-circle btn-sm" id="custom-btn" @click="handleClick"><i class="bi bi-plus"></i></button>
-                            
-                        </div>
-                        
-                        <div v-if="showPopup" class="popup-container">
-                            <div class="popup-content">
-                                <h2>Interests</h2>
-                                <p>Please select the interest(s) that suit you best:</p>
-                                <button v-for="option in options" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]" type="button" id="interest-badge" style="border-radius: 20px;" @click="handleChoice(option)">{{ option }}</button>
-
-                                <div class="button-container">
-                                <!-- <button @click="cancelSelection">Cancel</button> -->
-                                <button @click="confirmSelection()" id="confirmBtn">Confirm</button>
-    
-                                </div>
-                            </div>
+                            <AdditionButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
                         </div>
                         
                         <select v-model="selectedSchool" :required="!showPopup">
@@ -130,27 +110,6 @@ textarea{
     padding: 20px 25px;
 }
 
-#confirmBtn{
-    width: 10em;
-    color: white;
-    margin-top: 50px;
-    border: none;
-    background: linear-gradient(45deg,#FF6363, #E53A73);
-    border-radius: 10px;
-    padding: 10px 12px;
-}
-
-#interest-badge{
-    margin: 5px;
-    padding: 10px;
-}
-
-.interest-badges {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
 .interest-container {
   display: flex;
   align-items: center;
@@ -159,68 +118,6 @@ textarea{
 
 .interest-container label {
   margin-right: 10px;
-}
-
-#custom-btn{
-    color: #E53A73;
-    border-color: #E53A73; 
-    border-width: 2px;
-    margin-left: 10px;
-}
-
-.popup-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.popup-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.badge-kpop {
-    background-color: #FF7BE2;
-}
-
-.badge-games {
-    background-color: #6FE5FF;
-}
-
-.badge-technology {
-    background-color: #6FFFA8;
-}
-
-.badge-sports{
-    background-color: #FFE27B;
-}
-
-.badge-dancing{
-    background-color: #7B88FF;
-}
-
-.badge-jpop{
-    background-color: #FFAB6F;
-}
-
-.badge-coding{
-    background-color: #6F74FF;
-}
-
-.badge-lifestyle{
-    background-color: #FC5454;
-}
-
-.selected {
-    border: 3px solid;
 }
 
 @keyframes gradientAnimation {
@@ -239,10 +136,10 @@ textarea{
 </style>
 
 <script>
-
+import AdditionButton from '../../components/AdditionButton.vue'
 export default {
     components: {
-       
+       AdditionButton,
   },
 
     data() {
@@ -253,9 +150,7 @@ export default {
             selectedCourse: '',
             biography: '',
             maxCharacters: 500,
-            showPopup: false,
             selectedOption: [],
-            selectedButton: null,
             // schools: ['ICT','HS','FMS','BMS'],
             courses: {
                 '': ["Select a school first"],
@@ -264,18 +159,7 @@ export default {
                 FMS: ['FILM', 'MEDIA'],
                 BS: ['MARKETING', 'HR']
             },
-            options:[
-                'Kpop',
-                'Games',
-                'Technology',
-                'Sports',
-                'Dancing',
-                'JPOP',
-                'Coding',
-                'Lifestyle'
-            ],
-
-            
+                        
         };
     },
     computed: {
@@ -291,61 +175,14 @@ export default {
             this.biography = this.biography.slice(0, this.maxCharacters); // Truncate the input value to the maximum number of characters
             }
         },
-        handleClick(){
-            this.showPopup = true;
-        },
-        handleChoice(option){
-            const index = this.selectedOption.indexOf(option);
-            if (this.selectedOption.includes(option)) {
-                // Option is already selected, remove it from the array
-                this.selectedOption = this.selectedOption.filter(item => item !== option);
-                this.selectedButton = null;
-            } else {
-                // Option is not selected, add it to the array
-                this.selectedOption.push(option);
-                this.selectedButton = option;
-            }
+
+        handleSelectedInterests(selectedInterests) {
+            // Retrieve the selected interests here and perform necessary actions
+            console.log(selectedInterests);
+            // You can store the selected interests in a data property or send them to an API, etc.
+            this.selectedOption = selectedInterests;
         },
 
-        cancelSelection(){
-            this.selectedOption = [];
-            this.showPopup = false;
-        },
-
-        confirmSelection() {
-            // Perform any necessary actions with the selected options here
-            this.showPopup = false;
-        },
-        
-        getBadgeClass(option) {
-            if (this.selectedOption.includes(option)) {
-                return `badge ${this.getBadgeColor(option)} selected`;
-            }
-            return `badge ${this.getBadgeColor(option)}`;
-        },
-
-        getBadgeColor(option) {
-            // Return a class name based on the selected option
-            switch (option) {
-            case 'Kpop':
-                return 'badge badge-kpop';
-            case 'Games':
-                return 'badge badge-games';
-            case 'Technology':
-                return 'badge badge-technology';
-            case 'Sports':
-                return 'badge badge-sports'
-            case 'Dancing':
-                return 'badge badge-dancing'
-            case 'JPOP':
-                return 'badge badge-jpop'
-            case 'Coding':
-                return 'badge badge-coding'
-            case 'Lifestyle':
-                return 'badge badge-lifestyle'
-            }
-            return `badge-${bg-info}`;
-        },
         redirectUser(){
             fetch("http://localhost:8081/api/users/feed", {
                         method: "GET"
@@ -369,12 +206,12 @@ export default {
             // console.log(dataObject); // Access the received data object
             const emailAddress = localStorage.getItem('email');
             var detailsList = [this.realname, this.username, this.biography, this.selectedSchool, this.selectedCourse, this.selectedOption];
-            console.log(detailsList);
             if (detailsList.some(item => item === null)){
                 alert("Please enter all fields");
                 return;
             }
             else {
+                console.log(this.selectedOption);
                 this.userObject = {
                 'emailAddress': emailAddress,
                 'realName': this.realname,
@@ -382,7 +219,7 @@ export default {
                 'biography': this.biography,
                 'selectedSchool': this.selectedSchool,
                 'selectedCourse': this.selectedCourse,
-                'selectedInterests': this.selectedOption
+                'selectedInterests': this.selectedOption,
                 }
             }
             // fetch(`http://localhost:8081/api/users/${usersId}`, {
@@ -404,7 +241,7 @@ export default {
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                });;
+                });
                 
             // console.log(this.userObject);
         },

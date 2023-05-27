@@ -36,30 +36,13 @@
           </div>
         </div>
 
-        <div class="mb-3 row" id="position">
+        <div class="mb-3 row" id="position" >
           <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
           <div class="col-sm-4">
-            <div style="display: inline-block;">
-              <span v-for="option in selectedOption" id="interest-badge" :class="getBadgeClass(option)">{{ option }}</span>
-            </div>
-            <button class="btn rounded-circle btn-sm" id="custom-btn" @click="handleClick"><i class="bi bi-plus"></i></button>
-
-            <div v-if="showPopup" class="popup-container">
-              <div class="popup-content">
-                <h2>Popup Content</h2>
-                <p>Choose something:</p>
-                <button v-for="option in options" :class="getBadgeClass(option)" type="button" id="interest-badge" style="border-radius: 20px;" @click="handleChoice(option)">{{ option }}</button>
-
-                <div class="button-container">
-                  <button @click="cancelSelection">Cancel</button>
-                  <button @click="confirmSelection()">Confirm</button>
-                  <!-- <button @click="submitSelection">Submit</button> -->
-                </div>
-              </div>
-            </div>
+            <AdditionButton/>          
           </div>
-          
         </div>
+          
 
         <div style="margin: 30px;" id="profile">
           <div class="warningbox col-md-4 offset-md-1">
@@ -84,50 +67,6 @@
         <div class="submitbutton" style="margin: 30px;" id="profile">
           <button class="submit-button">Get Started!</button>
         </div>
-
-        <!-- <div class="name">
-          <h1 style="font-size: 33px; justify-content: center; display: flex; margin: 20px;">Lee Ji Eun</h1>
-        </div>
-
-        <div class="username" style="margin: 30px;" id="profile">
-          <label for="username">Username: @</label>
-          <div style="flex-direction: column;">
-            <input class="col-md-3" type="text" placeholder="Username" size="55">
-          </div>
-        </div>
-
-        <div class="biography" style="margin: 30px;" id="profile">
-          <p style="margin-right: 20px; margin-top: 10px;">Bio: </p>
-          <div style="flex-direction: column;">
-            <input class="col-md-3" type="text" placeholder="Biography" size="55">
-          </div>
-        </div>
-
-        <div class="interests" style="margin: 30px;" id="profile">
-          <p style="margin-right: 20px; margin-top: 10px;">Interests: </p>
-          <input type="text" placeholder="Interests" size="55">
-        </div>
-
-        <div style="margin: 30px;" id="profile">
-          <div class="warningbox">
-            <p><b>Personal Information</b> - This will only be recorded for user analytics. This will not be shown to the public.</p>
-          </div>
-        </div>
-
-        <div class="gender" style="margin: 30px;" id="profile">
-          <p style="margin-right: 20px; margin-top: 10px;">Gender: </p>
-          <input class="col-md-3" type="text" placeholder="Gender" size="55">
-        </div>
-
-        <div class="email" style="margin: 30px;" id="profile">
-          <p style="margin-right: 20px; margin-top: 10px;">Secondary Email: </p>
-          <input class="col-md-3" type="text" placeholder="Secondary Email" size="55">
-        </div>
-
-        <div class="submitbutton" style="margin: 30px;" id="profile">
-          <button class="submit-button">Get Started!</button>
-        </div> -->
-
       </div>
         
     </div>
@@ -137,12 +76,14 @@
   
 <script>
 import NavSidebar from '../../components/NavSidebar.vue'
+import AdditionButton from '../../components/AdditionButton.vue'
 import ngeeann from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
 
 export default {
   components: {
     NavSidebar,
+    AdditionButton,
     ngeeann,
     banner,
   },
@@ -155,44 +96,10 @@ export default {
       banner: banner,
       // selectedBanner: "banner",
       // selectedProfilePic: "profilePicture",
-      options:[
-        'Kpop',
-        'Games',
-        'Technology',
-        'Sports',
-        'Dancing',
-        'JPOP',
-        'Coding',
-        'Lifestyle'
-      ],
     }
   },
 
   methods:{
-    handleClick(){
-            console.log("CLicked");
-            this.showPopup = true;
-        },
-
-    handleChoice(option){
-        console.log(option);
-        const index = this.selectedOption.indexOf(option);
-        if (this.selectedOption.includes(option)) {
-            // Option is already selected, remove it from the array
-            this.selectedOption = this.selectedOption.filter(item => item !== option);
-        } else {
-            // Option is not selected, add it to the array
-            this.selectedOption.push(option);
-        }
-//         this.selectedOption = option;
-//         this.showPopup = false;
-    },
-
-    cancelSelection(){
-        this.selectedOption = [];
-        this.showPopup = false;
-    },
-
     chooseFile(imageType){
       console.log(imageType);
       if (imageType === "profilePicture") {
@@ -214,35 +121,6 @@ export default {
       }
       
     },
-
-    confirmSelection() {
-            // Perform any necessary actions with the selected options here
-            console.log("Selected options:", this.selectedOption);
-            this.showPopup = false;
-        },
-
-        getBadgeClass(option) {
-            // Return a class name based on the selected option
-            switch (option) {
-            case 'Kpop':
-                return 'badge badge-kpop';
-            case 'Games':
-                return 'badge badge-games';
-            case 'Technology':
-                return 'badge badge-technology';
-            case 'Sports':
-                return 'badge badge-sports'
-            case 'Dancing':
-                return 'badge badge-dancing'
-            case 'JPOP':
-                return 'badge badge-jpop'
-            case 'Coding':
-                return 'badge badge-coding'
-            case 'Lifestyle':
-                return 'badge badge-lifestyle'
-            }
-            return `badge-${bg-info}`;
-        },
   },
 }
 </script>
@@ -252,25 +130,6 @@ export default {
       margin: 0;
       padding: 0;
     }
-
-    .popup-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
 
     .banner {
       display: flex;
@@ -293,14 +152,6 @@ export default {
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-    }
-
-    .button-container {
-      margin-top: 100px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
     }
 
     .banner-button {
@@ -327,7 +178,7 @@ export default {
       position: absolute;
       top: 355px;
       font-weight: bold;
-      border-color: #E53A73;
+      border: 2px solid #E53A73;
     }
 
     .submit-button {
@@ -372,49 +223,5 @@ export default {
     #position{
       margin: 50px 0px; 
     }
-
-    #custom-btn{
-      color: #E53A73;
-      border-color: #E53A73; 
-      border-width: 2px;
-      margin-left: 10px;
-    }
-
-    #interest-badge{
-      margin: 5px;
-      padding: 10px;
-    }
-
-    .badge-kpop {
-    background-color: #FF7BE2;
-}
-
-.badge-games {
-    background-color: #6FE5FF;
-}
-
-.badge-technology {
-    background-color: #6FFFA8;
-}
-
-.badge-sports{
-    background-color: #FFE27B;
-}
-
-.badge-dancing{
-    background-color: #7B88FF;
-}
-
-.badge-jpop{
-    background-color: #FFAB6F;
-}
-
-.badge-coding{
-    background-color: #6F74FF;
-}
-
-.badge-lifestyle{
-    background-color: #FC5454;
-}
 
 </style>
