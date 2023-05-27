@@ -262,12 +262,13 @@ export default {
                 body: JSON.stringify(this.userObject)
             }) .then(response => {
                 if (response.ok) {
-                    this.redirectUser();
+                    console.log(response.status)
                 } else if (response.status === 409){
                     response.json().then(data => {
                     if (data.error === 'Email already exists') {
                         alert("Email already exists");
                         throw new Error('Email already exists')
+                        
                     }
                     else if (data.error === 'Phone Number already exists') {
                         alert("Phone Number already exists");
@@ -277,6 +278,7 @@ export default {
                         throw new Error('Error: ' + response.status);
                     }
                     });
+                    return;
                 }
                 })
                 .then(data => {

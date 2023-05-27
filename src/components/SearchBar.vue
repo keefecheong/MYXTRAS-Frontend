@@ -4,17 +4,31 @@
         <div class="col-md-6 " style="display: flex; align-items: center;"> 
             <input class="search-bar" type="text" placeholder="Search">
         </div>
-        <div class="col-md-3 d-flex justify-content-end">
+        <div class="col-md-3 d-flex justify-content-end margin-top">
             <!-- check for identity after authentication -->
-            <p class="username"><br></p>
-            <p class="school"></p>
-            <img v-if="login" class="headerprofilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+            <div class="col-md-4">
+                <p v-if="login" class="realname">{{ realname }}</p>
+                <p v-if="login" class="school">{{ school + '/' + course }}</p>
+            </div>
+            <p v-if="login" class="headerprofilepic"></p>
             <a v-else href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
+        
     </div>
 </template>
 
 <style>
+.margin-top {
+    margin-top: 1em !important;
+}
+.realname {
+    display: block;
+    color: white;
+}
+.school {
+    display: block;
+    color: white;
+}
 .search-bar {
     display: flex;
     align-items: center;
@@ -38,6 +52,7 @@
     height: 6rem;
     border: #133B5B 0.5rem solid;
     border-radius: 100%;
+    margin-right: 3em;
 }
 
 /* Login button CSS */
@@ -99,8 +114,44 @@
 export default {
     data() {
         return {
-            login: false
+            login: false,
+            pfplink: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png',
+            realname: '',
+            school: '',
+            course: ''
         }
     },
+    mounted() {
+        this.checkAuth();
+    },
+    methods: {
+        checkAuth() {
+            fetch("http://127.0.0.1:8081/api/users", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        console.log(data)
+                        this.realname = data.realname;
+                        this.school = data.school;
+                        this.course = data.course;
+                        this.login = true;
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }
 }
 </script>
