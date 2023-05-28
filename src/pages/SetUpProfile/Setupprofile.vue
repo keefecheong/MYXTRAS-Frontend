@@ -207,14 +207,14 @@ export default {
             var username = this.username;
             var school = this.selectedSchool;
             var course = this.selectedCourse;
-
+            console.log(Object.values(this.courses).flat())
             if (
             detailsList.some(item => item === "") ||
             /^[0-9]+$/.test(realname) ||
             realname.length > 32 ||
             username.length > 16 ||
             !(school in this.courses) ||
-            !(course in this.courses)
+            !Object.values(this.courses).flat().includes(course)
             ) {
                 if (detailsList.some(item => item === "")) {
                     alert("Please enter all fields");
@@ -231,7 +231,7 @@ export default {
                 } else if (!(school in this.courses)) {
                     alert("School does not exist");
 
-                } else if (!(course in this.courses)) {
+                } else if (!Object.values(this.courses).flat().includes(course)) {
                     alert("Course does not exist");
                 }
                 return checkStatus;
@@ -243,6 +243,7 @@ export default {
             // console.log(dataObject); // Access the received data object
             const emailAddress = localStorage.getItem('email');
             if (!this.validationCheck()){
+                console.log("1")
                 return;
             }
             else {
