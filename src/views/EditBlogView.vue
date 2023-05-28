@@ -47,7 +47,7 @@
             1. there are no files selected
             2. there are files selected but contains errors
         -->
-        <input type="submit" value="Update" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0)" />
+        <input type="submit" :value="submitting ? 'Updating...' : 'Update!'" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0) || submitting" />
     </form>
 </template>
 
@@ -64,7 +64,9 @@ export default {
             invalidFiles: [],
             initialized: false,
             toInitFiles: true,
-            dataTransfer: new DataTransfer()
+            dataTransfer: new DataTransfer(),
+            submitting: false,
+            fileUpdated: false
         }
     },
     methods: {
@@ -83,15 +85,32 @@ export default {
         },
         // to handle form submission
         async submitForm(e) {
+            this.submitting = true;
+
+            // if user did not edit files then do nothing
+            if (!this.fileUpdated) {
+                this.submitting = false;
+
+                alert('No changes made.');
+
+                return;
+            }
+
             // check if the user has uploaded any files
             if (this.files.length <= 0) {
+                this.submitting = false;
+
                 alert('No files selected.');
+
                 return;
             }
 
             // checks if there are any errors
             if (this.errors.length > 0) {
+                this.submitting = false;
+
                 alert('Invalid files selected.');
+                
                 return;
             }
 
@@ -108,6 +127,8 @@ export default {
                 method: 'PATCH',
                 body: formData
             }).then((res) => {
+                this.submitting = false;
+
                 // reset form
                 e.target.reset();
                 this.resetAll();
@@ -122,6 +143,8 @@ export default {
         },
         // to handle change in selected files
         fileChanged(e) {
+            this.fileUpdated = true;
+
             // set files
             this.files = e.target.files;
             // clear selectedLinks, errors and invalidFiles

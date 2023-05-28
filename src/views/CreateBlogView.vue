@@ -43,7 +43,7 @@
             1. there are no files selected
             2. there are files selected but contains errors
         -->
-        <input type="submit" value="Create!" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0)" />
+        <input type="submit" :value="submitting ? 'Creating...' : 'Create!'" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0) || submitting" />
     </form>
 </template>
 
@@ -54,21 +54,30 @@ export default {
             files: [],
             errors: [],
             selectedLinks: [],
-            invalidFiles: []
+            invalidFiles: [],
+            submitting: false
         }
     },
     methods: {
         // to handle form submission
         async submitForm(e) {
+            this.submitting = true;
+
             // check if the user has uploaded any files
             if (this.files.length <= 0) {
+                this.submitting = false;
+
                 alert('No files selected.');
+
                 return;
             }
 
             // checks if there are any errors
             if (this.errors.length > 0) {
+                this.submitting = false;
+
                 alert('Invalid files selected.');
+                
                 return;
             }
 
@@ -81,7 +90,7 @@ export default {
 
             // TODO implement account management to get user id
             // add creator_id (current user's id) to formData
-            formData.append('creator_id', '6021fde84705d830b8e458ab');
+            formData.append('creator_id', '6021fde84705d830b8f458ab');
 
             // send request to backend server with data
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts`, {
@@ -90,6 +99,8 @@ export default {
                 body: formData
             }).then((res) => {
                 // reset form
+                this.submitting = false;
+                
                 e.target.reset();
                 this.resetAll();
 
