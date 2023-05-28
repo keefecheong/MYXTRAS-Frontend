@@ -145,16 +145,29 @@ export default {
     }
   },
   methods:{
-    signOut(){
+    redirectlogin(){
         fetch("http://127.0.0.1:8081/api/users/redirect-login", {
                 method: 'GET',
-                mode: "no-cors",
-                credentials: 'include'
             }) .then(response => {
                 if (response.redirected) {
                     window.location.href = response.url;
                 } else {
-                    console.log("Error: Failed to log out")
+                    console.log("Error: Failed to log out (Redirect failure)")
+                    console.log(response)
+                }
+            });
+    },
+    signOut(){
+        console.log("1")
+        fetch("http://127.0.0.1:8081/api/users/remove-cookie", {
+                method: 'GET',
+                mode: "cors",
+                credentials: 'include'
+            }) .then(response => {
+                if (response.ok) {
+                    this.redirectlogin()
+                } else {
+                    console.log("Error: Failed to log out (Remove cookie)")
                     console.log(response)
                 }
             });

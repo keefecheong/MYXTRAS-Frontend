@@ -275,7 +275,7 @@ export default {
         },
         redirectUser(){
             fetch("http://localhost:8081/api/users/setupprofile", {
-                        method: "GET"
+                    method: "GET"
                 })
                 .then(response => {
                 if (response.redirected) {
@@ -297,7 +297,7 @@ export default {
                 return this.generalErrMsg = "Invalid phone number";
             }
             // Password complexity check
-            if (!/[A-Z]/.test(this.password) || !/[0-9]/.test(this.password) || this.password.length <= 8){
+            if (!/[A-Z]/.test(this.password) || !/[0-9]/.test(this.password) || this.password.length < 8){
                 this.registerFail = true;
                 return this.generalErrMsg = "Password does not meet requirements";
             }
