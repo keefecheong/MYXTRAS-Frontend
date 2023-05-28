@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './ProfileManagement.vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
+import 'cropperjs/dist/cropper.css';
 
 // Vuetify
 import 'vuetify/styles'
