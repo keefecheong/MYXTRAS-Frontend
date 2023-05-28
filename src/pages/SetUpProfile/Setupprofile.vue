@@ -214,7 +214,7 @@ export default {
             realname.length > 32 ||
             username.length > 16 ||
             !(school in this.courses) ||
-            !Object.values(this.courses).flat().includes(course)
+            !(Object.values(this.courses).flat().includes(course))
             ) {
                 if (detailsList.some(item => item === "")) {
                     alert("Please enter all fields");

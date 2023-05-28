@@ -131,6 +131,15 @@ export default {
         this.checkAuth();
     },
     methods: {
+        redirectsetup(){
+            fetch("http://127.0.0.1:8081/api/users/setupprofile", {
+                method: "GET"
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+        },
         checkAuth() {
             fetch("http://127.0.0.1:8081/api/users", {
                 method: "GET",
@@ -141,11 +150,16 @@ export default {
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        console.log(data)
-                        this.realname = data.realname;
-                        this.school = data.school;
-                        this.course = data.course;
-                        this.login = true;
+                        if (data.profilesetup === false){
+                            this.redirectsetup();
+                            return;
+                        }
+                        else {
+                            this.realname = data.realname;
+                            this.school = data.school;
+                            this.course = data.course;
+                            this.login = true;
+                        }
                     })
                 } else {
                     console.log('Error:', response);
