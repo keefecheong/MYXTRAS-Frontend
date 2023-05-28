@@ -167,7 +167,9 @@ export default {
             return this.courses[this.selectedSchool] || [];
         }
     },
-
+    mounted() {
+        this.checkForCookie();
+    },
     methods: {
         limitCharacters() {
         if (this.biography.length > this.maxCharacters) {
@@ -182,7 +184,27 @@ export default {
             // You can store the selected interests in a data property or send them to an API, etc.
             this.selectedOption = selectedInterests;
         },
-
+        checkForCookie(){
+            fetch("http://127.0.0.1:8081/api/users/get-cookie", {
+                    method: "GET",
+                    headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    credentials: "include",
+                })
+                .then(response => {
+                if (!response.ok) {
+                    console.log("fail")
+                    window.location.href = 'http://127.0.0.1:5173/feed.html';
+                }
+                else if (response.ok){
+                    console.log('Success:');
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
         redirectUser(){
             fetch("http://localhost:8081/api/users/feed", {
                         method: "GET"
@@ -198,6 +220,7 @@ export default {
                 .catch(error => {
                     console.error('Error:', error);
                 })
+                
         },
 
         validationCheck(){

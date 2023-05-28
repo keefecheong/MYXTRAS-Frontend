@@ -31,6 +31,10 @@
                 <span class="material-symbols-outlined">group</span>
                 <p>Feed</p>
             </a>
+            <a href="/explore.html" class="sidebar-link">
+                <span class="material-symbols-outlined">emoji_objects</span>
+                <p>Xplore</p>
+            </a>
             <a href="/forum.html" class="sidebar-link">
                 <span class="material-symbols-outlined">forum</span>
                 <p>Forum</p>
@@ -38,10 +42,6 @@
             <a href="/chat.html" class="sidebar-link">
                 <span class="material-symbols-outlined">chat</span>
                 <p>Chat</p>
-            </a>
-            <a href="/explore.html" class="sidebar-link">
-                <span class="material-symbols-outlined">emoji_objects</span>
-                <p>Xplore</p>
             </a>
             <a href="/events.html" class="sidebar-link">
                 <span class="material-symbols-outlined">campaign</span>
@@ -66,14 +66,14 @@
             <a href="/feed.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Feed">group</span>
             </a>
+            <a href="/explore.html" class="sidebar-link">
+                <span class="material-symbols-outlined" title="Xplore">emoji_objects</span>
+            </a>
             <a href="/forum.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Forum">forum</span>
             </a>
             <a href="/chat.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Chat">chat</span>
-            </a>
-            <a href="/explore.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Xplore">emoji_objects</span>
             </a>
             <a href="/events.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Events">campaign</span>
@@ -102,6 +102,10 @@
                 <span class="material-symbols-outlined">group</span>
                 <p>Feed</p>
             </a>
+            <a href="/explore.html" class="navbar-link">
+                <span class="material-symbols-outlined">emoji_objects</span>
+                <p>Xplore</p>
+            </a>
             <a href="/forum.html" class="navbar-link">
                 <span class="material-symbols-outlined">forum</span>
                 <p>Forum</p>
@@ -109,10 +113,6 @@
             <a href="/chat.html" class="navbar-link">
                 <span class="material-symbols-outlined">chat</span>
                 <p>Chat</p>
-            </a>
-            <a href="/explore.html" class="navbar-link">
-                <span class="material-symbols-outlined">emoji_objects</span>
-                <p>Xplore</p>
             </a>
             <a href="/events.html" class="navbar-link">
                 <span class="material-symbols-outlined">campaign</span>
