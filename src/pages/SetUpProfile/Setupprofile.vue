@@ -233,8 +233,8 @@ export default {
 
                 } else if (!(course in this.courses)) {
                     alert("Course does not exist");
-
                 }
+                return checkStatus;
             }
             return checkStatus = true;
         },
