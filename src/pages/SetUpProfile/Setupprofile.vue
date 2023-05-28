@@ -270,7 +270,6 @@ export default {
                 return;
             }
             else {
-                console.log(this.selectedOption);
                 this.userObject = {
                 'emailAddress': emailAddress,
                 'realName': this.realname,
