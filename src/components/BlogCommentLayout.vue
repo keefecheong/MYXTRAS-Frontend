@@ -98,6 +98,7 @@ export default {
                     }
 
                     alert(data.message);
+                    this.$emit('commentDeleted', this.comment._id);
                 });
             }).catch((error) => {
                 console.log(error);
