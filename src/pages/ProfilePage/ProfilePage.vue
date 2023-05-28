@@ -53,7 +53,7 @@
             </div>
 
             <div id="right-content" class="col-md-3">
-                <div class="card follower-card" style="height: 350px;">
+                <div class="card follower-card" >
                     <div class="card-body card-position">
                         <h5 class="card-title">Followers: {{ followers.length }}</h5>
                         <div v-for="follower in followers" :key="follower.username">
@@ -74,8 +74,8 @@
                     </div>
                 </div>
 
-                <div class="card forums-card" style="height:500px">
-                    <div class="card-body card-position">
+                <div class="card forums-card">
+                    <div class="card-body card-position" >
                         <h5 class="card-title">Joined Forums:</h5>
                             <div v-for="forum in forums" :key="forum.name">
                                 <br>
@@ -126,7 +126,7 @@ export default {
             { label: 'Kpop', class: 'bg-primary' },
             { label: 'Games', class: 'bg-secondary' },
             { label: 'Technology', class: 'bg-success' }
-      ],
+        ],
         images: [
             'https://pbs.twimg.com/profile_images/1655527977478946818/Z-Fu2b-P_400x400.jpg',
             'https://qph.cf2.quoracdn.net/main-qimg-6ba09fb44474d45efc83c2471487969d-lq'

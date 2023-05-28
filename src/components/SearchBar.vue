@@ -10,7 +10,7 @@
                 <p class="realname">{{ realname }}</p>
                 <p class="school">{{ school + '/' + course }}</p>
             </div>
-            <a v-if="login" href="/profilePage.html"><p class="headerprofilepic"></p></a>
+            <a v-if="login" href="/profilePage.html"><img class="headerprofilepic" :src="pfplink"></a>
             
             <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
@@ -121,7 +121,6 @@ export default {
     data() {
         return {
             login: false,
-            pfplink: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png',
             realname: '',
             school: '',
             course: ''
@@ -159,6 +158,7 @@ export default {
                             this.realname = data.realname;
                             this.school = data.school;
                             this.course = data.course;
+                            this.pfplink = data.profile_pic_link;
                             this.login = true;
                         }
                     })
