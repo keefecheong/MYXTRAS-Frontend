@@ -14,16 +14,17 @@
                             <h1>Register Now!</h1>
                             <input v-model="emailAddress" type="email" placeholder="Email Address" id="emailField" required>
                             <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required>
+                            <p v-if="showPhoneErr" id="phoneErr">Enter a valid phone number</p>
                             <br>
-                            <button id="sendOtpBtn">Send OTP</button>
+                            <button @click="sendOtp" id="sendOtpBtn">Send OTP</button>
                             <br>
-                            <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" required>
+                            <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" :maxlength="16" required>
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword(1)">visibility_off</button>
-                            <br>
-                            <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword" placeholder="Confirm Password" id="repeatPasswordField" required>
+                            <p v-if="password != null" id="passErr">{{ passwordRequirements }}</p>
+                            <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword" placeholder="Confirm Password" id="repeatPasswordField" :maxlength="16" required>
                             <!-- :class="{ 'password-visible': showPassword }" -->
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressedrepeated': isPressedrepeated }" @click="hidePassword(2)">visibility_off</button>
-                            
+                            <p v-if="registerFail" id="genErr"> {{ generalErrMsg }}</p>
                             <button @click="registerUser()" id="registerBtn">
                                 Register
                             </button>
@@ -44,19 +45,27 @@
 @import url('../../styles/main.css');
 body {
     background: linear-gradient(45deg,#FF6363, #E53A73);
-    height: 100vh;
+    height: 115vh;
     background-repeat: no-repeat;
     animation: gradientAnimation 2s infinite linear;
     background-size: 400% 400%;
     font-size: calc(.5em + 0.5vw) !important;
+}
+#phoneErr,
+#passErr,
+#genErr {
+    padding: 0 4em 0 4em;
+    color: red; 
+    font-weight: bold;
+    font-size: small;
 }
 h1 {
     margin-bottom: 5vh !important;
 }
 #ngeeAnnBanner {
     opacity: 0.75;
-    width: 100%;
-    height: 100%;
+    width: 120%;
+    height: 120%;
 }
 .loginContainer {
     border-radius: 1000px !important;
@@ -65,8 +74,8 @@ h1 {
 .whitebox {
     background-color: white;
     position: relative; /* for the register btn to stick to the bottom */
-    width: 100%;
-    height: 100%;
+    width: 120%;
+    height: 120%;
     padding-top: 5vh;
     display: flex;
     flex-direction: column;
@@ -186,18 +195,56 @@ input:focus{
 export default {
     data() {
         return {
-            isDraggable: false,
-            isPressed: false,
-            isPressedrepeated: false,
+            // Inputs
             emailAddress: null,
             phoneNumber: null,
             password: null,
             repeatedPassword: null,
+            userObject: null,
+            generalErrMsg: "",
+
+            // Booleans
+            isDraggable: false,
+            isPressed: false,
+            isPressedrepeated: false,
+            meetsPassComplexity: false,
+            showPhoneErr: false,
             showPassword: false,
             showPasswordrepeated: false,
-            userObject: null,
+            registerFail: false,
         }
     },
+    computed: {
+        passwordRequirements() {
+        let requirements = [];
+        
+        if (!/[A-Z]/.test(this.password)) {
+            this.meetsPassComplexity = false;
+            requirements.push('1 uppercase character');
+        }
+        
+        if (!/[0-9]/.test(this.password)) {
+            this.meetsPassComplexity = false;
+            requirements.push('1 numerical character');
+        }
+        if (this.password.length < 8) {
+            this.meetsPassComplexity = false;
+            requirements.push('min. 8 characters');
+        }
+        if (requirements.length === 0) {
+            this.meetsPassComplexity = true;
+            return;
+        } else {
+            return 'Password requirements: ' + requirements.join(', ');
+        }
+        }
+    },
+    // watch: {
+    //     password() {
+    //     // Perform additional actions based on the password changes
+    //     // Update the UI dynamically
+    //     }
+    // },
     methods: {
         hidePassword(num) {
             switch (num){
@@ -215,6 +262,16 @@ export default {
         filterNumber() {
         // Remove any non-numeric characters except the minus sign at the beginning
         this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
+        },
+        sendOtp() {
+            if (this.phoneNumber.length != 8){
+                return this.showPhoneErr = true;
+            } else {
+                this.showPhoneErr = false;
+                // Send otp using Firebase
+
+                return;
+            }
         },
         redirectUser(){
             fetch("http://localhost:8081/api/users/setupprofile", {
@@ -234,14 +291,25 @@ export default {
         },
         async registerUser() {
             var userDetailsList = [this.emailAddress, this.phoneNumber, this.password];
-
-            if (this.password !== this.repeatedPassword){
-                alert("Password mismatch");
-                return;
+            if (this.phoneNumber.length != 8){
+                this.showNumError = true;
+                this.registerFail = true;
+                return this.generalErrMsg = "Invalid phone number";
             }
+            // Password complexity check
+            if (!/[A-Z]/.test(this.password) || !/[0-9]/.test(this.password) || this.password.length <= 8){
+                this.registerFail = true;
+                return this.generalErrMsg = "Password does not meet requirements";
+            }
+            // Password confirm
+            if (this.password !== this.repeatedPassword){
+                this.registerFail = true;
+                return this.generalErrMsg = "Password mismatch";
+            }
+            // Check for empty fields
             if (userDetailsList.some(item => item === null)){
-                alert("Please enter all fields");
-                return;
+                this.registerFail = true;
+                return this.generalErrMsg = "Please enter all fields";
             }
             else {
                 this.userObject = {
@@ -262,13 +330,17 @@ export default {
                 body: JSON.stringify(this.userObject)
             }) .then(response => {
                 if (response.ok) {
-                    console.log(response.status)
+                    console.log('Success');
+                    // const userId = data.userId;
+                    // localStorage.setItem('userID', userId);
+                    localStorage.setItem('email', this.emailAddress);
+                    console.log("2")
+                    this.redirectUser();
                 } else if (response.status === 409){
                     response.json().then(data => {
                     if (data.error === 'Email already exists') {
                         alert("Email already exists");
                         throw new Error('Email already exists')
-                        
                     }
                     else if (data.error === 'Phone Number already exists') {
                         alert("Phone Number already exists");
@@ -278,16 +350,10 @@ export default {
                         throw new Error('Error: ' + response.status);
                     }
                     });
+                    console.log("1")
                     return;
                 }
                 })
-                .then(data => {
-                    console.log('Success:', data);
-                    // const userId = data.userId;
-                    // localStorage.setItem('userID', userId);
-                    localStorage.setItem('email', this.emailAddress);
-                    this.redirectUser();
-                    })
                 .catch(error => {
                     console.error('Error:', error);
                 });

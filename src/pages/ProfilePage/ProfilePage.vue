@@ -148,6 +148,7 @@ export default {
     signOut(){
         fetch("http://127.0.0.1:8081/api/users/redirect-login", {
                 method: 'GET',
+                mode: "no-cors",
                 credentials: 'include'
             }) .then(response => {
                 if (response.redirected) {
