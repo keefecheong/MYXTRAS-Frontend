@@ -6,9 +6,9 @@
                 <div class="col-md-6 whitebox">
                     <form @submit.prevent="login">
                         <h2 id="header">Set up your profile</h2>
-                        <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" @input="noIntegers">
-                        <input type="text" placeholder="Username" id="usernameField" v-model="username" :required="!showPopup">
-                        <textarea placeholder="Bio (Max 500 characters)" id="bioField" :required="!showPopup" style="appearance: none;" v-model="biography" @input="limitCharacters"></textarea>
+                        <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" :maxlength="32" @input="noIntegers">
+                        <input type="text" placeholder="Username" id="usernameField" v-model="username" :maxlength="16" :required="!showPopup">
+                        <textarea placeholder="Bio (Max 500 characters)" id="bioField" style="appearance: none;" v-model="biography" @input="limitCharacters"></textarea>
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
                             <AdditionButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
@@ -149,7 +149,7 @@ export default {
             selectedSchool: '',
             selectedCourse: '',
             biography: '',
-            maxCharacters: 500,
+            maxCharacters: 100,
             selectedOption: [],
             // schools: ['ICT','HS','FMS','BMS'],
             courses: {
@@ -200,14 +200,45 @@ export default {
                 })
         },
 
+        validationCheck(){
+            var checkStatus = false
+            var detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
+            var realname = this.realname;
+            var username = this.username;
+            var school = this.selectedSchool;
+            var course = this.selectedCourse;
 
+            if (detailsList.some(item => item === "")){
+                alert("Please enter all fields");
+                return checkStatus;
+            }
+            if (/^[0-9]+$/.test(realname)){
+                alert("No integers in your real name");
+                return checkStatus;
+            }
+            if (realname.length > 32){
+                alert("Real name must not be more than 32 characters long");
+                return checkStatus;
+            }
+            if (username.length > 16){
+                alert("Username must not be more than 32 characters long");
+                return checkStatus;
+            }
+            if (!school in this.courses){
+                alert("School does not exist")
+                return checkStatus;
+            }
+            if (!course in this.courses){
+                alert("Course does not exist")
+                return checkStatus;
+            }
+            return checkStatus = true;
+        },
         async setupprofile() {
             // const dataObject = JSON.parse(localStorage.getItem('dataObject'));
             // console.log(dataObject); // Access the received data object
             const emailAddress = localStorage.getItem('email');
-            var detailsList = [this.realname, this.username, this.biography, this.selectedSchool, this.selectedCourse, this.selectedOption];
-            if (detailsList.some(item => item === null)){
-                alert("Please enter all fields");
+            if (!this.validationCheck()){
                 return;
             }
             else {
@@ -231,13 +262,11 @@ export default {
                 body: JSON.stringify(this.userObject)
             }) .then(response => {
                     if (!response.ok) {
-                    throw new Error('Error: ' + response.status);
+                        throw new Error('Error: ' + response.status);
+                    } else {
+                        this.redirectUser();
+                        return response.json();
                     }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                    this.redirectUser();
                 })
                 .catch(error => {
                     console.error('Error:', error);
