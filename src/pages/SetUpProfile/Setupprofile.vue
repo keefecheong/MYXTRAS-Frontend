@@ -185,6 +185,7 @@ export default {
             this.selectedOption = selectedInterests;
         },
         checkForCookie(){
+            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
             fetch("http://127.0.0.1:8081/api/users/get-cookie", {
                     method: "GET",
                     headers: {

@@ -32,11 +32,9 @@
                             <h3 style="margin-left: 100px; color: black;"><i class="bi bi-pencil"></i></h3>
                         </a>
        
-                        <div style="display: flex; align-items: center; margin-left: 50px; margin-top: 31px; color: #dd1217">
-                            <div @click="signOut()">
-                                <h6><i class="bi bi-box-arrow-right" style="margin-left: 2px;"></i></h6>
-                                <h6 style="margin-left: 15px; margin-top:-1px;"><b>Sign out</b></h6>
-                            </div>
+                        <div id="signOutContainer" style="display: flex; align-items: center; margin-left: 50px; margin-top: 31px; color: #dd1217" @click="signOut()">
+                            <h6><i class="bi bi-box-arrow-right" style="margin-left: 2px;"></i></h6>
+                            <h6 style="margin-left: 15px; margin-top:-1px;"><b>Sign out</b></h6>
                         </div>
                     </div>
                     
@@ -183,7 +181,9 @@ export default {
         margin: 0;
         padding: 0;
     }
-
+    #signOutContainer:hover {
+        cursor: pointer !important;
+    }
     .banner {
         display: flex;
         flex-direction: column;
