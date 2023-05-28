@@ -39,8 +39,9 @@
                                     <div class="imageContainer">
                                         <img id="threadPic" :src="thread.threadPic">
                                     </div>
+                                    <br>
+                                    <p id="commentsText ">View {{ thread.numOfComments }} comments</p>
                                 </div>
-                                <p>View {{ thread.numOfComments }} comments</p>
                                 </div>
                             </div>
                             <br>
@@ -79,11 +80,13 @@ body {
     border: none !important;
 }
 .mainCard {
-    padding: 2em 3em;
+    padding: 2em 3em 1em 3em;
 
 }
 #forumHeader {
     color: var(--primary);
+    font-weight: bolder;
+    margin-bottom: 0.5em;
 }
 .line {
     margin: 2em !important;
@@ -113,6 +116,10 @@ body {
     font-weight: bolder;
     font-size: larger;
 }
+#commentsText {
+    margin-top: 2em;
+}
+
 .popularThreadContainer {
     display: flex;
     flex-direction: column;
@@ -131,13 +138,11 @@ body {
     margin-top: 1.5em;
 }
 .imageContainer {
-    position: relative;
-    overflow: hidden;
+    width: 100%;
 }
-.threadPic {
-    height: auto;
-    width: 400px;
-    object-fit: cover,
+.imageContainer img {
+    max-height: 100%;
+    max-width: 100%;
 }
 
 </style>
