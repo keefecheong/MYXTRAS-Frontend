@@ -208,29 +208,33 @@ export default {
             var school = this.selectedSchool;
             var course = this.selectedCourse;
 
-            if (detailsList.some(item => item === "")){
-                alert("Please enter all fields");
-                return checkStatus;
-            }
-            if (/^[0-9]+$/.test(realname)){
-                alert("No integers in your real name");
-                return checkStatus;
-            }
-            if (realname.length > 32){
-                alert("Real name must not be more than 32 characters long");
-                return checkStatus;
-            }
-            if (username.length > 16){
-                alert("Username must not be more than 32 characters long");
-                return checkStatus;
-            }
-            if (!school in this.courses){
-                alert("School does not exist")
-                return checkStatus;
-            }
-            if (!course in this.courses){
-                alert("Course does not exist")
-                return checkStatus;
+            if (
+            detailsList.some(item => item === "") ||
+            /^[0-9]+$/.test(realname) ||
+            realname.length > 32 ||
+            username.length > 16 ||
+            !(school in this.courses) ||
+            !(course in this.courses)
+            ) {
+                if (detailsList.some(item => item === "")) {
+                    alert("Please enter all fields");
+
+                } else if (/^[0-9]+$/.test(realname)) {
+                    alert("No integers in your real name");
+
+                } else if (realname.length > 32) {
+                    alert("Real name must not be more than 32 characters long");
+
+                } else if (username.length > 16) {
+                    alert("Username must not be more than 16 characters long");
+
+                } else if (!(school in this.courses)) {
+                    alert("School does not exist");
+
+                } else if (!(course in this.courses)) {
+                    alert("Course does not exist");
+
+                }
             }
             return checkStatus = true;
         },
