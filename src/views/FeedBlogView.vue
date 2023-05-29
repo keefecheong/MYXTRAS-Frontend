@@ -3,7 +3,7 @@
     <hr/>
     <div v-if="blogs.length <= 0" class="no-more-blogs">
         <p>No new activity.</p>
-        <p>Follow more people? <a :href="getFullpath('explore.html')">Explore!</a></p>
+        <p>Follow more people? <a href="/explore.html">Explore!</a></p>
     </div>
 
     <div v-else>
@@ -12,7 +12,7 @@
         <hr />
         <div class="no-more-blogs">
             <p>That's the end. You're all catched up!</p>
-            <p>Follow more people? <a :href="getFullpath('explore.html')">Explore!</a></p>
+            <p>Follow more people? <a href="/explore.html">Explore!</a></p>
         </div>
     </div>
 </template>
@@ -38,7 +38,8 @@ export default {
         async getPosts() {
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts`, {
                 mode: 'cors',
-                method: 'GET'
+                method: 'GET',
+                credentials: 'include'
             }).then(async (res) => {
                 await res.json().then((data) => {
                     this.blogs = data;
@@ -46,9 +47,6 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
-        },
-        getFullpath(path) {
-            return `${import.meta.env.VITE_BASE_URL}/${path}`;
         }
     }
 }

@@ -88,15 +88,12 @@ export default {
                 formData.append('selectedImages', this.files[i]);
             }
 
-            // TODO implement account management to get user id
-            // add creator_id (current user's id) to formData
-            formData.append('creator_id', '6021fde84705d830b8f458ab');
-
             // send request to backend server with data
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts`, {
                 mode: 'cors',
                 method: 'POST',
-                body: formData
+                body: formData,
+                credentials: 'include'
             }).then((res) => {
                 // reset form
                 this.submitting = false;
