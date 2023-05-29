@@ -17,10 +17,8 @@
               <img :src="profilePicture" alt="Profile Picture"  id="profile-picture" ref="cropperImage"/>
             </div>
             <input ref="fileInput" type="file" @change="upload($event, 'profilePicture')" style="display: none">
-            <button class="profile-button" @click="chooseFile('profilePicture')">Change Profile Picture</button>
-          </div>
-          <div>
-            <button class="confirm-button" @click="confirmCropping">Confirm Crop</button>
+            <button v-if="!showBtn" class="profile-button" @click="chooseFile('profilePicture')">Change Profile Picture</button>
+            <button v-if="showBtn" class="confirm-button" @click="confirmCropping">Confirm Crop</button>
           </div>
         </div>
 
@@ -106,6 +104,7 @@ export default {
       selectedOption: [],
       gender:'',
       secondaryEmail: '',
+      showBtn: false,
       // selectedBanner: "banner",
       // selectedProfilePic: "profilePicture",
     }
@@ -118,9 +117,9 @@ export default {
           aspectRatio: 1, // Set the aspect ratio for the cropped image
           viewMode: 1, // Restrict the cropping area to the container size
           dragMode: 'move', // Allow dragging the image within the container
-          cropBoxResizable: false, // Disable resizing of the cropping area
-          cropBoxMovable: false, // Disable moving of the cropping area
-          toggleDragModeOnDblclick: false, // Disable toggling drag mode on double-click
+          cropBoxResizable: true, // Disable resizing of the cropping area
+          cropBoxMovable: true, // Disable moving of the cropping area
+          toggleDragModeOnDblclick: true, // Disable toggling drag mode on double-click
           autoCropArea: 0.5, // Set the initial cropping area to a circle
           guides: false, // Hide the grid lines
           background: false, // Disable the background overlay
@@ -159,6 +158,7 @@ export default {
 
       if (imageType === 'profilePicture') {
         this.profilePicture = URL.createObjectURL(file);
+        this.showBtn = true;
         this.$nextTick(() => {
           this.initializeCropper();
         });
@@ -178,6 +178,7 @@ export default {
       this.profilePicture = croppedImage;
       this.cropper.destroy(); // Destroy the cropper instance
       this.cropper = null; // Set the cropper variable to null
+      this.showBtn = false;
     },
  
     // async updateProfile() {
@@ -272,6 +273,19 @@ export default {
       border: 2px solid #E53A73;
     }
 
+    .confirm-button{
+      background-color: transparent;
+      color: #E53A73;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 10px;
+      border-radius: 10px;
+      position: absolute;
+      margin-top: 235px;
+      font-weight: bold;
+      border: 2px solid #E53A73;
+    }
+
     .submit-button {
       background-color: #E53A73;
       border: none;
@@ -314,5 +328,21 @@ export default {
     #position{
       margin: 50px 0px; 
     }
+
+    .cropper-crop-box, .cropper-view-box {
+      border-radius: 50%;
+    }
+
+    .cropper-view-box {
+      box-shadow: 0 0 0 1px #39f;
+      outline: 0;
+    }
+
+    .cropper-modal{
+      height: 75%;
+      margin-top: 25px;
+    }
+
+    
 
 </style>
