@@ -13,7 +13,7 @@
                             <h5 class="card-title">Subscribed Forums</h5>
                             <div v-for="forum in forums" class="row">
                                 <div class="col-md-4 d-flex justify-content-end">
-                                    <img class="groupPic" :src="forum.groupPic">
+                                    <a href='./forumGroup.html'><img class="groupPic" :src="forum.groupPic"></a> 
                                 </div>
                                 <div class="col-md-8">
                                     <p class="forum-name">{{ forum.name }}</p>  
@@ -30,7 +30,7 @@
                             <div class="card mainCard">
                                 <div class="row">
                                     <div class="col-md-2 d-flex justify-content-end">
-                                        <img id="threadGroupPic" :src="thread.groupPic">
+                                        <a href='./forumGroup.html'><img id="threadGroupPic" :src="thread.groupPic"></a>
                                     </div>
                                 <div class="col-md-10">
                                     <p id="meta">{{ "x/" + thread.groupName + " ~ Posted by: @" + thread.creatorName }}</p>  

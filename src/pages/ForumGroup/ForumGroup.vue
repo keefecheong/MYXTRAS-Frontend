@@ -1,6 +1,6 @@
 <template>
 
-    <div id="main-container"    >
+    <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
             <div id="banner">
@@ -141,6 +141,10 @@ export default {
 </script>
 
 <style>
+    #main-content{
+        margin-left: -12px;
+    }
+
     #banner {
         display: flex;
         flex-direction: column;
@@ -160,7 +164,6 @@ export default {
         background-color: #E53A73;
         height: 100%;
         width: 100%;
-        position: relative;
     }
 
     .subscribe-button{
@@ -206,10 +209,9 @@ export default {
 
     #white-container{
         background-color: #E4E0E7;
-        height: 85%;
+        height: 100%;
         width: 100%;
-        position: absolute;
-        bottom: 0;
+        margin-left: 1px;
     }
 
     .profilepic {
