@@ -13,7 +13,7 @@
                             <h5 class="card-title">Subscribed Forums</h5>
                             <div v-for="forum in forums" class="row">
                                 <div class="col-md-4 d-flex justify-content-end">
-                                    <a href='./forumGroup.html'><img class="groupPic" :src="forum.groupPic"></a> 
+                                    <a href='./forumGroup.html'><img class="groupPic" :src="forum.groupPic" :draggable="isDraggable"></a> 
                                 </div>
                                 <div class="col-md-8">
                                     <p class="forum-name">{{ forum.name }}</p>  
@@ -30,23 +30,22 @@
                             <div class="card threadContainer">
                                 <div class="row">
                                     <div class="col-md-2 d-flex justify-content-end">
-                                        <a href='./forumGroup.html'><img id="threadGroupPic" :src="thread.groupPic"></a>
+                                        <a href='./forumGroup.html'><img id="threadGroupPic" :src="thread.groupPic" :draggable="isDraggable"></a>
                                     </div>
                                 <div class="col-md-10 threadContent">
                                     <p id="meta">{{ "x/" + thread.groupName + " ~ Posted by: @" + thread.creatorName }}</p>  
                                     <p id="thread-title">{{ thread.threadTitle }}</p>  
                                     <p id="thread-description">{{ thread.threadDesc }}</p>
                                     <div class="imageContainer">
-                                        <img id="threadPic" :src="thread.threadPic">
+                                        <img id="threadPic" :src="thread.threadPic" :draggable="isDraggable">
                                     </div>
                                     <br>
-                                    <p id="commentsText ">View {{ thread.numOfComments }} comments</p>
+                                    <div class="d-flex justify-content-end">
+                                        <a id="commentsText" href="/threadView.html">View {{ thread.numOfComments }} comments</a>
+                                    </div>
                                 </div>
                                 </div>
                             </div>
-                            <br>
-                            <br>
-                            <br>
                         </div>
                     </div>
                 </div>
@@ -59,7 +58,7 @@
                                 <div class="col-md-12 d-flex popularThreadContainer">
                                     <p class="profilepic">{{ thread.threadTitle }}</p>
                                     <div class="imageContainer">
-                                        <img id="popThreadPic" :src="thread.threadPic">
+                                        <img id="popThreadPic" :src="thread.threadPic" :draggable="isDraggable">
                                     </div>
                                 </div>
                                 <div class="line"></div>
@@ -75,13 +74,11 @@
 <style>
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
-body {
-    background-color: #F9F9F9 !important;
-}
 .card {
     padding: 1em 0 1em 0;
     border: none !important;
     border-radius: 10px;
+    margin: 3vh 1vh;
 }
 .threadContainer {
     padding: 2em 3em 1em 3em !important;
@@ -124,8 +121,8 @@ body {
     font-size: larger;
 }
 #commentsText {
-    margin-top: 2em;
-    font-size: 10px !important;
+    margin: 1em 0 0.5em 0;
+    text-decoration: none;
     color: gray !important;
 }
 
@@ -165,6 +162,7 @@ export default {
     },
     data() {
         return {
+            isDraggable: false,
             forums: [
             { name: 'ILUVCats', groupPic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'We talk about cats' },
             { name: 'muggingclub', groupPic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' },
