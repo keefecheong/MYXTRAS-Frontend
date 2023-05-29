@@ -49,7 +49,7 @@ body {
     background-repeat: no-repeat;
     animation: gradientAnimation 2s infinite linear;
     background-size: 400% 400%;
-    font-size: calc(.5em + 0.5vw) !important;
+    
 }
 #phoneErr,
 #passErr,
@@ -274,7 +274,7 @@ export default {
             }
         },
         redirectUser(){
-            fetch("http://localhost:8081/api/users/setupprofile", {
+            fetch("http://127.0.0.1:8081/api/users/setupprofile", {
                     method: "GET"
                 })
                 .then(response => {

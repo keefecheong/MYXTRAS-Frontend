@@ -2,6 +2,7 @@
     font-family: 'Montserrat', sans-serif;
     src: url('../fonts/Montserrat-VariableFont_wght.ttf');
     font-weight: normal;
+    font-size: calc(.5em + 0.5vw) !important;
     font-style: normal;
 }
 

@@ -32,7 +32,7 @@
             </div>
 
             <!-- show indicators only if more than one image, one indicator per image -->
-            <div class="blog-indicator-container" v-if="multipleImages">
+            <div class="blog-indicator-container" v-if="blog.content_links.length > 1">
                 <span class="blog-indicator" v-for="(value, index) in blog.content_links" :class="{active: currentId == index + 1}" :id="index + 1" @click="toggleSlide"></span>
             </div>
         </div>
@@ -44,7 +44,7 @@
                 <!-- like button -->
                 <div class="like-blog col align-items-center justify-content-center" :class="{liked: liked}">
                     <span class="material-symbols-outlined" @click="toggleLike">favorite</span>
-                    <span>({{ blog.likes.length }})</span>
+                    <span>({{ likeCount }})</span>
                 </div>
                 
                 <!-- comments button -->
@@ -76,7 +76,7 @@
             <form class="create-comment-form" @submit.prevent="createComment">
                 <textarea class="create-comment-text" wrap="soft" placeholder="Add a comment..." v-model="commentText"></textarea>
                 <hr />
-                <input class="create-comment-button" type="submit" value="Submit" :disabled="commentText.length <= 0" />
+                <input class="create-comment-button" type="submit" :value="submittingComment ? 'Creating...' : 'Create!'" :disabled="commentText.length <= 0 || submittingComment" />
             </form>
 
             <hr />
@@ -91,7 +91,7 @@
                 </div>
 
                 <div v-else class="blog-comments-container">
-                    <BlogCommentLayout v-for="comment in commentData.comments" :comment="comment" :postId="commentData._id" />
+                    <BlogCommentLayout v-for="comment in commentData.comments" :comment="comment" :postId="commentData._id" @commentDeleted="decreaseCommentCount" />
                 </div>
             </div>
         </div>
@@ -298,7 +298,11 @@ export default {
             showComments: false,
             commentsLoaded: false,
             commentText: '',
-            commentData: {}
+            commentData: {},
+            submittingComment: false,
+            liked: false,
+            likeTimeout: null,
+            likeCount: 0
         }; 
     },
     components: {
@@ -311,6 +315,11 @@ export default {
     mounted() {
         this.calcDateDifference();
         this.toggleControls();
+
+        // initialize liked and likeCount values
+        // TODO get user id and check in likes array
+        // this.liked = this.blog.likes.indexOf() != -1;
+        this.likeCount = this.blog.likes.length;
     },
     updated() {
         this.toggleControls();
@@ -319,6 +328,12 @@ export default {
             if (!this.commentsLoaded) {
                 this.getComments();
             }
+        }
+    },
+    beforeUnmount() {
+        // complete pending updateLike request before the 
+        if (!this.likeTimeout) {
+            this.updateLike();
         }
     },
     methods: {
@@ -398,11 +413,31 @@ export default {
             }
         },
         // toggle liking of blog
-        async toggleLike() {
+        toggleLike() {
+            // toggle like on frontend only
+            this.liked = !this.liked;
+
+            // update likeCount
+            if (this.liked) {
+                this.likeCount += 1;
+            }
+            else {
+                this.likeCount -= 1;
+            }
+
+            // set timeout and only send request to update backend if user has not clicked the like button for 3 seconds
+            if (this.likeTimeout) {
+                clearTimeout(this.likeTimeout);
+            }
+
+            this.likeTimeout = setTimeout(this.updateLike, 3000);
+        },
+        // handle updating of like status to backend
+        updateLike() {
             // send request to update liked status
             if (this.liked) {
                 // TODO add current user id to the end of request url
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like/`, {
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like/`, {
                     mode: 'cors',
                     method: 'DELETE'
                 }).then((res) => {
@@ -414,7 +449,7 @@ export default {
                 });
             }
             else {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like`, {
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like`, {
                     mode: 'cors',
                     method: 'POST',
                     body: JSON.stringify({
@@ -430,7 +465,7 @@ export default {
                     }
                 }).catch((error) => {
                     console.log(error);
-                })
+                });
             }
         },
         // handle deleting post
@@ -484,8 +519,11 @@ export default {
         },
         // create comment
         async createComment() {
+            this.submittingComment = true;
+
             // do nothing if no content is entered
             if (this.commentText.length <= 0) {
+                this.submittingComment = false;
                 return;
             }
 
@@ -503,6 +541,7 @@ export default {
                 }
             }).then(async (res) => {
                 await res.json().then((data) => {
+                    this.submittingComment = false;
                     alert(data.message);
 
                     // update comments list to update dom immediately
@@ -516,18 +555,10 @@ export default {
             }).catch((error) => {
                 console.log(error);
             })
-        }
-    },
-    computed: {
-        // to check if the blog has multiple images
-        multipleImages() {
-            return this.blog.content_links.length > 1;
         },
-        // to check if the current user has liked the image
-        liked() {
-            return false;  // dummy data until current user credentials can be checked
-
-            // TODO get current user id and check in list of users who liked the post
+        // remove deleted comment's id from the comments list to update the dom immediately
+        decreaseCommentCount(commentId) {
+            this.blog.comments.splice(this.blog.comments.indexOf(commentId), 1);
         }
     }
 }
