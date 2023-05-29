@@ -44,7 +44,7 @@
     align-items: center;
     margin: auto !important;
     padding: 15px;
-    padding-left: 50px;
+    padding-left: 53px;
     border: none;
     border-radius: 30px;
     width: 100%;
