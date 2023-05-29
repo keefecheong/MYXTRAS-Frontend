@@ -1,6 +1,6 @@
 @font-face {
-    font-family: 'Montserrat', sans-serif;
-    src: url('../fonts/Montserrat-VariableFont_wght.ttf');
+    font-family: 'Quicksand';
+    src: url('../fonts/Quicksand-Medium.ttf');
     font-weight: normal;
     font-size: calc(.5em + 0.5vw) !important;
     font-style: normal;
@@ -12,7 +12,7 @@
     --dark: #133B5B;
 }
 body {
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: 'Quicksand' !important;
     font-size: calc(.5em + 0.5vw) !important;
     overflow-x: hidden;
 }

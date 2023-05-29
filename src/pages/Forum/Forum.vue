@@ -27,12 +27,12 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div v-for="thread in followedGroupthreads">
-                            <div class="card mainCard">
+                            <div class="card threadContainer">
                                 <div class="row">
                                     <div class="col-md-2 d-flex justify-content-end">
                                         <img id="threadGroupPic" :src="thread.groupPic">
                                     </div>
-                                <div class="col-md-10">
+                                <div class="col-md-10 threadContent">
                                     <p id="meta">{{ "x/" + thread.groupName + " ~ Posted by: @" + thread.creatorName }}</p>  
                                     <p id="thread-title">{{ thread.threadTitle }}</p>  
                                     <p id="thread-description">{{ thread.threadDesc }}</p>
@@ -58,7 +58,9 @@
                             <div v-for="thread in popularThreads" class="row align-center">
                                 <div class="col-md-12 d-flex popularThreadContainer">
                                     <p class="profilepic">{{ thread.threadTitle }}</p>
-                                    <img id="popThreadPic" :src="thread.threadPic">
+                                    <div class="imageContainer">
+                                        <img id="popThreadPic" :src="thread.threadPic">
+                                    </div>
                                 </div>
                                 <div class="line"></div>
                             </div>
@@ -77,11 +79,16 @@ body {
     background-color: #F9F9F9 !important;
 }
 .card {
+    padding: 1em 0 1em 0;
     border: none !important;
+    border-radius: 10px;
 }
-.mainCard {
-    padding: 2em 3em 1em 3em;
+.threadContainer {
+    padding: 2em 3em 1em 3em !important;
 
+}
+.threadContent {
+    padding-right: 2em !important;
 }
 #forumHeader {
     color: var(--primary);
@@ -118,6 +125,8 @@ body {
 }
 #commentsText {
     margin-top: 2em;
+    font-size: 10px !important;
+    color: gray !important;
 }
 
 .popularThreadContainer {
@@ -172,7 +181,13 @@ export default {
                 {threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png"}
             ]
         }
-    }
+    },
+    methods: {
+        retrieveSubscribedGroups(){
+            fetch("http://127.0.0.1:5173/")
+        }
+    },
+    
     
 }
 </script>

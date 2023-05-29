@@ -2,7 +2,8 @@
     <div class="row pink-header-search">
         <div class="col-md-3"></div>
         <div class="col-md-6" style="display: flex; align-items: center;"> 
-            <input class="search-bar" type="text" placeholder="Search">
+            <span class="material-symbols-outlined" style="color: black">search</span>
+            <input class="search-bar" type="text" placeholder="Search for Xtras like you!">
         </div>
         <div class="col-md-3 d-flex justify-content-end profileContainter">
             <!-- check for identity after authentication -->
