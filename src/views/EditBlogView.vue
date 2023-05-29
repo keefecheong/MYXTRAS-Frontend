@@ -125,7 +125,8 @@ export default {
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}`, {
                 mode: 'cors',
                 method: 'PATCH',
-                body: formData
+                body: formData,
+                credentials: 'include'
             }).then((res) => {
                 this.submitting = false;
 
@@ -277,9 +278,6 @@ export default {
     unmounted() {
         // clear blog store
         this.clearBlogStore();
-
-        // remove event listener
-        window.removeEventListener('beforeunload', this.clearBlogStore);
     }
 }
 </script>

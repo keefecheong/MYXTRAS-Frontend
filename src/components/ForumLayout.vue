@@ -6,7 +6,9 @@
             </div>
             <div class="col-10">
                 <p><a href="#" class="forum-name">x/modana</a> ~ Posted by: <a href="#" class="username">@UIFAN</a></p>
-                <div class="row"><Button></Button></div>            
+                <div class="row">
+                    <span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span>
+                </div>            
                 <h3 class="forum-title">What is the best way to get rid of acne?</h3>
                 <p class="forum-caption">
                     shdkajhsdkjhaksjdhkjashdkjahsdkjasdhkja
@@ -64,6 +66,7 @@
 #interest-badge{
     margin: 5px;
     padding: 10px;
+    width: 5rem;
 }
 
 .badge-kpop {
@@ -100,6 +103,52 @@
 </style>
 <script>
 import { Button } from 'bootstrap';
+export default{
+    props: {
+        selectedOption: {
+            type: Array,
+            default: () => [],
+        },
+    },
+
+    data(){
+        return{
+            selectedOption: ['Kpop','Games'],
+        }
+    },
+    methods:{
+        
+        getBadgeClass(option) {
+            if (this.selectedOption.includes(option)) {
+                return `badge ${this.getBadgeColor(option)} selected`;
+            }
+            return `badge ${this.getBadgeColor(option)}`;
+        },
+
+        getBadgeColor(option) {
+            // Return a class name based on the selected option
+            switch (option) {
+            case 'Kpop':
+                return 'badge badge-kpop';
+            case 'Games':
+                return 'badge badge-games';
+            case 'Technology':
+                return 'badge badge-technology';
+            case 'Sports':
+                return 'badge badge-sports'
+            case 'Dancing':
+                return 'badge badge-dancing'
+            case 'JPOP':
+                return 'badge badge-jpop'
+            case 'Coding':
+                return 'badge badge-coding'
+            case 'Lifestyle':
+                return 'badge badge-lifestyle'
+            }
+            return `badge-${bg-info}`;
+        },
+    }
+}
 
 
 </script>
