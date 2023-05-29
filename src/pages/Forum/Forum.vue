@@ -13,7 +13,7 @@
                             <h5 class="card-title">Subscribed Forums</h5>
                             <div v-for="forum in forums" class="row">
                                 <div class="col-md-4 d-flex justify-content-end">
-                                    <a href='./forumGroup.html'><img class="groupPic" :src="forum.groupPic"></a> 
+                                    <a href='./forumGroup.html'><img class="groupPic" :src="forum.groupPic" :draggable="isDraggable"></a> 
                                 </div>
                                 <div class="col-md-8">
                                     <p class="forum-name">{{ forum.name }}</p>  
@@ -27,26 +27,25 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div v-for="thread in followedGroupthreads">
-                            <div class="card mainCard">
+                            <div class="card threadContainer">
                                 <div class="row">
                                     <div class="col-md-2 d-flex justify-content-end">
-                                        <a href='./forumGroup.html'><img id="threadGroupPic" :src="thread.groupPic"></a>
+                                        <a href='./forumGroup.html'><img id="threadGroupPic" :src="thread.groupPic" :draggable="isDraggable"></a>
                                     </div>
-                                <div class="col-md-10">
+                                <div class="col-md-10 threadContent">
                                     <p id="meta">{{ "x/" + thread.groupName + " ~ Posted by: @" + thread.creatorName }}</p>  
                                     <p id="thread-title">{{ thread.threadTitle }}</p>  
                                     <p id="thread-description">{{ thread.threadDesc }}</p>
                                     <div class="imageContainer">
-                                        <img id="threadPic" :src="thread.threadPic">
+                                        <img id="threadPic" :src="thread.threadPic" :draggable="isDraggable">
                                     </div>
                                     <br>
-                                    <p id="commentsText ">View {{ thread.numOfComments }} comments</p>
+                                    <div class="d-flex justify-content-end">
+                                        <a id="commentsText" href="/threadView.html">View {{ thread.numOfComments }} comments</a>
+                                    </div>
                                 </div>
                                 </div>
                             </div>
-                            <br>
-                            <br>
-                            <br>
                         </div>
                     </div>
                 </div>
@@ -58,7 +57,9 @@
                             <div v-for="thread in popularThreads" class="row align-center">
                                 <div class="col-md-12 d-flex popularThreadContainer">
                                     <p class="profilepic">{{ thread.threadTitle }}</p>
-                                    <img id="popThreadPic" :src="thread.threadPic">
+                                    <div class="imageContainer">
+                                        <img id="popThreadPic" :src="thread.threadPic" :draggable="isDraggable">
+                                    </div>
                                 </div>
                                 <div class="line"></div>
                             </div>
@@ -73,15 +74,18 @@
 <style>
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
-body {
-    background-color: #F9F9F9 !important;
-}
 .card {
+    padding: 1em 0 1em 0;
     border: none !important;
+    border-radius: 10px;
+    margin: 3vh 1vh;
 }
-.mainCard {
-    padding: 2em 3em 1em 3em;
+.threadContainer {
+    padding: 2em 3em 1em 3em !important;
 
+}
+.threadContent {
+    padding-right: 2em !important;
 }
 #forumHeader {
     color: var(--primary);
@@ -117,7 +121,9 @@ body {
     font-size: larger;
 }
 #commentsText {
-    margin-top: 2em;
+    margin: 1em 0 0.5em 0;
+    text-decoration: none;
+    color: gray !important;
 }
 
 .popularThreadContainer {
@@ -156,6 +162,7 @@ export default {
     },
     data() {
         return {
+            isDraggable: false,
             forums: [
             { name: 'ILUVCats', groupPic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'We talk about cats' },
             { name: 'muggingclub', groupPic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' },
@@ -172,7 +179,13 @@ export default {
                 {threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png"}
             ]
         }
-    }
+    },
+    methods: {
+        retrieveSubscribedGroups(){
+            fetch("http://127.0.0.1:5173/")
+        }
+    },
+    
     
 }
 </script>
