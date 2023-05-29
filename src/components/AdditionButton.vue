@@ -49,8 +49,8 @@ export default{
             ],
         }
     },
+  methods:{
 
-    methods: {
         handleClick(){
             this.showPopup = true;
         },
