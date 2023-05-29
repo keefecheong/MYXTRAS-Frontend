@@ -101,7 +101,6 @@ export default {
       banner: banner,
       username: '',
       biography: '',
-      selectedOption: [],
       gender:'',
       secondaryEmail: '',
       showBtn: false,
@@ -109,7 +108,45 @@ export default {
       // selectedProfilePic: "profilePicture",
     }
   },
+
+  mounted() {
+        this.checkAuth();
+  },
+
   methods:{
+    checkAuth() {
+            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
+            fetch("http://127.0.0.1:8081/api/users", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        if (data.profilesetup === false){
+                            this.redirectsetup();
+                            return;
+                        }
+                        else {
+                            this.username = data.username;
+                            this.biography = data.biography
+                            this.selectedOption = data.interests;
+                            this.pfplink = data.profile_pic_link;
+                        }
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        },
 
     initializeCropper() {
         const imageElement = this.$refs.cropperImage;
