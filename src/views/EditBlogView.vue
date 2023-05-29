@@ -244,6 +244,11 @@ export default {
             await Promise.all(imagePromises).catch((error) => {
                 console.log(error);
             });
+        },
+        // to clear blog store
+        clearBlogStore() {
+            const store = useBlogStore();
+            store.blogToEdit = {};
         }
     },
     async created() {
@@ -256,6 +261,9 @@ export default {
 
         // initialize data
         await this.initData();
+
+        // set event listener to clear blog store when the page is closed
+        window.addEventListener('beforeunload', this.clearBlogStore);
     },
     updated() {
         // check if need to init files of file input
@@ -268,9 +276,11 @@ export default {
     },
     unmounted() {
         // clear blog store
-        const store = useBlogStore();
-        store.blogToEdit = {};
-    }  
+        this.clearBlogStore();
+
+        // remove event listener
+        window.removeEventListener('beforeunload', this.clearBlogStore);
+    }
 }
 </script>
 

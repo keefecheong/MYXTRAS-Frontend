@@ -195,8 +195,8 @@ export default {
                 })
                 .then(response => {
                 if (!response.ok) {
-                    console.log("fail")
-                    window.location.href = 'http://127.0.0.1:5173/feed.html';
+                    console.log("fail");
+                    location.href = '/feed.html';
                 }
                 else if (response.ok){
                     console.log('Success:');
