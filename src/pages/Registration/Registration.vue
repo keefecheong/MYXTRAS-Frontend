@@ -336,7 +336,7 @@ export default {
                     localStorage.setItem('email', this.emailAddress);
                     console.log("2")
                     
-                    location.href = '/setupprofile.html'
+                    location.href = '/setupprofile.html';
                 } else if (response.status === 409){
                     response.json().then(data => {
                     if (data.error === 'Email already exists') {

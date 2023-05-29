@@ -194,9 +194,9 @@ export default {
                     credentials: "include",
                 })
                 .then(response => {
-                    console.log(response);
                 if (!response.ok) {
-                    console.log("fail")
+                    console.log("fail");
+                    location.href = '/feed.html';
                 }
                 else if (response.ok){
                     console.log('Success:');
