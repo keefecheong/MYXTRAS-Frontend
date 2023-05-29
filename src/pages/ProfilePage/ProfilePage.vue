@@ -15,16 +15,20 @@
 
                 <div id="header-content" class="mb-3 row">
                     <div class="col-md-8" style="margin-top: 30px;">
-                        <h1 id="Name" style="display: inline;">Lee Ji Eun</h1>
-                        <p style="display: inline-block; margin-left: 20px; font-size: 20px;">@IU</p>
-                        <p style="margin-left: 200px;">School of ICT - Diploma in Cybersecurity and Digital Forensics</p>
-                        <p style="margin-left: 200px;">I am 19 years old and I live by the motto, "live, laugh, love"</p>
-                        <span class="badge bg-primary" id="interest-badge" style="margin-left: 200px">
+                        <h1 id="Name" style="display: inline;">{{ realname }}</h1>
+                        <p style="display: inline-block; margin-left: 20px; font-size: 20px;">@{{ username }}</p>
+                        <p style="margin-left: 200px;">School of {{school}} - Diploma in {{ course }}</p>
+                        <p style="margin-left: 200px;">{{ biography }}</p>
+                        <button v-if="selectedOption.length > 0" :class="[getBadgeClass(selectedOption[0]), { 'selected': selectedButton === selectedOption[0] }]" type="button" id="interest-badge" style="margin-left: 200px;">
+                            {{ selectedOption[0] }}
+                        </button>
+                        <button v-for="option in selectedOption.slice(1)" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]" type="button" id="interest-badge">{{ option }}</button>
+                        <!-- <span class="badge bg-primary" id="interest-badge" style="margin-left: 200px">
                             {{ interests[0].label }}
                         </span>
                         <span v-for="interest in interests.slice(1)" :key="interest.label" :class="`badge ${interest.class}`" id="interest-badge">
                             {{ interest.label }}
-                        </span>
+                        </span> -->
                     </div>
 
                     <div class="col-md-2 offset-md-2" style="margin-top: 30px;">
@@ -122,6 +126,12 @@ export default {
     return{
         banner: banner,
         profilePicture: profilePicture,
+        realname: '',
+        username: '',
+        biography: '',
+        school:'',
+        course: '',
+        selectedOption: [],
         interests: [
             { label: 'Kpop', class: 'bg-primary' },
             { label: 'Games', class: 'bg-secondary' },
@@ -142,7 +152,49 @@ export default {
       ],
     }
   },
+
+  mounted() {
+        this.checkAuth();
+  },
+
   methods:{
+    checkAuth() {
+            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
+            fetch("http://127.0.0.1:8081/api/users", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        if (data.profilesetup === false){
+                            this.redirectsetup();
+                            return;
+                        }
+                        else {
+                            this.realname = data.realname;
+                            this.username = data.username;
+                            this.biography = data.biography;
+                            this.school = data.school;
+                            this.course = data.course;
+                            this.selectedOption = data.interests;
+                            this.userId = data._id;
+                        }
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        },
+
     redirectlogin(){
         fetch("http://127.0.0.1:8081/api/users/redirect-login", {
                 method: 'GET',
@@ -169,6 +221,10 @@ export default {
                     console.log(response)
                 }
             });
+    },
+
+    getBadgeClass(option) {
+        return 'badge badge-' + option.toLowerCase();
     },
   }
 
@@ -234,6 +290,7 @@ export default {
         margin: 5px;
         margin-right: 20px;
         padding: 10px 15px;
+        border: none;
     }
 
     .blog-image {
@@ -322,8 +379,36 @@ export default {
         font-size: 24px;
     }
 
+    .badge-kpop {
+        background-color: #FF7BE2;
+    }
 
+    .badge-games {
+        background-color: #6FE5FF;
+    }
 
+    .badge-technology {
+        background-color: #6FFFA8;
+    }
 
+    .badge-sports{
+        background-color: #FFE27B;
+    }
+
+    .badge-dancing{
+        background-color: #7B88FF;
+    }
+
+    .badge-jpop{
+        background-color: #FFAB6F;
+    }
+
+    .badge-coding{
+        background-color: #6F74FF;
+    }
+
+    .badge-lifestyle{
+        background-color: #FC5454;
+    }
 
 </style>

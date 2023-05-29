@@ -151,6 +151,7 @@ export default {
             biography: '',
             maxCharacters: 100,
             selectedOption: [],
+            userId: '',
             // schools: ['ICT','HS','FMS','BMS'],
             courses: {
                 '': ["Select a school first"],
@@ -169,8 +170,11 @@ export default {
     },
     mounted() {
         this.checkForCookie();
+        this.checkAuth();
+
     },
-    methods: {
+
+        methods: {
         limitCharacters() {
         if (this.biography.length > this.maxCharacters) {
             // If the number of characters exceeds the limit
@@ -206,6 +210,38 @@ export default {
                     console.error('Error:', error);
                 })
         },
+
+        checkAuth() {
+            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
+            fetch("http://127.0.0.1:8081/api/users", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        if (data.profilesetup === false){
+                            this.redirectsetup();
+                            return;
+                        }
+                        else {
+                            this.userId = data._id;
+                        }
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        },
+
         redirectUser(){
             fetch("http://localhost:8081/api/users/feed", {
                         method: "GET"
@@ -265,14 +301,13 @@ export default {
         async setupprofile() {
             // const dataObject = JSON.parse(localStorage.getItem('dataObject'));
             // console.log(dataObject); // Access the received data object
-            const emailAddress = localStorage.getItem('email');
             if (!this.validationCheck()){
                 console.log("1")
                 return;
             }
             else {
+                console.log('gu');
                 this.userObject = {
-                'emailAddress': emailAddress,
                 'realName': this.realname,
                 'userName': this.username,
                 'biography': this.biography,
@@ -281,13 +316,14 @@ export default {
                 'selectedInterests': this.selectedOption,
                 }
             }
-            // fetch(`http://localhost:8081/api/users/${usersId}`, {
+           
             fetch(`http://127.0.0.1:8081/api/users/setup`, {
                 method: 'PATCH', 
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
-                body: JSON.stringify(this.userObject)
+                body: JSON.stringify(this.userObject),
+                credentials: "include",
             }) .then(response => {
                     if (!response.ok) {
                         throw new Error('Error: ' + response.status);

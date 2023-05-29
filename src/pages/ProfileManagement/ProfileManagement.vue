@@ -40,7 +40,7 @@
         <div class="mb-3 row" id="position" >
           <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
           <div class="col-sm-4">
-            <AdditionButton/>          
+            <AdditionButton :selectedOption="selectedOption"/>          
           </div>
         </div>
           
@@ -58,15 +58,15 @@
           </div>
         </div>
 
-        <div class="mb-3 row" id="position">
+        <!-- <div class="mb-3 row" id="position">
           <label for="inputEmail" class="col-md-1 offset-md-4 col-form-label">Secondary Email: </label>
           <div class="col-sm-4">
             <input type="email" v-model="secondaryEmail" class="form-control" id="inputEmail" placeholder="Email">
           </div>
-        </div>
+        </div> -->
 
         <div class="submitbutton" style="margin: 30px;" id="profile">
-          <button class="submit-button" @click="updateProfile">Get Started!</button>
+          <button class="submit-button" @click="updateProfile()">Get Started!</button>
         </div>
       </div>
         
@@ -102,7 +102,7 @@ export default {
       username: '',
       biography: '',
       gender:'',
-      secondaryEmail: '',
+      // secondaryEmail: '',
       showBtn: false,
       // selectedBanner: "banner",
       // selectedProfilePic: "profilePicture",
@@ -133,6 +133,8 @@ export default {
                             this.username = data.username;
                             this.biography = data.biography
                             this.selectedOption = data.interests;
+                            this.gender = data.gender;
+                            this.userId = data._id;
                             this.pfplink = data.profile_pic_link;
                         }
                     })
@@ -217,39 +219,56 @@ export default {
       this.cropper = null; // Set the cropper variable to null
       this.showBtn = false;
     },
- 
-    // async updateProfile() {
-    
-    //   this.userObject = {
-    //     'userName': this.username,
-    //     'biography': this.biography,
-    //     'selectedInterests': this.selectedOption,
-    //     'gender': this.gender,
-    //     'secondaryEmail': this.secondaryEmail,
-    //   }
 
-    //   fetch(`http://127.0.0.1:8081/api/users/update`, {
-    //     method: 'PATCH', 
-    //     headers: {
-    //         'Content-Type': 'application/json; charset=UTF-8',
-    //     },
-    //     body: JSON.stringify(this.userObject)
-    // }) .then(response => {
-    //         if (!response.ok) {
-    //         throw new Error('Error: ' + response.status);
-    //         }
-    //         return response.json();
-    //     })
-    //     .then(data => {
-    //         console.log('Success:', data);
-    //         this.redirectUser();
-    //     })
-    //     .catch(error => {
-    //         console.error('Error:', error);
-    //     });
-        
-    // // console.log(this.userObject);
-    // },
+    redirectUser(){
+      fetch("http://localhost:8081/api/users/profilePage", {
+                  method: "GET"
+          })
+          .then(response => {
+          if (response.redirected) {
+              window.location.href = response.url;
+          }
+          else if (!response.ok){
+              response.error()
+          }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+          })
+            
+    },
+ 
+    async updateProfile() {
+      
+      this.userObject = {
+        'userName': this.username,
+        'biography': this.biography,
+        'selectedInterests': this.selectedOption,
+        'gender': this.gender
+      }
+
+      
+      fetch(`http://127.0.0.1:8081/api/users/update`, {
+          method: 'PATCH', 
+          headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: JSON.stringify(this.userObject),
+          credentials: "include",
+      }) .then(response => {
+              if (!response.ok) {
+                  throw new Error('Error: ' + response.status);
+              } else {
+                  this.redirectUser();
+                  return response.json();
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+          });
+          
+      // console.log(this.userObject);
+    },
   },
 }
 </script>
