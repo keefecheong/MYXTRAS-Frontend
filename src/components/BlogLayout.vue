@@ -110,7 +110,7 @@
     border: #133B5B;
     border-style: solid 1rem;
     margin: auto;
-    width: 80%;
+    width: 100%;
     box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);;
     border-radius: 30px;
     padding: 50px;
@@ -161,8 +161,6 @@
 
 .blog-image {
     width: 100%;
-    height: 500px;
-    object-fit: cover;
 }
 
 /* Next & previous buttons */

@@ -2,7 +2,8 @@
     <div class="row pink-header-search">
         <div class="col-md-3"></div>
         <div class="col-md-6" style="display: flex; align-items: center;"> 
-            <input class="search-bar" type="text" placeholder="Search">
+            <span class="material-symbols-outlined" style="color: black" id="searchIcon">search</span>
+            <input class="search-bar" type="text" placeholder="      Search for Xtras like you!">
         </div>
         <div class="col-md-3 d-flex justify-content-end profileContainter">
             <!-- check for identity after authentication -->
@@ -11,7 +12,7 @@
                 <p class="school">{{ school + '/' + course }}</p>
             </div>
             <a v-if="login" href="/profilePage.html"><img class="headerprofilepic" :src="pfplink"></a>
-            
+             
             <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
         
@@ -34,6 +35,9 @@
 .school {
     display: block;
     color: white;
+}
+#searchIcon {
+    transform: translate(6vh);
 }
 .search-bar {
     display: flex;
