@@ -292,6 +292,7 @@ export default {
     #banner-picture{
       height: 150px;
       width: 100%;
+      margin-left: -23px;
     }
 
     .content {
