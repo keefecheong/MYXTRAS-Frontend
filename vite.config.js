@@ -29,6 +29,7 @@ export default defineConfig(({command, mode}) => {
   return {
     plugins: [vue(), redirectIndexPlugin],
     server: {
+      host: "127.0.0.1",
       port: env.VITE_PORT
     }
   }
