@@ -194,9 +194,9 @@ export default {
                     credentials: "include",
                 })
                 .then(response => {
+                    console.log(response);
                 if (!response.ok) {
                     console.log("fail")
-                    window.location.href = 'http://127.0.0.1:5173/feed.html';
                 }
                 else if (response.ok){
                     console.log('Success:');
