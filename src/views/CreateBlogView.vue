@@ -159,6 +159,7 @@ export default {
         resetAll() {
             this.files = [];
             this.errors = [];
+            this.selectedLinks = [];
         },
         // to calculate size of file and display message
         calculateSize(bytes) {

@@ -431,7 +431,7 @@ export default {
         async updateLike() {
             // send request to update liked status
             if (this.liked) {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like`, {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/likes/${this.blog._id}`, {
                     mode: 'cors',
                     method: 'POST',
                     credentials: 'include'
@@ -447,7 +447,7 @@ export default {
                 });
             }
             else {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like`, {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/likes/${this.blog._id}`, {
                     mode: 'cors',
                     method: 'DELETE',
                     credentials: 'include'
@@ -505,7 +505,7 @@ export default {
         },
         // retrieve comments for the post
         async getComments() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/comments`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/${this.blog._id}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -534,7 +534,7 @@ export default {
             }
 
             // upload comment
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/comments`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/${this.blog._id}`, {
                 mode: 'cors',
                 method: 'POST',
                 body: JSON.stringify({
