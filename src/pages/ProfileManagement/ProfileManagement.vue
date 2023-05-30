@@ -135,7 +135,7 @@ export default {
                             this.selectedOption = data.interests;
                             this.gender = data.gender;
                             this.userId = data._id;
-                            this.pfplink = data.profile_pic_link;
+                            this.profilePicture = data.profile_pic_link;
                         }
                     })
                 } else {

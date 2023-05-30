@@ -182,6 +182,7 @@ export default {
                             this.school = data.school;
                             this.course = data.course;
                             this.selectedOption = data.interests;
+                            this.profilePicture = data.profile_pic_link
                             this.userId = data._id;
                         }
                     })
