@@ -291,8 +291,9 @@ export default {
 
     #banner-picture{
       height: 150px;
-      width: 100%;
-      margin-left: -23px;
+      width: 101%;
+      margin-left: -1%;
+
     }
 
     .content {

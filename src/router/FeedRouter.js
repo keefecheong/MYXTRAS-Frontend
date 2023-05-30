@@ -30,7 +30,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory('/profilePage.html'),
+  history: createWebHistory('/feed.html'),
   routes
 });
 
