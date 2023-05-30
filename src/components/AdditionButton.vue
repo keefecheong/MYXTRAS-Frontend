@@ -54,15 +54,25 @@ export default{
             this.showPopup = true;
         },
         handleChoice(option){
+            // const index = this.selectedOption.indexOf(option);
+            // if (this.selectedOption.includes(option)) {
+            //     // Option is already selected, remove it from the array
+            //     this.selectedOption = this.selectedOption.filter(item => item !== option);
+            //     this.selectedButton = null;
+            // } else {
+            //     // Option is not selected, add it to the array
+            //     this.selectedOption.push(option);
+            //     this.selectedButton = option;
+            // }
             const index = this.selectedOption.indexOf(option);
-            if (this.selectedOption.includes(option)) {
+            if (index > -1) {
                 // Option is already selected, remove it from the array
-                this.selectedOption = this.selectedOption.filter(item => item !== option);
-                this.selectedButton = null;
+                this.selectedOption.splice(index, 1);
+                this.selectedButton = null; // Reset the selectedButton
             } else {
                 // Option is not selected, add it to the array
                 this.selectedOption.push(option);
-                this.selectedButton = option;
+                this.selectedButton = option; // Set the selectedButton
             }
         },
 
@@ -81,25 +91,7 @@ export default{
 
         getBadgeColor(option) {
             // Return a class name based on the selected option
-            switch (option) {
-            case 'Kpop':
-                return 'badge badge-kpop';
-            case 'Games':
-                return 'badge badge-games';
-            case 'Technology':
-                return 'badge badge-technology';
-            case 'Sports':
-                return 'badge badge-sports'
-            case 'Dancing':
-                return 'badge badge-dancing'
-            case 'JPOP':
-                return 'badge badge-jpop'
-            case 'Coding':
-                return 'badge badge-coding'
-            case 'Lifestyle':
-                return 'badge badge-lifestyle'
-            }
-            return `badge-${bg-info}`;
+            return 'badge badge-' + option.toLowerCase();
         },
     }
 }
