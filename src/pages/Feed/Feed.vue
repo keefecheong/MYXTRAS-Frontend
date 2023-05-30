@@ -37,13 +37,11 @@
 <script>
 import NavSidebar from '../../components/NavSidebar.vue';
 import SearchBar from '../../components/SearchBar.vue';
-import BlogLayout from '../../components/BlogLayout.vue';
 
 export default {
     components: {
         NavSidebar,
-        SearchBar,
-        BlogLayout
+        SearchBar
     },
 }
 </script>
