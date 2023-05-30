@@ -200,7 +200,6 @@ export default {
                 .then(response => {
                 if (!response.ok) {
                     console.log("fail");
-                    location.href = '/feed.html';
                 }
                 else if (response.ok){
                     console.log('Success:');
