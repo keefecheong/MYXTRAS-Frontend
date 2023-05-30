@@ -8,7 +8,7 @@
             <h1 id="forumHeader">Latest Updates!</h1>
             <div class="row">
                 <div class="col-md-3">
-                    <div class="card">
+                    <div class="card shadow">
                         <div class="card-body card-position">
                             <h5 class="card-title">Subscribed Forums</h5>
                             <div v-for="forum in forums" class="row">
@@ -27,7 +27,7 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div v-for="thread in followedGroupthreads">
-                            <div class="card threadContainer">
+                            <div class="card shadow threadContainer">
                                 <div class="row">
                                     <div class="col-md-2 d-flex justify-content-end">
                                         <a href='./forumGroup.html'><img id="threadGroupPic" :src="thread.groupPic" :draggable="isDraggable"></a>
@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <div class="card">
+                    <div class="card shadow">
                         <div class="card-body card-position">
                             <h5 class="card-title">Popular Threads</h5>
                             <div v-for="thread in popularThreads" class="row align-center">
@@ -162,13 +162,14 @@ export default {
     },
     data() {
         return {
+            // to delete
             isDraggable: false,
             forums: [
-            { name: 'ILUVCats', groupPic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'We talk about cats' },
-            { name: 'muggingclub', groupPic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' },
-            { name: 'muggingclub', groupPic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' },
-            { name: 'muggingclub', groupPic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' },
-            { name: 'muggingclub', groupPic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' },
+            { name: 'ILUVCats', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'We talk about cats' },
+            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
             ],
             followedGroupthreads: [
                 {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://previews.123rf.com/images/parinyabinsuk/parinyabinsuk1407/parinyabinsuk140700176/30136368-young-asian-boy-being-scolded-by-parents.jpg" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},

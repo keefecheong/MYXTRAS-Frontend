@@ -131,11 +131,11 @@ export default {
                         }
                         else {
                             this.username = data.username;
-                            this.biography = data.biography
+                            this.biography = data.biography;
                             this.selectedOption = data.interests;
                             this.gender = data.gender;
                             this.userId = data._id;
-                            this.pfplink = data.profile_pic_link;
+                            this.profilePicture = data.profile_pic_link;
                         }
                     })
                 } else {

@@ -199,6 +199,7 @@ export default {
                 })
                 .then(response => {
                 if (!response.ok) {
+                    this.redirectUser();
                     console.log("fail");
                 }
                 else if (response.ok){
@@ -221,8 +222,8 @@ export default {
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        if (data.profilesetup === false){
-                            this.redirectsetup();
+                        if (data.profilesetup === true){
+                            this.redirectUser();
                             return;
                         }
                         else {
@@ -240,7 +241,6 @@ export default {
                     console.error('Error:', error);
                 });
         },
-
         redirectUser(){
             fetch("http://localhost:8081/api/users/feed", {
                         method: "GET"
@@ -301,7 +301,6 @@ export default {
             // const dataObject = JSON.parse(localStorage.getItem('dataObject'));
             // console.log(dataObject); // Access the received data object
             if (!this.validationCheck()){
-                console.log("1")
                 return;
             }
             else {
@@ -325,7 +324,7 @@ export default {
                 credentials: "include",
             }) .then(response => {
                     if (!response.ok) {
-                        throw new Error('Error: ' + response.status);
+                        throw new Error('Error: ' + response.error);
                     } else {
                         this.redirectUser();
                         return response.json();
