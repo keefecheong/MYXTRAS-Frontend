@@ -1,7 +1,7 @@
 <template>
 
     <div id="main-container">
-        <NavSidebar/>
+        <NavSidebar />
         <div id="main-content">
             <div id="row">
                 <img :src="banner" alt="Banner" id="banner-picture"/>
@@ -98,21 +98,14 @@
                                 <p class="text-below-pic">Grp 2</p>
                             </div>
 
-
-
-
-
-
                         </div>
                     </div>
                 </div>
-                
-                
-
-                </div>
             </div>
         </div>
+        
     </div>
+</div>
 
 </template>
 
@@ -145,23 +138,15 @@ export default {
         overflow-x: hidden;
     }
 
-    #main-content{
+    /* #main-content{
         margin-left: -12px;
-    }
-
-    #banner {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 150px;
-        width: 100%;
-        background-color: #f1f1f1;
-    }
+    } */
 
     #banner-picture{
-        height: 100%;
-        width: 100%;
+        max-height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    padding: 0 !important;
     }
 
     #pink-container{
@@ -256,6 +241,7 @@ export default {
     .text-below-pic {
         margin-top: 5px;
     }
+    
     
 
 
