@@ -240,7 +240,22 @@ export default {
                     console.error('Error:', error);
                 });
         },
-
+        redirectSetup() {
+            fetch("http://localhost:8081/api/users/feed", {
+                        method: "GET"
+                })
+                .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+                else if (!response.ok){
+                    response.error()
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
         redirectUser(){
             fetch("http://localhost:8081/api/users/feed", {
                         method: "GET"
