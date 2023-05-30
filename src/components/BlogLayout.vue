@@ -55,7 +55,7 @@
             </div>
 
             <!-- only if the blog is posted by the current user -->
-            <div class="blog-privilege-actions row">
+            <div class="blog-privilege-actions row" v-if="blog.isOwner">
                 <!-- edit button -->
                 <div class="blog-edit col">
                     <RouterLink to="/edit" @click="editPost">
@@ -76,7 +76,7 @@
             <form class="create-comment-form" @submit.prevent="createComment">
                 <textarea class="create-comment-text" wrap="soft" placeholder="Add a comment..." v-model="commentText"></textarea>
                 <hr />
-                <input class="create-comment-button" type="submit" :value="submittingComment ? 'Creating...' : 'Create!'" :disabled="commentText.length <= 0 || submittingComment" />
+                <input class="create-comment-button" type="submit" :value="submittingComment ? 'Creating...' : 'Create!'" :disabled="commentText.trim().length <= 0 || submittingComment" />
             </form>
 
             <hr />
@@ -91,7 +91,7 @@
                 </div>
 
                 <div v-else class="blog-comments-container">
-                    <BlogCommentLayout v-for="comment in commentData.comments" :comment="comment" :postId="commentData._id" @commentDeleted="decreaseCommentCount" />
+                    <BlogCommentLayout v-for="comment in commentData" :comment="comment" :postId="blog._id" @commentDeleted="decreaseCommentCount" />
                 </div>
             </div>
         </div>
@@ -315,9 +315,11 @@ export default {
         this.toggleControls();
 
         // initialize liked and likeCount values
-        // TODO get user id and check in likes array
-        // this.liked = this.blog.likes.indexOf() != -1;
+        this.liked = this.blog.liked;
         this.likeCount = this.blog.likes.length;
+
+        // set event listener to complete pending requests when the page is closed
+        window.addEventListener('beforeunload', this.completeLikeRequest);
     },
     updated() {
         this.toggleControls();
@@ -328,11 +330,8 @@ export default {
             }
         }
     },
-    beforeUnmount() {
-        // complete pending updateLike request before the 
-        if (!this.likeTimeout) {
-            this.updateLike();
-        }
+    unmounted() {
+        this.completeLikeRequest();
     },
     methods: {
         // show the next slide
@@ -424,46 +423,53 @@ export default {
             }
 
             // set timeout and only send request to update backend if user has not clicked the like button for 3 seconds
-            if (this.likeTimeout) {
-                clearTimeout(this.likeTimeout);
-            }
+            clearTimeout(this.likeTimeout);
 
             this.likeTimeout = setTimeout(this.updateLike, 3000);
         },
         // handle updating of like status to backend
-        updateLike() {
+        async updateLike() {
             // send request to update liked status
             if (this.liked) {
-                // TODO add current user id to the end of request url
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like/`, {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like`, {
                     mode: 'cors',
-                    method: 'DELETE'
-                }).then((res) => {
-                    if (res.status == 204) {
-                        console.log('Removed like.');
+                    method: 'POST',
+                    credentials: 'include'
+                }).then(async (res) => {
+                    if (res.status == 201) {
+                        console.log('Liked.');
+                    }
+                    else {
+                        await res.json().then(data => console.log(data));
                     }
                 }).catch((error) => {
                     console.log(error);
                 });
             }
             else {
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like`, {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/like`, {
                     mode: 'cors',
-                    method: 'POST',
-                    body: JSON.stringify({
-                        // TODO get current user id and pass as creator_id
-                        // creator_id: 
-                    }),
-                    headers: {
-                        "Content-Type": "application/json"
+                    method: 'DELETE',
+                    credentials: 'include'
+                }).then(async (res) => {
+                    if (res.status == 204) {
+                        console.log('Removed like.');
                     }
-                }).then((res) => {
-                    if (res.status == 201) {
-                        console.log('Liked.');
+                    else {
+                        await res.json().then(data => console.log(data));
                     }
                 }).catch((error) => {
                     console.log(error);
                 });
+            }
+            
+            this.likeTimeout = null;
+        },
+        // complete updateLike request if pending
+        completeLikeRequest() {
+            if (this.likeTimeout) {
+                clearTimeout(this.likeTimeout);
+                this.updateLike();
             }
         },
         // handle deleting post
@@ -477,7 +483,8 @@ export default {
 
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}`, {
                 mode: 'cors',
-                method: 'DELETE'
+                method: 'DELETE',
+                credentials: 'include'
             }).then(async (res) => {
                 await res.json().then((data) => {
                     if (res.status == 200) {
@@ -500,7 +507,8 @@ export default {
         async getComments() {
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}/comments`, {
                 mode: 'cors',
-                method: 'GET'
+                method: 'GET',
+                credentials: 'include'
             }).then(async (res) => {
                 await res.json().then((data) => {
                     this.commentData = data;
@@ -520,7 +528,7 @@ export default {
             this.submittingComment = true;
 
             // do nothing if no content is entered
-            if (this.commentText.length <= 0) {
+            if (this.commentText.trim().length <= 0) {
                 this.submittingComment = false;
                 return;
             }
@@ -530,13 +538,12 @@ export default {
                 mode: 'cors',
                 method: 'POST',
                 body: JSON.stringify({
-                    // TODO get current user id and set as creator_id
-                    creator_id: "6021fde84705d830b8f458ab",
-                    content: this.commentText
+                    content: this.commentText.trim()
                 }),
                 headers: {
                     "Content-Type": "application/json"
-                }
+                },
+                credentials: 'include'
             }).then(async (res) => {
                 await res.json().then((data) => {
                     this.submittingComment = false;
@@ -545,7 +552,7 @@ export default {
                     // update comments list to update dom immediately
                     if (res.status == 200) {
                         this.blog.comments.push(data.comment._id);
-                        this.commentData.comments.push(data.comment);
+                        this.commentData.push(data.comment);
                     }
 
                     this.commentText = '';

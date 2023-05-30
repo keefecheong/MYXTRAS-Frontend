@@ -16,9 +16,8 @@
                 <time :datetime="comment.creation_time" :title="new Date(comment.creation_time)">{{ dateCreated }}</time>
             </div>
 
-            <!-- TODO check user rights -->
             <!-- only if the comment is posted by the current user -->
-            <div class="col comment-privilege-actions">
+            <div class="col comment-privilege-actions" v-if="comment.isOwner">
                 <span class="material-symbols-outlined" @click="deleteComment">delete</span>
             </div>
         </div>
@@ -90,7 +89,8 @@ export default {
 
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.postId}/comments/${this.comment._id}`, {
                 mode: 'cors',
-                method: 'DELETE'
+                method: 'DELETE',
+                credentials: 'include'
             }).then(async (res) => {
                 await res.json().then((data) => {
                     if (res.status == 200) {

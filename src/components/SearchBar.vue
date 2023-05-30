@@ -3,7 +3,7 @@
         <div class="col-md-3"></div>
         <div class="col-md-6" style="display: flex; align-items: center;"> 
             <span class="material-symbols-outlined" style="color: black" id="searchIcon">search</span>
-            <input class="search-bar" type="text" placeholder="      Search for Xtras like you!">
+            <input class="search-bar" type="text" placeholder="Search for Xtras like you!">
         </div>
         <div class="col-md-3 d-flex justify-content-end profileContainter">
             <!-- check for identity after authentication -->
@@ -44,7 +44,7 @@
     align-items: center;
     margin: auto !important;
     padding: 15px;
-    padding-left: 30px;
+    padding-left: 53px;
     border: none;
     border-radius: 30px;
     width: 100%;

@@ -35,7 +35,6 @@ export default{
     data(){
         return{
             showPopup: false,
-            selectedOption: [],
             selectedButton: null,
             options:[
                 'Kpop',
@@ -49,8 +48,8 @@ export default{
             ],
         }
     },
+  methods:{
 
-    methods: {
         handleClick(){
             this.showPopup = true;
         },

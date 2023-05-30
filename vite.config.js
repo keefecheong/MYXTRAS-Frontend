@@ -9,7 +9,7 @@ const redirectIndexPlugin = {
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
       // set root path to feed.html and set up redirection for feed router
-      if (req.url === '/' || req.url === '/feed.html/create' || req.url === '/feed.html/edit') {
+      if (req.url === '/' || req.url === '/feed.html/create' || req.url === '/feed.html/edit' || req.url === '/feed.html/unauthorized') {
         req.url = '/feed.html';
       }
       // set up redirection for explore router
