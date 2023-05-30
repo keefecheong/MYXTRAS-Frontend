@@ -2,7 +2,7 @@
   
     <div id="main-container">
         <NavSidebar />
-        <div id="main-content" class="mb-3 row">
+        <div id="main-content" class="row">
             <div id="left-content" class="col-md-9">
                 <div class="banner">
                     <img :src="banner" alt="Banner" id="banner-picture"/>
@@ -50,9 +50,11 @@
                     </div>
                 </div>    
                 <div class="content-wrapper">
-                    <div class="floating-button" @click="createBlog">
-                        <i style="color: white" class="bi bi-plus plus-icon"></i>
-                    </div>
+                    <router-link for="create" class="create-link">
+                        <div class="floating-button" @click="createBlog">
+                            <i style="color: white" class="bi bi-plus plus-icon"></i>
+                        </div>
+                    </router-link>
                 </div>         
             </div>
 
@@ -233,13 +235,10 @@ export default {
 </script>
 
 <style>
-    body{
-        margin: 0;
-        padding: 0;
-    }
     #signOutContainer:hover {
         cursor: pointer !important;
     }
+
     .banner {
         display: flex;
         flex-direction: column;
@@ -253,6 +252,8 @@ export default {
     #banner-picture{
         height: 150px;
         width: 100%;
+        margin-left: -23px;
+        margin-right: -23px;
     }
 
     #right-content{
@@ -282,7 +283,6 @@ export default {
     #header-content{
         height: 225px;
         width: 100%;
-       
         margin-left: 0px;
     }
 
@@ -353,6 +353,7 @@ export default {
 
     #left-content {
         position: relative;
+        padding: 0px;
     }
 
     .content-wrapper {
@@ -373,6 +374,7 @@ export default {
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        margin-right: 15px;
     }
 
     .plus-icon{
