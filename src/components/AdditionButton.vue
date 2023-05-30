@@ -35,7 +35,6 @@ export default{
     data(){
         return{
             showPopup: false,
-            selectedOption: [],
             selectedButton: null,
             options:[
                 'Kpop',
