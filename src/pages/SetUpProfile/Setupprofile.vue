@@ -241,7 +241,7 @@ export default {
                 });
         },
         redirectSetup() {
-            fetch("http://localhost:8081/api/users/feed", {
+            fetch("http://localhost:8081/api/users/setupprofile", {
                         method: "GET"
                 })
                 .then(response => {
