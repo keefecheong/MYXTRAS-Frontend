@@ -301,7 +301,6 @@ export default {
             // const dataObject = JSON.parse(localStorage.getItem('dataObject'));
             // console.log(dataObject); // Access the received data object
             if (!this.validationCheck()){
-                console.log("1")
                 return;
             }
             else {
@@ -325,7 +324,7 @@ export default {
                 credentials: "include",
             }) .then(response => {
                     if (!response.ok) {
-                        throw new Error('Error: ' + response.status);
+                        throw new Error('Error: ' + response.error);
                     } else {
                         this.redirectUser();
                         return response.json();

@@ -337,7 +337,7 @@ export default {
                     console.log("2")
                     
                     location.href = '/setupprofile.html';
-                } else if (response.status === 409){
+                } else if (response.status === 400){
                     response.json().then(data => {
                     if (data.error === 'Email already exists') {
                         alert("Email already exists");

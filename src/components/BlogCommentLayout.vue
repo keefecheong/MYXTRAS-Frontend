@@ -16,7 +16,6 @@
                 <time :datetime="comment.creation_time" :title="new Date(comment.creation_time)">{{ dateCreated }}</time>
             </div>
 
-            <!-- TODO check user rights -->
             <!-- only if the comment is posted by the current user -->
             <div class="col comment-privilege-actions" v-if="comment.isOwner">
                 <span class="material-symbols-outlined" @click="deleteComment">delete</span>
