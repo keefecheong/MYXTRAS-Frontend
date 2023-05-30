@@ -223,12 +223,14 @@ export default {
         },
         // download images and save as files
         async downloadExistingImages() {
-            const imagePromises = this.selectedLinks.map(async (link) => {
-                await fetch(link).then(async (res) => {
+            const imagePromises = this.selectedLinks.map((link, index) => {
+                return fetch(link).then(async (res) => {
                     if (res.status == 200) {
                         await res.blob().then((blob) => {
-                            const imageName = `${link.split('%2F')[2].split('?')[0]}.${blob.type.split('/')[1]}`;
-                            const image = new File([blob], imageName);
+                            const imageName = `${this.blog.original_names[index]}`;
+                            const image = new File([blob], imageName, {
+                                type: blob.type
+                            });
 
                             this.files.push(image);
                             this.dataTransfer.items.add(image);

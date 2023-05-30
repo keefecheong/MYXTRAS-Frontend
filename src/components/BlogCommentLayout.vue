@@ -87,7 +87,7 @@ export default {
                 return;
             }
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.postId}/comments/${this.comment._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/${this.postId}/${this.comment._id}`, {
                 mode: 'cors',
                 method: 'DELETE',
                 credentials: 'include'
