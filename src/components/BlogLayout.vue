@@ -76,7 +76,7 @@
             <form class="create-comment-form" @submit.prevent="createComment">
                 <textarea class="create-comment-text" wrap="soft" placeholder="Add a comment..." v-model="commentText"></textarea>
                 <hr />
-                <input class="create-comment-button" type="submit" :value="submittingComment ? 'Creating...' : 'Create!'" :disabled="commentText.length <= 0 || submittingComment" />
+                <input class="create-comment-button" type="submit" :value="submittingComment ? 'Creating...' : 'Create!'" :disabled="commentText.trim().length <= 0 || submittingComment" />
             </form>
 
             <hr />
@@ -528,7 +528,7 @@ export default {
             this.submittingComment = true;
 
             // do nothing if no content is entered
-            if (this.commentText.length <= 0) {
+            if (this.commentText.trim().length <= 0) {
                 this.submittingComment = false;
                 return;
             }
@@ -538,7 +538,7 @@ export default {
                 mode: 'cors',
                 method: 'POST',
                 body: JSON.stringify({
-                    content: this.commentText
+                    content: this.commentText.trim()
                 }),
                 headers: {
                     "Content-Type": "application/json"
