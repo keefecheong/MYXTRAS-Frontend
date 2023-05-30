@@ -199,6 +199,7 @@ export default {
                 })
                 .then(response => {
                 if (!response.ok) {
+                    this.redirectUser();
                     console.log("fail");
                 }
                 else if (response.ok){
@@ -221,8 +222,8 @@ export default {
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        if (data.profilesetup === false){
-                            this.redirectsetup();
+                        if (data.profilesetup === true){
+                            this.redirectUser();
                             return;
                         }
                         else {
@@ -239,22 +240,6 @@ export default {
                 .catch(error => {
                     console.error('Error:', error);
                 });
-        },
-        redirectSetup() {
-            fetch("http://localhost:8081/api/users/setupprofile", {
-                        method: "GET"
-                })
-                .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-                else if (!response.ok){
-                    response.error()
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
         },
         redirectUser(){
             fetch("http://localhost:8081/api/users/feed", {
