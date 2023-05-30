@@ -20,7 +20,13 @@
                             <br>
                             <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" :maxlength="16" required>
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword(1)">visibility_off</button>
-                            <p v-if="password != null" id="passErr">{{ passwordRequirements }}</p>
+                            <div v-if="password == ''" >
+                                <p id="hint">Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters</p>
+                            </div>
+                            <div v-if="password != ''" >
+                                <span class="material-symbols-outlined" :class="passwordRequirements" id="infoSym">info</span>
+                                <p :class="passwordRequirements" id="passErr">{{ passwordStrengthMessage }}</p>
+                            </div>
                             <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword" placeholder="Confirm Password" id="repeatPasswordField" :maxlength="16" required>
                             <!-- :class="{ 'password-visible': showPassword }" -->
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressedrepeated': isPressedrepeated }" @click="hidePassword(2)">visibility_off</button>
@@ -52,12 +58,11 @@ body {
     
 }
 #phoneErr,
-#passErr,
 #genErr {
     padding: 0 4em 0 4em;
     color: red; 
     font-weight: bold;
-    font-size: small;
+    
 }
 h1 {
     margin-bottom: 5vh !important;
@@ -124,6 +129,10 @@ input:focus{
     border: solid;
     border-color: var(--primary);
 }
+#hint {
+    padding: 0 5em 0 5em;
+    font-size: 0.7em;
+}
 #registerBtn {
     width: 10em;
     height: 3em;
@@ -179,6 +188,27 @@ input:focus{
 #loginBtn:hover{
     color: var(--primary);
 }
+#infoSym {
+    display: inline-block;
+}
+#passErr{
+    display: inline-block;
+    margin: 0;
+    transform: translate(0, -0.9vh);
+}
+.very-weak {
+    color: red;
+}
+.weak {
+    color: rgb(255, 128, 0);
+}
+.strong {
+    color: #2ce05c;
+}
+.very-strong {
+    color: rgb(30, 196, 30);
+}
+
 @keyframes gradientAnimation {
   0% {
     background-position: 0 50%;
@@ -198,16 +228,17 @@ export default {
             // Inputs
             emailAddress: null,
             phoneNumber: null,
-            password: null,
+            password: '',
             repeatedPassword: null,
             userObject: null,
-            generalErrMsg: "",
+            generalErrMsg: '',
+            passwordStrengthMessage: '',
+            passwordStrength: 0,
 
             // Booleans
             isDraggable: false,
             isPressed: false,
             isPressedrepeated: false,
-            meetsPassComplexity: false,
             showPhoneErr: false,
             showPassword: false,
             showPasswordrepeated: false,
@@ -215,29 +246,46 @@ export default {
         }
     },
     computed: {
+        
         passwordRequirements() {
-        let requirements = [];
-        
-        if (!/[A-Z]/.test(this.password)) {
-            this.meetsPassComplexity = false;
-            requirements.push('1 uppercase character');
-        }
-        
-        if (!/[0-9]/.test(this.password)) {
-            this.meetsPassComplexity = false;
-            requirements.push('1 numerical character');
-        }
-        if (this.password.length < 8) {
-            this.meetsPassComplexity = false;
-            requirements.push('min. 8 characters');
-        }
-        if (requirements.length === 0) {
-            this.meetsPassComplexity = true;
-            return;
-        } else {
-            return 'Password requirements: ' + requirements.join(', ');
-        }
-        }
+            const password = this.password;
+
+            if (password.length < 4) {
+                this.passwordStrengthMessage = "Password is very weak"
+            return 'very-weak';
+            }
+
+            this.passwordStrength = 0;
+
+            if (/[A-Z]/.test(password)) {
+                this.passwordStrength++;
+            }
+
+            if (/\d/.test(password)) {
+                this.passwordStrength++;
+            }
+
+            if (password.length > 8) {
+                this.passwordStrength++;
+            }
+
+            if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+                this.passwordStrength++;
+            }
+            if (this.passwordStrength === 0) {
+                this.passwordStrengthMessage = "Password is very weak"
+                return 'very-weak';
+            } else if (this.passwordStrength === 1) {
+                this.passwordStrengthMessage = "Password is weak"
+                return 'weak';
+            } else if (this.passwordStrength === 2) {
+                this.passwordStrengthMessage = "Password is strong"
+                return 'strong';
+            } else {
+                this.passwordStrengthMessage = "Password is very strong"
+                return 'very-strong';
+            }
+        },
     },
     // watch: {
     //     password() {
@@ -290,6 +338,8 @@ export default {
                 })
         },
         async registerUser() {
+            
+            console.log(this.passwordStrength)
             var userDetailsList = [this.emailAddress, this.phoneNumber, this.password];
             if (this.phoneNumber.length != 8){
                 this.showNumError = true;
@@ -297,9 +347,9 @@ export default {
                 return this.generalErrMsg = "Invalid phone number";
             }
             // Password complexity check
-            if (!/[A-Z]/.test(this.password) || !/[0-9]/.test(this.password) || this.password.length < 8){
+            if (this.passwordStrength <= 2){
                 this.registerFail = true;
-                return this.generalErrMsg = "Password does not meet requirements";
+                return this.generalErrMsg = "Password is weak";
             }
             // Password confirm
             if (this.password !== this.repeatedPassword){
