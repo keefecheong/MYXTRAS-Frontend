@@ -78,7 +78,9 @@
 }
 
 .a-all {
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 85%;
     white-space: nowrap;
 }
 

@@ -31,4 +31,6 @@ export default {
     background-color: var(--primary);
 }
 
+
+
 </style>
