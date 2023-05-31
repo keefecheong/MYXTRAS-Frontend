@@ -466,9 +466,10 @@
         border: 0;
         padding: 0;
         margin: 0 auto;
-        display: block;
+        display: flex;
         cursor: pointer;
         text-align: center;
+        vertical-align: middle;
     }
 
     /* header styles */
@@ -529,6 +530,7 @@
 
     a > .material-symbols-outlined {
         margin: 0;
+
     }
 
     a.sidebar-link {
@@ -537,12 +539,14 @@
 
     a.sidebar-link > .material-symbols-outlined, a.navbar-link > .material-symbols-outlined {
         display: inline;
+        
     }
 
     a.sidebar-link > p, a.navbar-link > p {
         display: inline;
         margin-left: 20px;
         font-size: 1.25em;
+        vertical-align: middle;
     }
 
     /* link/symbol effects */ 
