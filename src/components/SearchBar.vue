@@ -37,14 +37,15 @@
     color: white;
 }
 #searchIcon {
-    transform: translate(6vh);
+    transform: translate(5vh);
+    font-size: 1.5rem;
 }
 .search-bar {
     display: flex;
     align-items: center;
     margin: auto !important;
     padding: 15px;
-    padding-left: 53px;
+    padding-left: 63px;
     border: none;
     border-radius: 30px;
     width: 100%;
