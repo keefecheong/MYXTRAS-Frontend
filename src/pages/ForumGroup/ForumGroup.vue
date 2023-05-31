@@ -144,9 +144,11 @@ export default {
 
     #banner-picture{
         max-height: 100%;
-    max-width: 100%;
+    max-width: 100.9%;
     object-fit: cover;
     padding: 0 !important;
+    margin-left: -12px;
+    float: right;
     }
 
     #pink-container{
