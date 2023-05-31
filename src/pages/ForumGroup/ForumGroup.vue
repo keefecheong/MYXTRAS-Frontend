@@ -143,12 +143,12 @@ export default {
     } */
 
     #banner-picture{
-        max-height: 100%;
-    max-width: 100.9%;
+        height: 150px;
+    width: 105%;
     object-fit: cover;
     padding: 0 !important;
     margin-left: -12px;
-    float: right;
+    float: left;
     }
 
     #pink-container{
