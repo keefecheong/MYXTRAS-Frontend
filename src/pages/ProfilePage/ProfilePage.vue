@@ -2,112 +2,115 @@
   
     <div id="main-container">
         <NavSidebar />
-        <div id="main-content" class="row">
-            <div id="left-content" class="col-md-9">
-                <div class="banner">
-                    <img :src="banner" alt="Banner" id="banner-picture"/>
-                </div>
-
-                <div class="image-container">
-                    <img :src="profilePicture" alt="Profile Picture"  id="profile-picture"/>
-                </div>
-
-
-                <div id="header-content" class="mb-3 row">
-                    <div class="col-md-8" style="margin-top: 30px;">
-                        <h1 id="Name" style="display: inline;">{{ realname }}</h1>
-                        <p style="display: inline-block; margin-left: 20px; font-size: 20px;">@{{ username }}</p>
-                        <p style="margin-left: 200px;">School of {{school}} - Diploma in {{ course }}</p>
-                        <p style="margin-left: 200px;">{{ biography }}</p>
-                        <button v-if="selectedOption.length > 0" :class="[getBadgeClass(selectedOption[0]), { 'selected': selectedButton === selectedOption[0] }]" type="button" id="interest-badge" style="margin-left: 200px;">
-                            {{ selectedOption[0] }}
-                        </button>
-                        <button v-for="option in selectedOption.slice(1)" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]" type="button" id="interest-badge">{{ option }}</button>
-                        <!-- <span class="badge bg-primary" id="interest-badge" style="margin-left: 200px">
-                            {{ interests[0].label }}
-                        </span>
-                        <span v-for="interest in interests.slice(1)" :key="interest.label" :class="`badge ${interest.class}`" id="interest-badge">
-                            {{ interest.label }}
-                        </span> -->
+        <div id="main-content" >
+            <div class="row">
+                <div id="left-content" class="col-md-9">
+                    <div class="banner">
+                        <img :src="banner" alt="Banner" id="banner-picture"/>
                     </div>
 
-                    <div class="col-md-2 offset-md-2" style="margin-top: 30px;">
-                        <a href="/profileManagement.html">
-                            <h3 style="margin-left: 100px; color: black;"><i class="bi bi-pencil"></i></h3>
-                        </a>
-       
-                        <div id="signOutContainer" style="display: flex; align-items: center; margin-left: 50px; margin-top: 31px; color: #dd1217" @click="signOut()">
-                            <h6><i class="bi bi-box-arrow-right" style="margin-left: 2px;"></i></h6>
-                            <h6 style="margin-left: 15px; margin-top:-1px;"><b>Sign out</b></h6>
+                    <div class="image-container">
+                        <img :src="profilePicture" alt="Profile Picture"  id="profile-picture"/>
+                    </div>
+
+
+                    <div id="header-content" class="mb-3 row">
+                        <div class="col-md-8" style="margin-top: 30px;">
+                            <h1 id="Name" style="display: inline;">{{ realname }}</h1>
+                            <p style="display: inline-block; margin-left: 20px; font-size: 20px;">@{{ username }}</p>
+                            <p style="margin-left: 200px;">School of {{school}} - Diploma in {{ course }}</p>
+                            <p style="margin-left: 200px;">{{ biography }}</p>
+                            <button v-if="selectedOption.length > 0" :class="[getBadgeClass(selectedOption[0]), { 'selected': selectedButton === selectedOption[0] }]" type="button" id="interest-badge" style="margin-left: 200px;">
+                                {{ selectedOption[0] }}
+                            </button>
+                            <button v-for="option in selectedOption.slice(1)" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]" type="button" id="interest-badge">{{ option }}</button>
+                            <!-- <span class="badge bg-primary" id="interest-badge" style="margin-left: 200px">
+                                {{ interests[0].label }}
+                            </span>
+                            <span v-for="interest in interests.slice(1)" :key="interest.label" :class="`badge ${interest.class}`" id="interest-badge">
+                                {{ interest.label }}
+                            </span> -->
                         </div>
+
+                        <div class="col-md-2 offset-md-2" style="margin-top: 30px;">
+                            <a href="/profileManagement.html">
+                                <h3 style="margin-left: 100px; color: black;"><i class="bi bi-pencil"></i></h3>
+                            </a>
+        
+                            <div id="signOutContainer" style="display: flex; align-items: center; margin-left: 50px; margin-top: 31px; color: #dd1217" @click="signOut()">
+                                <h6><i class="bi bi-box-arrow-right" style="margin-left: 2px;"></i></h6>
+                                <h6 style="margin-left: 15px; margin-top:-1px;"><b>Sign out</b></h6>
+                            </div>
+                        </div>
+                        
                     </div>
-                    
+
+                    <div class="mb-3 row">
+                        <div class="col-md-6" v-for="image in images" :key="image">
+                            <img class="blog-image" :src="image">
+                        </div>
+                    </div>    
+                    <div class="content-wrapper">
+                        <router-link for="create" class="create-link">
+                            <div class="floating-button" @click="createBlog">
+                                <i style="color: white" class="bi bi-plus plus-icon"></i>
+                            </div>
+                        </router-link>
+                    </div>         
                 </div>
 
-                <div class="mb-3 row">
-                    <div class="col-md-6" v-for="image in images" :key="image">
-                        <img class="blog-image" :src="image">
-                    </div>
-                </div>    
-                <div class="content-wrapper">
-                    <router-link for="create" class="create-link">
-                        <div class="floating-button" @click="createBlog">
-                            <i style="color: white" class="bi bi-plus plus-icon"></i>
-                        </div>
-                    </router-link>
-                </div>         
-            </div>
-
-            <div id="right-content" class="col-md-3">
-                <div class="card follower-card" >
-                    <div class="card-body card-position">
-                        <h5 class="card-title">Followers: {{ followers.length }}</h5>
-                        <div v-for="follower in followers" :key="follower.username">
-                            <br>
-                            <img class="profilepic" :src="follower.profilePic">
-                            <p class="follower-username">{{ follower.username }}</p>
-                            <br>
-                        </div>
-                        <!-- <h5 class="card-title">Followers: 2</h5>
-                        <br>
-                        <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                        <p class="follower-username">John</p>
-                        <br>
-                        <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                        <p class="follower-username">Temp</p>
-                        <br> -->
-                        <h4><i class="bi bi-three-dots three-dots"></i></h4>
-                    </div>
-                </div>
-
-                <div class="card forums-card">
-                    <div class="card-body card-position" >
-                        <h5 class="card-title">Joined Forums:</h5>
-                            <div v-for="forum in forums" :key="forum.name">
+                <div id="right-content" class="col-md-3">
+                    <div class="card follower-card" >
+                        <div class="card-body card-position">
+                            <h5 class="card-title">Followers: {{ followers.length }}</h5>
+                            <div v-for="follower in followers" :key="follower.username">
                                 <br>
-                                <img class="profilepic" :src="forum.profilePic">
-                                <p class="forum-name">{{ forum.name }}</p>
-                                <p class="forum-description">{{ forum.description }}</p>
+                                <img class="profilepic" :src="follower.profilePic">
+                                <p class="follower-username">{{ follower.username }}</p>
                                 <br>
                             </div>
-                        <!-- <h5 class="card-title">Joined Forums:</h5>
-                        <br>
-                        <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                        <p class="forum-name">ILUVCats</p>
-                        <p class="forum-description">We talk about cats</p>
-                        <br>
-                        <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                        <p class="forum-name">muggingclub</p>
-                        <p class="forum-description">Gind never stops!</p>
-                        <h4><i class="bi bi-three-dots three-dots"></i></h4>
-                        <br>
-                        <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                        <p class="forum-name">muggingclub</p>
-                        <p class="forum-description">Gind never stops!</p> -->
-                        <h4><i class="bi bi-three-dots three-dots"></i></h4>
+                            <!-- <h5 class="card-title">Followers: 2</h5>
+                            <br>
+                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                            <p class="follower-username">John</p>
+                            <br>
+                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                            <p class="follower-username">Temp</p>
+                            <br> -->
+                            <h4><i class="bi bi-three-dots three-dots"></i></h4>
+                        </div>
+                    </div>
+
+                    <div class="card forums-card">
+                        <div class="card-body card-position" >
+                            <h5 class="card-title">Joined Forums:</h5>
+                                <div v-for="forum in forums" :key="forum.name">
+                                    <br>
+                                    <img class="profilepic" :src="forum.profilePic">
+                                    <p class="forum-name">{{ forum.name }}</p>
+                                    <p class="forum-description">{{ forum.description }}</p>
+                                    <br>
+                                </div>
+                            <!-- <h5 class="card-title">Joined Forums:</h5>
+                            <br>
+                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                            <p class="forum-name">ILUVCats</p>
+                            <p class="forum-description">We talk about cats</p>
+                            <br>
+                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                            <p class="forum-name">muggingclub</p>
+                            <p class="forum-description">Gind never stops!</p>
+                            <h4><i class="bi bi-three-dots three-dots"></i></h4>
+                            <br>
+                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                            <p class="forum-name">muggingclub</p>
+                            <p class="forum-description">Gind never stops!</p> -->
+                            <h4><i class="bi bi-three-dots three-dots"></i></h4>
+                        </div>
                     </div>
                 </div>
             </div>
+            
         </div>
         
     </div>
@@ -297,7 +300,8 @@ export default {
     .blog-image {
         border-radius: 3%;
         /* height: 365px; */
-        width: 100%;
+        width: 90%;
+        margin-left: 10px;
     }
 
     .follower-card{
