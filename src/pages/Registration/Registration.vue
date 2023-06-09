@@ -16,9 +16,13 @@
                             <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required>
                             <p v-if="showPhoneErr" id="phoneErr">Enter a valid phone number</p>
                             <br>
-                            <button @click="sendOtp" id="sendOtpBtn">Send OTP</button>
+                            <button @click="sendOTP" id="sendOtpBtn">Send OTP</button>
+                            <div id="recaptcha-container" style="background-color:#1b1a1a;width:300px;margin:auto;"></div>
+                            <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" required>
+                            <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn">Verify OTP</button>
+                            <p v-if="verifiedotp">OTP verified</p>
                             <br>
-                            <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" :maxlength="16" required>
+                            <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" :maxlength="20" required>
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword(1)">visibility_off</button>
                             <div v-if="password == ''" >
                                 <p id="hint">Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters</p>
@@ -27,7 +31,7 @@
                                 <span class="material-symbols-outlined" :class="passwordRequirements" id="infoSym">info</span>
                                 <p :class="passwordRequirements" id="passErr">{{ passwordStrengthMessage }}</p>
                             </div>
-                            <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword" placeholder="Confirm Password" id="repeatPasswordField" :maxlength="16" required>
+                            <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword" placeholder="Confirm Password" id="repeatPasswordField" :maxlength="20" required>
                             <!-- :class="{ 'password-visible': showPassword }" -->
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressedrepeated': isPressedrepeated }" @click="hidePassword(2)">visibility_off</button>
                             <p v-if="registerFail" id="genErr"> {{ generalErrMsg }}</p>
@@ -222,18 +226,23 @@ input:focus{
 }
 </style>
 <script>
+import firebase from 'firebase';
+
 export default {
     data() {
         return {
             // Inputs
-            emailAddress: null,
-            phoneNumber: null,
+            emailAddress: '',
+            phoneNumber: '',
             password: '',
-            repeatedPassword: null,
+            repeatedPassword: '',
             userObject: null,
             generalErrMsg: '',
             passwordStrengthMessage: '',
             passwordStrength: 0,
+            otp: '',
+            recaptchaVerifier: null,
+            confirmResult: null,
 
             // Booleans
             isDraggable: false,
@@ -243,13 +252,15 @@ export default {
             showPassword: false,
             showPasswordrepeated: false,
             registerFail: false,
+            otpSent: false,
+            verifiedotp: false,
         }
     },
     computed: {
         
         passwordRequirements() {
             const password = this.password;
-
+            const consecutiveLimit = 3;
             if (password.length < 4) {
                 this.passwordStrengthMessage = "Password is very weak"
             return 'very-weak';
@@ -264,13 +275,30 @@ export default {
             if (/\d/.test(password)) {
                 this.passwordStrength++;
             }
-
             if (password.length > 8) {
                 this.passwordStrength++;
             }
-
+            if (password.length > 14) {
+                this.passwordStrength++;
+            }
             if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
                 this.passwordStrength++;
+            }
+            // checks for 3 consecutive characters
+            for (let i = 0; i < password.length - consecutiveLimit + 1; i++) {
+                let isConsecutive = true;
+                for (let j = i + 1; j < i + consecutiveLimit; j++) {
+                if (password[j] !== password[i]) {
+                    isConsecutive = false;
+                    break;
+                }
+                }
+                if (isConsecutive) {
+                    if (this.passwordStrength === 0){
+                        break;
+                    }
+                    this.passwordStrength--;
+                }
             }
             if (this.passwordStrength === 0) {
                 this.passwordStrengthMessage = "Password is very weak"
@@ -293,7 +321,53 @@ export default {
     //     // Update the UI dynamically
     //     }
     // },
+    mounted() {
+        this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('registerBtn',{
+            'size':'invisible',
+            'callback':(response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+            console.log(response)
+            }
+        })            
+    },
     methods: {
+        async sendOTP(){
+            if (this.phoneNumber.length != 8 || this.phoneNumber === ''){
+                return this.showPhoneErr = true;
+            } else {
+                this.showPhoneErr = false;
+                // Send otp using Firebase
+                this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
+                this.recaptchaVerifier.render().then((widgetId)=>{
+                this.recaptchaWidgetId = widgetId    
+                })
+                
+                this.phoneNumber = "+65" + this.phoneNumber;
+                firebase.auth().signInWithPhoneNumber(this.phoneNumber, this.recaptchaVerifier)
+                    .then((confirmationResult) => {
+                    // SMS sent. Prompt user to type the code from the message, then sign the
+                    // user in with confirmationResult.confirm(code).
+                    this.confirmResult = confirmationResult
+                    alert("Sms Sent!")
+                    this.otpSent = true;
+                    // ...
+                    }).catch((error) => {
+                    // Error; SMS not sent
+                    // ...
+                    });
+            }
+            
+        },
+        async verifyOTP() {
+            this.confirmResult.confirm(this.otp)
+            .then((result)=>{
+                alert("Registeration Successfull!",result)
+                console.log("correct otp")                
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+        },
         hidePassword(num) {
             switch (num){
                 case(1):
@@ -310,16 +384,6 @@ export default {
         filterNumber() {
         // Remove any non-numeric characters except the minus sign at the beginning
         this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
-        },
-        sendOtp() {
-            if (this.phoneNumber.length != 8){
-                return this.showPhoneErr = true;
-            } else {
-                this.showPhoneErr = false;
-                // Send otp using Firebase
-
-                return;
-            }
         },
         redirectUser(){
             fetch("http://127.0.0.1:8081/api/users/setupprofile", {
@@ -339,7 +403,9 @@ export default {
         },
         async registerUser() {
             
-            console.log(this.passwordStrength)
+            if (!this.verifiedotp){
+                return this.generalErrMsg = "Verify your phone number";
+            }
             var userDetailsList = [this.emailAddress, this.phoneNumber, this.password];
             if (this.phoneNumber.length != 8){
                 this.showNumError = true;
@@ -357,7 +423,7 @@ export default {
                 return this.generalErrMsg = "Password mismatch";
             }
             // Check for empty fields
-            if (userDetailsList.some(item => item === null)){
+            if (userDetailsList.some(item => item === '')){
                 this.registerFail = true;
                 return this.generalErrMsg = "Please enter all fields";
             }
