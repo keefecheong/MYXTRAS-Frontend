@@ -362,6 +362,7 @@ export default {
             this.confirmResult.confirm(this.otp)
             .then((result)=>{
                 alert("Registeration Successfull!",result)
+                this.verifiedotp = true
                 console.log("correct otp")                
             })
             .catch((error)=>{
