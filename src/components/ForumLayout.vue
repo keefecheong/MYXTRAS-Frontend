@@ -1,21 +1,37 @@
 <template>
     <div class="forum-container">
         <div class="row">
-            <div class="col-1">
-                <img class="profilepic" src="https://i.imgur.com/1qkYzYH.jpg" alt="profilepic">
-            </div>
-            <div class="col-10">
-                <p><a href="#" class="forum-name">x/modana</a> ~ Posted by: <a href="#" class="username">@UIFAN</a></p>
+            <div v-for="thread in followedGroupthreads">
+                <div class="card shadow threadContainer">
                 <div class="row">
-                    <span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span>
-                </div>            
-                <h3 class="forum-title">What is the best way to get rid of acne?</h3>
-                <p class="forum-caption">
-                    shdkajhsdkjhaksjdhkjashdkjahsdkjasdhkja
-                    shdkajhsdkjhaksjdhkjashdkjahsdkjasdhkja
-                    shdkajhsdkjhaksjdhkjashdkjahsdkjasdhkjashdkajhsdkjhaksjdhkjashdkjahsdkjasdhkjashdkajhsdkjhaksjdhkjashdkjahsdkjasdhkja
-                </p>
-                <img class="forum-image" src="https://i.imgur.com/1qkYzYH.jpg" alt="forum-image">
+                    <div class="col-md-2 d-flex justify-content-end">
+                        <a href='./forumGroup.html'><img id="threadGroupPic" :src="thread.groupPic" :draggable="isDraggable"></a>
+                    </div>
+                    <div class="col-10 threadContent">
+                            <!-- <p><a href="#" class="forum-name">x/modana</a> ~ Posted by: <a href="#" class="username">@UIFAN</a></p>
+                            <div class="row">
+                                <span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span>
+                            </div>            
+                            <h3 class="forum-title">What is the best way to get rid of acne?</h3>
+                            <p class="forum-caption">
+                                shdkajhsdkjhaksjdhkjashdkjahsdkjasdhkja
+                                shdkajhsdkjhaksjdhkjashdkjahsdkjasdhkja
+                                shdkajhsdkjhaksjdhkjashdkjahsdkjasdhkjashdkajhsdkjhaksjdhkjashdkjahsdkjasdhkjashdkajhsdkjhaksjdhkjashdkjahsdkjasdhkja
+                            </p>
+                            <img class="forum-image" src="https://i.imgur.com/1qkYzYH.jpg" alt="forum-image"> -->
+                        <p id="meta"><a href="#" class="forum-name">{{ "x/" + thread.groupName}}</a>{{ " ~ Posted by: @" + thread.creatorName }}</p>  
+                        <p id="thread-title">{{ thread.threadTitle }}</p>  
+                        <p id="thread-description">{{ thread.threadDesc }}</p>
+                        <div class="imageContainer">
+                            <img id="threadPic" :src="thread.threadPic" :draggable="isDraggable">
+                        </div>
+                        <br>
+                        <div class="d-flex justify-content-end">
+                            <a id="commentsText" href="/threadView.html">View {{ thread.numOfComments }} comments</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -23,21 +39,81 @@
 
 <style>
 @import url('../styles/main.css');
+.card {
+    padding: 1em 0 1em 0;
+    border: none !important;
+    margin: 3vh 1vh;
+}
 .forum-container {
     border: #133B5B;
     border-style: solid 1rem;
     margin: auto;
-    box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);;
-    border-radius: 10px;
-    padding: 40px;
+}
+.threadContainer {
+    padding: 2em 3em 1em 3em !important;
+
+}
+.threadContent {
+    padding-right: 2em !important;
+}
+#forumHeader {
+    color: var(--primary);
+    font-weight: bolder;
+    margin-bottom: 0.5em;
+}
+#meta {
+    font-size: small;
+}
+.groupPic {
+    overflow: hidden;
+    float:left;
+    width: 5vh;
+    height: 5vh;
+    margin-top: 15px;
+    border-radius: 50%;
+
+}
+#threadGroupPic {
+    overflow: hidden;
+    float:left;
+    width: 10vh;
+    height: 10vh;
+    margin-top: 15px;
+    border-radius: 50%;
+}
+#thread-title {
+    font-weight: bolder;
+    font-size: larger;
+}
+#commentsText {
+    margin: 1em 0 0.5em 0;
+    text-decoration: none;
+    color: gray !important;
 }
 
-.profilepic {
-    display: grid;
-    place-self: center;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+.popularThreadContainer {
+    display: flex;
+    flex-direction: column;
+}
+.align-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2em;
+}
+.card-title {
+    font-size: 2rem;
+    text-align: center;
+}
+.forum-name {
+    margin-top: 1.5em;
+}
+.imageContainer {
+    width: 100%;
+}
+.imageContainer img {
+    max-height: 100%;
+    max-width: 100%;
 }
 
 .col-1 {
@@ -49,7 +125,12 @@
     font-weight: bold;
     color: #133B5B;
 }
-
+.forum-name:hover {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--primary);
+}
+/* 
 .forum-caption {
     text-align: justify;
     word-wrap: break-word;
@@ -61,7 +142,7 @@
     max-height: 500px;
     display: flex;
     margin: auto;
-}
+} */
 
 #interest-badge{
     margin: 5px;
@@ -114,6 +195,22 @@ export default{
     data(){
         return{
             selectedOption: ['Kpop','Games'],
+            isDraggable: false,
+            forums: [
+            { name: 'ILUVCats', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'We talk about cats' },
+            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            ],
+            followedGroupthreads: [
+                {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://previews.123rf.com/images/parinyabinsuk/parinyabinsuk1407/parinyabinsuk140700176/30136368-young-asian-boy-being-scolded-by-parents.jpg" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
+                {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10}
+            ],
+            popularThreads: [
+                {threadTitle: "How do I make my parents proud?", threadPic:"https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png" },
+                {threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png"}
+            ]
         }
     },
     methods:{

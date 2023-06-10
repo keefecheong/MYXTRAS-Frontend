@@ -4,6 +4,15 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 import firebase from "firebase";
 import 'firebase/auth';
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+const vuetify = createVuetify({
+    components,
+    directives,
+  })
 
 const firebaseConfig = {
     apiKey: "AIzaSyA3wBWOXGlzafi-c8fF1-hUUTYWgZDIxBY",
@@ -17,4 +26,4 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const app = createApp(App);
-app.mount('#app');
+app.use(vuetify).mount('#app');

@@ -7,33 +7,39 @@
                         <span class="material-symbols-outlined" style="color: white; margin: 15px 0 0 15px">home</span>
                     </a>
                 </div>
+                <!-- <v-tooltip text="Tooltip">
+                <template v-slot:activator="{ props }">
+                    <v-input v-bind="props"></v-input>
+                </template>
+                </v-tooltip> -->
                 <div class="col-md-10 loginContainer">
                     <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
                     <div class="whitebox">
                         <form @submit.prevent="login">
                             <h1>Register Now!</h1>
                             <input v-model="emailAddress" type="email" placeholder="Email Address" id="emailField" required>
+
+                            <!-- Phone Number Field -->
                             <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required>
                             <p v-if="showPhoneErr" id="phoneErr">Enter a valid phone number</p>
                             <br>
                             <button @click="sendOTP" id="sendOtpBtn">Send OTP</button>
-                            <div id="recaptcha-container" style="background-color:#1b1a1a;width:300px;margin:auto;"></div>
+                            <br>
+                            <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
                             <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" required>
                             <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn">Verify OTP</button>
                             <p v-if="verifiedotp">OTP verified</p>
-                            <br>
-                            <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" :maxlength="20" required>
+
+                            <!-- Password Field -->
+                            <input title="Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters" :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" class="custom-input" :maxlength="20" required>
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword(1)">visibility_off</button>
-                            <div v-if="password == ''" >
-                                <p id="hint">Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters</p>
-                            </div>
                             <div v-if="password != ''" >
                                 <span class="material-symbols-outlined" :class="passwordRequirements" id="infoSym">info</span>
                                 <p :class="passwordRequirements" id="passErr">{{ passwordStrengthMessage }}</p>
                             </div>
                             <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword" placeholder="Confirm Password" id="repeatPasswordField" :maxlength="20" required>
-                            <!-- :class="{ 'password-visible': showPassword }" -->
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressedrepeated': isPressedrepeated }" @click="hidePassword(2)">visibility_off</button>
+                            
                             <p v-if="registerFail" id="genErr"> {{ generalErrMsg }}</p>
                             <button @click="registerUser()" id="registerBtn">
                                 Register
@@ -61,6 +67,7 @@ body {
     background-size: 400% 400%;
     
 }
+
 #phoneErr,
 #genErr {
     padding: 0 4em 0 4em;
@@ -227,6 +234,7 @@ input:focus{
 </style>
 <script>
 import firebase from 'firebase';
+import Tooltip from 'v-tooltip';
 
 export default {
     data() {
@@ -257,15 +265,13 @@ export default {
         }
     },
     computed: {
-        
         passwordRequirements() {
             const password = this.password;
             const consecutiveLimit = 3;
-            if (password.length < 4) {
+            if (password.length < 4 || this.isPasswordSingleType(password)) {
                 this.passwordStrengthMessage = "Password is very weak"
             return 'very-weak';
             }
-
             this.passwordStrength = 0;
 
             if (/[A-Z]/.test(password)) {
@@ -273,9 +279,6 @@ export default {
             }
 
             if (/\d/.test(password)) {
-                this.passwordStrength++;
-            }
-            if (password.length > 8) {
                 this.passwordStrength++;
             }
             if (password.length > 14) {
@@ -306,7 +309,7 @@ export default {
             } else if (this.passwordStrength === 1) {
                 this.passwordStrengthMessage = "Password is weak"
                 return 'weak';
-            } else if (this.passwordStrength === 2) {
+            } else if (this.passwordStrength === 2 || this.passwordStrength === 3) {
                 this.passwordStrengthMessage = "Password is strong"
                 return 'strong';
             } else {
@@ -331,6 +334,26 @@ export default {
         })            
     },
     methods: {
+        isPasswordSingleType(password) {
+        const lowercaseRegex = /^[a-z]+$/;
+        const uppercaseRegex = /^[A-Z]+$/;
+        const symbolRegex = /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/;
+        const numberRegex = /^[0-9]+$/;
+        if (
+            lowercaseRegex.test(password) ||
+            uppercaseRegex.test(password) ||
+            symbolRegex.test(password) ||
+            numberRegex.test(password)
+        ) {
+            return true;
+        }
+
+        return false;
+        },
+        //TO DO
+        // Fix +65 appearing in num field
+        // Change tooltip for password
+        // Fix UI
         async sendOTP(){
             if (this.phoneNumber.length != 8 || this.phoneNumber === ''){
                 return this.showPhoneErr = true;
@@ -414,7 +437,8 @@ export default {
                 return this.generalErrMsg = "Invalid phone number";
             }
             // Password complexity check
-            if (this.passwordStrength <= 2){
+            if (this.passwordStrength < 2){
+                console.log(this.passwordStrength)
                 this.registerFail = true;
                 return this.generalErrMsg = "Password is weak";
             }
