@@ -25,7 +25,7 @@
     padding: 0 !important;
 }
 .margin-top {
-    margin: 1.5em 0 0 0!important;
+    margin: 1em 0 0 0!important;
 }
 .realname {
     display: block;
@@ -37,7 +37,7 @@
     color: white;
 }
 #searchIcon {
-    transform: translate(5vh);
+    transform: translate(6.5vh);
     font-size: 1.5rem;
 }
 .search-bar {
@@ -53,15 +53,15 @@
 .pink-header-search {
     display: flex;
     flex-wrap: wrap;
-    padding-top: 5vh;
-    padding-bottom: 5vh;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
     background-color: var(--primary);
 }
 
 .headerprofilepic {
-    width: 6rem;
-    height: 6rem;
-    border: #133B5B 0.5rem solid;
+    width: 5rem;
+    height: 5rem;
+    border: #133B5B 0.3rem solid;
     border-radius: 100%;
     margin-right: 3em;
 }

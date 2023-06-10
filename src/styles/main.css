@@ -17,6 +17,13 @@ body {
     overflow-x: hidden;
 }
 
+.imageContainer {
+    width: 100%;
+}
+.imageContainer img {
+    max-height: 100%;
+    max-width: 100%;
+}
 a {
     text-decoration: none;
 }

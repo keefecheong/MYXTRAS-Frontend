@@ -18,57 +18,12 @@
                  </div>
                 <button class="subscribe-button">Subscribe</button>
             </div>
-            
-
-                
             <div id="white-container" class="row">
                 <div class="col-md-8 offset-md-1">
-                    <div class="card row" id="threads">
-                        <div class="card-body">
-                            <div id="image" class="col-md-1">
-                                <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                            </div>
-
-                            <div id="text-content" class="col-md-10 offset-md-1">
-                                <p>Amy Tan - @iloveapples</p>
-                                <h5 class="card-title">How do I make my parents proud?</h5>
-                                <p class="card-text">My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...</p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <div class="card row" id="threads">
-                        <div class="card-body">
-                            <div id="image" class="col-md-1">
-                                <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                            </div>
-
-                            <div id="text-content" class="col-md-10 offset-md-1">
-                                <p>Amy Tan - @iloveapples</p>
-                                <h5 class="card-title">How do I make my parents proud?</h5>
-                                <p class="card-text">My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...</p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <div class="card row" id="threads">
-                        <div class="card-body">
-                            <div id="image" class="col-md-1">
-                                <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                            </div>
-
-                            <div id="text-content" class="col-md-10 offset-md-1">
-                                <p>Amy Tan - @iloveapples</p>
-                                <h5 class="card-title">How do I make my parents proud?</h5>
-                                <p class="card-text">My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...</p>
-                            </div>
-                            
-                        </div>
-                    </div>
+                    <threadLayout/>
                 </div>
-
                 <div class="col-md-3">
-                    <div class="card" style="height:500px; text-align: center; margin-top: 50px; margin-right: 10px;">
+                    <div class="card shadow">
                         <div class="card-body">
                             <h4 class="card-title">Recommendations</h4>
 
@@ -112,6 +67,7 @@
 <script>
 import NavSidebar from '../../components/NavSidebar.vue';
 import SearchBar from '../../components/SearchBar.vue';
+import threadLayout from '../../components/ThreadLayout.vue';
 import banner from '../../assets/ForumBanner.png'
 import groupPic from '../../assets/NgeeAnnLogo.png'
 
@@ -120,6 +76,7 @@ export default {
     components: {
         NavSidebar,
         SearchBar,
+        threadLayout,
         banner,
     },
 
@@ -138,10 +95,6 @@ export default {
         overflow-x: hidden;
     }
 
-    /* #main-content{
-        margin-left: -12px;
-    } */
-
     #banner-picture{
         height: 150px;
         width: 105%;
@@ -150,7 +103,6 @@ export default {
         margin-left: -12px;
         float: left;
     }
-
     #pink-container{
         background-color: #E53A73;
         height: 100%;
@@ -199,7 +151,7 @@ export default {
     }
 
     #white-container{
-        background-color: #E4E0E7;
+        background-color: #fefefe;
         height: 100%;
         width: 100%;
     }

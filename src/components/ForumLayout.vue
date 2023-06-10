@@ -4,21 +4,14 @@
             <div v-for="thread in followedGroupthreads">
                 <div class="card shadow threadContainer">
                 <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-10"><span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span></div>
+                </div>
+                <div class="row">
                     <div class="col-md-2 d-flex justify-content-end">
                         <a href='./forumGroup.html'><img id="threadGroupPic" :src="thread.groupPic" :draggable="isDraggable"></a>
                     </div>
                     <div class="col-10 threadContent">
-                            <!-- <p><a href="#" class="forum-name">x/modana</a> ~ Posted by: <a href="#" class="username">@UIFAN</a></p>
-                            <div class="row">
-                                <span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span>
-                            </div>            
-                            <h3 class="forum-title">What is the best way to get rid of acne?</h3>
-                            <p class="forum-caption">
-                                shdkajhsdkjhaksjdhkjashdkjahsdkjasdhkja
-                                shdkajhsdkjhaksjdhkjashdkjahsdkjasdhkja
-                                shdkajhsdkjhaksjdhkjashdkjahsdkjasdhkjashdkajhsdkjhaksjdhkjashdkjahsdkjasdhkjashdkajhsdkjhaksjdhkjashdkjahsdkjasdhkja
-                            </p>
-                            <img class="forum-image" src="https://i.imgur.com/1qkYzYH.jpg" alt="forum-image"> -->
                         <p id="meta"><a href="#" class="forum-name">{{ "x/" + thread.groupName}}</a>{{ " ~ Posted by: @" + thread.creatorName }}</p>  
                         <p id="thread-title">{{ thread.threadTitle }}</p>  
                         <p id="thread-description">{{ thread.threadDesc }}</p>
@@ -42,7 +35,10 @@
 .card {
     padding: 1em 0 1em 0;
     border: none !important;
-    margin: 3vh 1vh;
+    margin: 0 1vh 3vh 1vh;
+}
+.col-10, .col-2 {
+    padding: 0;
 }
 .forum-container {
     border: #133B5B;
@@ -110,9 +106,12 @@
 }
 .imageContainer {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
 }
 .imageContainer img {
-    max-height: 100%;
+    margin: auto;
     max-width: 100%;
 }
 
@@ -124,6 +123,7 @@
     font-size: 15px;
     font-weight: bold;
     color: #133B5B;
+    text-decoration: none;
 }
 .forum-name:hover {
     font-size: 15px;
@@ -196,21 +196,14 @@ export default{
         return{
             selectedOption: ['Kpop','Games'],
             isDraggable: false,
-            forums: [
-            { name: 'ILUVCats', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'We talk about cats' },
-            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            ],
+            
             followedGroupthreads: [
                 {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://previews.123rf.com/images/parinyabinsuk/parinyabinsuk1407/parinyabinsuk140700176/30136368-young-asian-boy-being-scolded-by-parents.jpg" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
+                {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10},
+                {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://www.icegif.com/wp-content/uploads/icegif-2013.gif" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
                 {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10}
             ],
-            popularThreads: [
-                {threadTitle: "How do I make my parents proud?", threadPic:"https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png" },
-                {threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png"}
-            ]
+            
         }
     },
     methods:{

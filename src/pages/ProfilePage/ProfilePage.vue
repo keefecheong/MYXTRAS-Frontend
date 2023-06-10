@@ -80,34 +80,7 @@
                             <h4><i class="bi bi-three-dots three-dots"></i></h4>
                         </div>
                     </div>
-
-                    <div class="card forums-card">
-                        <div class="card-body card-position" >
-                            <h5 class="card-title">Joined Forums:</h5>
-                                <div v-for="forum in forums" :key="forum.name">
-                                    <br>
-                                    <img class="profilepic" :src="forum.profilePic">
-                                    <p class="forum-name">{{ forum.name }}</p>
-                                    <p class="forum-description">{{ forum.description }}</p>
-                                    <br>
-                                </div>
-                            <!-- <h5 class="card-title">Joined Forums:</h5>
-                            <br>
-                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                            <p class="forum-name">ILUVCats</p>
-                            <p class="forum-description">We talk about cats</p>
-                            <br>
-                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                            <p class="forum-name">muggingclub</p>
-                            <p class="forum-description">Gind never stops!</p>
-                            <h4><i class="bi bi-three-dots three-dots"></i></h4>
-                            <br>
-                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                            <p class="forum-name">muggingclub</p>
-                            <p class="forum-description">Gind never stops!</p> -->
-                            <h4><i class="bi bi-three-dots three-dots"></i></h4>
-                        </div>
-                    </div>
+                    <SubscribedForums/>
                 </div>
             </div>
             
@@ -119,12 +92,14 @@
 
 <script>
 import NavSidebar from '../../components/NavSidebar.vue'
+import SubscribedForums from '../../components/SubscribedForums.vue'
 import profilePicture from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
 
 export default {
   components: {
     NavSidebar,
+    SubscribedForums
   },
 
   data(){
@@ -239,6 +214,7 @@ export default {
 </script>
 
 <style>
+@import url('../../styles/main.css');
     #signOutContainer:hover {
         cursor: pointer !important;
     }
