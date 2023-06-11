@@ -14,18 +14,22 @@
                             <AdditionButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
                         </div>
                         
-                        <select v-model="selectedSchool" :required="!showPopup">
+                        <select v-model="selectedSchool" :required="!showPopup" @change="retrieveCourses">
                             <option value="" disabled selected hidden>Select a school</option>
-                            <option value="ICT">School of ICT</option>
-                            <option value="HS">School of HS</option>
+                            <option value="BA">School of BA</option>
+                            <option value="DE">School of DE</option>
+                            <option value="SoE">School of SoE</option>
                             <option value="FMS">School of FMS</option>
-                            <option value="BS">School of BS</option>
+                            <option value="HS">School of HS</option>
+                            <option value="HSM">School of HSM</option>
+                            <option value="ICT">School of ICT</option>
+                            <option value="LSCT">School of LSCT</option>
                         </select>
                         <br>
                         <br>
-                        <select v-model="selectedCourse" :required="!showPopup">
-                            <option value="" disabled selected hidden>Select a course</option>
-                            <option v-for="course in filteredCourses" :value="course" :disabled="course === 'Select a school first'">{{ course }}</option>
+                        <select v-model="selectedCourse" :required="!showPopup" :disabled="selectedSchool === '' || selectedSchool === null">
+                            <option value="" disabled selected hidden>Select a Course</option>
+                            <option v-for="course in courses" :value="course">{{ course }}</option>
                         </select>
                         <br>
                         <br>
@@ -152,22 +156,15 @@ export default {
             maxCharacters: 100,
             selectedOption: [],
             userId: '',
-            // schools: ['ICT','HS','FMS','BMS'],
-            courses: {
-                '': ["Select a school first"],
-                ICT: ['CSF', 'IM', 'CICT'],
-                HS: ['CHEM', 'BIO'],
-                FMS: ['FILM', 'MEDIA'],
-                BS: ['MARKETING', 'HR']
-            },
+            courses: [],
                         
         };
     },
-    computed: {
-        filteredCourses() {
-            return this.courses[this.selectedSchool] || [];
-        }
-    },
+    // computed: {
+    //     filteredCourses() {
+    //         return this.courses[this.selectedSchool] || [];
+    //     }
+    // },
     mounted() {
         this.checkForCookie();
         this.checkAuth();
@@ -335,6 +332,24 @@ export default {
                 });
                 
             // console.log(this.userObject);
+        },
+        retrieveCourses() {
+            const id = this.selectedSchool
+            fetch(`http://127.0.0.1:8081/api/school/get-courses/${id}`, {
+                method: 'GET',
+            }) .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error: ' + response.error);
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    this.courses = data.courseList;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         },
 
         noIntegers() {
