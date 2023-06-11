@@ -3,7 +3,7 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
-            <SearchBar/>
+            <SearchBar currentPage="forums"/>
             <br>
             <h1 id="forumHeader">Latest Updates!</h1>
             <div class="row">

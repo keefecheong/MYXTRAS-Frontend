@@ -261,7 +261,6 @@ export default {
             var detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
             var realname = this.realname;
             var username = this.username;
-            var school = this.selectedSchool;
             var course = this.selectedCourse;
             console.log(Object.values(this.courses).flat())
             if (
@@ -269,7 +268,6 @@ export default {
             /^[0-9]+$/.test(realname) ||
             realname.length > 32 ||
             username.length > 16 ||
-            !(school in this.courses) ||
             !(Object.values(this.courses).flat().includes(course))
             ) {
                 if (detailsList.some(item => item === "")) {
@@ -283,9 +281,6 @@ export default {
 
                 } else if (username.length > 16) {
                     alert("Username must not be more than 16 characters long");
-
-                } else if (!(school in this.courses)) {
-                    alert("School does not exist");
 
                 } else if (!Object.values(this.courses).flat().includes(course)) {
                     alert("Course does not exist");
@@ -301,13 +296,13 @@ export default {
                 return;
             }
             else {
-                console.log('gu');
+                const selectedCourseShort = this.findKeyByValue(this.courses, this.selectedCourse)
                 this.userObject = {
                 'realName': this.realname,
                 'userName': this.username,
                 'biography': this.biography,
                 'selectedSchool': this.selectedSchool,
-                'selectedCourse': this.selectedCourse,
+                'selectedCourse': selectedCourseShort,
                 'selectedInterests': this.selectedOption,
                 }
             }
@@ -355,6 +350,14 @@ export default {
         noIntegers() {
             this.realname = this.realname.replace(/[0-9]/g, '');
         },
+        findKeyByValue(dictionary, value) {
+        for (const key in dictionary) {
+            if (dictionary[key] === value) {
+            return key;
+            }
+        }
+        return null; // Return null if the value is not found
+        }
     }
 }
 </script>

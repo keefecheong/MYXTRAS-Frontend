@@ -1,11 +1,13 @@
 <template>
-    <div class="row pink-header-search">
-        <div class="col-md-3"></div>
-        <div class="col-md-6" style="display: flex; align-items: center;"> 
+    <div class="row pink-header-search" >
+        <div class="col-md-3 centerElements">
+            <a href="/forumCreate.html"><btn v-if="currentPage === 'forums'" id="createForumBtn">Create Community</btn></a>
+        </div>
+        <div class="col-md-6 centerElements" > 
             <span class="material-symbols-outlined" style="color: black" id="searchIcon">search</span>
             <input class="search-bar" type="text" placeholder="Search for Xtras like you!">
         </div>
-        <div class="col-md-3 d-flex justify-content-end profileContainter">
+        <div class="col-md-3 d-flex justify-content-end profileContainter centerElements">
             <!-- check for identity after authentication -->
             <div v-if="login" class="col-md-4 margin-top">
                 <p class="realname">{{ realname }}</p>
@@ -20,6 +22,22 @@
 </template>
 
 <style>
+#createForumBtn {
+    background-color: transparent;
+    padding: 1em;
+    margin-left: 4vh;
+    color: var(--dark);
+    border: 4px solid var(--dark);
+    border-radius: 10px;
+}
+#createForumBtn:hover {
+    border: 4px solid var(--secondary);
+    color: var(--secondary);
+    cursor: pointer;
+}
+.centerElements {
+    display: flex; align-items: center;
+}
 .profileContainter {
     margin: 0 !important;
     padding: 0 !important;
@@ -123,6 +141,12 @@
 
 <script>
 export default {
+    props: {
+        currentPage: {
+            type: String,
+            required: true
+        }
+    },
     data() {
         return {
             login: false,
@@ -133,6 +157,7 @@ export default {
     },
     mounted() {
         this.checkAuth();
+        console.log(this.currentPage)
     },
     methods: {
         redirectsetup(){
