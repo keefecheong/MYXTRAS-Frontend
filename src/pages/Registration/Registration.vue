@@ -407,27 +407,10 @@ export default {
                 
         },
         filterNumber() {
-        // Remove any non-numeric characters except the minus sign at the beginning
-        this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
-        },
-        redirectUser(){
-            fetch("http://127.0.0.1:8081/api/users/setupprofile", {
-                    method: "GET"
-                })
-                .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-                else if (!response.ok){
-                    response.error()
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
+            // Remove any non-numeric characters except the minus sign at the beginning
+            this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
         },
         async registerUser() {
-            
             if (!this.verifiedotp){
                 return this.generalErrMsg = "Verify your phone number";
             }
@@ -463,7 +446,7 @@ export default {
             // const dataObject = this.userObject;
             // localStorage.setItem('dataObject', JSON.stringify(dataObject));
 
-            fetch(`http://127.0.0.1:8081/api/users/register`, {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',

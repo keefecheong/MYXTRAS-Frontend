@@ -135,18 +135,9 @@ export default {
         this.checkAuth();
     },
     methods: {
-        redirectsetup(){
-            fetch("http://127.0.0.1:8081/api/users/setupprofile", {
-                method: "GET"
-            }).then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-            })
-        },
         checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch("http://127.0.0.1:8081/api/users", {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -155,12 +146,12 @@ export default {
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        if (data.profilesetup === false){
-                            this.redirectsetup();
+                        if (data.is_profile_setup === false){
+                            window.location.href = '/feed.html';
                             return;
                         }
                         else {
-                            this.realname = data.realname;
+                            this.realname = data.real_name;
                             this.school = data.school;
                             this.course = data.course;
                             this.pfplink = data.profile_pic_link;

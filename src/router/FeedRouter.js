@@ -56,7 +56,7 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
   let authenticated = false;
 
-  await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/get-cookie`, {
+  await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
     method: 'get',
     credentials: 'include'
   }).then((res) => {

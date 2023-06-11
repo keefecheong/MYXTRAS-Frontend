@@ -173,8 +173,7 @@ export default {
         this.checkAuth();
 
     },
-
-        methods: {
+    methods: {
         limitCharacters() {
         if (this.biography.length > this.maxCharacters) {
             // If the number of characters exceeds the limit
@@ -190,7 +189,7 @@ export default {
         },
         checkForCookie(){
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch("http://127.0.0.1:8081/api/users/get-cookie", {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
                     method: "GET",
                     headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -199,7 +198,7 @@ export default {
                 })
                 .then(response => {
                 if (!response.ok) {
-                    this.redirectUser();
+                    window.location.href = '/feed.html';
                     console.log("fail");
                 }
                 else if (response.ok){
@@ -213,7 +212,7 @@ export default {
 
         checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch("http://127.0.0.1:8081/api/users", {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -222,8 +221,8 @@ export default {
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        if (data.profilesetup === true){
-                            this.redirectUser();
+                        if (data.is_profile_setup === true){
+                            window.location.href = '/feed.html';
                             return;
                         }
                         else {
@@ -240,23 +239,6 @@ export default {
                 .catch(error => {
                     console.error('Error:', error);
                 });
-        },
-        redirectUser(){
-            fetch("http://localhost:8081/api/users/feed", {
-                        method: "GET"
-                })
-                .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-                else if (!response.ok){
-                    response.error()
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-                
         },
 
         validationCheck(){
@@ -306,16 +288,16 @@ export default {
             else {
                 console.log('gu');
                 this.userObject = {
-                'realName': this.realname,
-                'userName': this.username,
-                'biography': this.biography,
-                'selectedSchool': this.selectedSchool,
-                'selectedCourse': this.selectedCourse,
-                'selectedInterests': this.selectedOption,
+                    'realName': this.realname,
+                    'userName': this.username,
+                    'biography': this.biography,
+                    'selectedSchool': this.selectedSchool,
+                    'selectedCourse': this.selectedCourse,
+                    'selectedInterests': this.selectedOption,
                 }
             }
            
-            fetch(`http://127.0.0.1:8081/api/users/setup`, {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/setup`, {
                 method: 'PATCH', 
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -326,8 +308,7 @@ export default {
                     if (!response.ok) {
                         throw new Error('Error: ' + response.error);
                     } else {
-                        this.redirectUser();
-                        return response.json();
+                        window.location.href = '/feed.html';
                     }
                 })
                 .catch(error => {
