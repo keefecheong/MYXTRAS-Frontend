@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import NavSidebar from '../../components/NavSidebar.vue';
+import NavSidebar from '../../components/general/NavSidebar.vue';
 import AnnoucementLayout from '../../components/AnnoucementLayout.vue'; 
 
 export default {

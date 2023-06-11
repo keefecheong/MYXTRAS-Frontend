@@ -136,7 +136,7 @@ textarea{
 </style>
 
 <script>
-import AdditionButton from '../../components/AdditionButton.vue'
+import AdditionButton from '../../components/profile/AdditionButton.vue'
 export default {
     components: {
        AdditionButton,

@@ -62,7 +62,7 @@
 </template>
 
 <script>
-    import ForumLayout from '../components/ForumLayout.vue';
+    import ForumLayout from '../../components/forum/ForumLayout.vue';
     export default {
         components: {
             ForumLayout

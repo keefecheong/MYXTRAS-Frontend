@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import FeedBlogView from '../views/FeedBlogView.vue';
-import CreateBlogView from '../views/CreateBlogView.vue';
-import EditBlogView from '../views/EditBlogView.vue';
-import UnauthorizedView from '../views/UnauthorizedView.vue';
+import FeedBlogView from '../views/blog/FeedBlogView.vue';
+import CreateBlogView from '../views/blog/CreateBlogView.vue';
+import EditBlogView from '../views/blog/EditBlogView.vue';
+import UnauthorizedView from '../views/general/UnauthorizedView.vue';
 
 const routes = [
   {

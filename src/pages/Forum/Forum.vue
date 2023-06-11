@@ -120,10 +120,10 @@
 
 </style>
 <script>
-import NavSidebar from '../../components/NavSidebar.vue';
-import SearchBar from '../../components/SearchBar.vue';
-import ForumLayout from '../../components/ForumLayout.vue';
-import SubscribedForums from '../../components/SubscribedForums.vue';
+import NavSidebar from '../../components/general/NavSidebar.vue';
+import SearchBar from '../../components/general/SearchBar.vue';
+import ForumLayout from '../../components/forum/ForumLayout.vue';
+import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 export default {
     components: {
         NavSidebar,

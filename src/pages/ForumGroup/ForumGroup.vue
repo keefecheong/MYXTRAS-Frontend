@@ -65,9 +65,9 @@
 </template>
 
 <script>
-import NavSidebar from '../../components/NavSidebar.vue';
-import SearchBar from '../../components/SearchBar.vue';
-import threadLayout from '../../components/ThreadLayout.vue';
+import NavSidebar from '../../components/general/NavSidebar.vue';
+import SearchBar from '../../components/general/SearchBar.vue';
+import threadLayout from '../../components/forum/ThreadLayout.vue';
 import banner from '../../assets/ForumBanner.png'
 import groupPic from '../../assets/NgeeAnnLogo.png'
 

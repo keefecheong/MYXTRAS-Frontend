@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import NavSidebar from '../../components/NavSidebar.vue';
-import SearchBar from '../../components/SearchBar.vue';
+import NavSidebar from '../../components/general/NavSidebar.vue';
+import SearchBar from '../../components/general/SearchBar.vue';
 
 export default {
     components: {

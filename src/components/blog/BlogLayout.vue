@@ -281,7 +281,7 @@
 
 <script>
 import { RouterLink } from 'vue-router';
-import { useBlogStore } from '../stores/BlogStore.js';
+import { useBlogStore } from '../../stores/BlogStore.js';
 import BlogCommentLayout from './BlogCommentLayout.vue';
 
 export default {

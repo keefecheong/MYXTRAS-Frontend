@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import BlogLayout from '../components/BlogLayout.vue';
+import BlogLayout from '../../components/blog/BlogLayout.vue';
 
 export default {
     data() {

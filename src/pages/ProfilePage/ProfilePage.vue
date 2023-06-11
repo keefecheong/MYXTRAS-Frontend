@@ -91,8 +91,8 @@
 </template>
 
 <script>
-import NavSidebar from '../../components/NavSidebar.vue'
-import SubscribedForums from '../../components/SubscribedForums.vue'
+import NavSidebar from '../../components/general/NavSidebar.vue'
+import SubscribedForums from '../../components/forum/SubscribedForums.vue'
 import profilePicture from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
 
