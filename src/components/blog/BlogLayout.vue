@@ -103,7 +103,7 @@
 </template>
 
 <style>
-@import url('../styles/main.css');
+@import url('../../styles/main.css');
 
 /* container styles */
 .blog-container {
