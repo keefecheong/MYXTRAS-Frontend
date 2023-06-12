@@ -76,8 +76,8 @@
 
   
 <script>
-import NavSidebar from '../../components/NavSidebar.vue'
-import AdditionButton from '../../components/AdditionButton.vue'
+import NavSidebar from '../../components/general/NavSidebar.vue'
+import AdditionButton from '../../components/profile/AdditionButton.vue'
 import ngeeann from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
 import Cropper from 'cropperjs';
@@ -116,7 +116,7 @@ export default {
   methods:{
     checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch("http://127.0.0.1:8081/api/users", {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -125,8 +125,8 @@ export default {
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        if (data.profilesetup === false){
-                            this.redirectsetup();
+                        if (data.is_profile_setup === false){
+                            window.location.href = '/setupprofile.html';
                             return;
                         }
                         else {
@@ -219,24 +219,6 @@ export default {
       this.cropper = null; // Set the cropper variable to null
       this.showBtn = false;
     },
-
-    redirectUser(){
-      fetch("http://localhost:8081/api/users/profilePage", {
-                  method: "GET"
-          })
-          .then(response => {
-          if (response.redirected) {
-              window.location.href = response.url;
-          }
-          else if (!response.ok){
-              response.error()
-          }
-          })
-          .catch(error => {
-              console.error('Error:', error);
-          })
-            
-    },
  
     async updateProfile() {
       
@@ -248,7 +230,7 @@ export default {
       }
 
       
-      fetch(`http://127.0.0.1:8081/api/users/update`, {
+      fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
           method: 'PATCH', 
           headers: {
               'Content-Type': 'application/json; charset=UTF-8',
@@ -259,8 +241,7 @@ export default {
               if (!response.ok) {
                   throw new Error('Error: ' + response.status);
               } else {
-                  this.redirectUser();
-                  return response.json();
+                  window.location.href = '/profilePage.html';
               }
           })
           .catch(error => {

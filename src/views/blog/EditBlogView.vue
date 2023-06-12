@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { useBlogStore } from '../stores/BlogStore.js';
+import { useBlogStore } from '../../stores/BlogStore.js';
 
 export default {
     data() {

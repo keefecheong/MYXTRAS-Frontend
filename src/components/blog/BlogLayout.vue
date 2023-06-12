@@ -103,7 +103,7 @@
 </template>
 
 <style>
-@import url('../styles/main.css');
+@import url('../../styles/main.css');
 
 /* container styles */
 .blog-container {
@@ -281,7 +281,7 @@
 
 <script>
 import { RouterLink } from 'vue-router';
-import { useBlogStore } from '../stores/BlogStore.js';
+import { useBlogStore } from '../../stores/BlogStore.js';
 import BlogCommentLayout from './BlogCommentLayout.vue';
 
 export default {

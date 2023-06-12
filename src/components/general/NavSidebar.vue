@@ -25,7 +25,7 @@
                 <button class="material-symbols-outlined" id="close-sidebar" @click="toggleSidebar()">keyboard_double_arrow_left</button>
             </div>
             
-            <img src="../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
+            <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
         
             <a href="/feed.html" class="sidebar-link">
                 <span class="material-symbols-outlined">group</span>

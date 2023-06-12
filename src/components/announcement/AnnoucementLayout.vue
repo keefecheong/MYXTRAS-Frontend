@@ -40,7 +40,7 @@
 </script>
 
 <style>
-@import url('../styles/main.css');
+@import url('../../styles/main.css');
 
 .a-container {
     display: inline-block;

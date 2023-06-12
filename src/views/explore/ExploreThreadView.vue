@@ -62,7 +62,7 @@
 </template>
 
 <script>
-    import ForumLayout from '../components/ForumLayout.vue';
+    import ForumLayout from '../../components/forum/ForumLayout.vue';
     export default {
         components: {
             ForumLayout
@@ -84,7 +84,7 @@
 </script>
 
 <style>
-    @import url('../styles/main.css');
+    @import url('../../styles/main.css');
     .interestCommunity{
         font-size: 1.2rem;
         background-color: rgba(255, 150, 183, 0.6);

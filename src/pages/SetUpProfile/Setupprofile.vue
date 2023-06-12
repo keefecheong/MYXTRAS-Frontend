@@ -14,22 +14,18 @@
                             <AdditionButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
                         </div>
                         
-                        <select v-model="selectedSchool" :required="!showPopup" @change="retrieveCourses">
+                        <select v-model="selectedSchool" :required="!showPopup">
                             <option value="" disabled selected hidden>Select a school</option>
-                            <option value="BA">School of BA</option>
-                            <option value="DE">School of DE</option>
-                            <option value="SoE">School of SoE</option>
-                            <option value="FMS">School of FMS</option>
-                            <option value="HS">School of HS</option>
-                            <option value="HSM">School of HSM</option>
                             <option value="ICT">School of ICT</option>
-                            <option value="LSCT">School of LSCT</option>
+                            <option value="HS">School of HS</option>
+                            <option value="FMS">School of FMS</option>
+                            <option value="BS">School of BS</option>
                         </select>
                         <br>
                         <br>
-                        <select v-model="selectedCourse" :required="!showPopup" :disabled="selectedSchool === '' || selectedSchool === null">
-                            <option value="" disabled selected hidden>Select a Course</option>
-                            <option v-for="course in courses" :value="course">{{ course }}</option>
+                        <select v-model="selectedCourse" :required="!showPopup">
+                            <option value="" disabled selected hidden>Select a course</option>
+                            <option v-for="course in filteredCourses" :value="course" :disabled="course === 'Select a school first'">{{ course }}</option>
                         </select>
                         <br>
                         <br>
@@ -140,7 +136,7 @@ textarea{
 </style>
 
 <script>
-import AdditionButton from '../../components/AdditionButton.vue'
+import AdditionButton from '../../components/profile/AdditionButton.vue'
 export default {
     components: {
        AdditionButton,
@@ -156,22 +152,28 @@ export default {
             maxCharacters: 100,
             selectedOption: [],
             userId: '',
-            courses: [],
+            // schools: ['ICT','HS','FMS','BMS'],
+            courses: {
+                '': ["Select a school first"],
+                ICT: ['CSF', 'IM', 'CICT'],
+                HS: ['CHEM', 'BIO'],
+                FMS: ['FILM', 'MEDIA'],
+                BS: ['MARKETING', 'HR']
+            },
                         
         };
     },
-    // computed: {
-    //     filteredCourses() {
-    //         return this.courses[this.selectedSchool] || [];
-    //     }
-    // },
+    computed: {
+        filteredCourses() {
+            return this.courses[this.selectedSchool] || [];
+        }
+    },
     mounted() {
         this.checkForCookie();
         this.checkAuth();
 
     },
-
-        methods: {
+    methods: {
         limitCharacters() {
         if (this.biography.length > this.maxCharacters) {
             // If the number of characters exceeds the limit
@@ -187,7 +189,7 @@ export default {
         },
         checkForCookie(){
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch("http://127.0.0.1:8081/api/users/get-cookie", {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
                     method: "GET",
                     headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -196,7 +198,7 @@ export default {
                 })
                 .then(response => {
                 if (!response.ok) {
-                    this.redirectUser();
+                    window.location.href = '/feed.html';
                     console.log("fail");
                 }
                 else if (response.ok){
@@ -210,7 +212,7 @@ export default {
 
         checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch("http://127.0.0.1:8081/api/users", {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -219,8 +221,8 @@ export default {
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        if (data.profilesetup === true){
-                            this.redirectUser();
+                        if (data.is_profile_setup === true){
+                            window.location.href = '/feed.html';
                             return;
                         }
                         else {
@@ -238,29 +240,13 @@ export default {
                     console.error('Error:', error);
                 });
         },
-        redirectUser(){
-            fetch("http://localhost:8081/api/users/feed", {
-                        method: "GET"
-                })
-                .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-                else if (!response.ok){
-                    response.error()
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-                
-        },
 
         validationCheck(){
             var checkStatus = false
             var detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
             var realname = this.realname;
             var username = this.username;
+            var school = this.selectedSchool;
             var course = this.selectedCourse;
             console.log(Object.values(this.courses).flat())
             if (
@@ -268,6 +254,7 @@ export default {
             /^[0-9]+$/.test(realname) ||
             realname.length > 32 ||
             username.length > 16 ||
+            !(school in this.courses) ||
             !(Object.values(this.courses).flat().includes(course))
             ) {
                 if (detailsList.some(item => item === "")) {
@@ -281,6 +268,9 @@ export default {
 
                 } else if (username.length > 16) {
                     alert("Username must not be more than 16 characters long");
+
+                } else if (!(school in this.courses)) {
+                    alert("School does not exist");
 
                 } else if (!Object.values(this.courses).flat().includes(course)) {
                     alert("Course does not exist");
@@ -296,18 +286,18 @@ export default {
                 return;
             }
             else {
-                const selectedCourseShort = this.findKeyByValue(this.courses, this.selectedCourse)
+                console.log('gu');
                 this.userObject = {
-                'realName': this.realname,
-                'userName': this.username,
-                'biography': this.biography,
-                'selectedSchool': this.selectedSchool,
-                'selectedCourse': selectedCourseShort,
-                'selectedInterests': this.selectedOption,
+                    'realName': this.realname,
+                    'userName': this.username,
+                    'biography': this.biography,
+                    'selectedSchool': this.selectedSchool,
+                    'selectedCourse': this.selectedCourse,
+                    'selectedInterests': this.selectedOption,
                 }
             }
            
-            fetch(`http://127.0.0.1:8081/api/users/setup`, {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/setup`, {
                 method: 'PATCH', 
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -318,8 +308,7 @@ export default {
                     if (!response.ok) {
                         throw new Error('Error: ' + response.error);
                     } else {
-                        this.redirectUser();
-                        return response.json();
+                        window.location.href = '/feed.html';
                     }
                 })
                 .catch(error => {
@@ -328,36 +317,10 @@ export default {
                 
             // console.log(this.userObject);
         },
-        retrieveCourses() {
-            const id = this.selectedSchool
-            fetch(`http://127.0.0.1:8081/api/school/get-courses/${id}`, {
-                method: 'GET',
-            }) .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error: ' + response.error);
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(data => {
-                    this.courses = data.courseList;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        },
 
         noIntegers() {
             this.realname = this.realname.replace(/[0-9]/g, '');
         },
-        findKeyByValue(dictionary, value) {
-        for (const key in dictionary) {
-            if (dictionary[key] === value) {
-            return key;
-            }
-        }
-        return null; // Return null if the value is not found
-        }
     }
 }
 </script>

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
-import ExploreBlogView from '../views/ExploreBlogView.vue';
-import ExploreThreadView from '../views/ExploreThreadView.vue';
+import ExploreBlogView from '../views/explore/ExploreBlogView.vue';
+import ExploreThreadView from '../views/explore/ExploreThreadView.vue';
 
 const routes = [
   {

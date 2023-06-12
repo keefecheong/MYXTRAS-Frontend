@@ -91,8 +91,8 @@
 </template>
 
 <script>
-import NavSidebar from '../../components/NavSidebar.vue'
-import SubscribedForums from '../../components/SubscribedForums.vue'
+import NavSidebar from '../../components/general/NavSidebar.vue'
+import SubscribedForums from '../../components/forum/SubscribedForums.vue'
 import profilePicture from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
 
@@ -140,7 +140,7 @@ export default {
   methods:{
     checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch("http://127.0.0.1:8081/api/users", {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -149,12 +149,12 @@ export default {
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        if (data.profilesetup === false){
+                        if (data.is_profile_setup === false){
                             this.redirectsetup();
                             return;
                         }
                         else {
-                            this.realname = data.realname;
+                            this.realname = data.real_name;
                             this.username = data.username;
                             this.biography = data.biography;
                             this.school = data.school;
@@ -174,29 +174,16 @@ export default {
                 .catch(error => {
                     console.error('Error:', error);
                 });
-        },
-
-    redirectlogin(){
-        fetch("http://127.0.0.1:8081/api/users/redirect-login", {
-                method: 'GET',
-            }) .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else {
-                    console.log("Error: Failed to log out (Redirect failure)")
-                    console.log(response)
-                }
-            });
     },
     signOut(){
         console.log("1")
-        fetch("http://127.0.0.1:8081/api/users/remove-cookie", {
+        fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/remove`, {
                 method: 'GET',
                 mode: "cors",
                 credentials: 'include'
             }) .then(response => {
                 if (response.ok) {
-                    this.redirectlogin()
+                    window.location.href = '/login.html';
                 } else {
                     console.log("Error: Failed to log out (Remove cookie)")
                     console.log(response)

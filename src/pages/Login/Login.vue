@@ -181,24 +181,6 @@ export default {
                 this.showPassword = !this.showPassword;
                 this.isPressed = !this.isPressed;
             },
-
-            redirectUser(){
-                fetch("http://localhost:8081/api/users/feed", {
-                            method: "GET"
-                    })
-                    .then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    }
-                    else if (!response.ok){
-                        response.error()
-                    }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                })
-        },
-
             async loginUser(){
                 var credentialList = [this.emailAddress, this.password];
                 console.log(this.password);
@@ -214,7 +196,7 @@ export default {
                 }
 
                 try {
-                    const response = await fetch('http://127.0.0.1:8081/api/users/login', {
+                    const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json; charset=UTF-8'
@@ -226,7 +208,7 @@ export default {
                     if (response.ok) {
                         const data = await response.json();
                         console.log('Success:', data);
-                        this.redirectUser();
+                        window.location = '/feed.html';
                     } else {
                         const errorData = await response.json();
                         console.error('Error:', errorData.message);
@@ -239,7 +221,7 @@ export default {
                     alert('An error occurred. Please try again later.');
                 }
             }
-        },
+        }
     }
     
 //document.getElementById('ngeeAnnBanner').setAttribute('draggable', false);
