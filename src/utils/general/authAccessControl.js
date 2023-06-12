@@ -14,7 +14,7 @@
 
 import { createApp } from 'vue';
 import validateUser from './verifyAuthentication.js';
-import UnauthorizedView from '../views/general/UnauthorizedView.vue';
+import UnauthorizedView from '../../views/general/UnauthorizedView.vue';
 
 export default async function dynamicMount(originalApp) {
     const authenticated = await validateUser();

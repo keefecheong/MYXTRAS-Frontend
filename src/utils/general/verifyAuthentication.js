@@ -6,8 +6,6 @@ export default async function validateUser() {
         method: 'get',
         credentials: 'include'
     }).then((res) => {
-        console.log(res);
-        console.log(res.status);
         if (res.status == 204) {
             authenticated = true;
         }

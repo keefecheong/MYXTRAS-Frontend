@@ -27,6 +27,13 @@ a {
     max-width: 100%;
 }
 
+/* hide overflow text with ... */
+.hide-overflow-text {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 h1 {
     text-align: center;
     font-weight: 1000px;

@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import calcDateDifference from '../../utils/general/calcDateDifference.js';
+
 export default {
     data() {
         return {
@@ -47,38 +49,10 @@ export default {
         'comment'
     ],
     mounted() {
-        this.calcDateDifference();
+        // get time difference from when the comment was created and current datetime
+        this.dateCreated = calcDateDifference(this.comment.creation_time);
     },
     methods: {
-        // calculate difference between datetime when the comment was created and current datetime and show corresponding messages
-        calcDateDifference() {
-            const postDatetime = new Date(this.comment.creation_time);
-            const currentDatetime = new Date();
-
-            const timeDifference = currentDatetime.getTime() - postDatetime.getTime();
-            const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-            if (dayDifference == 0) {
-                this.dateCreated = 'Today';
-            }
-            else if (dayDifference == 1) {
-                this.dateCreated = 'Yesterday';
-            }
-            else if (dayDifference < 30) {
-                this.dateCreated = `${dayDifference} days ago`;
-            }
-            else {
-                const monthDifference = Math.floor(dayDifference / 30);
-
-                if (monthDifference < 12) {
-                    this.dateCreated = `${monthDifference} month${monthDifference > 1 ? 's' : ''} ago`;
-                }
-                else {
-                    const yearDifference = Math.floor(monthDifference / 12);
-                    this.dateCreated = `${yearDifference} year${yearDifference > 1 ? 's' : ''} ago`;
-                }
-            }
-        },
         // handle delete comment
         async deleteComment() {
             const confirmDelete = confirm('Are you sure you want to delete this comment?\n\nNote: This action is irreversible!');
@@ -109,6 +83,8 @@ export default {
 </script>
 
 <style>
+@import url('../../styles/main.css');
+
 /* comment header styles */
 .comment-container {
     border-style:dotted;

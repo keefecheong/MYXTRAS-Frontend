@@ -452,11 +452,11 @@
     }
 
     .compensateMaximizedSidebar {
-        margin-left: max(202px, 15vw + 42px);
+        margin-left: max(202px, 15vw + 42px) !important;
     }
 
     .compensateMinimizedSidebar {
-        margin-left: 82px;
+        margin-left: 82px !important;
     }
 
     /* material symbol styles */
