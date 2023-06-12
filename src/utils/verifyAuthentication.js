@@ -8,7 +8,7 @@ export default async function validateUser() {
     }).then((res) => {
         console.log(res);
         console.log(res.status);
-        if (res.status == 204) {
+        if (res.status == 200) {
             authenticated = true;
         }
     }).catch((error) => {
