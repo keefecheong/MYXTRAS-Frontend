@@ -195,7 +195,7 @@ export default {
         },
         checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/`, {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -214,6 +214,7 @@ export default {
                             this.course = data.course;
                             this.pfplink = data.profile_pic_link;
                             this.login = true;
+                            console.log(this.login)
                         }
                     })
                 } else {

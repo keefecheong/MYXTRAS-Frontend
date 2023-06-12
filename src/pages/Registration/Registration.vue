@@ -449,7 +449,7 @@ export default {
                 body: JSON.stringify(this.userObject)
             }) .then(response => {
                 if (response.ok) {
-                    //location.href = '/setupprofile.html';
+                    location.href = '/setupprofile.html';
                 } else if (response.status === 400){
                     response.json().then(data => {
                     if (data.error === 'Email already exists') {

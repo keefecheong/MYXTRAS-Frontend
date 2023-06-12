@@ -2,13 +2,13 @@
 export default async function validateUser() {
     let authenticated = false;
 
-    await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/`, {
+    await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
         method: 'get',
         credentials: 'include'
     }).then((res) => {
         console.log(res);
         console.log(res.status);
-        if (res.status == 200) {
+        if (res.status == 204) {
             authenticated = true;
         }
     }).catch((error) => {
