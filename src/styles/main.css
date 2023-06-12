@@ -11,6 +11,26 @@
     --secondary: #FF6363;
     --dark: #133B5B;
 }
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--dark);
+    border-radius: 15px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary);
+  }
 body {
     font-family: 'Quicksand' !important;
     font-size: calc(.5em + 0.5vw) !important;

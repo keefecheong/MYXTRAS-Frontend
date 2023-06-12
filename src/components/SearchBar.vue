@@ -1,13 +1,15 @@
 <template>
     <div class="row pink-header-search" >
-        <div class="col-md-3 centerElements">
-            <a href="/forumCreate.html"><btn v-if="currentPage === 'forums'" id="createForumBtn">Create Community</btn></a>
+        <div class="col-md-3">
         </div>
         <div class="col-md-6 centerElements" > 
             <span class="material-symbols-outlined" style="color: black" id="searchIcon">search</span>
             <input class="search-bar" type="text" placeholder="Search for Xtras like you!">
         </div>
-        <div class="col-md-3 d-flex justify-content-end profileContainter centerElements">
+        <div v-if="currentPage === 'forums'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
+            <btn v-if="currentPage === 'forums'" id="createForumBtn" @click="sendBool">Create Community</btn>
+        </div>
+        <div v-if="currentPage === 'feed'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
             <!-- check for identity after authentication -->
             <div v-if="login" class="col-md-4 margin-top">
                 <p class="realname">{{ realname }}</p>
@@ -17,22 +19,24 @@
              
             <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
-        
     </div>
 </template>
 
 <style>
+.disable-scroll {
+  overflow-y: hidden;
+}
 #createForumBtn {
     background-color: transparent;
     padding: 1em;
-    margin-left: 4vh;
-    color: var(--dark);
-    border: 4px solid var(--dark);
+    margin-right: 8vh;
+    color: white;
+    border: 4px solid white;
     border-radius: 10px;
 }
 #createForumBtn:hover {
-    border: 4px solid var(--secondary);
-    color: var(--secondary);
+    border: 4px solid var(--dark);
+    color: var(--dark);
     cursor: pointer;
 }
 .centerElements {
@@ -71,8 +75,8 @@
 .pink-header-search {
     display: flex;
     flex-wrap: wrap;
-    padding-top: 1vh;
-    padding-bottom: 1vh;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
     background-color: var(--primary);
 }
 
@@ -145,6 +149,9 @@ export default {
         currentPage: {
             type: String,
             required: true
+        },
+        showPopUp: {
+            type: Boolean
         }
     },
     data() {
@@ -152,14 +159,34 @@ export default {
             login: false,
             realname: '',
             school: '',
-            course: ''
+            course: '',
+            showPopUp: null
         }
     },
     mounted() {
         this.checkAuth();
-        console.log(this.currentPage)
     },
     methods: {
+        toggleScrolling() {
+            // Get the body element
+            const body = document.body;
+            body.classList.add('disable-scroll');
+        },
+        // showPopUpWindow() {
+        //     console.log('----------------')
+        //     console.log(this.showPopUp)
+        //     console.log(this.showPopUp)
+        //     this.showPopUp = !this.showPopUp
+        //     console.log(this.showPopUp)
+        //     console.log(this.showPopUp)
+        //     console.log('----------------')
+
+        // },
+        sendBool() {
+            //this.showPopUpWindow()
+            this.toggleScrolling()
+            this.$emit('show-popup', !this.showPopUp);
+        },
         redirectsetup(){
             fetch("http://127.0.0.1:8081/api/users/setupprofile", {
                 method: "GET"
@@ -173,9 +200,6 @@ export default {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
             fetch("http://127.0.0.1:8081/api/users", {
                 method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
                 credentials: "include",
             }).then(response => {
                 if (response.ok) {

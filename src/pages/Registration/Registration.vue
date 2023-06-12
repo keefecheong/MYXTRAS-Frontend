@@ -318,12 +318,6 @@ export default {
             }
         },
     },
-    // watch: {
-    //     password() {
-    //     // Perform additional actions based on the password changes
-    //     // Update the UI dynamically
-    //     }
-    // },
     mounted() {
         this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('registerBtn',{
             'size':'invisible',
@@ -472,13 +466,7 @@ export default {
                 body: JSON.stringify(this.userObject)
             }) .then(response => {
                 if (response.ok) {
-                    console.log('Success');
-                    // const userId = data.userId;
-                    // localStorage.setItem('userID', userId);
-                    localStorage.setItem('email', this.emailAddress);
-                    console.log("2")
-                    
-                    location.href = '/setupprofile.html';
+                    //location.href = '/setupprofile.html';
                 } else if (response.status === 400){
                     response.json().then(data => {
                     if (data.error === 'Email already exists') {
