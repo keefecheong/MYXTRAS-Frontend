@@ -87,6 +87,7 @@ export default {
             for (let i = 0; i < this.files.length; i++) {
                 formData.append('selectedImages', this.files[i]);
             }
+            console.log(formData.get('selectedImages'))
 
             // send request to backend server with data
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts`, {

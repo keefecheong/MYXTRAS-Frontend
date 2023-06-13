@@ -39,20 +39,40 @@
 export default {
     data() {
         return {
-            forums: [
-            { name: 'ILUVCats', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'We talk about cats' },
-            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            ],
+            subbedForums: []
+            // forums: [
+            // { name: 'ILUVCats', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'We talk about cats' },
+            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
+            // ],
         }
     },
     mounted() {
         
     },
     methods: {
-        
+        retrieveUserSubForums() {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${forumID}`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(res => {
+                if (res.ok) {
+                return res.json();
+                }
+                throw new Error('Response not OK');
+            })
+            .then(data => {
+                this.forum = data;
+                this.contentLoaded = true
+
+            })
+            .catch((error) => {
+                console.log("This page could not be loaded: ", error);
+            });
+        }
     
     }
 }

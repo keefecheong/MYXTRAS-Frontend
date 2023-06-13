@@ -2,19 +2,19 @@
 
     <div id="main-container">
         <NavSidebar />
-        <div id="main-content">
+        <div v-if="contentLoaded" id="main-content">
             <div id="row">
-                <img :src="banner" alt="Banner" id="banner-picture"/>
+                <img :src="forum.banner_link[0]" alt="Banner" id="banner-picture"/>
             </div>
             <div class="row">
                 <div id="pink-container">
                 <div id="image">
-                    <img class="groupicon" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                    <img class="groupicon" :src="forum.forum_pic_link">
                 </div>
                 <div id="group-description">
-                    <h1 id="groupname">nerdytunes</h1>
-                    <p id="groupid">x/nerdfest</p>
-                    <p id="groupdescription">We will help you get the grade you want</p>
+                    <h1 id="groupname">{{forum.forumName}}</h1>
+                    <p id="groupid">x/{{forum.forumID}}</p>
+                    <p id="groupdescription">{{forum.forumDesc}}</p>
                  </div>
                 <button class="subscribe-button">Subscribe</button>
             </div>
@@ -77,15 +77,43 @@ export default {
         NavSidebar,
         SearchBar,
         threadLayout,
-        banner,
     },
 
     data() {
         return {
-            banner: banner,
             groupPic: groupPic,
+            forum: null,
+            contentLoaded: false,
+            threads: []
         }
-  },
+    },
+    mounted() {
+        this.getForumPage()
+    },
+    methods: {
+        getForumPage() {
+            const forumID = localStorage.getItem('forumID');
+
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${forumID}`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(res => {
+                if (res.ok) {
+                return res.json();
+                }
+                throw new Error('Response not OK');
+            })
+            .then(data => {
+                this.forum = data;
+                this.contentLoaded = true
+
+            })
+            .catch((error) => {
+                console.log("This page could not be loaded: ", error);
+            });
+        }
+    },
 }
 </script>
 

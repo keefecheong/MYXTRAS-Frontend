@@ -190,6 +190,7 @@ export default{
             type: Array,
             default: () => [],
         },
+        props: ['thread'],
     },
 
     data(){

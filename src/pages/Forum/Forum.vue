@@ -12,7 +12,7 @@
             
                 <div class="col-md-6">
                     <div class="row">
-                        <ForumLayout/>
+                        <ForumLayout v-for="thread in threads" :thread="thread"/>
                     </div>
                 </div>
 
@@ -36,40 +36,55 @@
             <!-- TO DO disable y scrolling when popup is shown -->
             <div class="row">
                 <div class="createForum-container center-align" v-if="showPopUp">
+                    <span class="material-symbols-outlined" id="infoSym">back</span>
                     <div class="popup-content">
                         <div class="row"> 
                             <div class="col-3">
                             </div>
                             <div class="col-6">
                                 <h3>Create a community</h3>
-                                <div class="uploadImageContainer">
+                                <!-- Upload group pic container -->
+                                <div class="groupPicContainer">
+                                    <p v-if="selectedGroupPic === null">No image selected</p>
                                     <div class="image-container">
-                                        <img v-if="selectedBanner !== null" :src="selectedBanner" alt="Profile Picture"  id="profile-picture" ref="cropperImage"/>
+                                        <img v-if="selectedGroupPic !== null" :src="selectedGroupPic" alt="Group Picture"  id="profile-picture" ref="cropperImage"/>
                                     </div>
-                                    <input ref="fileInput" type="file" @change="uploadBanner($event)" style="display: none" required>
+                                    <input ref="groupPicInput" type="file" @change="uploadImage($event, 'groupPic')" style="display: none" accept=".jpg, .jpeg, .png" required>
                                     <br>
                                 </div>
-                                <div class="col-3">
+                                
+                                <button class="upload-banner-button" @click="selectImage('groupPic')">Customize</button>
+                                
+                                <!-- Upload banner container -->     
+                                <div class="bannerContainer">
+                                    <p v-if="selectedBanner === null">No image selected</p>
+                                    <div class="image-container">
+                                        <img v-if="selectedBanner !== null" :src="selectedBanner" alt="Banner"  id="profile-picture" ref="cropperImage"/>
+                                    </div>
+                                    <input ref="bannerInput" type="file" @change="uploadImage($event, 'banner')" style="display: none" accept=".jpg, .jpeg, .png" required>
+                                    <br>
                                 </div>
                                 
-                                <button class="upload-banner-button" @click="selectBanner()">Customize</button>
-                            </div> 
+                                <button class="upload-banner-button" @click="selectImage('banner')">Customize</button>
+                            </div>
+                            
+                            <div class="col-3"></div>
                         </div>
                         <div class="row">
                             <div class="col-3">
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 center-align">
                                 <input type="text" v-model="forumID" placeholder="Community ID: x/" required>
                                 <input type="text" v-model="forumName" placeholder="Community Name:" required>
                                 <input type="text" v-model="forumDesc" :maxlength="500" placeholder="Community Description" required>
-                                <select name="categoryDropdown" id="categoryDropdown">
-                                    <option selected hidden disabled>Category</option>
+                                <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
+                                    <option value="" selected hidden disabled>Category</option>
                                     <option value="Sports">Sports</option>
                                     <option value="Dance">Dance</option>
                                     <option value="Technology">Sports</option>
                                     <option value="News">News</option>
-
                                 </select>
+                                <p v-if="showErrMsg">Error: {{ errorMsg }}</p>
                             </div>
                             <div class="col-3"></div>
                         </div>
@@ -92,6 +107,7 @@
     text-align: center;
 }
 .createForum-container {
+    overflow-y: scroll;
     position: fixed;
     top: 0;
     left: 0;
@@ -100,44 +116,59 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 button {
-    margin-top: 1em;
+    margin: 2em;
     color:white;
     background-color: var(--primary);
     border: none;
     padding: 1em;
     border-radius: 10px;
+
 }
 input[type=text],
 #categoryDropdown{
-    margin: 10px;
+    margin: 10px 0;
     padding: 1em 0.5em;
     border-radius: 5px;
 }
-.uploadImageContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.groupPicContainer {
     background-color: white;
     color: var(--dark);
-    height: 40vh;
+    height: 15vh;
+    width: 15vh;
+    margin: auto;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bannerContainer {
+    background-color: white;
+    color: var(--dark);
+    height: 45vh;
+    margin: auto;
     border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
 .image-container {
-    width: 40vh;
-    max-height: 100%;
+    display: flex;
+    height: 100%;
 }
-.image-container img {
+.groupPicContainer .image-container img {
     max-height: 100%;
     max-width: 100%;
     margin: auto;
+    border-radius: 100%;
 }
 .popup-content {
     color: white;
     background-color: var(--dark);
     padding: 20px;
     border-radius: 5px;
+    margin-top: 110vh !important;
+    margin-bottom: 5vh;
+    width: 50vw;
 }
 .card {
     padding: 1em 0 1em 0;
@@ -228,10 +259,19 @@ export default {
             showPopUp: false,
             selectedBanner: null,
             bannerObject: null,
+
+            selectedGroupPic: null,
+            groupPicObject: null,
+
+            images: [],
             forumID: null,
             forumName: null,
             forumDesc: null,
             forumObject: null,
+            selectedCategory: null,
+            errorMsg: null,
+
+            showErrMsg: false,
             // followedGroupthreads: [
             //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://previews.123rf.com/images/parinyabinsuk/parinyabinsuk1407/parinyabinsuk140700176/30136368-young-asian-boy-being-scolded-by-parents.jpg" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
             //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10},
@@ -252,56 +292,75 @@ export default {
             fetch("http://127.0.0.1:5173/")
         },
         
-        selectBanner(){
-            this.$refs.fileInput.value = ''; // Reset the file input value
-            this.$nextTick(() => {
-            this.$refs.fileInput.click(); // Open the file input dialog
-            });
+        selectImage(type){
+            if (type === 'groupPic'){
+                this.$refs.groupPicInput.value = ''; // Reset the file input value
+                this.$nextTick(() => {
+                this.$refs.groupPicInput.click(); // Open the file input dialog
+                });            
+            }
+            else if (type === 'banner'){
+                this.$refs.bannerInput.value = ''; // Reset the file input value
+                this.$nextTick(() => {
+                this.$refs.bannerInput.click(); // Open the file input dialog
+                });
+            }
         },
-        uploadBanner(event){
-            this.bannerObject = event.target.files[0];
-            this.selectedBanner = URL.createObjectURL(this.bannerObject);
+        uploadImage(event, type){
+            var object = event.target.files[0];
+            if (type === 'groupPic'){
+                this.groupPicObject = object;
+                this.selectedGroupPic = URL.createObjectURL(object);
+            }
+            else if (type === 'banner'){
+                this.bannerObject = object;
+                this.selectedBanner = URL.createObjectURL(object);
+            }
         
         },
         createForum() {
-
-            const imageUpload = new FormData();
-            imageUpload.append('image', this.bannerObject, this.bannerObject.name)
+            const uploadData = new FormData();
+            uploadData.append('selectedImages', this.groupPicObject);
+            uploadData.append('selectedImages', this.bannerObject);
             try {
-                this.forumObject = {
+                var forumObject = this.forumObject
+                forumObject = {
                 'forumName': this.forumName,
                 'forumID': this.forumID,
                 'forumDesc': this.forumDesc,
-                'bannerImageLink': this.selectedBanner
+                'category': this.selectedCategory
                 }
-
-            } catch (error) {
                 
-            }
-
-            fetch("http://127.0.0.1:8081/api/forums/createForum", {
+                uploadData.append('forumObject', JSON.stringify(forumObject))
+                console.log(uploadData)
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create`, {
                 method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
                 credentials: "include",
-                body: JSON.stringify(this.forumObject)
+                body: uploadData
+                })
+                .then(response => {
+                    if (response.ok){
+                        localStorage.setItem('forumID', this.forumID);
+                        location.href = "/forumGroup.html"
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
             })
-            .then(response => {
-                console.log(response.status)
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error:', error);
-            })
-        
-
+            }
+            
             // Close the popup after submission
             this.showPopUp = false;
             const body = document.body;
             body.classList.remove('disable-scroll');
-        }
+        },
+
+        
+        retrievePopularForums() {
+
+        },
     },
-    
-    
 }
 </script>
