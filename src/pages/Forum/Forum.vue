@@ -7,7 +7,8 @@
             <h1 id="forumHeader">Latest Updates!</h1>
             <div class="row">
                 <div class="col-md-3">
-                   <SubscribedForums/>
+                   <SubscribedForums :subbedForums="subbedForums"/>
+                   <CreatedForums :createdForums="createdForums"/>
                 </div>
             
                 <div class="col-md-6">
@@ -245,24 +246,30 @@ import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
 import ForumLayout from '../../components/forum/ForumLayout.vue';
 import SubscribedForums from '../../components/forum/SubscribedForums.vue';
+import CreatedForums from '../../components/forum/CreatedForums.vue';
 export default {
     components: {
         NavSidebar,
         SearchBar,
         ForumLayout,
+        CreatedForums,
         SubscribedForums
     },
     data() {
         return {
-            // to delete
+            // Misc
             isDraggable: false,
             showPopUp: false,
+
+            // Data to display
+            subbedForums: [],
+            createdForums: [],
+
+            // Creation of forum var
             selectedBanner: null,
             bannerObject: null,
-
             selectedGroupPic: null,
             groupPicObject: null,
-
             images: [],
             forumID: null,
             forumName: null,
@@ -283,6 +290,10 @@ export default {
             //     {threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png"}
             // ]
         }
+    },
+    mounted() {
+        this.retrieveCreatedForums();
+        this.retrieveSubbedForums();
     },
     methods: {
         handleVariableUpdate(variable) {
@@ -357,9 +368,44 @@ export default {
             body.classList.remove('disable-scroll');
         },
 
-        
-        retrievePopularForums() {
-
+        async retrieveSubbedForums() {
+            
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-subbed-forums/`, {
+                method: "GET",
+                credentials: "include"
+                })
+                .then(async response => {
+                if (response.ok) {
+                    await response.json().then(data => {
+                        this.subbedForums = data
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
+        async retrieveCreatedForums() {
+            
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-created-forums/`, {
+                method: "GET",
+                credentials: "include"
+                })
+                .then(async response => {
+                if (response.ok) {
+                    await response.json().then(data => {
+                        this.createdForums = data
+                        console.log(this.createdForums)
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
         },
     },
 }

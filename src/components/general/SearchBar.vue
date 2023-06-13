@@ -196,9 +196,6 @@ export default {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
                 method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
                 credentials: "include",
             }).then(async response => {
                 if (response.ok) {
@@ -221,9 +218,6 @@ export default {
                     console.log('Error:', response);
                 }
                 })
-                .then(data => {
-                    console.log('Success:', data);
-                    })
                 .catch(error => {
                     console.error('Error:', error);
                 });
