@@ -3,12 +3,12 @@
         <div class="card shadow">
             <div class="card-body card-position">
                 <h5 class="card-title">Subscribed Forums</h5>
-                <div v-for="forum in forums" class="row">
+                <div v-for="forum in subbedForums" class="row">
                     <div class="col-md-4 d-flex justify-content-end">
-                        <a href='./forumGroup.html'><img class="groupPic" :src="forum.groupPic" :draggable="isDraggable"></a> 
+                        <a href='./forumGroup.html'><img class="groupPic" :src="forum.banner_link" :draggable="isDraggable"></a> 
                     </div>
                     <div class="col-md-8">
-                        <p class="forum-name">{{ forum.name }}</p>  
+                        <p class="forum-name">{{ forum.forumName }}</p>  
                     </div>
                 </div>
                 <h4><i class="bi bi-three-dots three-dots"></i></h4>
@@ -49,29 +49,14 @@ export default {
             // ],
         }
     },
-    mounted() {
-        
+    mounted(){
+        this.test()
     },
+    props: ['subbedForums'],
     methods: {
-        retrieveUserSubForums() {
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${forumID}`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(res => {
-                if (res.ok) {
-                return res.json();
-                }
-                throw new Error('Response not OK');
-            })
-            .then(data => {
-                this.forum = data;
-                this.contentLoaded = true
-
-            })
-            .catch((error) => {
-                console.log("This page could not be loaded: ", error);
-            });
+       
+        test(){
+            console.log(this.subbedForums)
         }
     
     }
