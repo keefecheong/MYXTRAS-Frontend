@@ -47,9 +47,7 @@
                                 <!-- Upload group pic container -->
                                 <div class="groupPicContainer">
                                     <p v-if="selectedGroupPic === null">No image selected</p>
-                                    <div class="image-container">
-                                        <img v-if="selectedGroupPic !== null" :src="selectedGroupPic" alt="Group Picture"  id="profile-picture" ref="cropperImage"/>
-                                    </div>
+                                    <img v-if="selectedGroupPic !== null" :src="selectedGroupPic" alt="Group Picture"  id="profile-picture" ref="cropperImage"/>
                                     <input ref="groupPicInput" type="file" @change="uploadImage($event, 'groupPic')" style="display: none" accept=".jpg, .jpeg, .png" required>
                                     <br>
                                 </div>
@@ -59,9 +57,7 @@
                                 <!-- Upload banner container -->     
                                 <div class="bannerContainer">
                                     <p v-if="selectedBanner === null">No image selected</p>
-                                    <div class="image-container">
-                                        <img v-if="selectedBanner !== null" :src="selectedBanner" alt="Banner"  id="profile-picture" ref="cropperImage"/>
-                                    </div>
+                                    <img v-if="selectedBanner !== null" :src="selectedBanner" alt="Banner"  id="profile-picture" ref="cropperImage"/>
                                     <input ref="bannerInput" type="file" @change="uploadImage($event, 'banner')" style="display: none" accept=".jpg, .jpeg, .png" required>
                                     <br>
                                 </div>
@@ -85,7 +81,7 @@
                                     <option value="Technology">Sports</option>
                                     <option value="News">News</option>
                                 </select>
-                                <p v-if="showErrMsg">Error: {{ errorMsg }}</p>
+                                <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
                             </div>
                             <div class="col-3"></div>
                         </div>
@@ -141,6 +137,7 @@ input[type=text],
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 .bannerContainer {
     background-color: white;
@@ -152,22 +149,18 @@ input[type=text],
     align-items: center;
     justify-content: center;
 }
-.image-container {
-    display: flex;
+img {
     height: 100%;
-}
-.groupPicContainer .image-container img {
-    max-height: 100%;
     max-width: 100%;
-    margin: auto;
-    border-radius: 100%;
+    object-fit: cover; /* Scale and crop the image to fit */
+    object-position: center; /* Center the image within the div */
 }
 .popup-content {
     color: white;
     background-color: var(--dark);
     padding: 20px;
     border-radius: 5px;
-    margin-top: 110vh !important;
+    margin-top: 80vh !important;
     margin-bottom: 5vh;
     width: 50vw;
 }
@@ -271,24 +264,15 @@ export default {
             selectedGroupPic: null,
             groupPicObject: null,
             images: [],
-            forumID: null,
-            forumName: null,
-            forumDesc: null,
+            forumID: '',
+            forumName: '',
+            forumDesc: '',
             forumObject: null,
             selectedCategory: null,
+            
+            //Error handling
             errorMsg: null,
-
             showErrMsg: false,
-            // followedGroupthreads: [
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://previews.123rf.com/images/parinyabinsuk/parinyabinsuk1407/parinyabinsuk140700176/30136368-young-asian-boy-being-scolded-by-parents.jpg" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10},
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://www.icegif.com/wp-content/uploads/icegif-2013.gif" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10}
-            // ],
-            // popularThreads: [
-            //     {threadTitle: "How do I make my parents proud?", threadPic:"https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png" },
-            //     {threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png"}
-            // ]
         }
     },
     mounted() {
@@ -330,6 +314,14 @@ export default {
         
         },
         createForum() {
+            // Validation
+            var forumDetails = [this.forumName, this.forumID, this.forumDesc, this.selectedCategory, this.selectedGroupPic,  this.selectedBanner];
+
+            if (forumDetails.some(item => item === '' || item === null)){
+                this.showErrMsg = true;
+                return this.errorMsg = "Please enter all fields";
+            }
+
             const uploadData = new FormData();
             uploadData.append('selectedImages', this.groupPicObject);
             uploadData.append('selectedImages', this.bannerObject);
