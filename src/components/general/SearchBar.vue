@@ -161,7 +161,6 @@ export default {
     },
     mounted() {
         this.checkAuth();
-        console.log(this.currentPage)
     },
     methods: {
         toggleScrolling() {
@@ -193,37 +192,32 @@ export default {
                 }
             })
         },
-        checkAuth() {
+        async checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
                 method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
                 credentials: "include",
-            }).then(response => {
+            }).then(async response => {
                 if (response.ok) {
-                    response.json().then(data => {
+                    await response.json().then(data => {
+                        
                         if (data.is_profile_setup === false){
                             window.location.href = '/feed.html';
                             return;
                         }
                         else {
-                            this.realname = data.realname;
+                            this.realname = data.real_name;
                             this.school = data.school;
                             this.course = data.course;
                             this.pfplink = data.profile_pic_link;
                             this.login = true;
-                            console.log(this.login)
+                            console.log(data.is_profile_setup)
                         }
                     })
                 } else {
                     console.log('Error:', response);
                 }
                 })
-                .then(data => {
-                    console.log('Success:', data);
-                    })
                 .catch(error => {
                     console.error('Error:', error);
                 });
