@@ -31,8 +31,8 @@
 
         <!-- container for message input -->
         <div id="chat-interface-input">
-            <form @submit.prevent="">
-                <input id="chat-message-input" type="text" placeholder="Message..." title="Enter your message" />
+            <form @submit.prevent="sendMessage" @keydown="updateTypingStatus">
+                <input id="chat-message-input" type="text" placeholder="Message..." title="Enter your message" v-model="messageText" />
 
                 <button title="Send message">
                     <span class="material-symbols-outlined" id="chat-message-send">Send</span>
@@ -45,76 +45,105 @@
 <script>
 import ChatMessageLayout from './ChatMessageLayout.vue';
 import { useChatStore } from '../../stores/ChatStore';
+import { socket } from '../../utils/chat/chatSocket.js';
+import ObjectID from 'bson-objectid';
 
 export default {
     data() {
         return {
-            chat: null,
             store: useChatStore(),
             status: {
                 online: 'Online',
                 offline: 'Offline',
                 typing: 'Typing...'
             },
-            messages: [
-                {
-                    id: '1',
-                    content: 'first message first message first message first message first message first message first message first message first message first message first message ',
-                    is_sender: true,
-                    creation_time: '2023-06-11T09:38:52.705+00:00'
-                },
-                {
-                    id: '2',
-                    content: 'second message',
-                    is_sender: true,
-                    creation_time: '2023-06-11T09:38:58.705+00:00'
-                },
-                {
-                    id: '3',
-                    content: 'third message',
-                    is_sender: false,
-                    creation_time: '2023-06-11T09:40:52.705+00:00'
-                },
-                {
-                    id: '4',
-                    content: 'fourth message',
-                    is_sender: true,
-                    creation_time: '2023-06-11T09:42:52.705+00:00'
-                },
-                {
-                    id: '5',
-                    content: 'first message first message first message first message first message first message first message first message first message first message first message ',
-                    is_sender: true,
-                    creation_time: '2023-06-11T09:44:52.705+00:00'
-                },
-                {
-                    id: '6',
-                    content: 'first message first message first message first message first message first message first message first message first message first message first message ',
-                    is_sender: false,
-                    creation_time: '2023-06-11T09:46:58.705+00:00'
-                },
-            ]
+            typingTimer: null,
+            messageText: '',
+            previousMessageLength: 0
         }
     },
+    props: [
+        'chat',
+        'messages'
+    ],
     components: {
         ChatMessageLayout
     },
-    created() {
-
+    mounted() {
+        this.checkNewMessages();
     },
-    watch: {
-        // watch for changes of currentChat in ChatStore
-        'store.currentChat': {
-            handler(newValue, oldValue) {
-                if ((JSON.stringify(newValue) != JSON.stringify(oldValue)) || this.chat == null) {
-                    this.chat = newValue;
-                }
-            },
-            immediate: true
-        }
+    updated() {
+        this.checkNewMessages();
     },
     methods: {
+        // to send message to backend
+        sendMessage() {
+            // if no message is entered then do nothing
+            if (this.messageText.trim().length <= 0) {
+                return;
+            }
 
+            // otherwise send the message to the backend
+            const newMessage = {
+                id: new ObjectID().toString(),
+                content: this.messageText,
+                is_sender: true,
+                creation_time: new Date().toISOString()
+            }
+
+            socket.emit('send-message', {
+                message: newMessage,
+                chat: this.chat
+            });
+
+            // add message to localMessages
+            newMessage.chatId = this.chat.id;
+            this.store.localMessages.push(newMessage);
+
+            this.messageText = '';
+
+            // give focus to input field
+            document.getElementById('chat-message-input').focus();
+        },
+        // to update user's typing status
+        // status changes to typing whenever user presses a key
+        // status changes back to after 1s from the last keypress
+        updateTypingStatus() {
+            // tell other user that current user is typing
+            this.sendTypingStatus();
+
+            clearTimeout(this.typingTimer);
+
+            // tell other user that current user is not typing after 1s from the last input
+            this.typingTimer = setTimeout(this.sendNonTypingStatus, 1000);
+        },
+        // update the other user that current user is typing
+        sendTypingStatus() {
+            // emit socket event
+        },
+        // update the other user that current user is no longer typing
+        sendNonTypingStatus() {
+            // emit socket event
+        },
+        // get other user's status (online/offline/typing)
+        getUserStatus() {
+            // handle socket event
+        },
+        // check for new messages and scroll to bottom
+        checkNewMessages() {
+            const messageLength = this.messages.length;
+
+            if (messageLength > this.previousMessageLength) {
+                this.scrollMessagesBottom();
+            }
+
+            this.previousMessageLength = messageLength;
+        },
+        // scroll to bottom of chat messages
+        scrollMessagesBottom() {
+            const messageContainer = document.getElementById('chat-interface-messages');
+            messageContainer.scrollBy(0, messageContainer.scrollHeight);
+        }
     }
 }
 </script>
@@ -193,6 +222,11 @@ export default {
 #chat-interface-input button {
     border: none;
     background-color: transparent;
+}
+
+#chat-interface-input button:focus {
+    border-radius: 20px;
+    outline: 1px solid black;
 }
 
 #chat-message-send {
