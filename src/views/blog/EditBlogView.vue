@@ -258,7 +258,7 @@ export default {
         // check if store is empty
         // go back to feed if store is empty
         const store = useBlogStore();
-        if (store.blogToEdit == {}) {
+        if (JSON.stringify(store.blogToEdit) == JSON.stringify({})) {
             location.href = '/feed.html';
         }
 

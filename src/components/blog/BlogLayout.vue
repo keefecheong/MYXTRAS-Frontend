@@ -136,12 +136,6 @@
     width: 40px;
 }
 
-.hide-overflow-text {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
 .blog-creation-time {
     text-align: end;
 }
@@ -283,6 +277,7 @@
 import { RouterLink } from 'vue-router';
 import { useBlogStore } from '../../stores/BlogStore.js';
 import BlogCommentLayout from './BlogCommentLayout.vue';
+import calcDateDifference from '../../utils/general/calcDateDifference.js';
 
 export default {
     data() {
@@ -311,7 +306,10 @@ export default {
         'blog'
     ],
     mounted() {
-        this.calcDateDifference();
+        // get time difference from when post was created and current datetime
+        this.dateCreated = calcDateDifference(this.blog.creation_time);
+
+        // setup controls if there is more than one picture
         this.toggleControls();
 
         // initialize liked and likeCount values
@@ -378,35 +376,6 @@ export default {
             }
             else {
                 this.showPrev = true;
-            }
-        },
-        // calculate difference between datetime when the post was created and current datetime and show corresponding messages
-        calcDateDifference() {
-            const postDatetime = new Date(this.blog.creation_time);
-            const currentDatetime = new Date();
-
-            const timeDifference = currentDatetime.getTime() - postDatetime.getTime();
-            const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-            if (dayDifference == 0) {
-                this.dateCreated = 'Today';
-            }
-            else if (dayDifference == 1) {
-                this.dateCreated = 'Yesterday';
-            }
-            else if (dayDifference < 30) {
-                this.dateCreated = `${dayDifference} days ago`;
-            }
-            else {
-                const monthDifference = Math.floor(dayDifference / 30);
-
-                if (monthDifference < 12) {
-                    this.dateCreated = `${monthDifference} month${monthDifference > 1 ? 's' : ''} ago`;
-                }
-                else {
-                    const yearDifference = Math.floor(monthDifference / 12);
-                    this.dateCreated = `${yearDifference} year${yearDifference > 1 ? 's' : ''} ago`;
-                }
             }
         },
         // toggle liking of blog
