@@ -1,12 +1,8 @@
 <template>
-    <div >
+    <div v-if="createdForums.length !== 0">
         <div class="card shadow">
             <div class="card-body card-position">
                 <h5 class="card-title">Created Forums</h5>
-                <div class="row center-align" v-if="createdForums.length === 0">
-                    <p>No subscribed forums ☹</p>
-                    <p>Head to the <a href="/explore.html">Xplore</a> page!</p>
-                </div>
                 <div v-for="forum in createdForums" class="row">
                     <div class="col-md-4 d-flex justify-content-end">
                         <img class="groupPic" :src="forum.forum_pic_link[0]" :draggable="isDraggable" @click="viewForum(forum)">
@@ -21,7 +17,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .card {
     padding: 1em 0 1em 0;
     border: none !important;
@@ -38,7 +34,6 @@
     height: 5vh;
     margin-top: 15px;
     border-radius: 50%;
-
 }
 </style>
 
@@ -49,14 +44,36 @@ export default {
             createdForums: []
         }
     },
-    props: ['createdForums'],
+    mounted() {
+        this.retrieveCreatedForums()
+    },
     methods: {
        
         async viewForum(forum){
             localStorage.setItem('forumID', forum.forumID);
             location.href = "/forumGroup.html"
-        }
+        },
     
+        async retrieveCreatedForums() {
+            
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-created-forums/`, {
+                method: "GET",
+                credentials: "include"
+                })
+                .then(async response => {
+                if (response.ok) {
+                    await response.json().then(data => {
+                        this.createdForums = data
+                        console.log(this.createdForums)
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
     }
 }
 </script>

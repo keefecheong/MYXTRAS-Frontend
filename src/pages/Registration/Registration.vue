@@ -360,18 +360,18 @@ export default {
                 this.recaptchaWidgetId = widgetId    
                 })
                 
-                this.phoneNumber = "+65" + this.phoneNumber;
-                firebase.auth().signInWithPhoneNumber(this.phoneNumber, this.recaptchaVerifier)
+                var phoneNum = "+65" + this.phoneNumber;
+                firebase.auth().signInWithPhoneNumber(phoneNum, this.recaptchaVerifier)
                     .then((confirmationResult) => {
                     // SMS sent. Prompt user to type the code from the message, then sign the
                     // user in with confirmationResult.confirm(code).
                     this.confirmResult = confirmationResult
+                    console.log(confirmationResult)
                     alert("Sms Sent!")
                     this.otpSent = true;
-                    // ...
                     }).catch((error) => {
                     // Error; SMS not sent
-                    // ...
+                        console.log(error)
                     });
             }
             
@@ -379,9 +379,8 @@ export default {
         async verifyOTP() {
             this.confirmResult.confirm(this.otp)
             .then((result)=>{
-                alert("Registeration Successfull!",result)
-                this.verifiedotp = true
-                console.log("correct otp")                
+                alert("OTP verified",result)
+                this.verifiedotp = true    
             })
             .catch((error)=>{
                 console.log(error)

@@ -21,6 +21,23 @@
     </div>
 </template>
 <style scoped>
+.card {
+    padding: 1em 0 1em 0;
+    border: none !important;
+    border-radius: 10px;
+    margin: 3vh 1vh;
+    min-height: 50vh;
+    max-height: 100vh;
+    overflow: hidden;
+}
+.groupPic {
+    overflow: hidden;
+    float:left;
+    width: 5vh;
+    height: 5vh;
+    margin-top: 15px;
+    border-radius: 50%;
+}
 .center-align {
     display: flex;
     flex-direction: column;
@@ -36,24 +53,33 @@ export default {
     data() {
         return {
             subbedForums: []
-            // forums: [
-            // { name: 'ILUVCats', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'We talk about cats' },
-            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            // ],
         }
     },
     mounted(){
-        this.test()
+        this.retrieveSubbedForums()
     },
-    props: ['subbedForums'],
     methods: {
        
-        test(){
-            console.log(this.subbedForums)
-        }
+        
+        async retrieveSubbedForums() {
+            
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-subbed-forums/`, {
+                method: "GET",
+                credentials: "include"
+                })
+                .then(async response => {
+                if (response.ok) {
+                    await response.json().then(data => {
+                        this.subbedForums = data
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
     
     }
 }

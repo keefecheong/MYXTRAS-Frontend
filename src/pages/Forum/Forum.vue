@@ -7,12 +7,17 @@
             <h1 id="forumHeader">Latest Updates!</h1>
             <div class="row">
                 <div class="col-md-3">
-                   <SubscribedForums :subbedForums="subbedForums"/>
-                   <CreatedForums :createdForums="createdForums"/>
+                   <CreatedForums />
+                   <SubscribedForums />
                 </div>
             
                 <div class="col-md-6">
                     <div class="row">
+                        <div class="card shadow">
+                            <div class="center-align" style="margin: 3vh 1vh;">
+                                <p v-if="threads.length === 0">No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
+                            </div>
+                        </div>
                         <ForumLayout v-for="thread in threads" :thread="thread"/>
                     </div>
                 </div>
@@ -243,6 +248,7 @@ export default {
             // Data to display
             subbedForums: [],
             createdForums: [],
+            threads: [],
 
             // Creation of forum var
             selectedBanner: null,
@@ -264,8 +270,6 @@ export default {
         }
     },
     mounted() {
-        this.retrieveCreatedForums();
-        this.retrieveSubbedForums();
     },
     methods: {
         handleVariableUpdate(variable) {
@@ -302,6 +306,7 @@ export default {
         
         },
 
+        // TODO RUN THE FUNCTION WHEN FORUMID INPUT CHANGES
         checkForumId() {
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create/${this.forumID}`, {
                 method: "GET",
@@ -372,46 +377,6 @@ export default {
                 console.error('Error:', error);
             }
             
-        },
-
-        async retrieveSubbedForums() {
-            
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-subbed-forums/`, {
-                method: "GET",
-                credentials: "include"
-                })
-                .then(async response => {
-                if (response.ok) {
-                    await response.json().then(data => {
-                        this.subbedForums = data
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-        },
-        async retrieveCreatedForums() {
-            
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-created-forums/`, {
-                method: "GET",
-                credentials: "include"
-                })
-                .then(async response => {
-                if (response.ok) {
-                    await response.json().then(data => {
-                        this.createdForums = data
-                        console.log(this.createdForums)
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
         },
     },
 }

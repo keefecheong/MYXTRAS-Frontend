@@ -80,6 +80,8 @@
                             <h4><i class="bi bi-three-dots three-dots"></i></h4>
                         </div>
                     </div>
+                    <CreatedForums/>
+                    <SubscribedForums/>
                 </div>
             </div>
             
@@ -92,13 +94,15 @@
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue'
 import SubscribedForums from '../../components/forum/SubscribedForums.vue'
+import CreatedForums from '../../components/forum/CreatedForums.vue'
 import profilePicture from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
 
 export default {
   components: {
     NavSidebar,
-    SubscribedForums
+    SubscribedForums,
+    CreatedForums
   },
 
   data(){

@@ -4,7 +4,8 @@
         </div>
         <div class="col-md-6 centerElements" > 
             <span class="material-symbols-outlined" style="color: black" id="searchIcon">search</span>
-            <input class="search-bar" type="text" placeholder="Search for Xtras like you!">
+            <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!">
+            <button @click="performSearch">Search</button>
         </div>
         <div v-if="currentPage === 'forums'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
             <btn v-if="currentPage === 'forums'" id="createForumBtn" @click="sendBool">Create Community</btn>
@@ -19,6 +20,9 @@
              
             <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
+    </div>
+    <div class="row">
+        <SearchResults :results="searchResults" />
     </div>
 </template>
 
@@ -144,7 +148,12 @@
 </style>
 
 <script>
+import SearchResults from '../../components/general/SearchResults.vue';
+
 export default {
+    components: {
+        SearchResults
+    },
     props: {
         currentPage: {
             type: String,
@@ -156,7 +165,9 @@ export default {
             login: false,
             realname: '',
             school: '',
-            course: ''
+            course: '',
+            searchResults: [],
+            searchTerm: '',
         }
     },
     mounted() {
@@ -191,6 +202,17 @@ export default {
                     window.location.href = response.url;
                 }
             })
+        },
+        async performSearch() {
+            try {
+                console.log(this.searchTerm)
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search?term=${this.searchTerm}`);
+                const data = await response.json();
+                this.searchResults = data.topThreeForums;
+                console.log(this.searchResults)
+            } catch (error) {
+                console.error('Error performing search:', error);
+            }
         },
         async checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
