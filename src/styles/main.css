@@ -39,6 +39,9 @@ body {
 a {
     text-decoration: none !important;
 }
+a:hover{
+    color: var(--primary);
+}
 .imageContainer {
     width: 100%;
 }
@@ -46,7 +49,6 @@ a {
     max-height: 100%;
     max-width: 100%;
 }
-
 /* hide overflow text with ... */
 .hide-overflow-text {
     white-space: nowrap;

@@ -1,50 +1,54 @@
 <template>
-    <h1>Create New Post</h1>
+    <div id="overlay">
+        <!-- form to upload images -->
+        <form id="create-blog-form" @submit.prevent="submitForm">
+            <button class="close-button" @click="$router.go(-1)">
+                <i class="bi bi-x"></i>
+            </button>
+            <h1 class="form-header">Create New Post</h1>
+            <div id="upload-image-container" class="container-fluid">
+                <div class="row">
+                    <!-- input to select images -->
+                    <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
+                    <label for="upload-image" id="upload-image-label">
+                        <p>Drag and drop or click <u>here</u> to upload.</p>
+                    </label>
 
-    <!-- form to upload images -->
-    <form id="create-blog-form" @submit.prevent="submitForm">
-        <div id="upload-image-container" class="container-fluid">
-            <div class="row">
-                <!-- input to select images -->
-                <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
-                <label for="upload-image" id="upload-image-label">
-                    <p>Drag and drop or click <u>here</u> to upload.</p>
-                </label>
+                    <!-- display errors -->
+                    <div id="upload-image-errors" v-if="files.length > 0 && errors.length > 0">
+                        <span>Error{{ errors.length > 1 ? 's' : '' }}:</span>
+                        <ul>
+                            <li v-for="error in errors">{{ error }}</li>
+                        </ul>
+                    </div>
 
-                <!-- display errors -->
-                <div id="upload-image-errors" v-if="files.length > 0 && errors.length > 0">
-                    <span>Error{{ errors.length > 1 ? 's' : '' }}:</span>
-                    <ul>
-                        <li v-for="error in errors">{{ error }}</li>
-                    </ul>
+                    <!-- display selected file names if there are errors -->
+                    <div id="selected-image-names" v-if="files.length > 0 && errors.length > 0">
+                        <span>Selected ({{ files.length }}):</span>
+                        <ul>
+                            <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <!-- display selected file names if there are errors -->
-                <div id="selected-image-names" v-if="files.length > 0 && errors.length > 0">
+                <!-- preview images if there are files selected with no errors -->
+                <div class="row" v-if="files.length > 0 && errors.length == 0">
                     <span>Selected ({{ files.length }}):</span>
-                    <ul>
-                        <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
-                    </ul>
+                    <div v-for="(link, index) in selectedLinks" class="preview-image-container">
+                        <img :src="link" />
+                        <span>{{ files[index].name }} ({{ calculateSize(files[index].size) }})</span>
+                    </div>
                 </div>
             </div>
-
-            <!-- preview images if there are files selected with no errors -->
-            <div class="row" v-if="files.length > 0 && errors.length == 0">
-                <span>Selected ({{ files.length }}):</span>
-                <div v-for="(link, index) in selectedLinks" class="preview-image-container">
-                    <img :src="link" />
-                    <span>{{ files[index].name }} ({{ calculateSize(files[index].size) }})</span>
-                </div>
-            </div>
-        </div>
-        <input type="reset" value="Clear Selection" @click="resetAll" />
-        <!-- 
-            disable submit button if 
-            1. there are no files selected
-            2. there are files selected but contains errors
-        -->
-        <input type="submit" :value="submitting ? 'Creating...' : 'Create!'" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0) || submitting" />
-    </form>
+            <input class="pink-button" type="reset" value="Clear Selection" @click="resetAll" />
+            <!-- 
+                disable submit button if 
+                1. there are no files selected
+                2. there are files selected but contains errors
+            -->
+            <input class="pink-button disabled" type="submit" :value="submitting ? 'Posting...' : 'Post!'" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0) || submitting" />
+        </form>
+    </div>
 </template>
 
 <script>
@@ -191,13 +195,43 @@ export default {
 </script>
 
 <style>
+.form-header {
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: white;
+    float: right;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0, 0.5);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #create-blog-form {
     padding: 40px;
     border-style: solid;
     border-color: black;
-    border-width: 3px;
+    border-width: 2.9px;
     border-radius: 10px;
     text-align: center;
+    background-color: #133B5B;
+    color: white;
+    width: 35%;
 }
 
 #upload-image-container {
@@ -259,5 +293,19 @@ export default {
 
 .preview-image-container span {
     overflow-wrap: break-word;
+}
+
+.pink-button {
+    background-color: #E53A73;
+    border: none;
+    border-radius: 7px;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 170px;
 }
 </style>

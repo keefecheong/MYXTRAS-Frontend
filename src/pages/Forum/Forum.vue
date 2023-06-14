@@ -7,12 +7,17 @@
             <h1 id="forumHeader">Latest Updates!</h1>
             <div class="row">
                 <div class="col-md-3">
-                   <SubscribedForums :subbedForums="subbedForums"/>
-                   <CreatedForums :createdForums="createdForums"/>
+                   <CreatedForums />
+                   <SubscribedForums />
                 </div>
             
                 <div class="col-md-6">
                     <div class="row">
+                        <div class="card shadow">
+                            <div class="center-align" style="margin: 3vh 1vh;">
+                                <p v-if="threads.length === 0">No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
+                            </div>
+                        </div>
                         <ForumLayout v-for="thread in threads" :thread="thread"/>
                     </div>
                 </div>
@@ -34,10 +39,9 @@
                     </div>
                 </div>
             </div>
-            <!-- TO DO disable y scrolling when popup is shown -->
             <div class="row">
                 <div class="createForum-container center-align" v-if="showPopUp">
-                    <span class="material-symbols-outlined" id="infoSym">back</span>
+                    <span class="material-symbols-outlined">back</span>
                     <div class="popup-content">
                         <div class="row"> 
                             <div class="col-3">
@@ -71,7 +75,8 @@
                             <div class="col-3">
                             </div>
                             <div class="col-6 center-align">
-                                <input type="text" v-model="forumID" placeholder="Community ID: x/" required>
+                                <input type="text" v-model="forumID" @input="checkForumId" placeholder="Community ID: x/" required>
+                                <p v-if="duplicateID"></p>
                                 <input type="text" v-model="forumName" placeholder="Community Name:" required>
                                 <input type="text" v-model="forumDesc" :maxlength="500" placeholder="Community Description" required>
                                 <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
@@ -85,10 +90,11 @@
                             </div>
                             <div class="col-3"></div>
                         </div>
-                        <button @click="createForum">Submit</button>
+                        <button @click="createForum" :class="{ 'disabled': submitting }" :disabled="submitting">{{ submitting ? 'Creating...' : 'Create' }}</button>
                     </div>
                 </div>
             </div>
+        
         </div>
     </div>
 
@@ -174,34 +180,17 @@ img {
     font-size: 2rem;
     text-align: center;
 }
-.threadContainer {
-    padding: 2em 3em 1em 3em !important;
 
-}
-.threadContent {
-    padding-right: 2em !important;
-}
-#forumHeader {
-    color: var(--primary);
-    font-weight: bolder;
-    margin-bottom: 0.5em;
-}
 .line {
     margin: 2em !important;
     border-top: 1px solid black;
 }
+
 #meta {
     font-size: small;
 }
-.groupPic {
-    overflow: hidden;
-    float:left;
-    width: 5vh;
-    height: 5vh;
-    margin-top: 15px;
-    border-radius: 50%;
 
-}
+
 #threadGroupPic {
     overflow: hidden;
     float:left;
@@ -230,8 +219,10 @@ img {
     align-items: center;
     padding: 0 2em;
 }
-.forum-name {
-    margin-top: 1.5em;
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 </style>
 <script>
@@ -257,6 +248,7 @@ export default {
             // Data to display
             subbedForums: [],
             createdForums: [],
+            threads: [],
 
             // Creation of forum var
             selectedBanner: null,
@@ -269,6 +261,8 @@ export default {
             forumDesc: '',
             forumObject: null,
             selectedCategory: null,
+            duplicateID: false,
+            submitting: false,
             
             //Error handling
             errorMsg: null,
@@ -276,8 +270,6 @@ export default {
         }
     },
     mounted() {
-        this.retrieveCreatedForums();
-        this.retrieveSubbedForums();
     },
     methods: {
         handleVariableUpdate(variable) {
@@ -313,12 +305,34 @@ export default {
             }
         
         },
-        createForum() {
+
+        // TODO RUN THE FUNCTION WHEN FORUMID INPUT CHANGES
+        checkForumId() {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create/${this.forumID}`, {
+                method: "GET",
+                credentials: "include",
+                })
+                .then(response => {
+                    if (response.ok){
+                        // No error
+                        this.duplicateID = false
+                    } else if (response.status === 400){
+                        // Display duplicate forumID error
+                        this.duplicateID = true
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
+        async createForum() {
+            this.submitting = true
             // Validation
             var forumDetails = [this.forumName, this.forumID, this.forumDesc, this.selectedCategory, this.selectedGroupPic,  this.selectedBanner];
-
+            console.log(this.forumID)
             if (forumDetails.some(item => item === '' || item === null)){
                 this.showErrMsg = true;
+                this.submitting = false;
                 return this.errorMsg = "Please enter all fields";
             }
 
@@ -336,16 +350,25 @@ export default {
                 
                 uploadData.append('forumObject', JSON.stringify(forumObject))
                 console.log(uploadData)
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create`, {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create`, {
                 method: "POST",
                 credentials: "include",
                 body: uploadData
                 })
-                .then(response => {
+                .then(async response => {
                     if (response.ok){
                         localStorage.setItem('forumID', this.forumID);
                         location.href = "/forumGroup.html"
+                    } else if (response.status === 400){
+                    response.json().then(data => {
+                    if (data.error === 'ForumID already exists') {
+                        alert("ForumID already exists");
                     }
+                    });
+                    
+                    this.submitting = false
+                    return;
+                }
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -354,50 +377,6 @@ export default {
                 console.error('Error:', error);
             }
             
-            // Close the popup after submission
-            this.showPopUp = false;
-            const body = document.body;
-            body.classList.remove('disable-scroll');
-        },
-
-        async retrieveSubbedForums() {
-            
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-subbed-forums/`, {
-                method: "GET",
-                credentials: "include"
-                })
-                .then(async response => {
-                if (response.ok) {
-                    await response.json().then(data => {
-                        this.subbedForums = data
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-        },
-        async retrieveCreatedForums() {
-            
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-created-forums/`, {
-                method: "GET",
-                credentials: "include"
-                })
-                .then(async response => {
-                if (response.ok) {
-                    await response.json().then(data => {
-                        this.createdForums = data
-                        console.log(this.createdForums)
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
         },
     },
 }

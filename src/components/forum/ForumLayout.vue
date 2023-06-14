@@ -101,9 +101,6 @@
     font-size: 2rem;
     text-align: center;
 }
-.forum-name {
-    margin-top: 1.5em;
-}
 .imageContainer {
     width: 100%;
     display: flex;
@@ -121,11 +118,11 @@
 
 .forum-name {
     font-size: 15px;
-    font-weight: bold;
-    color: #133B5B;
+    margin-top: 1.5em;
     text-decoration: none;
 }
 .forum-name:hover {
+    cursor: pointer;
     font-size: 15px;
     font-weight: bold;
     color: var(--primary);
@@ -197,7 +194,7 @@ export default{
         return{
             selectedOption: ['Kpop','Games'],
             isDraggable: false,
-            
+            followedGroupthreads: []
             // followedGroupthreads: [
             //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://previews.123rf.com/images/parinyabinsuk/parinyabinsuk1407/parinyabinsuk140700176/30136368-young-asian-boy-being-scolded-by-parents.jpg" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
             //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10},

@@ -3,6 +3,10 @@
         <div class="card shadow">
             <div class="card-body card-position">
                 <h5 class="card-title">Subscribed Forums</h5>
+                <div class="row center-align" v-if="subbedForums.length === 0">
+                    <p>No subscribed forums ☹</p>
+                    <p>Head to the <a href="/explore.html">Xplore</a> page!</p>
+                </div>
                 <div v-for="forum in subbedForums" class="row">
                     <div class="col-md-4 d-flex justify-content-end">
                         <a href='./forumGroup.html'><img class="groupPic" :src="forum.banner_link" :draggable="isDraggable"></a> 
@@ -16,13 +20,15 @@
         </div>
     </div>
 </template>
-
-<style>
+<style scoped>
 .card {
     padding: 1em 0 1em 0;
     border: none !important;
     border-radius: 10px;
     margin: 3vh 1vh;
+    min-height: 50vh;
+    max-height: 100vh;
+    overflow: hidden;
 }
 .groupPic {
     overflow: hidden;
@@ -31,7 +37,14 @@
     height: 5vh;
     margin-top: 15px;
     border-radius: 50%;
-
+}
+.center-align {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 10vh;
 }
 </style>
 
@@ -40,24 +53,33 @@ export default {
     data() {
         return {
             subbedForums: []
-            // forums: [
-            // { name: 'ILUVCats', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'We talk about cats' },
-            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            // { name: 'muggingclub', groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", description: 'Gind never stops!' },
-            // ],
         }
     },
     mounted(){
-        this.test()
+        this.retrieveSubbedForums()
     },
-    props: ['subbedForums'],
     methods: {
        
-        test(){
-            console.log(this.subbedForums)
-        }
+        
+        async retrieveSubbedForums() {
+            
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-subbed-forums/`, {
+                method: "GET",
+                credentials: "include"
+                })
+                .then(async response => {
+                if (response.ok) {
+                    await response.json().then(data => {
+                        this.subbedForums = data
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
     
     }
 }

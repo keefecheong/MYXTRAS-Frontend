@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import FeedBlogView from '../views/blog/FeedBlogView.vue';
+import CreateBlogView from '../views/blog/CreateBlogView.vue';
 import EditBlogView from '../views/blog/EditBlogView.vue';
 
 const routes = [
     {
-        path: '/',
-        name: 'view-feed',
-        component: FeedBlogView
+        path: '/create',
+        name: 'create-blog',
+        component: CreateBlogView
     },
     {
         path: '/edit',
@@ -24,7 +24,7 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory('/feed.html'),
+    history: createWebHistory('/profilePage.html'),
     routes
 });
 
