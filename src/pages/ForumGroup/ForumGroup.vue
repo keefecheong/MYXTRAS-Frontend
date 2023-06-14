@@ -16,7 +16,7 @@
                     <p id="groupid">x/{{forum.forumID}}</p>
                     <p id="groupdescription">{{forum.forumDesc}}</p>
                  </div>
-                <button class="subscribe-button">Subscribe</button>
+                <button class="subscribe-button" v-if="!isCreator">Subscribe</button>
             </div>
             <div id="white-container" class="row">
                 <div class="col-md-8 offset-md-1">
@@ -84,6 +84,7 @@ export default {
             groupPic: groupPic,
             forum: null,
             contentLoaded: false,
+            isCreator: false,
             threads: []
         }
     },
@@ -105,7 +106,8 @@ export default {
                 throw new Error('Response not OK');
             })
             .then(data => {
-                this.forum = data;
+                this.forum = data.forum;
+                this.isCreator = data.isCreator;    
                 this.contentLoaded = true
 
             })
