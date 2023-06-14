@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
-import { useLocalStorage } from '@vueuse/core';
+import { useSessionStorage } from '@vueuse/core';
 
 export const useBlogStore = defineStore('blogStore', {
     state: () => {
         return {
-            // use localstorage to persist  blog data over refresh
-            blogToEdit: useLocalStorage('blogToEdit', {})
+            // use sessionStorage to persist blog data over refresh and for each tab
+            blogToEdit: useSessionStorage('blogToEdit', {})
         }
     }
 })

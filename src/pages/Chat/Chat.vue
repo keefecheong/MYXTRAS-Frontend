@@ -21,16 +21,21 @@
                 <div class="col-3" id="chatlist-container">
                     <h1 id="chatlist-header">Chats</h1>
 
+                    <div v-if="!dataInitialized">
+                        <p>Loading...</p>
+                    </div>
+
                     <ChatListLayout 
+                        v-else
                         v-for="chat in chats" 
                         :chat="chat" 
-                        :selected="chat.id == selectedChat.id" 
+                        :selected="(chat._id == selectedChat._id) && chatSelected" 
                     />
                 </div>
 
                 <!-- chat interface (shows messages)-->
                 <div class="col-9" id="chat-interface-container">
-                    <div id="no-chat-selected" v-if="!chatSelected">
+                    <div id="no-chat-selected" v-if="!chatSelected || !dataInitialized">
                         <h1>Select a chat on the left</h1>
                     </div>
 
@@ -52,7 +57,6 @@ import ChatListLayout from '../../components/chat/ChatListLayout.vue';
 import ChatInterfaceLayout from '../../components/chat/ChatInterfaceLayout.vue';
 import { useChatStore } from '../../stores/ChatStore.js';
 import ObjectID from 'bson-objectid';
-import { socket } from '../../utils/chat/chatSocket.js';
 
 export default {
     components: {
@@ -62,29 +66,26 @@ export default {
     },
     data() {
         return {
-            chats: [
-                // {
-                //     id: '1',
-                //     targetUserId: '1',
-                //     name: 'user 1',
-                //     pic: 'https://static.vecteezy.com/system/resources/thumbnails/003/337/584/small/default-avatar-photo-placeholder-profile-icon-vector.jpg'
-                // },
-                // {
-                //     id: '2',
-                //     targetUserId: '2',
-                //     name: 'user 2',
-                //     pic: 'https://static.vecteezy.com/system/resources/thumbnails/003/337/584/small/default-avatar-photo-placeholder-profile-icon-vector.jpg'
-                // }
-            ],
+            chats: [],
             chatSelected: false,
             users: [],
             store: useChatStore(),
             selectedChat: null,
-            messages: []
+            messages: [],
+            dataInitialized: false
         }
     },
+    mounted() {
+        // this.handleNewTab();
+    },
     created() {
-        // initialize values
+        // handle tab opened
+        this.handleNewTab();
+
+        // get history data from database
+        this.initData();
+        
+        // initialize values from ChatStore
         this.updateValues();
 
         // subscribe to ChatStore
@@ -93,16 +94,34 @@ export default {
         // get users
         this.getUsers();
         
-        // clear chat store when the page is closed
-        window.addEventListener('beforeunload', this.clearChatStore);
-    },
-    unmounted() {
-        this.clearChatStore();
+        // handle tab closed
+        window.addEventListener('beforeunload', this.handleCloseTab);
     },
     methods: {
-        // clear chat store
-        clearChatStore() {
-            this.store.reset();
+        // when new tab is opened
+        handleNewTab() {
+            // keep track of tabs opened
+            if (!localStorage.tabCount || (localStorage.tabCount == 'NaN')) {
+                // initialize tabCount in localStorage
+                localStorage.tabCount = 1;
+            }
+            else {
+                // add to tabCount if tabCount exists
+                localStorage.tabCount = parseInt(localStorage.tabCount) + 1;
+            }
+        },
+        // handle close tab
+        handleCloseTab() {
+            // decrease tabCount
+            localStorage.tabCount = parseInt(localStorage.tabCount) - 1;
+
+            // if this is the last tab then clear localStorage
+            if (localStorage.tabCount <= 0) {
+                localStorage.clear();
+            }
+
+            // clear session storage
+            sessionStorage.clear();
         },
         // get users to set up create chat
         async getUsers() {
@@ -120,6 +139,7 @@ export default {
         },
         // create new chat (chat created locally, does not push to database)
         // chat only synced when user sends first message
+        // TODO: shift to user profile page
         createChat(e) {
             const targetUser = this.users[e.target.id];
 
@@ -132,7 +152,7 @@ export default {
             if (!target) {
                 target = {
                     // create new ObjectID for immediate access
-                    id: new ObjectID().toString(),
+                    _id: new ObjectID().toString(),
                     targetUserId: targetUser._id,
                     name: targetUser.username,
                     pic: targetUser.profile_pic_link
@@ -158,7 +178,7 @@ export default {
 
             // update chats array based on the chats in localChats that are not already added
             state.localChats.forEach(chat => {
-                if (this.chats.findIndex(addedChat => JSON.stringify(addedChat) == JSON.stringify(chat)) == -1) {
+                if (this.chats.findIndex(addedChat => addedChat._id == chat._id) == -1) {
                     this.chats.push(chat);
                 }
             });
@@ -168,9 +188,53 @@ export default {
 
             // update messages array based on the chats in localMessages that are not already added
             state.localMessages.forEach(message => {
-                if (this.messages.findIndex(addedMessage => JSON.stringify(addedMessage) == JSON.stringify(message)) == -1) {
+                if (this.messages.findIndex(addedMessage => addedMessage._id == message._id) == -1) {
                     this.messages.push(message);
                 }
+            });
+        },
+        // used to get existing chats and latest messages from top 5 recently used chats
+        async initData() {
+            // request to get user's chats
+            const chatRequest = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats`, {
+                mode: 'cors',
+                credentials: 'include',
+                method: 'GET'
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    if (data.chats) {
+                        this.chats = this.chats.concat(data.chats);
+                    }
+                    else {
+                        console.log('Could not retrieve chats.');
+                    }
+                });
+            });
+
+            // request to get latest 50 messages from user's last 5 used chats
+            const messageRequest = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats/latestMessages`, {
+                mode: 'cors',
+                credentials: 'include',
+                method: 'GET'
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    if (data.messages) {
+                        this.messages = this.messages.concat(data.messages);
+                    }
+                    else {
+                        console.log('Could not retrieve messages.');
+                    }
+                });
+            });
+
+            // send both requests together
+            await Promise.all([
+                chatRequest,
+                messageRequest
+            ]).then((res) => {
+                this.dataInitialized = true;
+            }).catch((error) => {
+                console.log(error);
             });
         }
     },
@@ -180,7 +244,7 @@ export default {
             let result = [];
 
             this.messages.forEach(message => {
-                if (message.chatId == this.selectedChat.id) {
+                if (message.chat_id == this.selectedChat._id) {
                     result.push(message);
                 }
             });

@@ -30,60 +30,45 @@
 
 <script>
 export default {
-    data() {
-        return {
-            isNewDate: false,
-            newDate: '',
-            timestamp: '',
-            isFirstMessage: true
-        }
-    },
     props: [
         'message',
         'previous_is_sender',
         'previous_creation_time'
     ],
-    created() {
-        // initialize isNewDate, isFirstMessage, and timestamp
-        this.checkNewDate();
-        this.checkFirstMessage();
-        this.formatMessageTimestamp();
-    },
-    methods: {
+    computed: {
         // check if the creation date of the current message is different from the previous message
-        // if different, set isNewDate to true and format the date for display
-        checkNewDate() {
+        isNewDate() {
             const currentDate = this.message.creation_time.split('T')[0];
             const previousDate = this.previous_creation_time.split('T')[0];
 
             if (currentDate != previousDate) {
-                this.isNewDate = true;
-
-                // format date
-                // formatted date: 'MMMM D, YYYY' eg. January 1, 2023
-                const date = new Date(currentDate);
-
-                this.newDate = date.toLocaleDateString([], {
-                    dateStyle: 'long'
-                });
+                return true;
             }
+
+            return false;
+        },
+        // return formatted new date to display
+        newDate() {
+            const date = new Date(this.message.creation_time);
+            
+            // formatted date: 'MMMM D, YYYY' eg. January 1, 2023
+            return date.toLocaleDateString([], {
+                dateStyle: 'long'
+            });
         },
         // check if the message is the first message
         // (mainly for a sequence of multiple sent/received messages)
-        // set isFirstMessage if the message is the first message of the sequence to update display
-        checkFirstMessage() {
-            if (this.message.is_sender == this.previous_is_sender) {
-                this.isFirstMessage = false;
-            }
+        isFirstMessage() {
+            return this.message.is_sender != this.previous_is_sender;
         },
-        // format timestamp to display for each message
-        formatMessageTimestamp() {
+        // format creation_time for display
+        timestamp() {
             const date = new Date(this.message.creation_time);
-            
+
             // formatted timestamp: 'h:mmA' eg. 9:10AM
-            this.timestamp = date.toLocaleTimeString([], {
+            return date.toLocaleTimeString([], {
                 timeStyle: 'short'
-            })
+            });
         }
     }
 }

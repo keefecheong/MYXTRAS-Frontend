@@ -18,13 +18,13 @@ class ChatSocket {
         // handle 'update-sent-message' events
         // when socket receives messages sent by self from another associated socket
         this.socket.on('update-sent-message', (data) => {
-            this.updateChatStore(store, data);
+            this.updateLocalChatsMessages(store, data);
         });
 
         // handle 'recipient-receive-message' events
         // when socket receives messages sent by other users
         this.socket.on('recipient-receive-message', (data) => {
-            this.updateChatStore(store, data);
+            this.updateLocalChatsMessages(store, data);
         });
     }
 
@@ -34,10 +34,10 @@ class ChatSocket {
     }
 
     // store new chat/message in ChatStore
-    updateChatStore(store, data) {
+    updateLocalChatsMessages(store, data) {
         // check if chat is stored in localMessages
         const chatExists = store.localChats.find(addedChat => {
-            addedChat.id == data.chat.id;
+            addedChat._id == data.chat._id;
         }) || null;
 
         // if chat is not stored, add the chat to localChats
@@ -47,13 +47,13 @@ class ChatSocket {
 
         // check if received message is stored in localMessages
         const messageExists = store.localMessages.find(addedMessage => {
-            addedMessage.id == data.message.id;
+            addedMessage._id == data.message._id;
         }) || null;
 
         // if message is not stored, add the message to localMessages
         if (!messageExists) {
             const message = data.message;
-            message.chatId = data.chat.id;
+            message.chat_id = data.chat._id;
             store.localMessages.push(message);
         }
     }
