@@ -1,5 +1,5 @@
 <template>
-    <div class="chatlist-item" @click="selectChat">
+    <div class="chatlist-item" :class="{selectedChat: selected}" @click="selectChat">
         <!-- other user's profile pic -->
         <div class="profile-pic-container">
             <img class="profile-pic" :src="chat.pic"/>
@@ -16,14 +16,19 @@
 import { useChatStore } from '../../stores/ChatStore.js';
 
 export default {
+    data() {
+        return {
+            store: useChatStore()
+        }
+    },
     props: [
-        'chat'
+        'chat',
+        'selected'
     ],
     methods: {
         // select chat to send/view messages
         selectChat() {
-            const store = useChatStore();
-            store.currentChat = this.chat;
+            this.store.currentChat = this.chat;
         }
     }
 }
@@ -35,10 +40,14 @@ export default {
 .chatlist-item {
     display: flex;
     padding: 10px;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid gray;
     column-gap: 15px;
     align-items: center;
     user-select: none;
+}
+
+.chatlist-item.selectedChat {
+    background-color: rgba(211, 211, 211, 0.6);
 }
 
 .profile-pic {

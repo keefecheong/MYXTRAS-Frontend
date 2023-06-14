@@ -111,7 +111,7 @@ export default {
     padding: 8px;
     border: 1px solid black;
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-top: 5px;
     position: relative;
     display: grid;
 }
@@ -127,7 +127,7 @@ export default {
 }
 
 .message.arrow-left, .message.arrow-right {
-    margin-bottom: 5px;
+    margin-top: 20px;
 }
 
 .message.arrow-left:after {
