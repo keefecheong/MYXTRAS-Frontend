@@ -464,7 +464,6 @@ export default {
                         throw new Error('Error: ' + response.status);
                     }
                     });
-                    console.log("1")
                     return;
                 }
                 })

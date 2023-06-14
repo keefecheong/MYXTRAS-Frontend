@@ -3,6 +3,10 @@
         <div class="card shadow">
             <div class="card-body card-position">
                 <h5 class="card-title">Subscribed Forums</h5>
+                <div class="row center-align" v-if="subbedForums.length === 0">
+                    <p>No subscribed forums ☹</p>
+                    <p>Head to the <a href="/explore.html">Xplore</a> page!</p>
+                </div>
                 <div v-for="forum in subbedForums" class="row">
                     <div class="col-md-4 d-flex justify-content-end">
                         <a href='./forumGroup.html'><img class="groupPic" :src="forum.banner_link" :draggable="isDraggable"></a> 
@@ -16,22 +20,14 @@
         </div>
     </div>
 </template>
-
-<style>
-.card {
-    padding: 1em 0 1em 0;
-    border: none !important;
-    border-radius: 10px;
-    margin: 3vh 1vh;
-}
-.groupPic {
-    overflow: hidden;
-    float:left;
-    width: 5vh;
-    height: 5vh;
-    margin-top: 15px;
-    border-radius: 50%;
-
+<style scoped>
+.center-align {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 10vh;
 }
 </style>
 

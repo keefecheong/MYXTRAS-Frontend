@@ -80,7 +80,6 @@
                             <h4><i class="bi bi-three-dots three-dots"></i></h4>
                         </div>
                     </div>
-                    <SubscribedForums/>
                 </div>
             </div>
             
