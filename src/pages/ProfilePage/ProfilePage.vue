@@ -51,11 +51,12 @@
                         </div>
                     </div>    
                     <div class="content-wrapper">
-                        <router-link for="create" class="create-link">
-                            <div class="floating-button" @click="createBlog">
+                        <router-link to="/create" class="create-link">
+                            <div class="floating-button">
                                 <i style="color: white" class="bi bi-plus plus-icon"></i>
                             </div>
                         </router-link>
+                        <router-view/>
                     </div>         
                 </div>
 
