@@ -58,7 +58,6 @@ import ChatListLayout from '../../components/chat/ChatListLayout.vue';
 import ChatInterfaceLayout from '../../components/chat/ChatInterfaceLayout.vue';
 import { useChatStore } from '../../stores/ChatStore.js';
 import ObjectID from 'bson-objectid';
-import { useThrottledRefHistory } from '@vueuse/core';
 
 export default {
     components: {
