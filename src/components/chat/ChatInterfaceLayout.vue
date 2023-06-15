@@ -34,6 +34,9 @@
                     :message="message" 
                     :previous_creation_time="previous_creation_time(index)" 
                     :previous_is_sender="previous_is_sender(index)"
+                    :index="index"
+                    @edit-message="editMessage"
+                    @delete-message="deleteMessage"
                 />
             </div>
         </div>
@@ -79,12 +82,15 @@ export default {
         'chat',
         'messages'
     ],
+    emits: [
+        'update-chat-timestamp'
+    ],
     components: {
         ChatMessageLayout
     },
     created() {
         // copy messages into copyMessages for manipulation
-        this.copyMessages = [...this.messages];
+        this.copyMessages = JSON.parse(JSON.stringify(this.messages));
 
         // initialize user status and user status listeners
         this.getUserStatus();
@@ -127,10 +133,44 @@ export default {
             newMessage.chat_id = this.chat._id;
             this.store.localMessages.push(newMessage);
 
+            // update last_message_timestamp
+            this.$emit('update-chat-timestamp', {
+                chatId: this.chat._id,
+                last_message_timestamp: newMessage.creation_time
+            });
+
             this.messageText = '';
 
             // give focus to input field
             document.getElementById('chat-message-input').focus();
+        },
+        // to edit message and update backend
+        editMessage(data) {
+            socket.emit('edit-message', {
+                message: {
+                    _id: data.messageId,
+                    content: data.editedMessage,
+                    chat_id: this.chat._id
+                },
+                targetUserId: this.chat.targetUserId
+            });
+
+            // update edited message's content
+            this.copyMessages.find(existingMessage => existingMessage._id == data.messageId).content = data.editedMessage;
+        },
+        // to delete message and update backend
+        deleteMessage(data) {
+            socket.emit('delete-message', {
+                message: {
+                    _id: data.messageId,
+                    chat_id: this.chat._id
+                },
+                targetUserId: this.chat.targetUserId
+            });
+
+            // remove deleted message from existing messages
+            const existingIndex = this.copyMessages.findIndex(existingMessage => existingMessage._id == data.messageId);
+            this.copyMessages.splice(existingIndex, 1);
         },
         // to update user's typing status
         // status changes to typing whenever user presses a key
@@ -159,7 +199,7 @@ export default {
                 targetUserId: this.chat.targetUserId
             });
         },
-        // get/react to other user's status and updates (online/offline/typing)
+        // get/react to other user's status and set up socket listeners (online/offline/typing)
         getUserStatus() {
             // to query initial user presence
             this.getUserPresence();
@@ -257,6 +297,9 @@ export default {
                             alert('No more messages found.');
                         }
                     }
+                    else {
+                        console.log('Could not retrieve messages.');
+                    }
                 });
             }).catch((error) => {
                 console.log(error);
@@ -264,7 +307,7 @@ export default {
 
             this.loadingPrevious = false;
         },
-        // get creation_time of previous message or null if it is the first message
+        // get creation_time of previous message or '' if it is the first message
         previous_creation_time(index) {
             return index == 0 ? '' : this.copyMessages[index - 1].creation_time;
         },
@@ -277,16 +320,15 @@ export default {
         // watch chat value
         'chat': {
             handler() {
-                // get user presence and update copyMessages with new set of messages when chat changes
+                // get user presence when chat changes
                 this.getUserPresence();
-                this.copyMessages = [...this.messages];
             }
         },
         // watch messages value
         'messages': {
             handler() {
                 // update copyMessages with new set of messages when messages changes
-                this.copyMessages = [...this.messages];
+                this.copyMessages = JSON.parse(JSON.stringify(this.messages));
             }
         }
     }

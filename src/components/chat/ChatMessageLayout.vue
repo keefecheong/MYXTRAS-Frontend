@@ -21,20 +21,154 @@
                 'arrow-left': isFirstMessage && !message.is_sender,
                 'arrow-right': isFirstMessage && message.is_sender
             }"
+            @mouseenter="showMore"
+            @mouseleave="hideMore"
+            :id="index"
         >
-            <span>{{ message.content }}</span>
-            <span class="message-timestamp">{{ timestamp }}</span>
+            <div v-if="!editMode">
+                <div class="message-content">
+                    <span>{{ message.content }}</span>
+                    <span class="message-timestamp">{{ timestamp }}</span>
+                </div>
+    
+                <div class="message-actions-container" v-if="displayMore && message.is_sender">
+                    <span class="material-symbols-outlined" @click="toggleMessageActions">more_vert</span>
+    
+                    <div class="message-actions" v-if="displayMore && displayActions && message.is_sender">
+                        <div @click.stop="enterEdit">
+                            <span class="material-symbols-outlined">edit</span>
+                            <span>Edit</span>
+                        </div>
+    
+                        <div @click="deleteMessage">
+                            <span class="material-symbols-outlined">delete</span>
+                            <span>Delete</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="edit-message" v-if="editMode && message.is_sender">
+                <form :id="'form-' + index">
+                    <input type="text" title="Enter your message" v-model="editedMessage" :id="'edit-' + index" placeholder="New message..." />
+
+                    <div>
+                        <button class="cancel" @click="exitEdit">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                        <button class="submit" @click.prevent="editMessage">
+                            <span class="material-symbols-outlined">check</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
+    data() {
+        return {
+            displayMore: false,
+            displayActions: false,
+            editMode: false,
+            editedMessage: ''
+        }
+    },
     props: [
         'message',
         'previous_is_sender',
-        'previous_creation_time'
+        'previous_creation_time',
+        'index'
     ],
+    emits: [
+        'edit-message',
+        'delete-message'
+    ],
+    updated() {
+        this.onEdit();
+    },
+    methods: {
+        // to show more actions menu
+        showMore() {
+            // only change displayMore to true if not in edit mode and message is sent by the user
+            if (!this.editMode && this.message.is_sender) {
+                this.displayMore = true;                
+            }
+        },
+        // to hide more actions menu
+        hideMore(e) {
+            // check if the cursor is within the message div
+            // only hide more actions menu if the cursor is outside the message div
+            if (!document.getElementById(this.index).contains(e.relatedTarget)) {
+                this.displayMore = false;
+
+                // also change displayActions back to default
+                this.displayActions = false;
+            }
+        },
+        // to toggle actions menu
+        toggleMessageActions() {
+            this.displayActions = !this.displayActions;
+        },
+        // to show edit message interface
+        enterEdit() {
+            // set editedMessage to message content
+            this.editedMessage = this.message.content;
+            this.editMode = true;
+
+            // reset displayMore and displayActions to display as usual after finishing the edit
+            this.displayMore = false;
+            this.displayActions = false;
+        },
+        // to hide edit message interface
+        exitEdit() {
+            // remove event listener on window
+            window.removeEventListener('click', this.offEdit);
+            window.removeEventListener('focusin', this.offEdit);
+            
+            this.editMode = false;
+        },
+        // to handle edit message
+        editMessage() {
+            // only process the edited message if it is not equal to the original message or is not empty
+            if (this.editedMessage != this.message.content && this.editedMessage.trim().length > 0) {
+                this.$emit('edit-message', {
+                    messageId: this.message._id,
+                    editedMessage: this.editedMessage
+                });
+            }
+            
+            this.exitEdit();
+        },
+        // perform changes to the DOM after editMode is true
+        onEdit() {
+            if (this.editMode) {
+                // set focus on edit input box
+                document.getElementById(`edit-${this.index}`).focus();
+    
+                // set listener on window to exit edit mode if any other part of the window is given focus or clicked
+                window.addEventListener('click', this.offEdit);
+                window.addEventListener('focusin', this.offEdit);
+            }
+        },
+        // callback for window click listener
+        offEdit(e) {
+            if (this.editMode) {
+                // exit edit mode if user focuses on any element or click outside the form
+                if (!document.getElementById(`form-${this.index}`).contains(e.target)) {
+                    this.exitEdit();
+                }
+            }
+        },
+        // to handle delete message
+        deleteMessage() {
+            this.$emit('delete-message', {
+                messageId: this.message._id
+            });
+        }
+    },
     computed: {
         // check if the creation date of the current message is different from the previous message
         isNewDate() {
@@ -75,6 +209,8 @@ export default {
 </script>
 
 <style>
+@import url('../../styles/main.css');
+
 /* date styles */
 .new-message-date {
     font-weight: 600;
@@ -99,6 +235,13 @@ export default {
     margin-top: 5px;
     position: relative;
     display: grid;
+    position: relative;
+}
+
+.message-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .message.received {
@@ -142,6 +285,77 @@ export default {
 .message-timestamp {
     justify-self: end;
     font-size: 0.8em;
+}
+
+/* message actions styles */
+.message-actions-container {
+    position: absolute;
+    top: 5px;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    user-select: none;
+}
+
+.message-actions-container .material-symbols-outlined {
+    color: black;
+}
+
+.message-actions {
+    position: absolute;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: white;
+    z-index: 2;
+    bottom: 1.5em;
+}
+
+.message.sent .message-actions-container .message-actions {
+    right: -1px;
+}
+
+.message-actions div {
+    display: flex;
+    column-gap: 5px;
+    padding: 10px;
+    border-bottom: 1px solid lightgray;
+    cursor: pointer;
+    align-items: center;
+}
+
+.message-actions div:last-child {
+    border: none;
+}
+
+.message-actions div span {
+    display: inline;
+    margin: 0;
+}
+
+/* edit message styles */
+.edit-message form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+
+.edit-message form div {
+    display: flex;
+    justify-content: end;
+    column-gap: 5px;
+}
+
+.edit-message form button {
+    border: none;
+    outline: none;
+}
+
+.edit-message form .cancel {
+    background-color: var(--primary);
+}
+
+.edit-message form .submit {
+    background-color: var(--dark);
 }
 
 </style>
