@@ -35,6 +35,7 @@
                     :previous_creation_time="previous_creation_time(index)" 
                     :previous_is_sender="previous_is_sender(index)"
                     :index="index"
+                    :key="index"
                     @edit-message="editMessage"
                     @delete-message="deleteMessage"
                 />
@@ -91,19 +92,24 @@ export default {
     created() {
         // copy messages into copyMessages for manipulation
         this.copyMessages = JSON.parse(JSON.stringify(this.messages));
+    },
+    // when mounted/restored from cache
+    activated() {
+        // focus on message input
+        document.getElementById('chat-message-input').focus();
 
         // initialize user status and user status listeners
         this.getUserStatus();
-    },
-    mounted() {
-        // scroll to bottom of messages when mounted
-        this.checkChangeMessages();
+
+        // scroll to bottom of messages
+        this.scrollMessagesBottom();
     },
     updated() {
         // sroll to bottom of messages when new messages are added
         this.checkChangeMessages();
     },
-    unmounted() {
+    // when cached
+    deactivated() {
         // clean up socket listeners
         socket.off('update-user-presence', this.updateUserPresence);
         socket.off('receive-user-typing', this.updateUserTyping);

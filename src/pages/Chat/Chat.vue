@@ -39,12 +39,16 @@
                         <h1>Select a chat on the left</h1>
                     </div>
 
-                    <ChatInterfaceLayout 
-                        v-else
-                        :chat="selectedChat"
-                        :messages="selectedChatMessages"
-                        @update-chat-timestamp="updateChatTimestamp"
-                    />
+                    <div v-else style="height: 100%">
+                        <keep-alive>
+                            <ChatInterfaceLayout 
+                                :key="selectedChat._id"
+                                :chat="selectedChat"
+                                :messages="selectedChatMessages"
+                                @update-chat-timestamp="updateChatTimestamp"
+                            />
+                        </keep-alive>
+                    </div>
                 </div>
             </div>
         </div>

@@ -18,8 +18,8 @@
             :class="{
                 'sent': message.is_sender,
                 'received': !message.is_sender,
-                'arrow-left': isFirstMessage && !message.is_sender,
-                'arrow-right': isFirstMessage && message.is_sender
+                'arrow-left': (isFirstMessage || isNewDate) && !message.is_sender,
+                'arrow-right': (isFirstMessage || isNewDate) && message.is_sender
             }"
             @mouseenter="showMore"
             @mouseleave="hideMore"
@@ -239,9 +239,7 @@ export default {
 }
 
 .message-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: grid;
 }
 
 .message.received {
