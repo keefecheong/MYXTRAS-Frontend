@@ -3,9 +3,8 @@
         <div class="col-md-3">
         </div>
         <div class="col-md-6 centerElements" > 
-            <span class="material-symbols-outlined" style="color: black" id="searchIcon">search</span>
-            <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!">
-            <button @click="performSearch">Search</button>
+            <span class="material-symbols-outlined" style="color: black" id="searchIcon" @click="performSearch">search</span>
+            <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!" v-on:keyup.enter="performSearch">
         </div>
         <div v-if="currentPage === 'forums'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
             <btn v-if="currentPage === 'forums'" id="createForumBtn" @click="sendBool">Create Community</btn>
