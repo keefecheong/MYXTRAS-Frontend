@@ -1,42 +1,71 @@
 <template>
-    <div class="row a-all">
+    <div class="row a-all" onload="autoScroll()">
         <div class="a-container red">
-            <h1 class="a-header">Halloween 👻</h1>
+            <h1 class="a-header">{{ announcements[0].title }}</h1>
             <p class="a-caption">
-                As the crisp autumn air settles in and the leaves crunch underfoot, 
-                the time for spooky fun draws near. Halloween is just around the corner, 
-                and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. 
-                So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it!
-                <br>Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇
+                {{ announcements[0].caption }}
             </p>
-            <img class="a-image" src="https://i.imgur.com/1qkYzYH.jpg" alt="forum-image">
+            <img class="a-image" :src="announcements[0].image" alt="forum-image">
         </div>
         <div class="a-container yellow">
-            <h1 class="a-header">Halloween 👻</h1>
+            <h1 class="a-header">{{ announcements[1].title }}</h1>
             <p class="a-caption">
-                As the crisp autumn air settles in and the leaves crunch underfoot, 
-                the time for spooky fun draws near. Halloween is just around the corner, 
-                and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. 
-                So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it!
-                <br>Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇
+                {{ announcements[1].caption }}
             </p>
-            <img class="a-image" src="https://i.imgur.com/1qkYzYH.jpg" alt="forum-image">
+            <img class="a-image" :src="announcements[1].image" alt="forum-image">
         </div>
         <div class="a-container pink">
-            <h1 class="a-header">Halloween 👻</h1>
+            <h1 class="a-header">{{ announcements[2].title }}</h1>
             <p class="a-caption">
-                As the crisp autumn air settles in and the leaves crunch underfoot, 
-                the time for spooky fun draws near. Halloween is just around the corner, 
-                and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. 
-                So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it!
-                <br>Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇
+                {{ announcements[2].caption }}
             </p>
-            <img class="a-image" src="https://i.imgur.com/1qkYzYH.jpg" alt="forum-image">
+            <img class="a-image" :src="announcements[2].image" alt="forum-image">
         </div>
     </div>
 </template>
 <script>
-
+export default { 
+    data() {
+        return {
+            announcements: [
+                {
+                    title: "Halloween 👻",
+                    caption: "As the crisp autumn air settles in and the leaves crunch underfoot, the time for spooky fun draws near. Halloween is just around the corner, and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it! Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇",
+                    image: "https://upload.wikimedia.org/wikipedia/en/e/e0/Ngee_Ann_Polytechnic_logo.svg",
+                    color: "red"
+                },
+                {
+                    title: "Halloween 👻",
+                    caption: "As the crisp autumn air settles in and the leaves crunch underfoot, the time for spooky fun draws near. Halloween is just around the corner, and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it! Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇",
+                    image: "https://upload.wikimedia.org/wikipedia/en/e/e0/Ngee_Ann_Polytechnic_logo.svg",
+                    color: "yellow"
+                },
+                {
+                    title: "Halloween 👻",
+                    caption: "As the crisp autumn air settles in and the leaves crunch underfoot, the time for spooky fun draws near. Halloween is just around the corner, and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it! Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇",
+                    image: "https://upload.wikimedia.org/wikipedia/en/e/e0/Ngee_Ann_Polytechnic_logo.svg",
+                    color: "pink"
+                }
+            ],
+            paused: false
+        }
+    },
+    method: {
+        autoScroll() {
+            setInterval(window.scrollBy(0, 2), 100);
+        },
+        stopScroll() {
+            if (this.paused) {
+                setInterval(window.scrollBy(0, 2), 100);
+                paused = false;
+            }
+            else {
+                clearInterval();
+                paused = true;
+            }
+        }
+    }
+}
 </script>
 
 <style>
