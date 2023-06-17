@@ -1,17 +1,23 @@
 <template>
-    <div id="overlay">
+    <div id="overlay" @click="$router.go(-1)">
         <!-- form to upload images -->
         <form id="create-blog-form" @submit.prevent="submitForm">
             <button class="close-button" @click="$router.go(-1)">
                 <i class="bi bi-x"></i>
             </button>
+            <br>
             <h1 class="form-header">Create New Post</h1>
             <div id="upload-image-container" class="container-fluid">
                 <div class="row">
                     <!-- input to select images -->
                     <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
                     <label for="upload-image" id="upload-image-label">
-                        <p>Drag and drop or click <u>here</u> to upload.</p>
+                        <p>Drag and drop 
+                            <br>
+                            or
+                            <br> 
+                            click <u>here</u> to upload.
+                        </p>
                     </label>
 
                     <!-- display errors -->
@@ -40,6 +46,38 @@
                     </div>
                 </div>
             </div>
+            <div id="upload-image-caption" class="container-fluid">
+                <div class="row">
+                    <label for="image-caption" id="caption-title">Caption:</label>
+                    <textarea id="image-caption" name="image-caption" placeholder="Enter caption here..."></textarea>
+                </div>
+            </div>
+            <br>
+            <div id="upload-image-location" class="container-fluid">
+                <div class="row">
+                    <label for="image-tags" id="location-title">Location:</label>
+                    <input type="text" id="image-location" name="image-location" placeholder="Optional"/>
+                </div>
+            </div>
+            <br>
+            <div id="upload-image-tags" class="container-fluid">
+                <div class="mb-3 row">
+                    <label for="image-tags" id="tags-title">Tags:</label>
+                    <AdditionButton :tags="selectedOption"/>
+                </div>
+            </div>
+            <div id="comments-opton" class="container-fluid">
+                <div class="row">
+                    <label for="image-comments" id="comments-title">Turn on comments:</label>
+                    <div class="container">
+                        <input type="checkbox" class="checkbox" id="checkbox" @click="commentsCheck()">
+                        <label class="switch" for="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br>
             <input class="pink-button" type="reset" value="Clear Selection" @click="resetAll" />
             <!-- 
                 disable submit button if 
@@ -52,13 +90,22 @@
 </template>
 
 <script>
+import AdditionButton from '../../components/profile/AdditionButton.vue'
+
 export default {
+    components: {
+        AdditionButton
+    },
     data() {
         return {
             files: [],
             errors: [],
             selectedLinks: [],
             invalidFiles: [],
+            caption: "",
+            location: "",
+            tags: [],
+            comments: false,
             submitting: false
         }
     },
@@ -165,6 +212,10 @@ export default {
             this.files = [];
             this.errors = [];
             this.selectedLinks = [];
+            this.caption = "";
+            this.location = "";
+            this.tags = [];
+            this.comments = false;
         },
         // to calculate size of file and display message
         calculateSize(bytes) {
@@ -189,12 +240,25 @@ export default {
                     }
                 }
             }
+        },
+        commentsCheck() {
+            if (this.comments) {
+                this.comments = false;
+            } else {
+                this.comments = true;
+            }
         }
     }
 }
 </script>
 
 <style>
+#custom-btn {
+    width: fit-content !important;
+    height: fit-content !important;
+    margin-left: 0 !important;
+    margin-top: 5px !important;
+}
 .form-header {
     align-items: center;
     margin-bottom: 1rem;
@@ -240,12 +304,14 @@ export default {
     border-width: 1px;
     border-radius: 10px;
     padding: 10px;
-    margin-bottom: 40px;
-    width: 60%;
+    margin-bottom: 30px !important;
+    width: 80% !important;
     height: fit-content;
     display: grid;
     row-gap: 10px;
     align-items: center;
+    background-color: white;
+    color: black;
 }
 
 #upload-image {
@@ -270,6 +336,106 @@ export default {
 #upload-image-container ul {
     list-style-type: none;
     padding: 0;
+}
+
+#caption-title {
+    width: fit-content;
+    margin-left: 8%;
+    margin-right: 2%;
+}
+
+#image-caption {
+    width: 60%;
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 15px;
+    font-size: 14px;
+}
+
+#location-title {
+    width: fit-content;
+    margin-left: 8%;
+    margin-right: 1%;
+    display: grid;
+    align-items: center;
+}
+
+#image-location {
+    width: 59.5%;
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 10px;
+    padding-left: 15px;
+    font-size: 12px;
+}
+
+#tags-title {
+    width: fit-content;
+    margin-left: 8%;
+    margin-right: 4%;
+    display: grid;
+    align-items: center;
+}
+
+#interest-badges {
+    width: fit-content;
+}
+
+#comments-title {
+    width: fit-content;
+    margin-left: 8%;
+    margin-right: 1%;
+    display: grid;
+    align-items: center;
+}
+
+/* The switch - the box around the slider */
+.container {
+    width: 4.8rem;
+    height: 31px;
+    position: relative;
+    margin-right: 2rem;
+}
+
+/* Hide default HTML checkbox */
+.checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.switch {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: #e9e9eb;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+/* The slider */
+.slider {
+    width: 27px;
+    height: 27px;
+    position: absolute;
+    left: calc(50% - 27px/2 - 10px);
+    top: calc(50% - 27px/2);
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+}
+
+.checkbox:checked + .switch {
+    background-color: #34C759;
+}
+
+.checkbox:checked + .switch .slider {
+    left: calc(50% - 27px/2 + 10px);
+    top: calc(50% - 27px/2);
 }
 
 .preview-image-container {

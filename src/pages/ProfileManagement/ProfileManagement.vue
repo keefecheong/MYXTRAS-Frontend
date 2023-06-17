@@ -40,7 +40,7 @@
         <div class="mb-3 row" id="position" >
           <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
           <div class="col-sm-4">
-            <AdditionButton :selectedOption="selectedOption"/>          
+            <AdditionButton :selectedOption="selectedOption"/>
           </div>
         </div>
           
