@@ -1,5 +1,5 @@
 <template>
-    <div id="overlay" @click="$router.go(-1)">
+    <div id="overlay" >
         <!-- form to upload images -->
         <form id="create-blog-form" @submit.prevent="submitForm">
             <button class="close-button" @click="$router.go(-1)">
