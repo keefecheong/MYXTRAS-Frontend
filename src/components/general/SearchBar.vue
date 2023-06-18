@@ -5,6 +5,7 @@
         <div class="col-md-6 centerElements" > 
             <span class="material-symbols-outlined" style="color: black" id="searchIcon" @click="performSearch">search</span>
             <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!" v-on:keyup.enter="performSearch">
+            
         </div>
         <div v-if="currentPage === 'forums'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
             <btn v-if="currentPage === 'forums'" id="createForumBtn" @click="sendBool">Create Community</btn>
@@ -20,12 +21,23 @@
             <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
     </div>
-    <div class="row">
-        <SearchResults :results="searchResults" />
-    </div>
+    <SearchResults :results="searchResults" :currentPage="currentPage"/>
 </template>
 
 <style>
+
+.pink-header-search {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 102%;
+    z-index: 9998;
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    background-color: var(--primary);
+}
 .disable-scroll {
   overflow-y: hidden;
 }
@@ -74,13 +86,6 @@
     border: none;
     border-radius: 30px;
     width: 100%;
-}
-.pink-header-search {
-    display: flex;
-    flex-wrap: wrap;
-    padding-top: 2vh;
-    padding-bottom: 2vh;
-    background-color: var(--primary);
 }
 
 .headerprofilepic {
@@ -178,16 +183,6 @@ export default {
             const body = document.body;
             body.classList.add('disable-scroll');
         },
-        // showPopUpWindow() {
-        //     console.log('----------------')
-        //     console.log(this.showPopUp)
-        //     console.log(this.showPopUp)
-        //     this.showPopUp = !this.showPopUp
-        //     console.log(this.showPopUp)
-        //     console.log(this.showPopUp)
-        //     console.log('----------------')
-
-        // },
         sendBool() {
             //this.showPopUpWindow()
             this.toggleScrolling()
@@ -203,11 +198,17 @@ export default {
             })
         },
         async performSearch() {
+            let searchObject;
+            if (this.currentPage === 'feed') {
+                searchObject = 'users'
+            }
+            else if (this.currentPage === 'forums'){
+                searchObject = this.currentPage
+            }
             try {
-                console.log(this.searchTerm)
-                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search?term=${this.searchTerm}`);
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search/${searchObject}?term=${this.searchTerm}`);
                 const data = await response.json();
-                this.searchResults = data.topThreeForums;
+                this.searchResults = data.topSixResults;
                 console.log(this.searchResults)
             } catch (error) {
                 console.error('Error performing search:', error);
