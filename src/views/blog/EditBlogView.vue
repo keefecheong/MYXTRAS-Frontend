@@ -1,60 +1,106 @@
 <template>
-    <h1>Edit Post</h1>
-
-    <div v-if="!initialized">
-        <p>Loading...</p>
-    </div>
-
-    <!-- form to upload images -->
-    <form id="edit-blog-form" @submit.prevent="submitForm" v-if="initialized">
-        <div id="upload-image-container" class="container-fluid">
-            <div class="row">
-                <!-- input to select images -->
-                <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
-                <label for="upload-image" id="upload-image-label">
-                    <p>Drag and drop or click <u>here</u> to upload.</p>
-                </label>
-
-                <!-- display errors -->
-                <div id="upload-image-errors" v-if="files.length > 0 && errors.length > 0">
-                    <span>Error{{ errors.length > 1 ? 's' : '' }}:</span>
-                    <ul>
-                        <li v-for="error in errors">{{ error }}</li>
-                    </ul>
-                </div>
-
-                <!-- display selected file names if there are errors -->
-                <div id="selected-image-names" v-if="files.length > 0 && errors.length > 0">
-                    <span>Selected ({{ files.length }}):</span>
-                    <ul>
-                        <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- preview images if there are files selected with no errors -->
-            <div class="row" v-if="files.length > 0 && errors.length == 0">
-                <span>Selected ({{ files.length }}):</span>
-                <div v-for="(link, index) in selectedLinks" class="preview-image-container">
-                    <img :src="link" />
-                    <span>{{ files[index].name }} ({{ calculateSize(files[index].size) }})</span>
-                </div>
-            </div>
+    <div id="overlay" >
+        <div v-if="!initialized">
+            <p>Loading...</p>
         </div>
-        <input type="reset" value="Clear Selection" @click="resetAll" />
-        <!-- 
-            disable submit button if 
-            1. there are no files selected
-            2. there are files selected but contains errors
-        -->
-        <input type="submit" :value="submitting ? 'Updating...' : 'Update!'" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0) || submitting" />
-    </form>
+
+        <!-- form to upload images -->
+        <form id="edit-blog-form" @submit.prevent="submitForm" v-if="initialized">
+            <button class="close-button" @click="$router.go(-1)">
+                <i class="bi bi-x"></i>
+            </button>
+            <br>
+            <h1 class="form-header">Edit Post</h1>
+            <div id="upload-image-container" class="container-fluid">
+                <div class="row">
+                    <!-- input to select images -->
+                    <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
+                    <label for="upload-image" id="upload-image-label">
+                        <p>Drag and drop 
+                            <br>
+                            or
+                            <br> 
+                            click <u>here</u> to upload.
+                        </p>
+                    </label>
+
+                    <!-- display errors -->
+                    <div id="upload-image-errors" v-if="files.length > 0 && errors.length > 0">
+                        <span>Error{{ errors.length > 1 ? 's' : '' }}:</span>
+                        <ul>
+                            <li v-for="error in errors">{{ error }}</li>
+                        </ul>
+                    </div>
+
+                    <!-- display selected file names if there are errors -->
+                    <div id="selected-image-names" v-if="files.length > 0 && errors.length > 0">
+                        <span>Selected ({{ files.length }}):</span>
+                        <ul>
+                            <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- preview images if there are files selected with no errors -->
+                <div class="row" v-if="files.length > 0 && errors.length == 0">
+                    <span>Selected ({{ files.length }}):</span>
+                    <div v-for="(link, index) in selectedLinks" class="preview-image-container">
+                        <img :src="link" />
+                        <span>{{ files[index].name }} ({{ calculateSize(files[index].size) }})</span>
+                    </div>
+                </div>
+            </div>
+            <div id="upload-image-caption" class="container-fluid">
+                <div class="row">
+                    <label for="image-caption" id="caption-title">Caption:</label>
+                    <textarea id="image-caption" name="image-caption" placeholder="Enter caption here..."></textarea>
+                </div>
+            </div>
+            <br>
+            <div id="upload-image-location" class="container-fluid">
+                <div class="row">
+                    <label for="image-tags" id="location-title">Location:</label>
+                    <input type="text" id="image-location" name="image-location" placeholder="Optional"/>
+                </div>
+            </div>
+            <br>
+            <div id="upload-image-tags" class="container-fluid">
+                <div class="mb-3 row">
+                    <label for="image-tags" id="tags-title">Tags:</label>
+                    <AdditionButton :tags="selectedOption"/>
+                </div>
+            </div>
+            <div id="comments-opton" class="container-fluid">
+                <div class="row">
+                    <label for="image-comments" id="comments-title">Turn on comments:</label>
+                    <div class="container">
+                        <input type="checkbox" class="checkbox" id="checkbox" @click="commentsCheck()">
+                        <label class="switch" for="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <input class="pink-button" type="reset" value="Clear Selection" @click="resetAll" />
+            <!-- 
+                disable submit button if 
+                1. there are no files selected
+                2. there are files selected but contains errors
+            -->
+            <input class="pink-button disabled" type="submit" :value="submitting ? 'Updating...' : 'Update!'" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0) || submitting" />
+        </form>
+    </div>
 </template>
 
 <script>
 import { useBlogStore } from '../../stores/BlogStore.js';
+import AdditionButton from '../../components/profile/AdditionButton.vue'
 
 export default {
+    components: {
+        AdditionButton
+    },
     data() {
         return {
             blog: {},
@@ -62,6 +108,10 @@ export default {
             errors: [],
             selectedLinks: [],
             invalidFiles: [],
+            caption: "",
+            location: "",
+            tags: [],
+            comments: false,
             initialized: false,
             toInitFiles: true,
             dataTransfer: new DataTransfer(),
@@ -196,6 +246,10 @@ export default {
         resetAll() {
             this.files = [];
             this.errors = [];
+            this.caption = "";
+            this.location = "";
+            this.tags = [];
+            this.comments = false;
         },
         // to calculate size of file and display message
         calculateSize(bytes) {
@@ -289,9 +343,44 @@ export default {
     padding: 40px;
     border-style: solid;
     border-color: black;
-    border-width: 3px;
+    border-width: 2.9px;
     border-radius: 10px;
     text-align: center;
+    background-color: #133B5B;
+    color: white;
+    width: 45%;
+}
+#custom-btn {
+    width: fit-content !important;
+    height: fit-content !important;
+    margin-left: 0 !important;
+    margin-top: 5px !important;
+}
+.form-header {
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: white;
+    float: right;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0, 0.5);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #upload-image-container {
@@ -300,12 +389,14 @@ export default {
     border-width: 1px;
     border-radius: 10px;
     padding: 10px;
-    margin-bottom: 40px;
-    width: 60%;
+    margin-bottom: 30px !important;
+    width: 80% !important;
     height: fit-content;
     display: grid;
     row-gap: 10px;
     align-items: center;
+    background-color: white;
+    color: black;
 }
 
 #upload-image {
@@ -332,6 +423,106 @@ export default {
     padding: 0;
 }
 
+#caption-title {
+    width: fit-content;
+    margin-left: 8%;
+    margin-right: 2%;
+}
+
+#image-caption {
+    width: 60%;
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 15px;
+    font-size: 14px;
+}
+
+#location-title {
+    width: fit-content;
+    margin-left: 8%;
+    margin-right: 1%;
+    display: grid;
+    align-items: center;
+}
+
+#image-location {
+    width: 59.5%;
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 10px;
+    padding-left: 15px;
+    font-size: 12px;
+}
+
+#tags-title {
+    width: fit-content;
+    margin-left: 8%;
+    margin-right: 4%;
+    display: grid;
+    align-items: center;
+}
+
+#interest-badges {
+    width: fit-content;
+}
+
+#comments-title {
+    width: fit-content;
+    margin-left: 8%;
+    margin-right: 1%;
+    display: grid;
+    align-items: center;
+}
+
+/* The switch - the box around the slider */
+.container {
+    width: 4.8rem;
+    height: 31px;
+    position: relative;
+    margin-right: 2rem;
+}
+
+/* Hide default HTML checkbox */
+.checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.switch {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: #e9e9eb;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+/* The slider */
+.slider {
+    width: 27px;
+    height: 27px;
+    position: absolute;
+    left: calc(50% - 27px/2 - 10px);
+    top: calc(50% - 27px/2);
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+}
+
+.checkbox:checked + .switch {
+    background-color: #34C759;
+}
+
+.checkbox:checked + .switch .slider {
+    left: calc(50% - 27px/2 + 10px);
+    top: calc(50% - 27px/2);
+}
+
 .preview-image-container {
     margin: 0 auto;
     margin-bottom: 12px;
@@ -353,5 +544,19 @@ export default {
 
 .preview-image-container span {
     overflow-wrap: break-word;
+}
+
+.pink-button {
+    background-color: #E53A73;
+    border: none;
+    border-radius: 7px;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 170px;
 }
 </style>

@@ -211,7 +211,6 @@ export default {
         resetAll() {
             this.files = [];
             this.errors = [];
-            this.selectedLinks = [];
             this.caption = "";
             this.location = "";
             this.tags = [];

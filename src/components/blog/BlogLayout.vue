@@ -36,6 +36,13 @@
                 <span class="blog-indicator" v-for="(value, index) in blog.content_links" :class="{active: currentId == index + 1}" :id="index + 1" @click="toggleSlide"></span>
             </div>
         </div>
+        
+        <!-- caption -->
+        <div class="row blog-caption">
+            <div class="blog-caption-container">
+                <span>{{ caption }}Need Backend</span>
+            </div>
+        </div>
 
         <!-- actions - contains like and comment -->
         <div class="row blog-actions">
@@ -287,6 +294,7 @@ export default {
             currentId: 1,
             showPrev: false,
             showNext: false,
+            caption: '',
             deleted: false,
             showComments: false,
             commentsLoaded: false,
