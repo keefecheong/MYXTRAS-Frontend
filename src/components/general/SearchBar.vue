@@ -4,8 +4,8 @@
         </div>
         <div class="col-md-6 centerElements" > 
             <span class="material-symbols-outlined" style="color: black" id="searchIcon" @click="performSearch">search</span>
-            <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!" v-on:keyup.enter="performSearch">
-            
+            <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!" v-on:keyup="performSearch">
+            <SearchResults :results="searchResults" :currentPage="currentPage"/>
         </div>
         <div v-if="currentPage === 'forums'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
             <btn v-if="currentPage === 'forums'" id="createForumBtn" @click="sendBool">Create Community</btn>
@@ -21,7 +21,6 @@
             <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
     </div>
-    <SearchResults :results="searchResults" :currentPage="currentPage"/>
 </template>
 
 <style>
@@ -199,17 +198,27 @@ export default {
         },
         async performSearch() {
             let searchObject;
+            if (this.searchTerm !== '') {
+                console.log('searching for:', this.searchTerm);
+                document.querySelector('.resultsContainer').style.display = 'block';
+            }
+            else {
+                document.querySelector('.resultsContainer').style.display = 'none';
+            }
             if (this.currentPage === 'feed') {
                 searchObject = 'users'
             }
             else if (this.currentPage === 'forums'){
                 searchObject = this.currentPage
             }
+
             try {
                 const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search/${searchObject}?term=${this.searchTerm}`);
                 const data = await response.json();
                 this.searchResults = data.topSixResults;
-                console.log(this.searchResults)
+                if (this.searchResults.length === 0) {
+                    document.querySelector('.resultsContainer').style.display = 'none';
+                }
             } catch (error) {
                 console.error('Error performing search:', error);
             }
