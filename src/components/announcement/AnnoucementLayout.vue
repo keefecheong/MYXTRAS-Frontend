@@ -1,5 +1,5 @@
 <template>
-    <div class="row a-all" onload="autoScroll()">
+    <div class="row a-all">
         <div class="a-container red">
             <h1 class="a-header">{{ announcements[0].title }}</h1>
             <p class="a-caption">
@@ -50,13 +50,21 @@ export default {
             paused: false
         }
     },
+    mounted() {
+        this.autoScroll = () => {
+            setInterval(() => document.querySelector('.a-all').scrollBy(2, 0), 50);
+            if ((document.querySelector('.a-all').innerWidth + document.querySelector('.a-all').scrollX) >= document.body.offsetWidth) {
+                // Reached end of page
+                setInterval(() => document.querySelector('.a-all').scrollBy(-2, 0), 50);
+                console.log("Reached end of page");
+            }
+        };
+        this.autoScroll();
+    },
     method: {
-        autoScroll() {
-            setInterval(window.scrollBy(0, 2), 100);
-        },
         stopScroll() {
             if (this.paused) {
-                setInterval(window.scrollBy(0, 2), 100);
+                setInterval(document.getElementsByClassName('.a-all').scrollBy(0, 2), 50);
                 paused = false;
             }
             else {
