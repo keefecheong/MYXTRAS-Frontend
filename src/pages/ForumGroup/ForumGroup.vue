@@ -154,7 +154,6 @@ export default {
             // Validation
             var threadDetails = [this.threadTitle, this.threadDesc, this.threadPicObject];
             
-            console.log(threadDetails)
             if (threadDetails.some(item => item === '' || item === null)){
                 this.showErrMsg = true;
                 this.submitting = false;
@@ -223,8 +222,8 @@ export default {
                 this.forum = data.forum;
 
                 // Stores forumPic to be displayed in threadView.html
-                this.current_forumID = localStorage.setItem('forumGroupPic', this.forum.forum_pic_link[0]);
-                this.current_forumID = localStorage.setItem('forumBannerPic', this.forum.banner_link[0]);
+                localStorage.setItem('forumGroupPic', this.forum.forum_pic_link[0]);
+                localStorage.setItem('forumBannerPic', this.forum.banner_link[0]);
                 this.isCreator = data.isCreator;
                 this.contentLoaded = true
 
