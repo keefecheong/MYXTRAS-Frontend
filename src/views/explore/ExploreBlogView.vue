@@ -22,12 +22,21 @@
         </div>
     </div>
 </template>
+<script>
+    export default {
+        data() {
+            return {
+                blogLink: [String]
+            }
+        },
+    }
+</script>
 
 <style>
     .gallery {
         display: grid;
         grid-template-columns: repeat(8, 1fr);
-        grid-template-rows: repeat(8, 5vw);
+        grid-template-rows: repeat(15, 5vw);
         grid-gap: 1rem; 
     }
 
@@ -40,43 +49,43 @@
 
     .gallery__item--1 {
         grid-column-start: 1;
-        grid-column-end: 3;
+        grid-column-end: 5;
         grid-row-start: 1;
-        grid-row-end: 3;
+        grid-row-end: 6;
     }
 
     .gallery__item--2 {
-        grid-column-start: 3;
-        grid-column-end: 5;
-        grid-row-start: 1;
-        grid-row-end: 3;
-    }
-
-    .gallery__item--3 {
         grid-column-start: 5;
         grid-column-end: 9;
         grid-row-start: 1;
         grid-row-end: 6;
     }
 
-    .gallery__item--4 {
+    .gallery__item--3 {
         grid-column-start: 1;
         grid-column-end: 5;
-        grid-row-start: 3;
-        grid-row-end: 6;
+        grid-row-start: 6;
+        grid-row-end: 11;
+    }
+
+    .gallery__item--4 {
+        grid-column-start: 5;
+        grid-column-end: 9;
+        grid-row-start: 6;
+        grid-row-end: 11;
     }
 
     .gallery__item--5 {
         grid-column-start: 1;
         grid-column-end: 5;
-        grid-row-start: 6;
-        grid-row-end: 9;
+        grid-row-start: 11;
+        grid-row-end: 16;
     }
 
     .gallery__item--6 {
         grid-column-start: 5;
         grid-column-end: 9;
-        grid-row-start: 6;
-        grid-row-end: 9;
+        grid-row-start: 11;
+        grid-row-end: 16;
     }
 </style>
