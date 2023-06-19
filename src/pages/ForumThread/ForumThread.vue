@@ -1,17 +1,19 @@
 <template>
     <div id="main-container">
         <NavSidebar/>
-        <div id="main-content">
+        <div id="main-content" v-if="contentLoaded">
             <div class="row">
-                <img :src="banner" alt="Banner" id="banner-picture"/>
+                <div class="imageContainer">
+                    <img :src="forumBannerPic" alt="Banner" id="banner-picture"/>
+                </div>
             </div>
             <div class="row">
                 <div id="pink-container">
                     <div id="image" class="col-md-1">
-                        <img class="imageIcon" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
+                        <img class="imageIcon" :src="forumGroupPic">
                     </div>
                     <div id="group-description" class="col-md-1">
-                        <h5 id="groupname">x/nerdfest</h5>
+                        <h5 id="groupname">x/{{ forumID }}</h5>
                     </div>
                 </div>
             </div>
@@ -19,24 +21,39 @@
                 <div class="col-md-9">
                     <div class="card">
                         <div class="row threadContent">
-                            <h2> {{ threadDetails.title}}</h2>
-                            <h6> {{ threadDetails.description}} </h6>
+                            <h2> {{ thread.thread_title}}</h2>
+                            <h6> {{ thread.thread_desc}} </h6>
                         </div>
-                        <div class="row threadContent">
+                        <div class="row">
                             <div id="threadImageContainer">
-                                <img id="threadImage" :src="threadDetails.pfpPic">
+                                <img id="threadImage" :src="thread.content_links[0]">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="reactionContainer">
+                                    <span class="material-symbols-outlined reactionBtns">sentiment_very_satisfied</span>
+                                    <span class="material-symbols-outlined reactionBtns">sentiment_very_dissatisfied</span>
+                                </div>
+                            </div>
+                            <div class="col-6 d-flex justify-content-end">
+                                <p>Posted by: @</p>
+                                <br>
+                                <p>{{thread.creator_id.username }}</p>
+                                <img class="profilepic" :src="thread.creator_id.profile_pic_link" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <textarea placeholder="Anything Xtra to say?" style="width: 100%;"></textarea>
+                            </div>
+                            <div class="col-md-3">
+                                <button>Comment</button>
                             </div>
                         </div>
                         <hr>
-                        <div v-for="comment in threadDetails.comments">
-                            <img :src="comment.pfpPic" class="imageIcon">   
-                            <p>{{ comment.creator_name }}</p>
-                            <p>{{ '@' + comment.creator_username }}</p>
-                            <p>{{comment.content }}</p>
-                        </div>
                     </div>
                 </div>
-
                 <div class="col-md-3">
                     <div class="card shadow">
                         <div class="card-body">
@@ -71,6 +88,14 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div v-for="comment in threadDetails.comments">
+                    <img :src="comment.pfpPic" class="imageIcon">   
+                    <p>{{ comment.creator_name }}</p>
+                    <p>{{ '@' + comment.creator_username }}</p>
+                    <p>{{comment.content }}</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -89,14 +114,12 @@ export default {
         SearchBar,
         banner,
     },
-    mounted() {
-        this.tests()
-    },
     data() {
         return {
-            banner: banner,
-            groupPic: groupPic,
-            test: 'hi',
+            contentLoaded: false,
+            forumID: null,
+            forumGroupPic: null,
+            forumBannerPic: null,
             threadDetails: {
             title: "How do I make my parents proud?",
             description: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are some ways I can get their attention?",
@@ -121,21 +144,36 @@ export default {
                 }
             ]
             },
-            // threadDetails: {title: "How do I make my parents proud?", 
-            // description: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are some ways I can get their attention?", 
-            // creator_name: "Pompourous", pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png",
-            // comments : { creator_name: "Lim Long Teck", creator_username: "notatryhard", content: "Where got time brotherman", 
-            // pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", 
-            // creation_date: "12-11-25, 5 days ago", subcomments: {creator_name: "Lee Wee Kang", 
-            // creator_username: "Pompourous", content: "@notatryhard Seriously?", 
-            // pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", 
-            // creation_date: "12-11-25, 5 days ago"}}},
         }
     },
+    mounted() {
+        this.getForumPage()
+    },
     methods: {
-        tests() {
-            console.log(this.threadDetails)
-        }
+        async getForumPage() {
+            this.forumID = localStorage.getItem('forumID');
+            this.forumGroupPic = localStorage.getItem('forumGroupPic');
+            this.forumBannerPic = localStorage.getItem('forumBannerPic');
+            const threadID = localStorage.getItem('threadID');
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-thread/${threadID}`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(res => {
+                if (res.ok) {
+                return res.json();
+                }
+                throw new Error('Response not OK');
+            })
+            .then(data => {
+                this.thread = data;
+                console.log(this.thread)
+                this.contentLoaded = true
+            })
+            .catch((error) => {
+                console.log("This page could not be loaded: ", error);
+            });
+        },
     },
 }
 
@@ -145,6 +183,13 @@ export default {
 
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
+.reactionContainer {
+    display: inline-block;
+}
+.reactionBtns {
+    
+    color: black !important;
+}
 body {
     background-color: white !important;
     overflow-x: hidden;
@@ -153,7 +198,7 @@ body {
     padding: 1em 0 1em 0;
     border: none !important;
     border-radius: 10px;
-    margin: 3vh 1vh;
+    margin: 3vh 0;
 }
 #group-description {
     display: flex;
@@ -220,9 +265,8 @@ body {
 }
 .profilepic {
     overflow: hidden;
-    float:left;
-    width: 65px;
-    height: 65px;
+    width: 6vh;
+    height: 6vh;
     margin-right: 20px;
     margin-top: 15px;
     border-radius: 50%;

@@ -18,7 +18,7 @@
                     </div>
                     <br>
                     <div class="d-flex justify-content-end">
-                        <a id="commentsText" @click="viewThread">View {{ thread.numOfComments }} comments</a>
+                        <a id="commentsText" @click="viewThread(thread)">View {{ thread.numOfComments }} comments</a>
                     </div>
                 </div>
             </div>
@@ -177,15 +177,14 @@ export default {
     data() {
         return {
             isDraggable: false,
-            threadID: null,
         }
     },
     props: ['threads'],
     methods: {
-        viewThread(){
-            localStorage.setItem("threadID", this.threadID)
-            location.href="/threadView.html"
-        },
+        viewThread(thread) {
+            localStorage.setItem("threadID", thread._id)
+            location.href = '/threadView.html'
+        }, 
     }
 }
 </script>

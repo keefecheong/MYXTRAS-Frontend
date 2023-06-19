@@ -19,18 +19,15 @@
                         <p id="groupdescription">{{forum.forumDesc}}</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-2">
                 <button class="subscribe-button" v-if="!isCreator" @click="subscribeForum">Subscribe</button>
-            </div>
-            <div class="col-md-2">
+                <button @click="showCreateThread">Create Thread!</button>
                 <div style="margin-left: 5vw !important; ">
                     <p>{{"Subscribers: " + forum.numOfSubs}}</p>
                 </div>
             </div>
             <div class="col-md-8 d-flex justify-content end">
                 <div style="margin-left: 5vw !important; ">
-                    <button @click="showCreateThread">Create Thread!</button>
+                    
                 </div>
             </div>
         </div>
@@ -142,7 +139,11 @@ export default {
         toggleScrolling() {
             // Get the body element
             const body = document.body;
-            body.classList.add('disable-scroll');
+            if (body.classList.contains('disable-scroll')) {
+                body.classList.remove('disable-scroll');
+            } else {
+                body.classList.add('disable-scroll');
+            }
         },
         showCreateThread() {
             this.toggleScrolling()
@@ -220,7 +221,11 @@ export default {
             })
             .then(data => {
                 this.forum = data.forum;
-                this.isCreator = data.isCreator;    
+
+                // Stores forumPic to be displayed in threadView.html
+                this.current_forumID = localStorage.setItem('forumGroupPic', this.forum.forum_pic_link[0]);
+                this.current_forumID = localStorage.setItem('forumBannerPic', this.forum.banner_link[0]);
+                this.isCreator = data.isCreator;
                 this.contentLoaded = true
 
             })
@@ -241,7 +246,6 @@ export default {
             })
             .then(data => {
                 this.threads = data.threads;
-                console.log(this.threads)
             })
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);
@@ -320,12 +324,12 @@ export default {
     }
     .subscribe-button{
         background-color: transparent;
-        color: white;
+        color: var(--primary);
         padding: 10px 30px;
         font-size: 15px;
         border-radius: 10px;
         font-weight: bold;
-        border: 2px solid white;
+        border: 2px solid var(--primary);
         margin-top: 25px;
         margin-left: 55px;
     }

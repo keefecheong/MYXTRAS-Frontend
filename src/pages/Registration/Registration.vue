@@ -26,7 +26,7 @@
                             <button @click="sendOTP" id="sendOtpBtn">Send OTP</button>
                             <br>
                             <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
-                            <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="8" required>
+                            <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="6" required>
                             <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn">Verify OTP</button>
                             <p v-if="verifiedotp">OTP verified</p>
 
