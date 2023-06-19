@@ -69,7 +69,7 @@
             <div id="comments-opton" class="container-fluid">
                 <div class="row">
                     <label for="image-comments" id="comments-title">Turn on comments:</label>
-                    <div class="container">
+                    <div class="comments-checkbox-container">
                         <input type="checkbox" class="checkbox" id="checkbox" @click="commentsCheck()">
                         <label class="switch" for="checkbox">
                             <span class="slider"></span>
@@ -389,7 +389,7 @@ export default {
 }
 
 /* The switch - the box around the slider */
-.container {
+.comments-checkbox-container {
     width: 4.8rem;
     height: 31px;
     position: relative;

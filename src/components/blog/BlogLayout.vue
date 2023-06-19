@@ -218,6 +218,7 @@
 
 .blog-actions .row {
     width: fit-content;
+    align-items: center;
 }
 
 .blog-privilege-actions {

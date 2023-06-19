@@ -21,6 +21,8 @@
             <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
     </div>
+
+    <div id="compensate-searchbar-height"></div>
 </template>
 
 <style>
@@ -33,8 +35,8 @@
     z-index: 9998;
     display: flex;
     flex-wrap: wrap;
-    padding-top: 2vh;
-    padding-bottom: 2vh;
+    padding-top: 10px;
+    padding-bottom: 10px;
     background-color: var(--primary);
 }
 .disable-scroll {
@@ -175,6 +177,7 @@ export default {
     },
     mounted() {
         this.checkAuth();
+        this.compensateSearchBar();
     },
     methods: {
         toggleScrolling() {
@@ -252,6 +255,12 @@ export default {
                 .catch(error => {
                     console.error('Error:', error);
                 });
+        },
+        compensateSearchBar() {
+            const searchbar = document.querySelector('.pink-header-search');
+            const searchbarHeight = window.getComputedStyle(searchbar).height;
+
+            document.getElementById('compensate-searchbar-height').style.height = searchbarHeight;
         }
     }
 }
