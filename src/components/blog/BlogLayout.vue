@@ -25,7 +25,7 @@
                 <div class="blog-item" v-for="(link, index) in blog.content_links" :class="{active: currentId == index + 1}">
                     <img class="blog-image" :src="link" />
                 </div>
-
+                <p></p>
                 <!-- show controls only if more than one image and the active image is not the first/last -->
                 <a class="blog-prev" @click="prevSlide" v-if="showPrev">&#10094;</a>
                 <a class="blog-next" @click="nextSlide" v-if="showNext">&#10095;</a>
@@ -36,7 +36,7 @@
                 <span class="blog-indicator" v-for="(value, index) in blog.content_links" :class="{active: currentId == index + 1}" :id="index + 1" @click="toggleSlide"></span>
             </div>
         </div>
-        
+
         <!-- caption -->
         <div class="row blog-caption">
             <div class="blog-caption-container">
