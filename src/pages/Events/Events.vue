@@ -23,7 +23,6 @@ export default {
 
 <style>
 @import url('../../styles/main.css');
-@import url('../../styles/sub-navigation.css');
 
 .pink-header {
     margin: 0 -12px 0 -12px;
