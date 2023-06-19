@@ -96,6 +96,7 @@ export default {
     font-weight: bold;
     border-bottom: #000000 2px solid;
     padding: 40px;
+    color: var(--dark);
 }
 
 .a-caption {

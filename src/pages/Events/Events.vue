@@ -23,14 +23,15 @@ export default {
 
 <style>
 @import url('../../styles/main.css');
+@import url('../../styles/sub-navigation.css');
 
 .pink-header {
     margin: 0 -12px 0 -12px;
     padding-top: 5vh;
     padding-bottom: 5vh;
     background-color: var(--primary);
+    color: white;
 }
-
 
 
 </style>
