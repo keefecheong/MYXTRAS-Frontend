@@ -20,7 +20,8 @@
 @import url('../../styles/sub-navigation.css');
 
 .feed-container {
-    max-width: 70%;
+    max-width: 50%;
+    margin-top: 20px;
 }
 </style>
 

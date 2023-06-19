@@ -30,7 +30,7 @@
                 <button id="load-previous-messages" @click="loadPreviousMessages" :disabled="loadingPrevious">Load Previous</button>
 
                 <ChatMessageLayout 
-                    v-for="(message, index) in copyMessages" 
+                    v-for="(message, index) in updatedMessages" 
                     :message="message" 
                     :previous_creation_time="previous_creation_time(index)" 
                     :previous_is_sender="previous_is_sender(index)"
@@ -75,8 +75,8 @@ export default {
             previousMessageLength: 0,
             currentStatus: null,
             loadingPrevious: false,
-            copyMessages: [],
-            preventScroll: false
+            preventScroll: false,
+            store: useChatStore()
         }
     },
     props: [
@@ -88,10 +88,6 @@ export default {
     ],
     components: {
         ChatMessageLayout
-    },
-    created() {
-        // copy messages into copyMessages for manipulation
-        this.copyMessages = JSON.parse(JSON.stringify(this.messages));
     },
     // when mounted/restored from cache
     activated() {
@@ -137,7 +133,7 @@ export default {
 
             // add message to localMessages
             newMessage.chat_id = this.chat._id;
-            this.store.localMessages.push(newMessage);
+            this.store.newMessage(newMessage);
 
             // update last_message_timestamp
             this.$emit('update-chat-timestamp', {
@@ -162,7 +158,7 @@ export default {
             });
 
             // update edited message's content
-            this.copyMessages.find(existingMessage => existingMessage._id == data.messageId).content = data.editedMessage;
+            this.store.editMessage(this.chat._id, data.messageId, data.editedMessage);
         },
         // to delete message and update backend
         deleteMessage(data) {
@@ -175,8 +171,7 @@ export default {
             });
 
             // remove deleted message from existing messages
-            const existingIndex = this.copyMessages.findIndex(existingMessage => existingMessage._id == data.messageId);
-            this.copyMessages.splice(existingIndex, 1);
+            this.store.deleteMessage(this.chat._id, data.messageId);
         },
         // to update user's typing status
         // status changes to typing whenever user presses a key
@@ -257,7 +252,7 @@ export default {
         },
         // check for change in messages and scroll to bottom
         checkChangeMessages() {
-            const messageLength = this.copyMessages.length;
+            const messageLength = this.updatedMessages.length;
 
             // only scroll to bottom if preventScroll is false
             if (!this.preventScroll) {
@@ -279,7 +274,7 @@ export default {
         // load more messages stored in database
         async loadPreviousMessages() {
             this.loadingPrevious = true;
-            const encodedTimestamp = encodeURIComponent(this.copyMessages[0].creation_time);
+            const encodedTimestamp = encodeURIComponent(this.updatedMessages[0].creation_time);
 
             // send request to backend to get previous messages
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats/${this.chat._id}/${encodedTimestamp}/100`, {
@@ -295,7 +290,7 @@ export default {
 
                             // if there are more history messages
                             // update message list with previous messages
-                            this.copyMessages = data.messages.concat(this.copyMessages);
+                            this.store.newMessageBulk(data.messages, this.chat._id);
                         }
                         else {
                             // if there are no more history messages then tell user no more messages found
@@ -315,27 +310,17 @@ export default {
         },
         // get creation_time of previous message or '' if it is the first message
         previous_creation_time(index) {
-            return index == 0 ? '' : this.copyMessages[index - 1].creation_time;
+            return index == 0 ? '' : this.updatedMessages[index - 1].creation_time;
         },
         // get is_sender of previous message or null if it is the first message
         previous_is_sender(index) {
-            return index == 0 ? null : this.copyMessages[index - 1].is_sender;
+            return index == 0 ? null : this.updatedMessages[index - 1].is_sender;
         }
     },
-    watch: {
-        // watch chat value
-        'chat': {
-            handler() {
-                // get user presence when chat changes
-                this.getUserPresence();
-            }
-        },
-        // watch messages value
-        'messages': {
-            handler() {
-                // update copyMessages with new set of messages when messages changes
-                this.copyMessages = JSON.parse(JSON.stringify(this.messages));
-            }
+    computed: {
+        // to make sure updates to messages are not left out
+        updatedMessages() {
+            return this.messages;
         }
     }
 }

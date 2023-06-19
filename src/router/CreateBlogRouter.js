@@ -14,7 +14,7 @@ const routes = [
         component: EditBlogView,
         // only allow going to edit page from view feed page or refresh from edit page
         beforeEnter: (to, from, next) => {
-            if (from.name != 'view-feed' && performance.navigation.type != 1) {
+            if (from.name != 'view-feed' && performance != 1) {
                 next('/');
             }
 
