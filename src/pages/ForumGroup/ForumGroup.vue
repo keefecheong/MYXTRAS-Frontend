@@ -2,91 +2,97 @@
     <div id="main-container">
     <NavSidebar />
     <div id="main-content" v-if="contentLoaded" >
-        <div id="row" class="imageContainer">
-            <img :src="forum.banner_link[0]" alt="Banner" id="banner-picture"/>
-        </div>
         <div class="row">
-            <div class="col-md-2" id="pink-container">
-                <div class="forumMeta">
-                    <div id="image">
-                        <img class="groupicon" :src="forum.forum_pic_link">
+            <div class="imageContainer row">
+                <img :src="forum.banner_link[0]" alt="Banner" id="banner-picture"/>
+            </div>
+            <div class="row">
+                <div class="col-md-2" id="pink-container">
+                    <br>
+                    <div class="forumMeta">
+                        <div id="image">
+                            <img class="groupicon" :src="forum.forum_pic_link">
+                        </div>
+                        <div id="group-description">
+                            <h3 id="groupname">{{forum.forumName}}</h3>
+                            <p id="groupid">x/{{forum.forumID}}</p>
+                            <p id="groupdescription">{{forum.forumDesc}}</p>
+                        </div>
                     </div>
-                    <div id="group-description">
-                        <h3 id="groupname">{{forum.forumName}}</h3>
-                        <p id="groupid">x/{{forum.forumID}}</p>
-                        <p id="groupdescription">{{forum.forumDesc}}</p>
+                    <div class="forumOptions">
+                        <button class="subscribe-button pink-btn" v-if="!isCreator" @click="subscribeForum">Subscribe</button>
+                        <button @click="showCreateThread" class="pink-btn">Create Thread!</button>
+                        <div class="subs">
+                            <p>{{"Subscribers: " + forum.numOfSubs}}</p>
+                        </div>
                     </div>
                 </div>
-                <button class="subscribe-button" v-if="!isCreator" @click="subscribeForum">Subscribe</button>
-                <button @click="showCreateThread">Create Thread!</button>
-                <div style="margin-left: 5vw !important; ">
-                    <p>{{"Subscribers: " + forum.numOfSubs}}</p>
+                <div class="col-md-8 d-flex justify-content end">
+                    <div style="margin-left: 5vw !important; ">
+                          
+                    </div>
                 </div>
             </div>
-            <div class="col-md-8 d-flex justify-content end">
-                <div style="margin-left: 5vw !important; ">
-                    
-                </div>
-            </div>
-        </div>
-        <div id="white-container" class="row">
-            <div class="col-md-8 offset-md-1">
-                <threadLayout :threads="threads"/>
-            </div>
-            <div class="col-md-3">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h4 class="card-title">Recommendations</h4>
+            <div id="white-container" class="row">
+                <div class="col-md-8 offset-md-1">
+                    <threadLayout :threads="threads"/>
 
-                        <!-- max 6 groups -->
-                        <div class="group-container" v-for="group in groups">
-                            <img class="groupPic" :src="groupPic" />
-                            <p class="text-below-pic">Grp 2</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title">Recommendations</h4>
+
+                            <!-- max 6 groups -->
+                            <div class="group-container" v-for="group in groups">
+                                <img class="groupPic" :src="groupPic" />
+                                <p class="text-below-pic">Grp 2</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="createThread-container center-align" v-if="showPopUp">
-                <span class="material-symbols-outlined" @click="showCreateThread">back</span>
-                <div class="popup-content">
-                    <div class="row"> 
-                        <div class="col-3">
-                        </div>
-                        <div class="col-6">
-                            <h3>Create a community</h3>
-                            <!-- Upload group pic container -->
-                            <div class="groupPicContainer">
-                                <p v-if="selectedThreadPic === null">No image selected</p>
-                                <img v-if="selectedThreadPic !== null" :src="selectedThreadPic" alt="Group Picture"  id="profile-picture" ref="cropperImage"/>
-                                <input ref="threadPicInput" type="file" @change="uploadImage($event)" style="display: none" accept=".jpg, .jpeg, .png" required>
-                                <br>
+            <div class="row">
+                <div class="createThread-container center-align" v-if="showPopUp">
+                    <span class="material-symbols-outlined" @click="showCreateThread">back</span>
+                    <div class="popup-content">
+                        <div class="row"> 
+                            <div class="col-3">
+                            </div>
+                            <div class="col-6">
+                                <h3>Create a community</h3>
+                                <!-- Upload group pic container -->
+                                <div class="groupPicContainer">
+                                    <p v-if="selectedThreadPic === null">No image selected</p>
+                                    <img v-if="selectedThreadPic !== null" :src="selectedThreadPic" alt="Group Picture"  id="profile-picture" ref="cropperImage"/>
+                                    <input ref="threadPicInput" type="file" @change="uploadImage($event)" style="display: none" accept=".jpg, .jpeg, .png" required>
+                                    <br>
+                                </div>
+                                
+                                <button class="upload-banner-button" @click="selectImage()">Customize</button>
                             </div>
                             
-                            <button class="upload-banner-button" @click="selectImage()">Customize</button>
+                            <div class="col-3"></div>
                         </div>
-                        
-                        <div class="col-3"></div>
+                        <div class="row">
+                            <div class="col-3">
+                            </div>
+                            <div class="col-6 center-align">
+                                <input type="text" v-model="threadTitle" placeholder="Thread Title" required>
+                                <input type="text" v-model="threadDesc" :maxlength="500" placeholder="Thread Description" required>
+                                <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
+                                    <option value="" selected hidden disabled>Category</option>
+                                    <option value="Sports">Sports</option>
+                                    <option value="Dance">Dance</option>
+                                    <option value="Technology">Sports</option>
+                                    <option value="News">News</option>
+                                </select>
+                                <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
+                            </div>
+                            <div class="col-3"></div>
+                        </div>
+                        <button @click="createThread" :class="{ 'disabled': submitting }" :disabled="submitting">{{ submitting ? 'Creating...' : 'Create' }}</button>
                     </div>
-                    <div class="row">
-                        <div class="col-3">
-                        </div>
-                        <div class="col-6 center-align">
-                            <input type="text" v-model="threadTitle" placeholder="Thread Title" required>
-                            <input type="text" v-model="threadDesc" :maxlength="500" placeholder="Thread Description" required>
-                            <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
-                                <option value="" selected hidden disabled>Category</option>
-                                <option value="Sports">Sports</option>
-                                <option value="Dance">Dance</option>
-                                <option value="Technology">Sports</option>
-                                <option value="News">News</option>
-                            </select>
-                            <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
-                        </div>
-                        <div class="col-3"></div>
-                    </div>
-                    <button @click="createThread" :class="{ 'disabled': submitting }" :disabled="submitting">{{ submitting ? 'Creating...' : 'Create' }}</button>
                 </div>
             </div>
         </div>
@@ -276,128 +282,167 @@ export default {
 <style>
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
-    body{
-        overflow-x: hidden;
-    }
-    img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover; /* Scale and crop the image to fit */
-        object-position: center; /* Center the image within the div */
-    }
-    .createThread-container {
-        overflow-y: scroll;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 3;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-    .popup-content {
-        color: white;
-        background-color: var(--dark);
-        padding: 20px;
-        border-radius: 5px;
-        margin-bottom: 5vh;
-        width: 50vw;
-    }
-    .forumMeta{
-        margin-top: 0.5em;
-    }
-    .imageContainter {
-        height: 20vh;
-        overflow: hidden;
-    }
-    .imageContainter img {
-        height: 150px !important;
-    }
-    #pink-container{
-        background-color: var(--primary);
-        height: 100%;
-        width: 100%;
-    }
-    .subscribe-button{
-        background-color: transparent;
-        color: var(--primary);
-        padding: 10px 30px;
-        font-size: 15px;
-        border-radius: 10px;
-        font-weight: bold;
-        border: 2px solid var(--primary);
-        margin-top: 25px;
-        margin-left: 55px;
-    }
+.row {
+    padding: 0 !important;
+    width: 100%;
+    margin: 0 !important;
+}
 
-    .groupicon {
-        float:left;
-        overflow: hidden;
-        width: 60px;
-        height: 60px;
-        margin-left: 150px;
-        margin-right: 20px;
-        border-radius: 50%;
-    }
-    #group-description{
-        float:left;
-    }
-    #groupname{
-        color: white;
-        margin-bottom: 0px;
-    }
-    #groupid{
-        margin-bottom: 5px;
-        font-size: 14px;
-        margin-bottom: 0px;
-    }
-    #groupdescription{
-        font-size: 16px;
-    }
+#main-container {
+    margin-left: -12px;
+}
 
-    #white-container{
-        background-color: #fefefe;
-        height: 100%;
-        width: 100%;
-    }
+.createThread-container {
+    overflow-y: scroll;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
 
-    .profilepic {
-        overflow: hidden;
-        float:left;
-        width: 65px;
-        height: 65px;
-        margin-right: 20px;
-        margin-top: 15px;
-        border-radius: 50%;
+.popup-content {
+    color: white;
+    background-color: var(--dark);
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 5vh;
+    width: 50vw;
+}
 
-    }
+.forumMeta{
+    margin-top: 1rem;
+    margin-left: 100px;
+}
 
-    .groupPic{
-        overflow: hidden;
-        float:left;
-        width: 80px;
-        height: 80px;
-        margin-right: 20px;
-        margin-top: 10px;
-        margin-left: 25px;
-        border-radius: 50%;
-    }
+.subs {
+    margin-top: 5%;
+    float: right;
+}
 
-    #threads{
-        margin: 20px;
-        margin-top: 50px;
-    }
+#banner-picture {
+    width: 100%;
+    object-fit: cover; /* Scale and crop the image to fit */
+    object-position: center; /* Center the image within the div */
+    height: 150px;
+    margin: 0;
+    padding: 0;
+}
 
-    .group-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        width: 50%;
-        float: left;
-    }
+#pink-container{
+    background-color: var(--primary);
+    height: 100%;
+    width: 100%;
+}
 
-    .text-below-pic {
-        margin-top: 5px;
-    }
+.subscribe-button{
+    background-color: transparent;
+    color: var(--primary);
+    padding: 10px 30px;
+    font-size: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.groupicon {
+    float:left;
+    width: 60px;
+    height: 60px;
+    margin-right: 20px;
+    border-radius: 50%;
+    object-fit: cover; /* Scale and crop the image to fit */
+    object-position: center; /* Center the image within the div */
+}
+
+.forumOptions {
+    float: right;
+    margin-right: 40px;
+}
+
+#group-description{
+    float:left;
+}
+
+#groupname{
+    color: white;
+    margin-bottom: 0px;
+}
+
+#groupid{
+    margin-bottom: 5px;
+    font-size: 14px;
+    margin-bottom: 0px;
+}
+
+#groupdescription{
+    font-size: 16px;
+}
+
+#white-container{
+    background-color: #fefefe;
+    height: 100%;
+    width: 100%;
+}
+
+.profilepic {
+    float:left;
+    width: 65px;
+    height: 65px;
+    margin-right: 20px;
+    margin-top: 15px;
+    border-radius: 50%;
+}
+
+.groupPic{
+    float:left;
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-left: 25px;
+    border-radius: 50%;
+}
+
+.pink-btn {
+    background-color: #ffffff;
+    border: transparent solid 3.5px;
+    border-radius: 10px;
+    color: black;
+    height: 3rem;
+    width: 8.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    text-decoration: none;
+    text-align: center;
+}
+
+.pink-btn:hover {
+    background-color: #e53a73;
+    color: white;
+    border: transparent solid 3.5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#threads{
+    margin: 20px;
+    margin-top: 50px;
+}
+
+.group-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 50%;
+    float: left;
+}
+
+.text-below-pic {
+    margin-top: 5px;
+}
 </style>
