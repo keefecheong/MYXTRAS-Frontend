@@ -18,55 +18,29 @@ class ChatSocket {
         // handle 'receive-message' events
         // when socket receives new messages
         this.socket.on('receive-message', (data) => {
-            this.updateLocalChatsMessages(store, data);
+            // add chat and message
+            store.newChat(data.chat);
+
+            data.message.chat_id = data.chat._id;
+            store.newMessage(data.message);
         });
 
         // handle 'receive-edit-message' events
         // when a message is edited
         this.socket.on('receive-edit-message', (data) => {
-            // push message to editedMessages
-            store.editedMessages.push(data.message);
+            store.editMessage(data.message.chat_id, data.message._id, data.message.content);
         });
 
         // handle 'receive-delete-message' events
         // when a message is deleted
         this.socket.on('receive-delete-message', (data) => {
-            // push message to deletedMessages
-            store.deletedMessages.push(data.message);
-        })
+            store.deleteMessage(data.message.chat_id, data.message._id);
+        });
     }
 
     // disconnects the socket
     disconnect() {
         this.socket.disconnect();
-    }
-
-    // store new chat/message in ChatStore
-    updateLocalChatsMessages(store, data) {
-        // check if chat is stored in localMessages
-        // if chat is not stored, add the chat to localChats
-        const existingLocalChat = store.localChats.find(existingChat => existingChat._id == data.chat._id) || null;
-
-        if (!existingLocalChat) {
-            store.localChats.push(data.chat);
-        }
-        else {
-            // if the same chat id already exists, check if the last_message_timestamps are the same
-            // use the latest last_message_timestamp
-            const currentTimestamp = new Date(existingLocalChat.last_message_timestamp);
-            const newTimestamp = new Date(data.chat.last_message_timestamp);
-
-            if (newTimestamp - currentTimestamp > 0) {
-                existingLocalChat.last_message_timestamp = data.chat.last_message_timestamp;
-            }
-        }
-
-        // check if received message is stored in localMessages
-        // if message is not stored, add the message to localMessages
-        if (!store.localMessages.some(addedMessage => addedMessage._id == data.message._id)) {
-            data.message.chat_id = data.chat._id;
-            store.localMessages.push(data.message);
-        }
     }
 }
 

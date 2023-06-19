@@ -71,12 +71,9 @@ export default {
     },
     data() {
         return {
-            chats: [],
             chatSelected: false,
             users: [],
             store: useChatStore(),
-            selectedChat: null,
-            messages: {},
             dataInitialized: false,
             retrievedChatIds: []
         }
@@ -118,7 +115,7 @@ export default {
             // check if chat exists
             // if exists: target = existing chat
             // otherwise: target = null
-            let target = this.chats.find(chat => chat.targetUserId == targetUser._id) || null;
+            let target = this.store.chats.find(chat => chat.targetUserId == targetUser._id) || null;
 
             // if chat does not exist then create new chat
             if (!target) {
@@ -131,8 +128,8 @@ export default {
                     last_message_timestamp: Date.now()
                 }
 
-                // store new chat in localChats
-                this.store.localChats.push(target);
+                // store new chat in chats
+                this.store.chats.push(target);
             }
 
             // select the created/existing chat
@@ -150,61 +147,11 @@ export default {
             this.chatSelected = JSON.stringify(state.currentChat) != JSON.stringify({});
 
             if (this.chatSelected) {
-                // update selectedChat based on currentChat
-                this.selectedChat = state.currentChat;
-
-                // if messages of selectedChat have not been retrieved yet then query stored messages for the chat
-                if (!this.retrievedChatIds.some(chatId => chatId == this.selectedChat._id)) {
-                    this.retrieveMessages(this.selectedChat._id);
+                // if messages of currentChat have not been retrieved yet then query stored messages for the chat
+                if (!this.retrievedChatIds.some(chatId => chatId == state.currentChat._id)) {
+                    this.retrieveMessages(state.currentChat._id);
                 }
             }
-
-            // update chats array based on the chats in localChats that are not already added
-            state.localChats.forEach(chat => {
-                const existingChat = this.chats.find(addedChat => addedChat._id == chat._id) || null;
-
-                if (!existingChat) {
-                    // if chat does not exist then add to chats
-                    this.chats.push(chat);
-                }
-                else {
-                    // if the last_message_timestamps for the two chats with the same ids are not equal then use the latest last_message_timestamp
-                    const currentTimestamp = new Date(existingChat.last_message_timestamp);
-                    const localTimestamp = new Date(chat.last_message_timestamp);
-
-                    if (localTimestamp - currentTimestamp > 0) {
-                        existingChat.last_message_timestamp = chat.last_message_timestamp;
-                    }
-                }
-            });
-
-            // update messages array based on the chats in localMessages that are not already added and not deleted
-            state.localMessages.forEach(message => {
-                const chatId = message.chat_id;
-
-                if (!this.messages[chatId].some(addedMessage => addedMessage._id == message._id)
-                    && !state.deletedMessages.some(deletedMessage => deletedMessage._id == message._id)) {
-
-                    const newMessage = {...message};
-                    delete newMessage.chat_id;
-
-                    this.messages[chatId] = this.messages[chatId].concat([newMessage]);
-                }
-            });
-
-            // update existing messages if edited
-            state.editedMessages.forEach(message => {
-                this.messages[message.chat_id].find(existingMessage => existingMessage._id == message._id).content = message.content;
-                this.messages[message.chat_id] = [...this.messages[message.chat_id]];
-            });
-
-            // delete existing messages if deleted
-            state.deletedMessages.forEach(message => {
-                const existingIndex = this.messages[message.chat_id].findIndex(existingMessage => existingMessage._id == message._id);
-                this.messages[message.chat_id].splice(existingIndex, 1);
-
-                this.messages[message.chat_id] = [...this.messages[message.chat_id]];
-            });
         },
         // used to get existing chats and latest messages from top 5 recently used chats
         async initData() {
@@ -216,7 +163,7 @@ export default {
             }).then(async (res) => {
                 await res.json().then((data) => {
                     if (data.chats) {
-                        this.chats = data.chats.concat(this.chats);
+                        this.store.newChatBulk(data.chats);
                     }
                     else {
                         console.log('Could not retrieve chats.');
@@ -235,7 +182,7 @@ export default {
                         for (const key in data.data) {
                             if (data.data.hasOwnProperty(key)) {
                                 // update messages with the retrieved messages
-                                this.messages[key] = data.data[key].concat(!this.messages[key] ? [] : this.messages[key]);
+                                this.store.newMessageBulk(data.data[key], key);
 
                                 // update retrievedChatIds with the chat ids for which the messages above have been retrieved
                                 this.retrievedChatIds.push(key);
@@ -269,8 +216,7 @@ export default {
                     if (data.messages) {
                         // update messages with the retrieved messages
                         // check if any of the messages retrieved already exist locally
-                        const historyMessages = data.messages.filter(message => !this.messages[chatId].some(addedMessage => addedMessage._id == message._id));
-                        this.messages[chatId] = historyMessages.concat(!this.messages[chatId] ? [] : this.messages[chatId]);
+                        this.store.newMessageBulk(data.messages, chatId);
 
                         // update retrievedChatIds with the chat id requested
                         this.retrievedChatIds.push(chatId);
@@ -285,22 +231,26 @@ export default {
         },
         // update last_message_timestamp for specified chat
         updateChatTimestamp(data) {
-            this.chats.find(chat => chat._id == data.chatId).last_message_timestamp = data.last_message_timestamp;
+            this.store.chats.find(chat => chat._id == data.chatId).last_message_timestamp = data.last_message_timestamp;
         }
     },
     computed: {
+        // get currentChat from store
+        selectedChat() {
+            return this.store.currentChat;
+        },
         // extract a list of messages for the selected chat only
         selectedChatMessages() {
-            return this.messages[this.selectedChat._id];
+            return this.store.messages[this.selectedChat._id];
         },
         // order chats in descending last_message_timestamps
         orderedChats() {
-            return this.chats.sort((a, b) => {
+            return this.store.chats.sort((a, b) => {
                 const timestampA = new Date(a.last_message_timestamp);
                 const timestampB = new Date(b.last_message_timestamp);
 
                 return timestampB - timestampA;
-            })
+            });
         }
     }
 }
