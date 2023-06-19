@@ -2,10 +2,8 @@
     <div id="main-container">
     <NavSidebar />
     <div id="main-content" v-if="contentLoaded" >
-        <div id="row">
-            <div class="imageContainter">
-                <img :src="forum.banner_link[0]" alt="Banner" id="banner-picture"/>
-            </div>
+        <div id="row" class="imageContainer">
+            <img :src="forum.banner_link[0]" alt="Banner" id="banner-picture"/>
         </div>
         <div class="row">
             <div class="col-md-2" id="pink-container">
@@ -284,7 +282,7 @@ export default {
     }
     img {
         height: 100%;
-        max-width: 100%;
+        width: 100%;
         object-fit: cover; /* Scale and crop the image to fit */
         object-position: center; /* Center the image within the div */
     }
@@ -314,8 +312,7 @@ export default {
         overflow: hidden;
     }
     .imageContainter img {
-        max-width: 100%;
-        object-fit: cover;
+        height: 150px !important;
     }
     #pink-container{
         background-color: var(--primary);
