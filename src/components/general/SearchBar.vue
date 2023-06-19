@@ -31,7 +31,7 @@
     top: 0;
     left: 0;
     width: 102%;
-    z-index: 9998;
+    z-index: 2;
     display: flex;
     flex-wrap: wrap;
     padding-top: 2vh;
@@ -184,7 +184,6 @@ export default {
             body.classList.add('disable-scroll');
         },
         sendBool() {
-            //this.showPopUpWindow()
             this.toggleScrolling()
             this.$emit('show-popup', !this.showPopUp);
         },

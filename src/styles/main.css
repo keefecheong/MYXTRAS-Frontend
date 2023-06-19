@@ -36,6 +36,14 @@ body {
     font-size: calc(.5em + 0.5vw) !important;
     overflow-x: hidden;
 }
+.center-align {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 a {
     text-decoration: none !important;
 }
