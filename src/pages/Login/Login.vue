@@ -35,7 +35,7 @@
 <style>
 @import url('../../styles/main.css');
 body {
-    background: linear-gradient(45deg,#FF6363, #E53A73);
+    background: linear-gradient(45deg,#FF6363, var(--primary));
     height: 100vh;
     background-repeat: no-repeat;
     animation: gradientAnimation 2s infinite linear;
@@ -87,7 +87,7 @@ input[type=email],
 input[type=password] {
   border: none;
   border-bottom: 2px solid transparent;
-  background-image: linear-gradient(45deg,#FF6363, #E53A73);
+  background-image: linear-gradient(45deg,#FF6363, var(--primary));
   background-position: 0 100%;
   background-repeat: no-repeat;
   background-size: 100% 2px;
@@ -103,7 +103,7 @@ input:focus{
     color: white;
     margin-top: 5vh;
     border: none;
-    background: linear-gradient(45deg,#FF6363, #E53A73);
+    background: linear-gradient(45deg,#FF6363, var(--primary));
 }
 #loginBtn:hover {
     background: transparent;
@@ -127,7 +127,7 @@ input:focus{
   bottom: -2px;
   width: 100%;
   height: 2px;
-  background: linear-gradient(45deg,#FF6363, #E53A73);
+  background: linear-gradient(45deg,#FF6363, var(--primary));
   transform: scaleX(0);
   transition: transform 0.3s ease-in-out;
 }

@@ -228,7 +228,7 @@ export default {
     }
 
     #right-content{
-        background-color: #E53A73;
+        background-color: var(--primary);
     }
 
     #profile-picture {
@@ -338,7 +338,7 @@ export default {
     }
 
     .floating-button {
-        background-color: #E53A73;
+        background-color: var(--primary) ;
         border-radius: 50%;
         width: 50px;
         height: 50px;

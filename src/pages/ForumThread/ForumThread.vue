@@ -208,7 +208,7 @@ body {
     border-radius: 50%;
 }
 #pink-container{
-    background-color: #E53A73;
+    background-color: var(--primary);
 }
 .group-container {
     display: flex;

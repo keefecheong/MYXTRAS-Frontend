@@ -314,7 +314,7 @@ export default {
         object-fit: cover;
     }
     #pink-container{
-        background-color: #E53A73;
+        background-color: var(--primary);
         height: 100%;
         width: 100%;
     }
