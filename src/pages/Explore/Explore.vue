@@ -2,7 +2,8 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
-            <SearchBar/>
+            <SearchBar currentPage="feed"/>
+            <br>
             <br>
             <h1>Explore</h1>
             <br>
