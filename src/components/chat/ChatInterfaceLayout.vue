@@ -30,7 +30,7 @@
                 <button id="load-previous-messages" @click="loadPreviousMessages" :disabled="loadingPrevious">Load Previous</button>
 
                 <ChatMessageLayout 
-                    v-for="(message, index) in updatedMessages" 
+                    v-for="(message, index) in messages" 
                     :message="message" 
                     :previous_creation_time="previous_creation_time(index)" 
                     :previous_is_sender="previous_is_sender(index)"
@@ -47,10 +47,67 @@
             <form @submit.prevent="sendMessage">
                 <input id="chat-message-input" type="text" placeholder="Message..." title="Enter your message" v-model="messageText" @input="updateTypingStatus" />
 
-                <button title="Send message">
+                <button title="Add a file" type="button" @click="() => toggleFileInput(true)">
+                    <span class="material-symbols-outlined">Attach_file</span>
+                </button>
+
+                <button title="Send message" type="submit">
                     <span class="material-symbols-outlined" id="chat-message-send">Send</span>
                 </button>
             </form>
+        </div>
+
+        <div id="chat-file-upload-container" v-if="fileInput">
+            <div id="chat-file-upload">
+                <span id="close-file-input" class="material-symbols-outlined" @click="() => toggleFileInput(false)">Close</span>
+
+                <form @submit.prevent="sendMessage">
+                    <div id="upload-file-container">
+                        <!-- input to select file -->
+                        <input id="chat-add-file" type="file" title="Add a file" @change="handleFileInput" />
+                        <label for="chat-add-file" id="chat-add-file-label">
+                            <p>Drag and drop 
+                                <br>
+                                or
+                                <br> 
+                                click <u>here</u> to upload.
+                            </p>
+                        </label>
+
+                        <!-- inform user about invalid file -->
+                        <div v-if="error != ''" id="chat-invalid-file">
+                            <span>Error:</span>
+                            <br />
+                            <span>{{ error }}</span>
+                        </div>
+                        
+                        <!-- preview file -->
+                        <div id="preview-file-container" v-if="fileSelected">
+                            <span>Selected File:</span>
+                            
+                            <div>
+                                <img
+                                    :class="{'image-preview': isFileImageType, 'unknown-preview': !isFileImageType}"
+                                    :src="isFileImageType ? selectedLink : '../../assets/unknown-file-icon.png'"
+                                    />
+                                    
+                                <span>{{ file.name }} ({{ calculateSize(file.size) }})</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="chat-file-interface-input" v-if="fileSelected && !invalidFile">
+                        <input id="chat-file-message-input" type="text" placeholder="Message... (Optional)" title="Enter your message" v-model="messageText" @input="updateTypingStatus" />
+                        
+                        <button title="Send file" type="submit">
+                            <span class="material-symbols-outlined" id="chat-message-send">Send</span>
+                        </button>
+                    </div>
+                </form>
+                
+            </div>
+
+            <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="isUploadingFile" />
         </div>
     </div>
 </template>
@@ -60,6 +117,8 @@ import ChatMessageLayout from './ChatMessageLayout.vue';
 import { useChatStore } from '../../stores/ChatStore';
 import { socket } from '../../utils/chat/chatSocket.js';
 import ObjectID from 'bson-objectid';
+import calculateSize from '../../utils/general/formatFileSize.js';
+import LoadingOverlay from '../general/LoadingOverlay.vue';
 
 export default {
     data() {
@@ -75,19 +134,21 @@ export default {
             previousMessageLength: 0,
             currentStatus: null,
             loadingPrevious: false,
-            preventScroll: false,
-            store: useChatStore()
+            store: useChatStore(),
+            fileInput: false,
+            file: {},
+            error: '',
+            selectedLink: '',
+            uploadingFile: false
         }
     },
     props: [
         'chat',
         'messages'
     ],
-    emits: [
-        'update-chat-timestamp'
-    ],
     components: {
-        ChatMessageLayout
+        ChatMessageLayout,
+        LoadingOverlay
     },
     // when mounted/restored from cache
     activated() {
@@ -112,10 +173,29 @@ export default {
     },
     methods: {
         // to send message to backend
-        sendMessage() {
+        async sendMessage() {
+            // if file input mode is inactive,
             // if no message is entered then do nothing
-            if (this.messageText.trim().length <= 0) {
-                return;
+            if (!this.fileInput) {
+                if (this.messageText.trim().length <= 0) {
+                    return;
+                }
+            }
+            // otherwise
+            else {
+                // if no file is selected do nothing
+                if (!this.fileSelected) {
+                    alert('No file selected.');
+
+                    return;
+                }
+
+                // if there are any errors do nothing
+                if (this.invalidFile) {
+                    alert('Invalid file selected.');
+
+                    return;
+                }
             }
 
             // otherwise send the message to the backend
@@ -126,25 +206,109 @@ export default {
                 creation_time: new Date().toISOString()
             }
 
-            socket.emit('send-message', {
-                message: newMessage,
-                chat: this.chat
-            });
+            // if there are files selected send the files to server in chunks
+            if (this.fileInput && this.fileSelected) {
+                this.sendFile(newMessage);
 
-            // add message to localMessages
+                // wait for file upload results
+                const uploadResults = await this.receiveFileUploadResults(newMessage._id);
+                
+                // if file upload is successful then update file attributes and continue
+                if (uploadResults.successful) {
+                    newMessage.file_link = uploadResults.fileLink;
+                    newMessage.original_name = this.file.name;
+                    newMessage.file_type = this.file.type;
+
+                    alert('File upload successful');
+                }
+                // otherwise tell user file upload failed and return
+                else {
+                    alert('File upload failed.');
+
+                    return;
+                }
+            }
+            else {
+                socket.emit('send-message', {
+                    message: newMessage,
+                    chat: this.chat
+                });
+            }
+
+            // add message to messages
             newMessage.chat_id = this.chat._id;
             this.store.newMessage(newMessage);
 
             // update last_message_timestamp
-            this.$emit('update-chat-timestamp', {
-                chatId: this.chat._id,
-                last_message_timestamp: newMessage.creation_time
-            });
+            this.store.updateChatTimestamp(this.chat._id, newMessage.creation_time);
 
+            // reset message to default
             this.messageText = '';
+
+            // toggle file input mode off
+            this.toggleFileInput(false);
 
             // give focus to input field
             document.getElementById('chat-message-input').focus();
+        },
+        // to process and send file to server
+        sendFile(message) {
+            this.uploadingFile = true;
+
+            const context = this;
+            const reader = new FileReader();
+
+            // set chunk size to 4KB
+            const chunkSize = 4 * 1024;
+
+            // process obtained array buffer and send message and file to server
+            reader.onload = function() {
+                const buffer = reader.result;
+                const totalChunks = Math.ceil(buffer.byteLength / chunkSize);
+
+                const file = {
+                    name: context.file.name,
+                    type: context.file.type,
+                    totalChunks: totalChunks
+                }
+
+                socket.emit('send-message', {
+                    message: message,
+                    chat: context.chat,
+                    file: file
+                });
+
+                // send chunks to server
+                for (let i = 0; i < totalChunks; i++) {
+                    const startByte = i * chunkSize;
+                    // set endByte to accommodate files that are not exactly 'n' chunks long
+                    const endByte = Math.min(startByte + chunkSize, buffer.byteLength);
+                    const chunk = buffer.slice(startByte, endByte);
+
+                    const chunkData = {
+                        message_id: message._id,
+                        chunk: chunk
+                    };
+
+                    socket.emit('file-chunk', chunkData);
+                }
+            }
+
+            // read file as array buffer to process and send to server
+            reader.readAsArrayBuffer(this.file);
+        },
+        // to wait and receive file upload result
+        receiveFileUploadResults(messageId) {
+            return new Promise((resolve) => {
+                // set up event listener to receive file upload results
+                socket.on('file-upload-result', data => {
+                    if (data.messageId == messageId) {
+                        // resolve promise with file upload results if received results is for the correct message id
+                        this.uploadingFile = false;
+                        resolve(data.uploadResult);
+                    }
+                });
+            })
         },
         // to edit message and update backend
         editMessage(data) {
@@ -152,21 +316,28 @@ export default {
                 message: {
                     _id: data.messageId,
                     content: data.editedMessage,
-                    chat_id: this.chat._id
+                    chat_id: this.chat._id,
+                    last_modified_time: data.lastModifiedTime
                 },
                 targetUserId: this.chat.targetUserId
             });
 
             // update edited message's content
-            this.store.editMessage(this.chat._id, data.messageId, data.editedMessage);
+            this.store.editMessage(this.chat._id, data.messageId, data.editedMessage, data.lastModifiedTime);
         },
         // to delete message and update backend
         deleteMessage(data) {
+            const message = {
+                _id: data.messageId,
+                chat_id: this.chat._id,
+            };
+
+            if (data.fileLink) {
+                message.fileLink = data.fileLink;
+            }
+
             socket.emit('delete-message', {
-                message: {
-                    _id: data.messageId,
-                    chat_id: this.chat._id
-                },
+                message: message,
                 targetUserId: this.chat.targetUserId
             });
 
@@ -252,17 +423,11 @@ export default {
         },
         // check for change in messages and scroll to bottom
         checkChangeMessages() {
-            const messageLength = this.updatedMessages.length;
+            const messageLength = this.messages.length;
 
-            // only scroll to bottom if preventScroll is false
-            if (!this.preventScroll) {
-                if (messageLength != this.previousMessageLength) {
-                    this.scrollMessagesBottom();
-                }
+            if (messageLength != this.previousMessageLength) {
+                this.scrollMessagesBottom();
             }
-
-            // reset preventScroll to false to scroll on next update
-            this.preventScroll = false;
 
             this.previousMessageLength = messageLength;
         },
@@ -274,7 +439,7 @@ export default {
         // load more messages stored in database
         async loadPreviousMessages() {
             this.loadingPrevious = true;
-            const encodedTimestamp = encodeURIComponent(this.updatedMessages[0].creation_time);
+            const encodedTimestamp = encodeURIComponent(this.messages[0].creation_time);
 
             // send request to backend to get previous messages
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats/${this.chat._id}/${encodedTimestamp}/100`, {
@@ -285,9 +450,6 @@ export default {
                 await res.json().then((data) => {
                     if (data.messages) {
                         if (data.messages.length > 0) {
-                            // set preventScroll to true to prevent user from having to scroll from bottom to view previous messages
-                            this.preventScroll = true;
-
                             // if there are more history messages
                             // update message list with previous messages
                             this.store.newMessageBulk(data.messages, this.chat._id);
@@ -310,17 +472,80 @@ export default {
         },
         // get creation_time of previous message or '' if it is the first message
         previous_creation_time(index) {
-            return index == 0 ? '' : this.updatedMessages[index - 1].creation_time;
+            return index == 0 ? '' : this.messages[index - 1].creation_time;
         },
         // get is_sender of previous message or null if it is the first message
         previous_is_sender(index) {
-            return index == 0 ? null : this.updatedMessages[index - 1].is_sender;
+            return index == 0 ? null : this.messages[index - 1].is_sender;
+        },
+        // to handle file input
+        handleFileInput(e) {
+            // if no file is selected then set file back to empty object and do nothing
+            if (!e.target.files[0]) {
+                this.file = {};
+                return;
+            }
+            
+            // set file
+            this.file = e.target.files[0];
+
+            // clear error
+            this.error = '';
+            this.selectedLink = '';
+
+            // valid conditions
+            const maxFileSize = 2 * 1024 * 1024;
+
+            // error messages
+            const largeFileError = `File is too large, maximum file size is ${maxFileSize / 1024 / 1024}MB.`;
+            
+            // check for large file
+            if (this.file.size > maxFileSize) {
+                this.error = largeFileError;
+            }
+
+            // do nothing if the file is too large
+            if (this.invalidFile) {
+                return;
+            }
+
+            //add link to preview file
+            // for images create object URL for preview
+            // for non-images use default unknown file icon
+            if (this.file.type.startsWith('image/')) {
+                this.selectedLink = URL.createObjectURL(this.file);
+            }
+        },
+        // to toggle file input
+        toggleFileInput(show) {
+            // set file related fields to default
+            this.file = {};
+            this.selectedLink = '';
+            this.error = '';
+
+            this.fileInput = show;
+        },
+        // to format size of file for display
+        calculateSize(bytes) {
+            return calculateSize(bytes);
         }
     },
     computed: {
-        // to make sure updates to messages are not left out
-        updatedMessages() {
-            return this.messages;
+        // check if a file is selected
+        fileSelected() {
+            return this.file.size;
+        },
+        // check if selected file is invalid
+        invalidFile() {
+            return this.error != '';
+        },
+        // check if selected file is image type
+        isFileImageType() {
+            return this.file.type.startsWith('image/');
+        },
+        // check if file upload is in progress
+        isUploadingFile() {
+            return this.uploadingFile;
         }
     }
 }
@@ -334,6 +559,7 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
+    position: relative;
 }
 
 /* chat interface header styles */
@@ -421,31 +647,137 @@ export default {
     padding: 15px;
 }
 
-#chat-interface-input form {
+#chat-interface-input form, #chat-file-interface-input {
     display: flex;
     column-gap: 5px;
-}
-
-#chat-message-input {
-    padding: 10px;
-    outline: none;
     border: 1px solid black;
     border-radius: 20px;
+    padding: 10px !important;
+    align-items: center;
+    background-color: white;
+    flex-direction: row;
+}
+
+#chat-message-input, #chat-file-message-input {
+    outline: none;
+    border: none;
     width: 100%;
 }
 
-#chat-interface-input button {
+#chat-interface-input button, #chat-file-upload-container button {
     border: none;
     background-color: transparent;
 }
 
-#chat-interface-input button:focus {
+#chat-interface-input button:focus, #chat-file-upload-container button:focus {
     border-radius: 20px;
     outline: 1px solid black;
 }
 
-#chat-message-send {
+#chat-interface-input .material-symbols-outlined, #chat-file-upload-container .material-symbols-outlined {
     color: black;
     font-size: 2em;
+}
+
+/* file input styles */
+#chat-file-upload-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#chat-file-upload {
+    background-color: var(--dark);
+    padding: 15px;
+    border-radius: 20px;
+    min-width: 50%;
+    min-height: 50%;
+    max-width: 75%;
+    max-height: 75%;
+    position: relative;
+    overflow: auto;
+}
+
+#chat-file-upload .container-fluid, #chat-file-upload .row {
+    padding: 0;
+    margin: 0;
+}
+
+#close-file-input {
+    color: white !important;
+    width: fit-content;
+    position: relative;
+    left: 100%;
+    margin: 0;
+    transform: translateX(-100%);
+}
+
+#chat-file-upload form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+#upload-file-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+#chat-add-file {
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    overflow: hidden;
+}
+
+#chat-add-file-label {
+    text-align: center;
+    margin: 0 auto;
+    width: 75%;
+    border-bottom: 1px solid lightgray;
+}
+
+#chat-invalid-file {
+    color: red;
+    font-style: italic;
+    text-align: center;
+}
+
+#preview-file-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 10px;
+}
+
+#preview-file-container div {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
+}
+
+.image-preview {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.unknown-preview {
+    max-width: 30px;
 }
 </style>

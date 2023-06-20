@@ -94,11 +94,12 @@ export const useChatStore = defineStore('chatStore', {
             });
         },
         // check if specified message exists and update content if exists
-        editMessage(chatId, messageId, content) {
+        editMessage(chatId, messageId, content, lastModifiedTime) {
             const existingMessage = this.messages[chatId].find(message => message._id == messageId) || null;
 
             if (existingMessage) {
                 existingMessage.content = content;
+                existingMessage.last_modified_time = lastModifiedTime;
             }
         },
         // remove specified message if exists
@@ -108,6 +109,10 @@ export const useChatStore = defineStore('chatStore', {
             if (existingIndex != -1) {
                 this.messages[chatId].splice(existingIndex, 1);
             }
+        },
+        // update the last_message_timestamp for a chat
+        updateChatTimestamp(chatId, timestamp) {
+            this.chats.find(chat => chat._id == chatId).last_message_timestamp = timestamp;
         }
     }
 });

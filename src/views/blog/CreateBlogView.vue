@@ -29,7 +29,7 @@
                     </div>
 
                     <!-- display selected file names if there are errors -->
-                    <div id="selected-image-names" v-if="files.length > 0 && errors.length > 0">
+                    <div id="selected-image-names" v-if="files.length > 0 && invalidFiles.length > 0">
                         <span>Selected ({{ files.length }}):</span>
                         <ul>
                             <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
@@ -90,7 +90,8 @@
 </template>
 
 <script>
-import AdditionButton from '../../components/profile/AdditionButton.vue'
+import AdditionButton from '../../components/profile/AdditionButton.vue';
+import calculateSize from '../../utils/general/formatFileSize.js';
 
 export default {
     components: {
@@ -216,29 +217,9 @@ export default {
             this.tags = [];
             this.comments = false;
         },
-        // to calculate size of file and display message
+        // to format size of file for display
         calculateSize(bytes) {
-            if (bytes < 1024) {
-                return `${bytes}B`;
-            }
-            else {
-                const kilobytes = Math.floor(bytes / 1024);
-
-                if (kilobytes < 1024) {
-                    return `${kilobytes}KB`;
-                }
-                else {
-                    const megabytes = Math.floor(kilobytes / 1024);
-
-                    if (megabytes < 1024) {
-                        return `${megabytes}MB`;
-                    }
-
-                    else {
-                        return `${Math.floor(megabytes / 1024)}GB`;
-                    }
-                }
-            }
+            return calculateSize(bytes);
         },
         commentsCheck() {
             if (this.comments) {
