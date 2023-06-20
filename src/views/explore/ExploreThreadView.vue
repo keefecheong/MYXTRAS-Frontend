@@ -46,7 +46,7 @@
                         <a href="#" class="forum4-5">Link 5</a>
                     </div>
                 </div>
-                <div class="interestCommunity">
+                <div class="interestCommunity last">
                     <h4 class="cat" @click="openForum(5)">Interest 5<div class="triangle-down" id="5"></div></h4>
                     <div class="dropdown-content" id="dc5">
                         <a href="#" class="forum5-1">Link 1</a>
@@ -106,11 +106,12 @@
     .pop-header {
         margin: 0;
         padding: 1em 0;
-        border-radius: 3%;
+        border-top-right-radius: 15px;
+        border-top-left-radius: 15px;
         width: 100%;
-        border: #e53a73 solid 2px;
+        border: var(--primary) solid 2px;
         font-size: 1.5rem;
-        color: #e53a73;
+        color: var(--primary);
         font-weight: bold;
         border-bottom: solid transparent;
     }
@@ -122,12 +123,11 @@
 
     .cat {
         font-size: 1.2rem;
-        background-color: #e53a73;
+        background-color: var(--primary);
         width: 100%;
         color: #ffffff;
         display: flex;
-        align-items: center;
-        padding-left: 35% !important;
+        justify-content: right;
         padding: 10px;
         border-bottom: 1px solid #443b3b;
         margin: 0;
@@ -135,6 +135,8 @@
 
     .dropdown-content {
         display: none;
+        border-left: var(--primary) solid 2px;
+        border-right: var(--primary) solid 2px;
     }
 
     .triangle-up {
@@ -143,8 +145,11 @@
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
         border-bottom: 15px solid #ffffff;
-        margin-left: 20% !important;
+        margin-left: 30px;
+        margin-right: 70px;
         cursor: pointer;
+        display: grid;
+        place-self: center;
     }
 
     .triangle-down {
@@ -153,8 +158,11 @@
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
         border-top: 15px solid #ffffff;
-        margin-left: 20% !important;
+        margin-left: 30px;
+        margin-right: 70px;
         cursor: pointer;
+        display: grid;
+        place-self: center;
     }
 
     .open-forum {
@@ -171,5 +179,10 @@
         width: 30px;
         border-radius: 100%;
         margin-right: 20px; 
+    }
+
+    .last, .last.dropdown-content {
+        border-bottom-right-radius: 15px;
+        border-bottom-left-radius: 15px;
     }
 </style>

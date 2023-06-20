@@ -41,7 +41,7 @@
             </div>
             <div class="row">
                 <div class="createForum-container center-align" v-if="showPopUp">
-                    <span class="material-symbols-outlined">back</span>
+                    <span class="material-symbols-outlined" @click="openPopUp">back</span>
                     <div class="popup-content">
                         <div class="row"> 
                             <div class="col-3">
@@ -102,18 +102,12 @@
 <style scoped>
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
-.center-align {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
 .createForum-container {
     overflow-y: scroll;
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 3;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
@@ -275,10 +269,9 @@ export default {
         handleVariableUpdate(variable) {
             this.showPopUp = variable;
         },
-        retrieveSubscribedGroups(){
-            fetch("http://127.0.0.1:5173/")
+        openPopUp() {
+            this.showPopUp = !this.showPopUp
         },
-        
         selectImage(type){
             if (type === 'groupPic'){
                 this.$refs.groupPicInput.value = ''; // Reset the file input value
@@ -329,7 +322,6 @@ export default {
             this.submitting = true
             // Validation
             var forumDetails = [this.forumName, this.forumID, this.forumDesc, this.selectedCategory, this.selectedGroupPic,  this.selectedBanner];
-            console.log(this.forumID)
             if (forumDetails.some(item => item === '' || item === null)){
                 this.showErrMsg = true;
                 this.submitting = false;

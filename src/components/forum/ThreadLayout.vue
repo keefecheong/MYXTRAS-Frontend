@@ -7,18 +7,18 @@
             </div>
             <div class="row">
                 <div class="col-md-2 d-flex justify-content-end">
-                    <a href='./forumGroup.html'><img id="threadGroupPic" :src="thread.groupPic" :draggable="isDraggable"></a>
+                    <a><img id="threadGroupPic" :src="thread.creator_id.profile_pic_link" :draggable="isDraggable"></a>
                 </div>
                 <div class="col-10 threadContent">
-                    <p id="meta">{{ "Posted by: @" + thread.creatorName }}</p>  
-                    <p id="thread-title">{{ thread.threadTitle }}</p>  
-                    <p id="thread-description">{{ thread.threadDesc }}</p>
+                    <p id="meta">{{ "Posted by: @" + thread.creator_id.username }}</p>  
+                    <p id="thread-title">{{ thread.thread_title }}</p>  
+                    <p id="thread-description">{{ thread.thread_desc }}</p>
                     <div class="imageContainer">
-                        <img id="threadPic" :src="thread.threadPic" :draggable="isDraggable">
+                        <img id="threadPic" :src="thread.content_links[0]" :draggable="isDraggable">
                     </div>
                     <br>
                     <div class="d-flex justify-content-end">
-                        <a id="commentsText" href="/threadView.html">View {{ thread.numOfComments }} comments</a>
+                        <a id="commentsText" @click="viewThread(thread)">View {{ thread.numOfComments }} comments</a>
                     </div>
                 </div>
             </div>
@@ -26,6 +26,8 @@
     </div>
 </template>
 <style>
+@import url('../../styles/main.css');
+@import url('../../styles/sub-navigation.css'); 
 .card {
     padding: 1em 0 1em 0;
     border: none !important;
@@ -49,8 +51,6 @@
     padding-right: 2em !important;
 }
 #forumHeader {
-    color: var(--primary);
-    font-weight: bolder;
     margin-bottom: 0.5em;
 }
 #meta {
@@ -82,7 +82,10 @@
     text-decoration: none;
     color: gray !important;
 }
-
+#commentsText:hover {
+    color: var(--primary) !important;
+    cursor: pointer;
+}
 .popularThreadContainer {
     display: flex;
     flex-direction: column;
@@ -172,18 +175,14 @@ export default {
     data() {
         return {
             isDraggable: false,
-            // threads: [
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://previews.123rf.com/images/parinyabinsuk/parinyabinsuk1407/parinyabinsuk140700176/30136368-young-asian-boy-being-scolded-by-parents.jpg" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10},
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://www.icegif.com/wp-content/uploads/icegif-2013.gif" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10}
-            // ],
         }
     },
+    props: ['threads'],
     methods: {
-        retrieveSubscribedGroups(){
-            fetch("http://127.0.0.1:5173/")
-        },
+        viewThread(thread) {
+            localStorage.setItem("threadID", thread._id)
+            location.href = '/threadView.html'
+        }, 
     }
 }
 </script>

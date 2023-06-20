@@ -4,7 +4,7 @@
         </div>
         <div class="col-md-6 centerElements" > 
             <span class="material-symbols-outlined" style="color: black" id="searchIcon" @click="performSearch">search</span>
-            <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!" v-on:keyup="performSearch">
+            <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!" @keyup.enter="performSearch">
             <SearchResults :results="searchResults" :currentPage="currentPage"/>
         </div>
         <div v-if="currentPage === 'forums'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
@@ -32,7 +32,7 @@
     top: 0;
     left: 0;
     width: 102%;
-    z-index: 9998;
+    z-index: 2;
     display: flex;
     flex-wrap: wrap;
     padding-top: 10px;
@@ -186,7 +186,6 @@ export default {
             body.classList.add('disable-scroll');
         },
         sendBool() {
-            //this.showPopUpWindow()
             this.toggleScrolling()
             this.$emit('show-popup', !this.showPopUp);
         },
@@ -202,7 +201,6 @@ export default {
         async performSearch() {
             let searchObject;
             if (this.searchTerm !== '') {
-                console.log('searching for:', this.searchTerm);
                 document.querySelector('.resultsContainer').style.display = 'block';
             }
             else {

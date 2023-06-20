@@ -29,8 +29,8 @@ export default {
     padding-top: 5vh;
     padding-bottom: 5vh;
     background-color: var(--primary);
+    color: white;
 }
-
 
 
 </style>

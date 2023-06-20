@@ -26,7 +26,7 @@
                             <button @click="sendOTP" id="sendOtpBtn">Send OTP</button>
                             <br>
                             <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
-                            <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="8" required>
+                            <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="6" required>
                             <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn">Verify OTP</button>
                             <p v-if="verifiedotp">OTP verified</p>
 
@@ -60,7 +60,7 @@
 <style>
 @import url('../../styles/main.css');
 body {
-    background: linear-gradient(45deg,#FF6363, #E53A73);
+    background: linear-gradient(45deg,#FF6363, var(--primary));
     height: 115vh;
     background-repeat: no-repeat;
     animation: gradientAnimation 2s infinite linear;
@@ -112,7 +112,7 @@ input[type=password],
 input[type=email] {
   border: none;
   border-bottom: 2px solid transparent;
-  background-image: linear-gradient(45deg,#FF6363, #E53A73);
+  background-image: linear-gradient(45deg,#FF6363, var(--primary));
   background-position: 0 100%;
   background-repeat: no-repeat;
   background-size: 100% 2px;
@@ -131,7 +131,7 @@ input:focus{
     color: white;
     margin-top: calc(.5em + 0.1vw);
     border: none;
-    background: linear-gradient(45deg,#FF6363, #E53A73);
+    background: linear-gradient(45deg,#FF6363, var(--primary));
 }
 #sendOtpBtn:hover {
     background: transparent;
@@ -150,7 +150,7 @@ input:focus{
     color: white;
     margin-top: calc(.5em + 0.1vw);
     border: none;
-    background: linear-gradient(45deg,#FF6363, #E53A73);
+    background: linear-gradient(45deg,#FF6363, var(--primary));
 }
 #registerBtn:hover {
     background: transparent;
@@ -188,7 +188,7 @@ input:focus{
   bottom: -2px;
   width: 100%;
   height: 2px;
-  background: linear-gradient(45deg,#FF6363, #E53A73);
+  background: linear-gradient(45deg,#FF6363, var(--primary));
   transform: scaleX(0);
   transition: transform 0.3s ease-in-out;
 }

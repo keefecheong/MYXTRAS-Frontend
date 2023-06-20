@@ -376,7 +376,7 @@
         height: fit-content;
         min-height: 100vh;
         background-color: #133B5B;
-        z-index: 9999;
+        z-index: 3;
     }
 
     #sidebar-wrapper > div {

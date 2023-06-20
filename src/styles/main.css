@@ -36,6 +36,14 @@ body {
     font-size: calc(.5em + 0.5vw) !important;
     overflow-x: hidden;
 }
+.center-align {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 a {
     text-decoration: none !important;
 }
@@ -58,7 +66,8 @@ a:hover{
 
 h1 {
     text-align: center;
-    font-weight: 1000px;
+    font-weight: bolder;
+    color: #E53A73;
 }
 
 [data-tooltip]:before {
