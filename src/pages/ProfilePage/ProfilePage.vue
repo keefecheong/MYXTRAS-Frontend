@@ -55,12 +55,9 @@
                     </div>
 
                     <div class="content-wrapper">
-                        <router-link to="/create" class="create-link">
-                            <div class="floating-button">
-                                <i style="color: white" class="bi bi-plus plus-icon"></i>
-                            </div>
-                        </router-link>
-                        <router-view />
+                        <div class="floating-button" @click="() => { toggleCreateBlog(true) }">
+                            <i style="color: white" class="bi bi-plus plus-icon"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -90,6 +87,7 @@
                 </div>
             </div>
 
+            <BlogCreateLayout v-if="showCreateBlog" @close-create-blog="() => { toggleCreateBlog(false) }" />
         </div>
 
     </div>
@@ -102,13 +100,15 @@ import CreatedForums from '../../components/forum/CreatedForums.vue';
 import profilePicture from '../../assets/NgeeAnnLogo.png';
 import banner from '../../assets/CustomBanner.png';
 import BlogLayout from '../../components/blog/BlogLayout.vue';
+import BlogCreateLayout from '../../components/blog/BlogCreateLayout.vue';
 
 export default {
     components: {
         NavSidebar,
         SubscribedForums,
         CreatedForums,
-        BlogLayout
+        BlogLayout,
+        BlogCreateLayout
     },
     data() {
         return {
@@ -135,6 +135,7 @@ export default {
                 { name: 'muggingclub', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' },
                 { name: 'muggingclub', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' }
             ],
+            showCreateBlog: false
         }
     },
     created() {
@@ -216,7 +217,11 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
-        }
+        },
+        // to toggle create blog form
+        toggleCreateBlog(show) {
+            this.showCreateBlog = show;
+        },
     }
 
 }

@@ -1,5 +1,3 @@
-import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
@@ -9,7 +7,7 @@ const redirectIndexPlugin = {
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
       // set root path to feed.html and set up redirection for feed router
-      if (req.url === '/' || req.url === '/feed.html/create' || req.url === '/feed.html/edit' || req.url === '/feed.html/unauthorized') {
+      if (req.url === '/') {
         req.url = '/feed.html';
       }
       // set up redirection for explore router
