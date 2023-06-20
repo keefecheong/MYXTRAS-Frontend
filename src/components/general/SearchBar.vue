@@ -243,7 +243,6 @@ export default {
                             this.course = data.course;
                             this.pfplink = data.profile_pic_link;
                             this.login = true;
-                            console.log(data.is_profile_setup)
                         }
                     })
                 } else {

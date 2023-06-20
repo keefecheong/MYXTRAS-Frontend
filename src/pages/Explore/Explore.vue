@@ -11,11 +11,11 @@
             <div class="row">
                 <div class="col-md-2 sub-navigation-container">
                     <div class="sub-navigation-links">
-                        <router-link to="/blogs" class="sub-navigation">
-                            <span>Blogs</span>
+                        <router-link to="/blogs">
+                            <span class="sub-navigation active" id="blogs" @click="toggleBlogs">Blogs</span>
                         </router-link>
-                        <router-link to="/threads" class="sub-navigation">
-                            <span>Threads</span>
+                        <router-link to="/threads">
+                            <span class="sub-navigation" id="forums" @click="toggleForums">Threads</span>
                         </router-link>
                     </div>                    
                 </div>
@@ -42,31 +42,14 @@ export default {
         NavSidebar,
         SearchBar
     },
-    data() {
-        return {
-            blogs: true,
-        }
-    },
     methods: {
         toggleBlogs() {
-            this.blogs = true;
             document.getElementById("blogs").className += " active";
             document.getElementById("forums").className = "sub-navigation";
         },
         toggleForums() {
-            this.blogs = false;
             document.getElementById("forums").className += " active";
             document.getElementById("blogs").className = "sub-navigation";
-        },
-        openForum(no) {
-            var x = document.getElementById(no).className;
-            if (x == "triangle-down") {
-                document.getElementById("dc"+no).className += " active2";
-                document.getElementById(no).className = "triangle-up";
-            } else {
-                document.getElementById("dc"+no).className = "dropdown-content";
-                document.getElementById(no).className = "triangle-down";
-            }
         }
     }
 }
