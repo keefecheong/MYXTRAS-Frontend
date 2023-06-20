@@ -20,8 +20,8 @@
                         </div>
                     </div>
                     <div class="forumOptions">
-                        <button :class="{ 'subscribed': isSubscribed, 'pink-btn': !isSubscribed  }" v-if="!isCreator" @click="subscribeForum">{{ isSubscribed ? 'Unsubscribe' : 'Subscribe' }}</button>
-                        <button @click="showCreateThread" class="pink-btn">Create Thread!</button>
+                        <button :class="{ 'subscribed': isSubscribed, 'white-btn': !isSubscribed  }" v-if="!isCreator" @click="subscribeForum">{{ isSubscribed ? 'Unsubscribe' : 'Subscribe' }}</button>
+                        <button @click="showCreateThread" class="white-btn">Create Thread!</button>
                         <div class="subs">
                             <p>{{"Subscribers: " + forum.numOfSubs}}</p>
                         </div>
@@ -39,17 +39,7 @@
 
                 </div>
                 <div class="col-md-3">
-                    <div class="card shadow">
-                        <div class="card-body">
-                            <h4 class="card-title">Recommendations</h4>
-
-                            <!-- max 6 groups -->
-                            <div class="group-container" v-for="group in groups">
-                                <img class="groupPic" :src="groupPic" />
-                                <p class="text-below-pic">Grp 2</p>
-                            </div>
-                        </div>
-                    </div>
+                    <recommendedForums />
                 </div>
             </div>
             <div class="row">
@@ -105,6 +95,7 @@
 import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
 import threadLayout from '../../components/forum/ThreadLayout.vue';
+import recommendedForums from '../../components/forum/RecommendedForums.vue';
 
 
 export default {
@@ -112,6 +103,7 @@ export default {
         NavSidebar,
         SearchBar,
         threadLayout,
+        recommendedForums
     },
 
     data() {
@@ -130,6 +122,8 @@ export default {
             selectedCategory: [],
             submitting: false,
             isSubscribed: false,
+
+            recommendations: {},
 
             //Error handling
             errorMsg: null,
@@ -226,8 +220,6 @@ export default {
             .then(data => {
                 this.forum = data.forum;
                 // Stores forumPic to be displayed in threadView.html
-                localStorage.setItem('forumGroupPic', this.forum.forum_pic_link[0]);
-                localStorage.setItem('forumBannerPic', this.forum.banner_link[0]);
                 this.isCreator = data.isCreator;
                 this.isSubscribed = data.isSubscribed;
                 this.contentLoaded = true
@@ -252,7 +244,7 @@ export default {
                 this.threads = data.threads;
             })
             .catch((error) => {
-                console.log("This page could not be loaded: ", error);
+                console.log("The threads could not be loaded: ", error);
             });
         },
         subscribeForum(){
@@ -263,7 +255,7 @@ export default {
                 credentials: 'include'
             }).then(res => {
                 if (res.ok) {
-                return res.json();
+                    return res.json();
                 }
                 throw new Error('Response not OK');
             })
@@ -278,7 +270,7 @@ export default {
                 }
             })
             .catch((error) => {
-                console.log("This page could not be loaded: ", error);
+                console.log("Unable to subscribe to forum: ", error);
             });
         }
     },
@@ -392,41 +384,29 @@ export default {
     border-radius: 50%;
 }
 
-.groupPic{
-    float:left;
-    width: 80px;
-    height: 80px;
-    margin-right: 20px;
-    margin-top: 10px;
-    margin-left: 25px;
-    border-radius: 50%;
-}
-
-.pink-btn {
-    background-color: #ffffff;
+.white-btn {
+    display: flex;
+    background-color: white;
     border: transparent;
     border-radius: 10px;
-    color: black;
     height: 3rem;
     width: 8.5rem;
-    display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
     text-decoration: none;
-    text-align: center;
 }
 
-.pink-btn:hover {
+.white-btn:hover {
     background-color: transparent;
     color: white;
-    border: transparent solid 3.5px;
+    border: white solid 3.5px;
     cursor: pointer;
     font-weight: bold;
 }
 .subscribed {
     background-color: transparent;
-    color: #fff;
+    color: white;
     border: white solid 3.5px;
     border-radius: 10px;
     display: flex;
@@ -438,8 +418,7 @@ export default {
     transition: all 0.3s;
 }
 .subscribed:hover {
-    background-color: white;
-    color: black;
+    color: white;
     border: white solid 3.5px;
 }
 #threads{
@@ -456,7 +435,4 @@ export default {
     float: left;
 }
 
-.text-below-pic {
-    margin-top: 5px;
-}
 </style>
