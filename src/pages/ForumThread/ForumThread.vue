@@ -4,16 +4,16 @@
         <div id="main-content" v-if="contentLoaded">
             <div class="row">
                 <div class="imageContainer">
-                    <img :src="forumBannerPic" alt="Banner" id="banner-picture"/>
+                    <img :src="forum.banner_link" alt="Banner" id="banner-picture"/>
                 </div>
             </div>
             <div class="row">
                 <div id="pink-container">
                     <div id="image" class="col-md-1">
-                        <img class="imageIcon" :src="forumGroupPic">
+                        <img class="imageIcon" :src="forum.forum_pic_link">
                     </div>
                     <div id="group-description" class="col-md-1">
-                        <h5 id="groupname">x/{{ forumID }}</h5>
+                        <h5 id="groupname">x/{{ forum.forumID }}</h5>
                     </div>
                 </div>
             </div>
@@ -55,37 +55,7 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card shadow">
-                        <div class="card-body">
-                            <h4 class="card-title">Recommendations</h4>
-                            <div class="group-container">
-                                <img class="groupPic" :src="groupPic" />
-                                <p class="text-below-pic">Grp 2</p>
-                            </div>
-
-                            <div class="group-container">
-                                <img class="groupPic" :src="groupPic" />
-                                <p class="text-below-pic">Grp 2</p>
-                            </div>
-                            <div class="group-container">
-                                <img class="groupPic" :src="groupPic" />
-                                <p class="text-below-pic">Grp 2</p>
-                            </div>
-                            <div class="group-container">
-                                <img class="groupPic" :src="groupPic" />
-                                <p class="text-below-pic">Grp 2</p>
-                            </div>
-                            <div class="group-container">
-                                <img class="groupPic" :src="groupPic" />
-                                <p class="text-below-pic">Grp 2</p>
-                            </div>
-                            <div class="group-container">
-                                <img class="groupPic" :src="groupPic" />
-                                <p class="text-below-pic">Grp 2</p>
-                            </div>
-
-                        </div>
-                    </div>
+                    <RecommendedForums />
                 </div>
             </div>
             <div class="row" v-if="!commentsLoaded">
@@ -104,13 +74,13 @@
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
-import groupPic from '../../assets/NgeeAnnLogo.png'
-
+import RecommendedForums from '../../components/forum/RecommendedForums.vue';
 
 export default {
     components: {
         NavSidebar,
         SearchBar,
+        RecommendedForums
     },
     data() {
         return {
@@ -155,9 +125,6 @@ export default {
     },
     methods: {
         async getForumPage() {
-            this.forumID = localStorage.getItem('forumID');
-            this.forumGroupPic = localStorage.getItem('forumGroupPic');
-            this.forumBannerPic = localStorage.getItem('forumBannerPic');
             this.current_threadID = localStorage.getItem('threadID');
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-thread/${this.current_threadID}`, {
                 mode: 'cors',
@@ -166,12 +133,13 @@ export default {
             }).then(res => {
                 if (res.ok) {
                 return res.json();
-                }
+                }   
                 throw new Error('Response not OK');
             })
             .then(data => {
-                this.thread = data;
-                this.contentLoaded = true
+                this.thread = data.thread;
+                this.forum = data.forum;
+                this.contentLoaded = true;
             })
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);

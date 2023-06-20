@@ -1,8 +1,9 @@
 <template>
     <div id="main-container">
         <NavSidebar/>
+        
+        <SearchBar currentPage="feed"/>
         <div id="main-content">
-            <SearchBar currentPage="feed"/>
             <br>
             <div class="feed-container container-fluid">
                 <div class="row">

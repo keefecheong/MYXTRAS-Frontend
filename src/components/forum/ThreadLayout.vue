@@ -96,10 +96,6 @@
     align-items: center;
     padding: 0 2em;
 }
-.card-title {
-    font-size: 2rem;
-    text-align: center;
-}
 .forum-name {
     margin-top: 1.5em;
 }

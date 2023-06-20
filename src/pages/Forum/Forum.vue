@@ -23,20 +23,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <div class="card shadow">
-                        <div class="card-body card-position">
-                            <h5 class="card-title">Popular Threads</h5>
-                            <div v-for="thread in popularThreads" class="row align-center">
-                                <div class="col-md-12 d-flex popularThreadContainer">
-                                    <p class="profilepic">{{ thread.threadTitle }}</p>
-                                    <div class="imageContainer">
-                                        <img id="popThreadPic" :src="thread.threadPic" :draggable="isDraggable">
-                                    </div>
-                                </div>
-                                <div class="line"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <PopularThreads/>
                 </div>
             </div>
             <div class="row">
@@ -170,10 +157,6 @@ img {
     border-radius: 10px;
     margin: 3vh 1vh;
 }
-.card-title {
-    font-size: 2rem;
-    text-align: center;
-}
 
 .line {
     margin: 2em !important;
@@ -225,13 +208,16 @@ import SearchBar from '../../components/general/SearchBar.vue';
 import ForumLayout from '../../components/forum/ForumLayout.vue';
 import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 import CreatedForums from '../../components/forum/CreatedForums.vue';
+import PopularThreads from '../../components/forum/PopularThreads.vue';
+
 export default {
     components: {
         NavSidebar,
         SearchBar,
         ForumLayout,
         CreatedForums,
-        SubscribedForums
+        SubscribedForums,
+        PopularThreads,
     },
     data() {
         return {
@@ -331,6 +317,7 @@ export default {
             const uploadData = new FormData();
             uploadData.append('selectedImages', this.groupPicObject);
             uploadData.append('selectedImages', this.bannerObject);
+            
             try {
                 var forumObject = this.forumObject
                 forumObject = {

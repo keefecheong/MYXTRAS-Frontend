@@ -95,10 +95,6 @@
     align-items: center;
     padding: 0 2em;
 }
-.card-title {
-    font-size: 2rem;
-    text-align: center;
-}
 .imageContainer {
     width: 100%;
     display: flex;

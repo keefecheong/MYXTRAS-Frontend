@@ -44,6 +44,10 @@ body {
     text-align: center;
 }
 
+.card-title {
+    font-size: 2rem;
+    text-align: center;
+}
 a {
     text-decoration: none !important;
 }
