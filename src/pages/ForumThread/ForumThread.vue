@@ -45,10 +45,10 @@
                         </div>
                         <div class="row">
                             <div class="col-md-9">
-                                <textarea placeholder="Anything Xtra to say?" style="width: 100%;"></textarea>
+                                <textarea placeholder="Anything Xtra to say?" style="width: 100%;" v-model="commentText"></textarea>
                             </div>
                             <div class="col-md-3">
-                                <button>Comment</button>
+                                <button @click="createComment">Comment</button>
                             </div>
                         </div>
                         <hr>
@@ -116,10 +116,14 @@ export default {
     },
     data() {
         return {
+            commentText: null,
             contentLoaded: false,
             forumID: null,
             forumGroupPic: null,
             forumBannerPic: null,
+            current_threadID: null,
+            submittingComment: false,
+            commentData: {},
             threadDetails: {
             title: "How do I make my parents proud?",
             description: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are some ways I can get their attention?",
@@ -154,8 +158,8 @@ export default {
             this.forumID = localStorage.getItem('forumID');
             this.forumGroupPic = localStorage.getItem('forumGroupPic');
             this.forumBannerPic = localStorage.getItem('forumBannerPic');
-            const threadID = localStorage.getItem('threadID');
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-thread/${threadID}`, {
+            this.current_threadID = localStorage.getItem('threadID');
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-thread/${this.current_threadID}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -167,12 +171,48 @@ export default {
             })
             .then(data => {
                 this.thread = data;
-                console.log(this.thread)
                 this.contentLoaded = true
             })
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);
             });
+        },
+        async createComment() {
+            this.submittingComment = true;
+
+            // do nothing if no content is entered
+            if (this.commentText.trim().length <= 0) {
+                this.submittingComment = false;
+                return;
+            }
+
+            // upload comment
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.current_threadID}`, {
+                mode: 'cors',
+                method: 'POST',
+                body: JSON.stringify({
+                    content: this.commentText.trim()
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    this.submittingComment = false;
+                    alert(data.message);
+
+                    // update comments list to update dom immediately
+                    if (res.status == 200) {
+                        this.thread.comments.push(data.comment._id);
+                        this.commentData.push(data.comment);
+                    }
+
+                    this.commentText = '';
+                });
+            }).catch((error) => {
+                console.log(error);
+            })
         },
     },
 }
