@@ -1,25 +1,27 @@
 <template>
-    <div class="row a-all">
-        <div class="a-container red">
-            <h1 class="a-header">{{ announcements[0].title }}</h1>
-            <p class="a-caption">
-                {{ announcements[0].caption }}
-            </p>
-            <img class="a-image" :src="announcements[0].image" alt="forum-image">
-        </div>
-        <div class="a-container yellow">
-            <h1 class="a-header">{{ announcements[1].title }}</h1>
-            <p class="a-caption">
-                {{ announcements[1].caption }}
-            </p>
-            <img class="a-image" :src="announcements[1].image" alt="forum-image">
-        </div>
-        <div class="a-container pink">
-            <h1 class="a-header">{{ announcements[2].title }}</h1>
-            <p class="a-caption">
-                {{ announcements[2].caption }}
-            </p>
-            <img class="a-image" :src="announcements[2].image" alt="forum-image">
+    <div class="row announce">
+        <div class="row a-all">
+            <div class="a-container red">
+                <h1 class="a-header">{{ announcements[0].title }}</h1>
+                <p class="a-caption">
+                    {{ announcements[0].caption }}
+                </p>
+                <img class="a-image" :src="announcements[0].image" alt="forum-image">
+            </div>
+            <div class="a-container yellow">
+                <h1 class="a-header">{{ announcements[1].title }}</h1>
+                <p class="a-caption">
+                    {{ announcements[1].caption }}
+                </p>
+                <img class="a-image" :src="announcements[1].image" alt="forum-image">
+            </div>
+            <div class="a-container pink">
+                <h1 class="a-header">{{ announcements[2].title }}</h1>
+                <p class="a-caption">
+                    {{ announcements[2].caption }}
+                </p>
+                <img class="a-image" :src="announcements[2].image" alt="forum-image">
+            </div>
         </div>
     </div>
 </template>
@@ -47,29 +49,28 @@ export default {
                     color: "pink"
                 }
             ],
-            paused: false
+            scrolling: setInterval(() => document.querySelector('.announce').scrollBy(1, 0), 50)
         }
     },
     mounted() {
         this.autoScroll = () => {
-            setInterval(() => document.querySelector('.a-all').scrollBy(2, 0), 50);
-            if ((document.querySelector('.a-all').innerWidth + document.querySelector('.a-all').scrollX) >= document.body.offsetWidth) {
-                // Reached end of page
-                setInterval(() => document.querySelector('.a-all').scrollBy(-2, 0), 50);
-                console.log("Reached end of page");
-            }
+            setInterval(this.checkScroll, 100)
         };
         this.autoScroll();
     },
-    method: {
-        stopScroll() {
-            if (this.paused) {
-                setInterval(document.getElementsByClassName('.a-all').scrollBy(0, 2), 50);
-                paused = false;
+    methods: {
+        checkScroll() {
+            const announceElement = document.querySelector('.announce');
+
+            if (Math.ceil(announceElement.scrollLeft + announceElement.clientWidth) >= announceElement.scrollWidth) {
+                clearInterval(this.scrolling);
+                // Reached end of page
+                this.scrolling = setInterval(() => announceElement.scrollBy(-1, 0), 50);
             }
-            else {
-                clearInterval();
-                paused = true;
+            else if (Math.ceil(announceElement.scrollLeft) == 0) {
+                clearInterval(this.scrolling);
+                // Reached start of page
+                this.scrolling = setInterval(() => announceElement.scrollBy(1, 0), 50);
             }
         }
     }
@@ -115,7 +116,7 @@ export default {
     margin: auto;
 }
 
-.a-all {
+.announce {
     overflow-x: auto;
     overflow-y: hidden;
     height: 85%;
