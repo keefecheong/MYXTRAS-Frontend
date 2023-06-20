@@ -1,20 +1,27 @@
 <template>
     <div class="blog-container" :id="uniqueId" v-if="!deleted">
-        <!-- heading - contains creator's profile pic, username, and time posted -->
-        <div class="row blog-header">
-            <!-- creator profile pic -->
-            <div class="profile-pic-container col">
-                <img class="profile-pic" :src="blog.creator_id.profile_pic_link"/>
+        <!-- heading - contains creator's profile pic, username, time posted, and location -->
+        <div class="blog-header">
+            <div>
+                <!-- creator profile pic -->
+                <div class="profile-pic-container">
+                    <img class="profile-pic" :src="blog.creator_id.profile_pic_link"/>
+                </div>
+
+                <!-- creator username -->
+                <div class="blog-username-container hide-overflow-text">
+                    <span>{{ blog.creator_id.username }}</span>
+                </div>
+
+                <!-- creation time (time difference) -->
+                <div class="blog-creation-time">
+                    <time :datetime="blog.creation_time" :title="new Date(blog.creation_time)">{{ dateCreated }}</time>
+                </div>
             </div>
 
-            <!-- creator username -->
-            <div class="col-7 hide-overflow-text">
-                <span>{{ blog.creator_id.username }}</span>
-            </div>
-
-            <!-- creation time (time difference) -->
-            <div class="col blog-creation-time">
-                <time :datetime="blog.creation_time" :title="new Date(blog.creation_time)">{{ dateCreated }}</time>
+            <!-- location -->
+            <div class="blog-location" v-if="blog.location">
+                <span>At {{ blog.location }}</span>
             </div>
         </div>
 
@@ -38,10 +45,8 @@
         </div>
 
         <!-- caption -->
-        <div class="row blog-caption">
-            <div class="blog-caption-container">
-                <span>{{ caption }}Need Backend</span>
-            </div>
+        <div class="row blog-caption" v-if="blog.caption">
+            <span>{{ blog.caption }}</span>
         </div>
 
         <!-- actions - contains like and comment -->
@@ -50,35 +55,33 @@
             <div class="blog-normal-actions row">
                 <!-- like button -->
                 <div class="like-blog col align-items-center justify-content-center" :class="{liked: liked}">
-                    <span class="material-symbols-outlined" @click="toggleLike">favorite</span>
-                    <span>({{ likeCount }})</span>
+                    <span class="material-symbols-outlined" @click="toggleLike" :title="liked ? 'Remove like' : 'Like this post'">favorite</span>
+                    <span title="Number of likes">({{ likeCount }})</span>
                 </div>
                 
                 <!-- comments button -->
                 <div class="col align-items-center justify-content-center">
-                    <span class="material-symbols-outlined" @click="toggleComments">comment</span>
-                    <span>({{ blog.comments.length }})</span>
+                    <span class="material-symbols-outlined" :class="{ 'disabled': !blog.comments_enabled }" @click="toggleComments" :title="commentTitle">comment</span>
+                    <span title="Number of comments" v-if="blog.comments_enabled">({{ blog.comment_count }})</span>
                 </div>
             </div>
 
             <!-- only if the blog is posted by the current user -->
             <div class="blog-privilege-actions row" v-if="blog.isOwner">
                 <!-- edit button -->
-                <div class="blog-edit col">
-                    <RouterLink to="/edit" @click="editPost">
-                        <span class="material-symbols-outlined">edit</span>
-                    </RouterLink>
+                <div class="blog-edit col" title="Edit this post">
+                    <span class="material-symbols-outlined" @click="editPost">edit</span>
                 </div>
 
                 <!-- delete button -->
-                <div class="blog-delete col">
+                <div class="blog-delete col" title="Delete this post">
                     <span class="material-symbols-outlined" @click="deletePost">delete</span>
                 </div>
             </div>
         </div>
 
         <!-- comments - contains the comments posted -->
-        <div v-if="showComments" class="row blog-comments-container">
+        <div v-if="showComments && blog.comments_enabled" class="row blog-comments-container">
             <!-- form to create new comment -->
             <form class="create-comment-form" @submit.prevent="createComment">
                 <textarea class="create-comment-text" wrap="soft" placeholder="Add a comment..." v-model="commentText"></textarea>
@@ -88,17 +91,20 @@
 
             <hr />
 
-            <div v-if="blog.comments.length <= 0">
+            <div v-if="blog.comment_count <= 0">
                 <p>No comments yet, be the first!</p>
             </div>
 
-            <div v-else>
-                <div v-if="!commentsLoaded">
-                    <p>Loading...</p>
-                </div>
+            <div v-else style="position: relative;">
+                <LoadingOverlay v-if="!commentsLoaded" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
 
                 <div v-else class="blog-comments-container">
-                    <BlogCommentLayout v-for="comment in commentData" :comment="comment" :postId="blog._id" @commentDeleted="decreaseCommentCount" />
+                    <BlogCommentLayout
+                        v-for="comment in commentData"
+                        :comment="comment"
+                        :postId="blog._id"
+                        @commentDeleted="deleteComment"
+                    />
                 </div>
             </div>
         </div>
@@ -107,6 +113,12 @@
     <div class="blog-container" v-else>
         <p>Post deleted.</p>
     </div>
+
+    <BlogEditLayout 
+        v-if="editMode"
+        @close-edit-blog="exitEditPost"
+        :location="currentLocation"
+    />
 </template>
 
 <style>
@@ -129,11 +141,17 @@
 
 /* blog header styles */
 .blog-header {
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.profile-pic-container {
-    flex: 0 0 0% !important;
+.blog-header > div {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    column-gap: 15px;
+    align-items: center;
 }
 
 .profile-pic {
@@ -143,8 +161,22 @@
     width: 40px;
 }
 
+.blog-username-container {
+    flex: 1 0 auto;
+}
+
 .blog-creation-time {
-    text-align: end;
+    max-width: 30%;
+}
+
+.blog-location {
+    display: flex;
+    justify-content: end;
+}
+
+.blog-caption {
+    border-bottom: 1px solid lightgray;
+    font-style: italic;
 }
 
 /* blog content styles */
@@ -244,6 +276,16 @@
     font-variation-settings: 'FILL' 1;
 }
 
+/* style disabled comments button */
+.blog-actions .material-symbols-outlined.disabled {
+    color: lightgray;
+}
+
+.blog-actions .material-symbols-outlined.disabled:hover {
+    opacity: 1;
+    cursor: not-allowed;
+}
+
 .blog-edit a {
     text-decoration: none;
 }
@@ -268,7 +310,6 @@
     width: 100%;
     display: block;
     margin-bottom: 10px;
-    
 }
 
 .create-comment-text, .create-comment-text:focus {
@@ -286,6 +327,8 @@ import { RouterLink } from 'vue-router';
 import { useBlogStore } from '../../stores/BlogStore.js';
 import BlogCommentLayout from './BlogCommentLayout.vue';
 import calcDateDifference from '../../utils/general/calcDateDifference.js';
+import BlogEditLayout from './BlogEditLayout.vue';
+import LoadingOverlay from '../general/LoadingOverlay.vue';
 
 export default {
     data() {
@@ -304,12 +347,15 @@ export default {
             submittingComment: false,
             liked: false,
             likeTimeout: null,
-            likeCount: 0
+            likeCount: 0,
+            editMode: false
         }; 
     },
     components: {
         RouterLink,
-        BlogCommentLayout
+        BlogCommentLayout,
+        BlogEditLayout,
+        LoadingOverlay
     },
     props: [
         'blog'
@@ -480,6 +526,13 @@ export default {
             // update the store to hold the current blog to edit
             const store = useBlogStore();
             store.blogToEdit = this.blog;
+
+            // toggle edit blog view
+            this.editMode = true;
+        },
+        // to exist edit blog view
+        exitEditPost() {
+            this.editMode = false;
         },
         // retrieve comments for the post
         async getComments() {
@@ -497,9 +550,11 @@ export default {
                 console.log(error);
             });
         },
-        // toggle comments for the post
+        // toggle comments for the post if comments are enabled
         toggleComments() {
-            this.showComments = !this.showComments;
+            if (this.blog.comments_enabled) {
+                this.showComments = !this.showComments;
+            }
         },
         // create comment
         async createComment() {
@@ -529,7 +584,7 @@ export default {
 
                     // update comments list to update dom immediately
                     if (res.status == 200) {
-                        this.blog.comments.push(data.comment._id);
+                        this.blog.comment_count += 1;
                         this.commentData.push(data.comment);
                     }
 
@@ -540,8 +595,24 @@ export default {
             })
         },
         // remove deleted comment's id from the comments list to update the dom immediately
-        decreaseCommentCount(commentId) {
-            this.blog.comments.splice(this.blog.comments.indexOf(commentId), 1);
+        deleteComment(commentId) {
+            this.blog.comment_count -= 1;
+            this.commentData.splice(this.commentData.indexOf(commentId), 1);
+        }
+    },
+    computed: {
+        // get current path for redirection
+        currentLocation() {
+            return window.location.pathname;
+        },
+        // generate tooltip text for comment button
+        commentTitle() {
+            if (this.blog.comments_enabled) {
+                return this.showComments ? 'Hide comments' : 'Show comments';
+            }
+            else {
+                return 'Comments disbled for this post';
+            }
         }
     }
 }

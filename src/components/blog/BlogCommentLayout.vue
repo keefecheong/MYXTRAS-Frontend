@@ -1,23 +1,23 @@
 <template>
-    <div class="comment-container container" v-if="!deleted">
-        <div class="row comment-header">
+    <div class="comment-container" v-if="!deleted">
+        <div class="comment-header">
             <!-- creator profile pic -->
-            <div class="profile-pic-container col">
+            <div class="profile-pic-container">
                 <img class="profile-pic" :src="comment.creator_id.profile_pic_link"/>
             </div>
 
             <!-- creator username -->
-            <div class="col-7 hide-overflow-text">
+            <div class="comment-username-container hide-overflow-text">
                 <span>{{ comment.creator_id.username }}</span>
             </div>
 
             <!-- creation time (time difference) -->
-            <div class="col comment-creation-time">
+            <div class="comment-creation-time">
                 <time :datetime="comment.creation_time" :title="new Date(comment.creation_time)">{{ dateCreated }}</time>
             </div>
 
             <!-- only if the comment is posted by the current user -->
-            <div class="col comment-privilege-actions" v-if="comment.isOwner">
+            <div class="comment-privilege-actions" v-if="comment.isOwner">
                 <span class="material-symbols-outlined" @click="deleteComment">delete</span>
             </div>
         </div>
@@ -96,11 +96,18 @@ export default {
 }
 
 .comment-header {
+    display: flex;
+    flex-direction: row;
     align-items: center;
+    column-gap: 15px;
+}
+
+.comment-username-container {
+    flex: 1 0 auto;
 }
 
 .comment-creation-time {
-    text-align: end;
+    max-width: 30%;
 }
 
 .comment-privilege-actions {
