@@ -45,7 +45,6 @@
                                 :key="selectedChat._id"
                                 :chat="selectedChat"
                                 :messages="selectedChatMessages"
-                                @update-chat-timestamp="updateChatTimestamp"
                             />
                         </keep-alive>
                     </div>
@@ -228,10 +227,6 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
-        },
-        // update last_message_timestamp for specified chat
-        updateChatTimestamp(data) {
-            this.store.chats.find(chat => chat._id == data.chatId).last_message_timestamp = data.last_message_timestamp;
         }
     },
     computed: {

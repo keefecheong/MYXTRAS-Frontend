@@ -25,22 +25,41 @@
             @mouseleave="hideMore"
             :id="index"
         >
+            <!-- layout for normal message -->
             <div v-if="!editMode">
                 <div class="message-content">
-                    <span>{{ message.content }}</span>
-                    <span class="message-timestamp">{{ timestamp }}</span>
+                    <!-- displayed if message has file -->
+                    <div v-if="hasFile">
+                        <ChatFileLayout 
+                            :fileLink="message.file_link" 
+                            :originalName="message.original_name"
+                            :fileType="message.file_type"
+                        />
+                    </div>
+
+                    <!-- displayed if message has text content -->
+                    <div v-if="hasText">
+                        <span>{{ message.content }}</span>
+                    </div>
+
+                    <!-- displays creation time and 'Edited' if edited (hover over 'Edited' to see last modified time) -->
+                    <div class="message-timestamp-container">
+                        <span class="message-timestamp last-modified-timestamp" v-if="isEdited" :title="'Last modified at ' + lastModifiedTimestamp">Edited</span>
+                        <span class="message-timestamp">{{ timestamp }}</span>
+                    </div>
                 </div>
     
+                <!-- action buttons/icons for editing/deleting message (only for senders) -->
                 <div class="message-actions-container" v-if="displayMore && message.is_sender">
-                    <span class="material-symbols-outlined" @click="toggleMessageActions">more_vert</span>
+                    <span class="material-symbols-outlined" @click="toggleMessageActions" title="More actions">more_vert</span>
     
                     <div class="message-actions" v-if="displayMore && displayActions && message.is_sender">
-                        <div @click.stop="enterEdit">
+                        <div @click.stop="enterEdit" title="Edit">
                             <span class="material-symbols-outlined">edit</span>
                             <span>Edit</span>
                         </div>
     
-                        <div @click="deleteMessage">
+                        <div @click="deleteMessage" title="Delete">
                             <span class="material-symbols-outlined">delete</span>
                             <span>Delete</span>
                         </div>
@@ -48,15 +67,16 @@
                 </div>
             </div>
 
+            <!-- layout for editing message (only for senders) -->
             <div class="edit-message" v-if="editMode && message.is_sender">
                 <form :id="'form-' + index">
                     <input type="text" title="Enter your message" v-model="editedMessage" :id="'edit-' + index" placeholder="New message..." />
 
                     <div>
-                        <button class="cancel" @click="exitEdit">
+                        <button class="cancel" @click="exitEdit" title="Discard changes">
                             <span class="material-symbols-outlined">close</span>
                         </button>
-                        <button class="submit" @click.prevent="editMessage">
+                        <button class="submit" @click.prevent="editMessage" title="Save changes">
                             <span class="material-symbols-outlined">check</span>
                         </button>
                     </div>
@@ -67,6 +87,8 @@
 </template>
 
 <script>
+import ChatFileLayout from './ChatFileLayout.vue';
+
 export default {
     data() {
         return {
@@ -82,6 +104,9 @@ export default {
         'previous_creation_time',
         'index'
     ],
+    components: {
+        ChatFileLayout
+    },
     emits: [
         'edit-message',
         'delete-message'
@@ -136,7 +161,8 @@ export default {
             if (this.editedMessage != this.message.content && this.editedMessage.trim().length > 0) {
                 this.$emit('edit-message', {
                     messageId: this.message._id,
-                    editedMessage: this.editedMessage
+                    editedMessage: this.editedMessage,
+                    lastModifiedTime: new Date().toISOString()
                 });
             }
             
@@ -164,9 +190,15 @@ export default {
         },
         // to handle delete message
         deleteMessage() {
-            this.$emit('delete-message', {
+            const data = {
                 messageId: this.message._id
-            });
+            }
+
+            if (this.hasFile) {
+                data.fileLink = this.message.file_link;
+            }
+            
+            this.$emit('delete-message', data);
         }
     },
     computed: {
@@ -203,6 +235,32 @@ export default {
             return date.toLocaleTimeString([], {
                 timeStyle: 'short'
             });
+        },
+        // check if message is edited based on last_modified_time
+        isEdited() {
+            return this.message.last_modified_time || null;
+        },
+        // format last_modified_time for display
+        lastModifiedTimestamp() {
+            const creationDate = new Date(this.message.creation_time).toLocaleDateString([], {
+                dateStyle: 'short'
+            });
+            
+            const lastModifiedTime = new Date(this.message.last_modified_time);
+
+            const lastModifiedDate = lastModifiedTime.toLocaleDateString([], {
+                dateStyle: 'short'
+            });
+
+            return creationDate == lastModifiedDate ? lastModifiedTime.toLocaleTimeString([], { timeStyle: 'short' }) : lastModifiedTime.toString();
+        },
+        // check if message has text content
+        hasText() {
+            return this.message.content != '';
+        },
+        // check if message has file
+        hasFile() {
+            return this.message.file_link || null;
         }
     }
 }
@@ -236,10 +294,6 @@ export default {
     position: relative;
     display: grid;
     position: relative;
-}
-
-.message-content {
-    display: grid;
 }
 
 .message.received {
@@ -280,9 +334,25 @@ export default {
 
 /* arrow symbols from: https://codeconvey.com/css-message-box-with-arrow/ */
 
+.message-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.message-timestamp-container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 5px;
+    align-items: center;
+    justify-content: end;
+}
+
 .message-timestamp {
-    justify-self: end;
     font-size: 0.8em;
+}
+
+.last-modified-timestamp {
+    font-style: italic;
 }
 
 /* message actions styles */
