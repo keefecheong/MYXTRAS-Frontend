@@ -9,10 +9,10 @@
                 </div>
                 <div v-for="forum in subbedForums" class="row">
                     <div class="col-md-4 d-flex justify-content-end">
-                        <a href='./forumGroup.html'><img class="groupPic" :src="forum.banner_link" :draggable="isDraggable"></a> 
+                        <a @click="viewForum(forum)"><img class="groupPic" :src="forum.forum_pic_link" :draggable="isDraggable"></a> 
                     </div>
                     <div class="col-md-8">
-                        <p class="forum-name">{{ forum.forumName }}</p>  
+                        <p class="forum-name" @click="viewForum(forum)">{{ forum.forumName }}</p>  
                     </div>
                 </div>
                 <h4><i class="bi bi-three-dots three-dots"></i></h4>
@@ -70,7 +70,8 @@ export default {
                 .then(async response => {
                 if (response.ok) {
                     await response.json().then(data => {
-                        this.subbedForums = data
+                        console.log(data)
+                        this.subbedForums = data.subscribed_forums
                     })
                 } else {
                     console.log('Error:', response);
@@ -80,7 +81,11 @@ export default {
                     console.error('Error:', error);
                 })
         },
-    
+
+        viewForum(forum){
+            localStorage.setItem('forumID', forum.forumID);
+            location.href = "/forumGroup.html"
+        },
     }
 }
 </script>

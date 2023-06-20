@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="forumOptions">
-                        <button class="subscribe-button pink-btn" v-if="!isCreator" @click="subscribeForum">Subscribe</button>
+                        <button :class="{ 'subscribed': isSubscribed, 'pink-btn': !isSubscribed  }" v-if="!isCreator" @click="subscribeForum">{{ isSubscribed ? 'Unsubscribe' : 'Subscribe' }}</button>
                         <button @click="showCreateThread" class="pink-btn">Create Thread!</button>
                         <div class="subs">
                             <p>{{"Subscribers: " + forum.numOfSubs}}</p>
@@ -129,7 +129,8 @@ export default {
             threadDesc: null,
             selectedCategory: [],
             submitting: false,
-            
+            isSubscribed: false,
+
             //Error handling
             errorMsg: null,
             showErrMsg: false,
@@ -224,11 +225,11 @@ export default {
             })
             .then(data => {
                 this.forum = data.forum;
-
                 // Stores forumPic to be displayed in threadView.html
                 localStorage.setItem('forumGroupPic', this.forum.forum_pic_link[0]);
                 localStorage.setItem('forumBannerPic', this.forum.banner_link[0]);
                 this.isCreator = data.isCreator;
+                this.isSubscribed = data.isSubscribed;
                 this.contentLoaded = true
 
             })
@@ -255,9 +256,10 @@ export default {
             });
         },
         subscribeForum(){
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/subscribe-forum/${forumID}`, {
+            this.isSubscribed = true
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/subscribe-forum/${this.forum._id}`, {
                 mode: 'cors',
-                method: 'GET',
+                method: 'POST',
                 credentials: 'include'
             }).then(res => {
                 if (res.ok) {
@@ -265,11 +267,15 @@ export default {
                 }
                 throw new Error('Response not OK');
             })
-            .then(data => {
-                this.forum = data.forum;
-                this.isCreator = data.isCreator;    
-                this.contentLoaded = true
+            .then(data => {   
+                this.isSubscribed = data.isSubscribed
 
+                if (this.isSubscribed){
+                    this.forum.numOfSubs += 1
+                }
+                else{
+                    this.forum.numOfSubs -= 1
+                }
             })
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);
@@ -337,15 +343,6 @@ export default {
     width: 100%;
 }
 
-.subscribe-button{
-    background-color: transparent;
-    color: var(--primary);
-    padding: 10px 30px;
-    font-size: 15px;
-    border-radius: 10px;
-    font-weight: bold;
-}
-
 .groupicon {
     float:left;
     width: 60px;
@@ -407,7 +404,7 @@ export default {
 
 .pink-btn {
     background-color: #ffffff;
-    border: transparent solid 3.5px;
+    border: transparent;
     border-radius: 10px;
     color: black;
     height: 3rem;
@@ -421,13 +418,30 @@ export default {
 }
 
 .pink-btn:hover {
-    background-color: #e53a73;
+    background-color: transparent;
     color: white;
     border: transparent solid 3.5px;
     cursor: pointer;
     font-weight: bold;
 }
-
+.subscribed {
+    background-color: transparent;
+    color: #fff;
+    border: white solid 3.5px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 3rem;
+    width: 8.5rem;
+    transition: all 0.3s;
+}
+.subscribed:hover {
+    background-color: white;
+    color: black;
+    border: white solid 3.5px;
+}
 #threads{
     margin: 20px;
     margin-top: 50px;

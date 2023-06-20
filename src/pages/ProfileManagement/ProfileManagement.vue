@@ -220,36 +220,79 @@ export default {
       this.showBtn = false;
     },
  
-    async updateProfile() {
+    // async updateProfile() {
       
+    //   this.userObject = {
+    //     'userName': this.username,
+    //     'biography': this.biography,
+    //     'selectedInterests': this.selectedOption,
+    //     'gender': this.gender
+    //   }
+
+      
+    //   fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
+    //       method: 'PATCH', 
+    //       headers: {
+    //           'Content-Type': 'application/json; charset=UTF-8',
+    //       },
+    //       body: JSON.stringify(this.userObject),
+    //       credentials: "include",
+    //   }) .then(response => {
+    //           if (!response.ok) {
+    //               throw new Error('Error: ' + response.status);
+    //           } else {
+    //               window.location.href = '/profilePage.html';
+    //           }
+    //       })
+    //       .catch(error => {
+    //           console.error('Error:', error);
+    //       });
+          
+    //   // console.log(this.userObject);
+    // },
+    async updateProfile(){
+      var formData = new FormData();
+
       this.userObject = {
         'userName': this.username,
         'biography': this.biography,
         'selectedInterests': this.selectedOption,
-        'gender': this.gender
-      }
+        'gender': this.gender,
+        // 'profilePicture': this.$refs.fileInput.files[0],
+        
+      };
+      console.log(this.userObject);
+      formData.append('userObject', JSON.stringify(this.userObject));
 
-      
-      fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-          method: 'PATCH', 
-          headers: {
-              'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: JSON.stringify(this.userObject),
-          credentials: "include",
-      }) .then(response => {
-              if (!response.ok) {
-                  throw new Error('Error: ' + response.status);
-              } else {
-                  window.location.href = '/profilePage.html';
-              }
-          })
-          .catch(error => {
-              console.error('Error:', error);
-          });
-          
-      // console.log(this.userObject);
-    },
+      formData.append('selectedImages', this.$refs.fileInput.files[0]);
+
+
+      // console.log(this.username);
+      // formData.append('userName', this.username);
+      // console.log(formData);
+
+      // formData.append('biography', this.biography);
+      // formData.append('selectedInterests', JSON.stringify(this.selectedOption));
+      // formData.append('gender', this.gender);
+      // formData.append('profilePicture', this.$refs.fileInput.files[0]);
+      try{
+        const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`,{
+          method: 'PATCH',
+          body: formData,
+          credentials: 'include',
+        });
+
+        if (response.ok){
+          window.location.href = '/profilePage.html';
+        }else{
+          console.log('Error:', response.statusText);
+        }
+      }
+      catch (error){
+        console.log('Error:', error);
+      }
+    }
+
   },
 }
 </script>

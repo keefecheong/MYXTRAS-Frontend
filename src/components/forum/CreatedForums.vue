@@ -49,7 +49,7 @@ export default {
     },
     methods: {
        
-        async viewForum(forum){
+        viewForum(forum){
             localStorage.setItem('forumID', forum.forumID);
             location.href = "/forumGroup.html"
         },

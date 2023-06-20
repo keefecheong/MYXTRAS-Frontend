@@ -88,11 +88,11 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div v-for="comment in threadDetails.comments">
-                    <img :src="comment.pfpPic" class="imageIcon">   
-                    <p>{{ comment.creator_name }}</p>
-                    <p>{{ '@' + comment.creator_username }}</p>
+            <div class="row" v-if="!commentsLoaded">
+                <div v-for="comment in commentData">
+                    <img :src="comment.creator_id.profile_pic_link" class="imageIcon">   
+                    <p>{{ comment.creator_id.real_name }}</p>
+                    <p>{{ '@' + comment.creator_id.username }}</p>
                     <p>{{comment.content }}</p>
                 </div>
             </div>
@@ -104,7 +104,6 @@
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
-import banner from '../../assets/ForumBanner.png'
 import groupPic from '../../assets/NgeeAnnLogo.png'
 
 
@@ -112,46 +111,47 @@ export default {
     components: {
         NavSidebar,
         SearchBar,
-        banner,
     },
     data() {
         return {
             commentText: null,
             contentLoaded: false,
+            commentsLoaded: false,
             forumID: null,
             forumGroupPic: null,
             forumBannerPic: null,
             current_threadID: null,
             submittingComment: false,
             commentData: {},
-            threadDetails: {
-            title: "How do I make my parents proud?",
-            description: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are some ways I can get their attention?",
-            creator_name: "Pompourous",
-            pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png",
-            comments: [
-                {
-                creator_name: "Lim Long Teck",
-                creator_username: "notatryhard",
-                content: "Where got time brotherman",
-                pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png",
-                creation_date: "12-11-25, 5 days ago",
-                subcomments: [
-                    {
-                    creator_name: "Lee Wee Kang",
-                    creator_username: "Pompourous",
-                    content: "@notatryhard Seriously?",
-                    pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png",
-                    creation_date: "12-11-25, 5 days ago"
-                    }
-                ]
-                }
-            ]
-            },
+            // threadDetails: {
+            // title: "How do I make my parents proud?",
+            // description: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are some ways I can get their attention?",
+            // creator_name: "Pompourous",
+            // pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png",
+            // comments: [
+            //     {
+            //     creator_name: "Lim Long Teck",
+            //     creator_username: "notatryhard",
+            //     content: "Where got time brotherman",
+            //     pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png",
+            //     creation_date: "12-11-25, 5 days ago",
+            //     subcomments: [
+            //         {
+            //         creator_name: "Lee Wee Kang",
+            //         creator_username: "Pompourous",
+            //         content: "@notatryhard Seriously?",
+            //         pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png",
+            //         creation_date: "12-11-25, 5 days ago"
+            //         }
+            //     ]
+            //     }
+            // ]
+            // },
         }
     },
     mounted() {
         this.getForumPage()
+        this.getComments()
     },
     methods: {
         async getForumPage() {
@@ -214,6 +214,25 @@ export default {
                 console.log(error);
             })
         },
+        async getComments() {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.current_threadID}`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('Response not OK');
+            })
+            .then(data => {
+                this.commentData = data.comments;
+                console.log(this.commentData)
+            })
+            .catch((error) => {
+                console.log("This page could not be loaded: ", error);
+            });
+        }
     },
 }
 
