@@ -225,11 +225,11 @@ export default {
             })
             .then(data => {
                 this.forum = data.forum;
-
                 // Stores forumPic to be displayed in threadView.html
                 localStorage.setItem('forumGroupPic', this.forum.forum_pic_link[0]);
                 localStorage.setItem('forumBannerPic', this.forum.banner_link[0]);
                 this.isCreator = data.isCreator;
+                this.isSubscribed = data.isSubscribed;
                 this.contentLoaded = true
 
             })
