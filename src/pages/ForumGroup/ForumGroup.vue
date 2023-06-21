@@ -36,7 +36,6 @@
             <div id="white-container" class="row">
                 <div class="col-md-8 offset-md-1">
                     <threadLayout :threads="threads"/>
-
                 </div>
                 <div class="col-md-3">
                     <recommendedForums />
@@ -316,7 +315,6 @@ export default {
 }
 
 .subs {
-    margin-top: 5%;
     float: right;
 }
 
@@ -333,6 +331,7 @@ export default {
     background-color: var(--primary);
     height: 100%;
     width: 100%;
+    color: white;
 }
 
 .groupicon {
@@ -385,16 +384,17 @@ export default {
 }
 
 .white-btn {
-    display: flex;
+    display: grid;
     background-color: white;
-    border: transparent;
+    border: white solid 3.5px;
     border-radius: 10px;
     height: 3rem;
     width: 8.5rem;
-    align-items: center;
-    justify-content: center;
+    place-items: center;
     transition: all 0.3s;
+    margin-bottom: 5%;
     text-decoration: none;
+    font-size: 1rem;
 }
 
 .white-btn:hover {
@@ -409,18 +409,13 @@ export default {
     color: white;
     border: white solid 3.5px;
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    place-items: center;
     height: 3rem;
     width: 8.5rem;
     transition: all 0.3s;
+    margin-bottom: 5%;
 }
-.subscribed:hover {
-    color: white;
-    border: white solid 3.5px;
-}
+
 #threads{
     margin: 20px;
     margin-top: 50px;

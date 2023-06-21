@@ -40,7 +40,7 @@
         <div class="mb-3 row" id="position" >
           <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
           <div class="col-sm-4">
-            <AdditionButton :selectedOption="selectedOption"/>
+            <AddInterestButton :selectedOption="selectedOption"/>
           </div>
         </div>
           
@@ -77,7 +77,7 @@
   
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue'
-import AdditionButton from '../../components/profile/AdditionButton.vue'
+import AddInterestButton from '../../components/profile/AddInterestButton.vue'
 import ngeeann from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
 import Cropper from 'cropperjs';
@@ -86,7 +86,7 @@ import Cropper from 'cropperjs';
 export default {
   components: {
     NavSidebar,
-    AdditionButton,
+    AddInterestButton,
     Cropper,
     ngeeann,
     banner,

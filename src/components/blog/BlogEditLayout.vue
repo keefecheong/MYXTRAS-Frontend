@@ -3,7 +3,6 @@
         <BlogFormLayout 
             @close-image-form="closeEditBlog" 
             :editMode="true"
-            :windowLocation="location"
         />
     </div>
 </template>
@@ -21,9 +20,6 @@ export default {
     components: {
         BlogFormLayout
     },
-    props: [
-        'location'
-    ],
     emits: [
         'close-edit-blog'
     ],
