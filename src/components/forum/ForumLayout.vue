@@ -210,7 +210,7 @@ export default {
             console.log(this.subbedForums)
             
             // Step 1: Retrieve the threads from the filtered forums
-
+            // Store forum details inside the thread array
             const threads = this.subbedForums.reduce((result, forum) => {
                 const threadsWithForumDetails = forum.threads.map((thread) => {
                     return {
@@ -219,8 +219,9 @@ export default {
                         forum_pic_link: forum.forum_pic_link,
                         ...thread,
                     };
-            });
-            return result.concat(threadsWithForumDetails);
+                });
+                
+                return result.concat(threadsWithForumDetails);
             }, []);
             
             // Step 2: Flatten the threads array

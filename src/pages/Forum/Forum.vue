@@ -8,17 +8,17 @@
             <div class="row">
                 <div class="col-md-3">
                    <CreatedForums />
-                   <SubscribedForums  v-on:subbedForums="retrieveRecentThreads"/>
+                   <SubscribedForums v-on:subbedForums="retrieveRecentThreads"/>
                 </div>
             
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="card shadow">
-                            <div class="center-align" style="margin: 3vh 1vh;">
-                                <p v-if="subbedForums.length === 0">No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
+                        <div class="card shadow" v-if="subbedForums.length === 0">
+                            <div class="center-align" style="margin: 3vh 0;">
+                                <p>No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
                             </div>
                         </div>
-                        <ForumLayout :subbedForums="subbedForums"/>
+                        <ForumLayout :subbedForums="subbedForums" style="margin: 3vh 0;"/>
                     </div>
                 </div>
 
