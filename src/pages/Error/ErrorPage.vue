@@ -2,7 +2,7 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
-            <SearchBar/>
+            <SearchBar currentPage="feed"/>
             <br>
             <div id="notfound">
                 <div class="notfound">
@@ -23,7 +23,6 @@
 
 #notfound {
     position: relative;
-    height: 100vh;
 }
 
 #notfound .notfound {
