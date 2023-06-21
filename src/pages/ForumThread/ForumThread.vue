@@ -44,10 +44,10 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-9">
+                            <div class="col-md-8">
                                 <textarea placeholder="Anything Xtra to say?" style="width: 100%;" v-model="commentText"></textarea>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <button @click="createComment">Comment</button>
                             </div>
                         </div>

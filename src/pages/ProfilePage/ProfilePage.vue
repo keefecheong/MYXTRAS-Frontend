@@ -312,7 +312,9 @@ export default {
     flex-direction: row;
     column-gap: 10px;
 }
-
+#sign-out-container {
+    cursor: pointer;
+}
 #user-sign-out-icon, #user-sign-out-text {
     color: #dd1217;
     font-size: 1.2rem;

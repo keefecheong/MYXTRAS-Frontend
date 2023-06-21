@@ -40,7 +40,7 @@
                 <p>Forum</p>
             </a>
             <a href="/chat.html" class="sidebar-link">
-                <span class="material-symbols-outlined">chat</span>
+                <span class="material-symbols-outlined">stream_apps</span>
                 <p>Chat</p>
             </a>
             <a href="/events.html" class="sidebar-link">
@@ -73,7 +73,7 @@
                 <span class="material-symbols-outlined" title="Forum">forum</span>
             </a>
             <a href="/chat.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Chat">chat</span>
+                <span class="material-symbols-outlined" title="Chat">stream_apps</span>
             </a>
             <a href="/events.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Events">campaign</span>
@@ -111,7 +111,7 @@
                 <p>Forum</p>
             </a>
             <a href="/chat.html" class="navbar-link">
-                <span class="material-symbols-outlined">chat</span>
+                <span class="material-symbols-outlined">stream_apps</span>
                 <p>Chat</p>
             </a>
             <a href="/events.html" class="navbar-link">

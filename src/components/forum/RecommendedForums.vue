@@ -4,9 +4,9 @@
             <h4 class="card-title">Recommendations</h4>
 
             <!-- max 6 groups -->
-            <div class="group-container" v-for="forum in recommendations">
+            <div class="group-container" @click="viewForum(forum)" v-for="forum in recommendations">
                 <img class="groupPic" :src="forum.forum_pic_link[0]" />
-                <p class="text-below-pic" @click="viewForum(forum)">{{ forum.forumName }}</p>
+                <p class="text-below-pic">{{ forum.forumName }}</p>
             </div>
         </div>
     </div>
@@ -25,7 +25,9 @@ p:hover {
     margin-left: 25px;
     border-radius: 50%;
 }
-
+.groupPic:hover{
+    cursor: pointer;
+}
 .text-below-pic {
     margin-top: 5px;
 }

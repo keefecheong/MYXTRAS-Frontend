@@ -15,20 +15,39 @@
                         <p class="forum-name" @click="viewForum(forum)">{{ forum.forumName }}</p>  
                     </div>
                 </div>
-                <h4><i class="bi bi-three-dots three-dots"></i></h4>
             </div>
         </div>
     </div>
 </template>
 <style scoped>
+p:hover {
+    color: var(--primary);
+    cursor: pointer;
+}
+/* Track */
+::-webkit-scrollbar-track {
+background: #ffffff; 
+border-radius: 15px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #c9c9c9c4;
+border-radius: 15px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #c9c9c98d;
+}
 .card {
     padding: 1em 0 1em 0;
     border: none !important;
     border-radius: 10px;
     margin: 3vh 1vh;
     min-height: 50vh;
-    max-height: 100vh;
-    overflow: hidden;
+    max-height: 60vh;
+    overflow-y: scroll;
 }
 .groupPic {
     overflow: hidden;
@@ -37,6 +56,9 @@
     height: 5vh;
     margin-top: 15px;
     border-radius: 50%;
+}
+.groupPic:hover{
+    cursor: pointer;
 }
 .center-align {
     display: flex;
