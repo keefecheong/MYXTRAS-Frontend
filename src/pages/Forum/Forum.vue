@@ -62,8 +62,8 @@
                             <div class="col-3">
                             </div>
                             <div class="col-6 center-align">
-                                <input type="text" v-model="forumID" @input="checkForumId" placeholder="Community ID: x/" required>
-                                <p v-if="duplicateID"></p>
+                                <input type="text" v-model="forumID" placeholder="Community ID: x/" required>
+                                <p class="errMsg"> {{ idErr }}</p>
                                 <input type="text" v-model="forumName" placeholder="Community Name:" required>
                                 <textarea type="text" v-model="forumDesc" :maxlength="500" placeholder="Community Description (optional)" ></textarea>
                                 <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
@@ -73,7 +73,7 @@
                                     <option value="Technology">Sports</option>
                                     <option value="News">News</option>
                                 </select>
-                                <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
+                                <p v-if="showErrMsg" class="errMsg">Error: {{ errorMsg }}</p>
                             </div>
                             <div class="col-3"></div>
                         </div>
@@ -106,7 +106,11 @@ button {
     border: none;
     padding: 1em;
     border-radius: 10px;
-
+}
+.errMsg{
+    color: red;
+    font-weight: bold;
+    margin-bottom: 0;
 }
 input[type=text],
 #categoryDropdown{
@@ -209,7 +213,7 @@ import ForumLayout from '../../components/forum/ForumLayout.vue';
 import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 import CreatedForums from '../../components/forum/CreatedForums.vue';
 import PopularThreads from '../../components/forum/PopularThreads.vue';
-
+import { debounce } from 'lodash'
 export default {
     components: {
         NavSidebar,
@@ -218,6 +222,14 @@ export default {
         CreatedForums,
         SubscribedForums,
         PopularThreads,
+    },
+    watch: {
+        forumID: {
+            immediate: false,
+            handler(newVal, oldVal) {
+                this.verifyForumID();
+            }
+        },
     },
     data() {
         return {
@@ -242,17 +254,48 @@ export default {
             forumDesc: '',
             forumObject: null,
             selectedCategory: null,
-            duplicateID: false,
             submitting: false,
             
             //Error handling
             errorMsg: null,
             showErrMsg: false,
+            idErr: null,
+            debouncedVerifyForumID: debounce(async function () {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/verify-forumID`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+                body: JSON.stringify({ forumID: this.forumID })
+            });
+                if (response.ok) {
+                    this.idErr = null
+                    return;
+                } else if (response.status === 400){
+                    response.json().then(data => {
+                    if (data.error === 'ForumID already exists') {
+                        this.idErr = "ForumID already taken"
+                        console.log(this.idErr)
+                        return;
+                    }
+                    else {
+                        throw new Error('Error: ' + response.status);
+                    }
+                    });
+                    return;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            }, 2000)
         }
     },
-    mounted() {
-    },
     methods: {
+        verifyForumID(){
+            this.debouncedVerifyForumID.call(this)
+        },
         handleVariableUpdate(variable) {
             this.showPopUp = variable;
         },
@@ -292,25 +335,6 @@ export default {
         
         },
 
-        // TODO RUN THE FUNCTION WHEN FORUMID INPUT CHANGES
-        checkForumId() {
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create/${this.forumID}`, {
-                method: "GET",
-                credentials: "include",
-                })
-                .then(response => {
-                    if (response.ok){
-                        // No error
-                        this.duplicateID = false
-                    } else if (response.status === 400){
-                        // Display duplicate forumID error
-                        this.duplicateID = true
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-        },
         async createForum() {
             this.submitting = true
             // Validation
