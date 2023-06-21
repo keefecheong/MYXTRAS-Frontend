@@ -253,11 +253,15 @@ export default {
                     console.error('Error:', error);
                 });
         },
+        // to compensate height of searchbar (absolute positioned)
         compensateSearchBar() {
-            const searchbar = document.querySelector('.pink-header-search');
-            const searchbarHeight = window.getComputedStyle(searchbar).height;
+            // set timeout before setting height to wait for browser to finish rendering
+            setTimeout(function() {
+                const searchbar = document.querySelector('.pink-header-search');
+                const searchbarHeight = window.getComputedStyle(searchbar).height;
 
-            document.getElementById('compensate-searchbar-height').style.height = searchbarHeight;
+                document.getElementById('compensate-searchbar-height').style.height = searchbarHeight;
+            }, 100);
         }
     }
 }

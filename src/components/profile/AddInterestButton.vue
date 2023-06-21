@@ -59,6 +59,7 @@
 
 <script>
 import InterestBadgeList from './InterestBadgeList.vue';
+import handleSelectedInterests from '../../utils/general/defaultInterestSelectedCallback';
 
 export default{
     props: {
@@ -94,14 +95,7 @@ export default{
         },
         // add/remove selected interest
         handleSelection(option) {
-            const index = this.selectedOption.indexOf(option);
-            if (index > -1) {
-                // if option is already selected, remove it from the array
-                this.selectedOption.splice(index, 1);
-            } else {
-                // otherwise add it to the array
-                this.selectedOption.push(option);
-            }
+            handleSelectedInterests(option, this.selectedOption);
         }
     },
     

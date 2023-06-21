@@ -27,7 +27,7 @@
             v-for="option in displayOptions"
             class="badge"
             :class="[
-                getBadgeClass(option),
+                `badge-${option.toLowerCase()}`,
                 { 'selection': selection },
                 { 'selected': selection && selectedOption.includes(option) }
             ]"
@@ -68,10 +68,6 @@ export default {
             if (this.selection) {
                 this.$emit('interest-selected', option);
             }
-        },
-        // Return a class name based on the selected option
-        getBadgeClass(option) {
-            return `badge-${option.toLowerCase()}`;
         }
     },
     computed: {
@@ -100,6 +96,8 @@ div {
     padding: 10px;
     color: black;
     user-select: none;
+    display: flex;
+    align-items: center;
 }
 
 .badge.selection {

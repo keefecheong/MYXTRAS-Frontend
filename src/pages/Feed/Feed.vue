@@ -4,7 +4,7 @@
         
         <div id="main-content">
             <SearchBar currentPage="feed"/>
-            <br>
+            
             <div class="feed-container container-fluid">
                 <div class="row">
                     <div class="feed-content justify-content-center">
