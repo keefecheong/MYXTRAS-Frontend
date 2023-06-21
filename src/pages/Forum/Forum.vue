@@ -8,17 +8,17 @@
             <div class="row">
                 <div class="col-md-3">
                    <CreatedForums />
-                   <SubscribedForums />
+                   <SubscribedForums  v-on:subbedForums="retrieveRecentThreads"/>
                 </div>
             
                 <div class="col-md-6">
                     <div class="row">
                         <div class="card shadow">
                             <div class="center-align" style="margin: 3vh 1vh;">
-                                <p v-if="threads.length === 0">No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
+                                <p v-if="subbedForums.length === 0">No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
                             </div>
                         </div>
-                        <ForumLayout v-for="thread in threads" :thread="thread"/>
+                        <ForumLayout :subbedForums="subbedForums"/>
                     </div>
                 </div>
 
@@ -213,8 +213,8 @@ import PopularThreads from '../../components/forum/PopularThreads.vue';
 export default {
     components: {
         NavSidebar,
-        SearchBar,
         ForumLayout,
+        SearchBar,
         CreatedForums,
         SubscribedForums,
         PopularThreads,
@@ -229,7 +229,8 @@ export default {
             subbedForums: [],
             createdForums: [],
             threads: [],
-
+            subbedForumThreads: [],
+            
             // Creation of forum var
             selectedBanner: null,
             bannerObject: null,
@@ -254,6 +255,9 @@ export default {
     methods: {
         handleVariableUpdate(variable) {
             this.showPopUp = variable;
+        },
+        retrieveRecentThreads(variable) {
+            this.subbedForums = variable;
         },
         openPopUp() {
             this.showPopUp = !this.showPopUp

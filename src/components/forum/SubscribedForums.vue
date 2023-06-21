@@ -70,8 +70,8 @@ export default {
                 .then(async response => {
                 if (response.ok) {
                     await response.json().then(data => {
-                        console.log(data)
                         this.subbedForums = data.subscribed_forums
+                        this.$emit('subbedForums', this.subbedForums);
                     })
                 } else {
                     console.log('Error:', response);

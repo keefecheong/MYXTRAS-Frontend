@@ -1,7 +1,7 @@
 <template>
     <div class="forum-container">
         <div class="row">
-            <div v-for="thread in followedGroupthreads">
+            <div v-for="thread in this.sortedThreads">
                 <div class="card shadow threadContainer">
                 <div class="row">
                     <div class="col-2"></div>
@@ -9,18 +9,18 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2 d-flex justify-content-end">
-                        <a href='./forumGroup.html'><img id="threadGroupPic" :src="thread.groupPic" :draggable="isDraggable"></a>
+                        <a @click="viewForum(thread.forumID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
                     </div>
                     <div class="col-10 threadContent">
-                        <p id="meta"><a href="#" class="forum-name">{{ "x/" + thread.groupName}}</a>{{ " ~ Posted by: @" + thread.creatorName }}</p>  
-                        <p id="thread-title">{{ thread.threadTitle }}</p>  
-                        <p id="thread-description">{{ thread.threadDesc }}</p>
+                        <p id="meta"><a @click="viewForum(thread.forumID)" class="forum-name">{{ "x/" + thread.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
+                        <p id="thread-title">{{ thread.thread_title }}</p>  
+                        <p id="thread-description">{{ thread.thread_desc }}</p>
                         <div class="imageContainer">
-                            <img id="threadPic" :src="thread.threadPic" :draggable="isDraggable">
+                            <img id="threadPic" :src="thread.content_links[0]" :draggable="isDraggable">
                         </div>
                         <br>
                         <div class="d-flex justify-content-end">
-                            <a id="commentsText" href="/threadView.html">View {{ thread.numOfComments }} comments</a>
+                            <a id="commentsText" @click="viewThread(thread)" >View {{ thread.numOfComments }} comments</a>
                         </div>
                     </div>
                 </div>
@@ -173,33 +173,76 @@
     background-color: #FC5454;
 }
 </style>
+
 <script>
-import { Button } from 'bootstrap';
-export default{
+export default {
+    data() {
+        return {
+            sortedThreads: []
+        }
+    },
     props: {
         selectedOption: {
             type: Array,
             default: () => [],
         },
-        props: ['thread'],
+        subbedForums: {
+            type: Array,
+            default: {}
+        }
     },
-
+    watch: {
+        subbedForums: {
+            immediate: false,
+            handler(newVal, oldVal) {
+                this.filterThreads();
+            }
+        }
+    },
     data(){
         return{
             selectedOption: ['Kpop','Games'],
             isDraggable: false,
-            followedGroupthreads: []
-            // followedGroupthreads: [
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://previews.123rf.com/images/parinyabinsuk/parinyabinsuk1407/parinyabinsuk140700176/30136368-young-asian-boy-being-scolded-by-parents.jpg" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10},
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "nerdfest", creatorName: "Pompourous", threadTitle: "How do I make my parents proud?", threadPic:"https://www.icegif.com/wp-content/uploads/icegif-2013.gif" ,threadDesc: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are...", numOfComments: 10},
-            //     {groupPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png", groupName: "sleeping-ing", creatorName: "notaslacker", threadTitle: "Here is a pic of me sleeping, what do y’all think? What are some comfortable sleeping positions?", threadPic:"https://media.tenor.com/JVKQ8mJoi7gAAAAC/bocchi-the-rock-hitori-gotou.gif", threadDesc: "I recommend sleeping 10 hours a day to keep your battery full! Message me at +65 12345678 if you want to learn more!", numOfComments: 10}
-            // ],
-            
         }
     },
     methods:{
-        
+        filterThreads() {
+            console.log(this.subbedForums)
+            
+            // Step 1: Retrieve the threads from the filtered forums
+
+            const threads = this.subbedForums.reduce((result, forum) => {
+                const threadsWithForumDetails = forum.threads.map((thread) => {
+                    return {
+                        forumID: forum.forumID,
+                        forumName: forum.forumName,
+                        forum_pic_link: forum.forum_pic_link,
+                        ...thread,
+                    };
+            });
+            return result.concat(threadsWithForumDetails);
+            }, []);
+            
+            // Step 2: Flatten the threads array
+            const mergedThreads = [].concat(...threads);
+            
+            // Step 3: Sort the merged threads array in chronological order
+            this.sortedThreads = mergedThreads.sort((a, b) => {
+                return new Date(b.creation_time) - new Date(a.creation_time);
+            });
+
+            console.log(this.sortedThreads)
+        },
+
+        viewForum(forumID){
+            localStorage.setItem('forumID', forumID)
+            location.href="/forumGroup.html"
+        },
+
+        viewThread(thread){
+            localStorage.setItem('threadID', thread._id)
+            location.href="/threadView.html"
+        },
         getBadgeClass(option) {
             if (this.selectedOption.includes(option)) {
                 return `badge ${this.getBadgeColor(option)} selected`;
