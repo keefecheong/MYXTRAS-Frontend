@@ -1,26 +1,29 @@
 <template>
     <div id="main-container">
         <NavSidebar/>
+
         <div id="main-content">
             <SearchBar currentPage="feed"/>
-            <br>
-            <br>
-            <h1>Explore</h1>
-            <br>
 
-            <div class="row">
-                <div class="col-md-2 sub-navigation-container">
-                    <div class="sub-navigation-links">
-                        <router-link to="/blogs">
-                            <span class="sub-navigation active" id="blogs" @click="toggleBlogs">Blogs</span>
-                        </router-link>
-                        <router-link to="/threads">
-                            <span class="sub-navigation" id="forums" @click="toggleForums">Threads</span>
-                        </router-link>
-                    </div>                    
-                </div>
-                <div class="col-md-9">
-                    <router-view />
+            <div class="container-fluid explore-container">
+                <div class="row">
+                    <div class="col-md-2 sub-navigation-container">
+                        <div class="sub-navigation-links">
+                            <router-link to="/blogs">
+                                <span class="sub-navigation" :class="{'active': viewingBlogs}" @click="() => toggleViewingBlogs(true)">Blogs</span>
+                            </router-link>
+                            
+                            <router-link to="/threads">
+                                <span class="sub-navigation" :class="{'active': !viewingBlogs}" @click="() => toggleViewingBlogs(false)">Threads</span>
+                            </router-link>
+                        </div>                    
+                    </div>
+
+                    <div class="col-md-9">
+                        <h1>Explore</h1>
+                        <hr />
+                        <router-view :blogs="blogs" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -31,6 +34,10 @@
 <style>
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
+
+.explore-container {
+    margin-top: 20px;
+}
 </style>
 
 <script>
@@ -38,18 +45,37 @@ import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
 
 export default {
+    data() {
+        return {
+            viewingBlogs: true,
+            blogs: []
+        }
+    },
     components: {
         NavSidebar,
         SearchBar
     },
+    created() {
+        this.getPosts();
+    },
     methods: {
-        toggleBlogs() {
-            document.getElementById("blogs").className += " active";
-            document.getElementById("forums").className = "sub-navigation";
+        // method to get blog data
+        async getPosts() {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/explore`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    this.blogs = data;
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
         },
-        toggleForums() {
-            document.getElementById("forums").className += " active";
-            document.getElementById("blogs").className = "sub-navigation";
+        // toggle viewingBlogs to update navigation display
+        toggleViewingBlogs(viewing) {
+            this.viewingBlogs = viewing;
         }
     }
 }

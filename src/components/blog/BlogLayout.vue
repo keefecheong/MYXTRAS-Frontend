@@ -366,6 +366,7 @@ export default {
             commentText: '',
             commentData: {},
             submittingComment: false,
+            savedLike: false,
             liked: false,
             likeTimeout: null,
             likeCount: 0,
@@ -390,6 +391,7 @@ export default {
         this.toggleControls();
 
         // initialize liked and likeCount values
+        this.savedLike = this.blog.liked;
         this.liked = this.blog.liked;
         this.likeCount = this.blog.likes.length;
 
@@ -405,7 +407,7 @@ export default {
             }
         }
     },
-    unmounted() {
+    beforeUnmount() {
         this.completeLikeRequest();
     },
     methods: {
@@ -476,7 +478,8 @@ export default {
         // handle updating of like status to backend
         async updateLike() {
             // send request to update liked status
-            if (this.liked) {
+            // only send to add like if new like value is true and currently saved like value is false
+            if (this.liked && !this.savedLike) {
                 await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/likes/${this.blog._id}`, {
                     mode: 'cors',
                     method: 'POST',
@@ -484,6 +487,7 @@ export default {
                 }).then(async (res) => {
                     if (res.status == 201) {
                         console.log('Liked.');
+                        this.savedLike = true;
                     }
                     else {
                         await res.json().then(data => console.log(data));
@@ -492,7 +496,8 @@ export default {
                     console.log(error);
                 });
             }
-            else {
+            // only send to remove like if new like value is false and currently saved like value is true
+            else if (!this.liked && this.savedLike) {
                 await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/likes/${this.blog._id}`, {
                     mode: 'cors',
                     method: 'DELETE',
@@ -500,6 +505,7 @@ export default {
                 }).then(async (res) => {
                     if (res.status == 204) {
                         console.log('Removed like.');
+                        this.savedLike = false;
                     }
                     else {
                         await res.json().then(data => console.log(data));

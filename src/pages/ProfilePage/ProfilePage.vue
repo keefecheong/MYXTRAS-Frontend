@@ -23,12 +23,12 @@
                                     <span id="user-school">School of {{ school }} - Diploma in {{ course }}</span>
                                 </div>
                                 
-                                <div id="header-user-biography">
+                                <div id="header-user-biography" v-if="biography != ''">
                                     <span>About me:</span>
-                                    <span id="user-biography" v-if="biography != ''">{{ biography }}</span>
+                                    <span id="user-biography">{{ biography }}</span>
                                 </div>
 
-                                <div id="header-user-interests">
+                                <div id="header-user-interests" v-if="selectedOption.length > 0">
                                     <span>Interested in: </span>
                                     <InterestBadgeList :selectedOption="selectedOption" :selection="false" />
                                 </div>
@@ -137,6 +137,10 @@ export default {
     },
     created() {
         this.getPosts();
+        
+        if (window.location.search == '?create') {
+            this.showCreateBlog = true;
+        }
     },
 
     mounted() {

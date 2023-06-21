@@ -24,11 +24,12 @@ const redirectIndexPlugin = {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(({command, mode}) => {
+export default defineConfig(({ command, mode }) => {
     const env = loadEnv(mode, process.cwd(), '');
+
     return {
-            plugins: [vue(), redirectIndexPlugin],
-            server: {
+        plugins: [vue(), redirectIndexPlugin],
+        server: {
             host: "127.0.0.1",
             port: env.VITE_PORT
         }
