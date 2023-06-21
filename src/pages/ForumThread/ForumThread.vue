@@ -31,9 +31,9 @@
                         </div>
                         <div class="row">
                             <div class="col-6">
-                                <div class="reactionContainer">
-                                    <span class="material-symbols-outlined reactionBtns">sentiment_very_satisfied</span>
-                                    <span class="material-symbols-outlined reactionBtns">sentiment_very_dissatisfied</span>
+                                <div class="reactionContainer like-thread" :class="{liked:liked}">
+                                    <span class="material-symbols-outlined reactionBtns" @click='toggleLike'>sentiment_very_satisfied</span><span>{{ likeCount }}</span>
+                                    <span class="material-symbols-outlined reactionBtns" @click="toggleDisike">sentiment_very_dissatisfied</span><span>{{ dislikeCount }}</span>
                                 </div>
                             </div>
                             <div class="col-6 d-flex justify-content-end">
@@ -93,38 +93,18 @@ export default {
             current_threadID: null,
             submittingComment: false,
             commentData: {},
-            // threadDetails: {
-            // title: "How do I make my parents proud?",
-            // description: "My parents are constantly disappointed in me. I get consistent C grades for all my modules which is impressive already. What are some ways I can get their attention?",
-            // creator_name: "Pompourous",
-            // pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png",
-            // comments: [
-            //     {
-            //     creator_name: "Lim Long Teck",
-            //     creator_username: "notatryhard",
-            //     content: "Where got time brotherman",
-            //     pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png",
-            //     creation_date: "12-11-25, 5 days ago",
-            //     subcomments: [
-            //         {
-            //         creator_name: "Lee Wee Kang",
-            //         creator_username: "Pompourous",
-            //         content: "@notatryhard Seriously?",
-            //         pfpPic: "https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png",
-            //         creation_date: "12-11-25, 5 days ago"
-            //         }
-            //     ]
-            //     }
-            // ]
-            // },
+            likeCount: null,
+            dislikeCount: null,
+            likeTimeout: null,
+            dislikeTimeout: null,
         }
     },
     mounted() {
-        this.getForumPage()
+        this.getThreadPage()
         this.getComments()
     },
     methods: {
-        async getForumPage() {
+        async getThreadPage() {
             this.current_threadID = localStorage.getItem('threadID');
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-thread/${this.current_threadID}`, {
                 mode: 'cors',
@@ -138,8 +118,14 @@ export default {
             })
             .then(data => {
                 this.thread = data.thread;
+                console.log(this.thread)
                 this.forum = data.forum;
                 this.contentLoaded = true;
+                this.liked = this.thread.liked;
+                this.likeCount =  this.thread.likes.length;
+                this.disliked = this.thread.disliked;
+                this.dislikeCount =  this.thread.dislikes.length;
+                
             })
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);
@@ -200,7 +186,138 @@ export default {
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);
             });
-        }
+        },
+        toggleLike() {
+            // toggle like on frontend only
+            this.liked = !this.liked;
+
+            // update likeCount
+            if (this.liked) {
+                this.likeCount += 1;
+                if (this.disliked) {
+                    this.dislikeCount -= 1;
+                }
+            }
+            else {
+                this.likeCount -= 1;
+            }
+
+            // set timeout and only send request to update backend if user has not clicked the like button for 3 seconds
+            clearTimeout(this.likeTimeout);
+
+            this.likeTimeout = setTimeout(this.updateLike, 3000);
+        },
+        toggleDisike() {
+            // toggle like on frontend only
+            this.disliked = !this.disliked;
+
+            // update dislikeCount
+            if (this.disliked) {
+                this.dislikeCount += 1;
+                if (this.liked) {
+                    this.likeCount -= 1;
+                }
+            }
+            else {
+                this.dislikeCount -= 1;
+            }
+            // set timeout and only send request to update backend if user has not clicked the like button for 3 seconds
+            clearTimeout(this.dislikeTimeout);
+
+            this.dislikeTimeout = setTimeout(this.updateDislike, 3000);
+        },
+        // handle updating of like status to backend
+        async updateLike() {
+            
+            // send request to update liked status
+            if (this.liked) {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/like/${this.thread._id}`, {
+                    mode: 'cors',
+                    method: 'POST',
+                    credentials: 'include'
+                }).then(async (res) => {
+                    if (res.status == 201) {
+                        console.log('Liked.');
+                    }
+                    else {
+                        await res.json().then(data => console.log(data));
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                });
+                if (this.disliked){
+                    this.disliked = false;
+                    this.updateDislike()
+                }
+            }
+            else {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/like/${this.thread._id}`, {
+                    mode: 'cors',
+                    method: 'DELETE',
+                    credentials: 'include'
+                }).then(async (res) => {
+                    if (res.status == 204) {
+                        console.log('Removed like.');
+                    }
+                    else {
+                        await res.json().then(data => console.log(data));
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
+            
+            this.likeTimeout = null;
+        },
+        async updateDislike() {
+            
+            // send request to update liked status
+            if (this.disliked) {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/dislike/${this.thread._id}`, {
+                    mode: 'cors',
+                    method: 'POST',
+                    credentials: 'include'
+                }).then(async (res) => {
+                    if (res.status == 201) {
+                        console.log('Disiked.');
+                    }
+                    else {
+                        await res.json().then(data => console.log(data));
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                });
+                if (this.liked){
+                    this.liked = false;
+                    this.updateLike()
+                }
+            }
+            else {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/dislike/${this.thread._id}`, {
+                    mode: 'cors',
+                    method: 'DELETE',
+                    credentials: 'include'
+                }).then(async (res) => {
+                    if (res.status == 204) {
+                        console.log('Removed dislike.');
+                    }
+                    else {
+                        await res.json().then(data => console.log(data));
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
+            
+            this.likeTimeout = null;
+        },
+        // complete updateLike request if pending
+        completeLikeRequest() {
+            if (this.likeTimeout) {
+                clearTimeout(this.likeTimeout);
+                this.updateLike();
+            }
+        },
     },
 }
 
@@ -210,6 +327,10 @@ export default {
 
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
+.like-thread.liked .material-symbols-outlined {
+    color: red Im !important;
+    font-variation-settings: 'FILL' 1;
+}
 .reactionContainer {
     display: inline-block;
 }
