@@ -136,7 +136,7 @@ textarea{
 </style>
 
 <script>
-import AddInterestButton from '../../components/profile/AddInterestButton.vue'
+import AddInterestButton from '../../components/general/AddInterestButton.vue'
 export default {
     components: {
        AddInterestButton,

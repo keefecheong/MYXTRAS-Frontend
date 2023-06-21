@@ -101,7 +101,7 @@ import profilePicture from '../../assets/NgeeAnnLogo.png';
 import banner from '../../assets/CustomBanner.png';
 import BlogLayout from '../../components/blog/BlogLayout.vue';
 import BlogCreateLayout from '../../components/blog/BlogCreateLayout.vue';
-import InterestBadgeList from '../../components/profile/InterestBadgeList.vue';
+import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
 
 export default {
     components: {

@@ -349,7 +349,7 @@ import BlogCommentLayout from './BlogCommentLayout.vue';
 import calcDateDifference from '../../utils/general/calcDateDifference.js';
 import BlogEditLayout from './BlogEditLayout.vue';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
-import InterestBadgeList from '../profile/InterestBadgeList.vue';
+import InterestBadgeList from '../general/InterestBadgeList.vue';
 
 export default {
     data() {

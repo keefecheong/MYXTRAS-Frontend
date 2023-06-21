@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import AddInterestButton from '../profile/AddInterestButton.vue';
+import AddInterestButton from '../general/AddInterestButton.vue';
 import { useBlogStore } from '../../stores/BlogStore';
 import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';

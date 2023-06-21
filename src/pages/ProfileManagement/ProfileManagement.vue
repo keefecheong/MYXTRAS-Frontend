@@ -77,7 +77,7 @@
   
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue'
-import AddInterestButton from '../../components/profile/AddInterestButton.vue'
+import AddInterestButton from '../../components/general/AddInterestButton.vue'
 import ngeeann from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
 import Cropper from 'cropperjs';

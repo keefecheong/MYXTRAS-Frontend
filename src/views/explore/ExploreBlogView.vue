@@ -52,7 +52,7 @@
 <script>
 import BlogExploreLayout from '../../components/blog/BlogExploreLayout.vue';
 import ExploreSingleBlogLayout from '../../components/blog/ExploreSingleBlogLayout.vue';
-import InterestBadgeList from '../../components/profile/InterestBadgeList.vue';
+import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
 import handleInterestSelected from '../../utils/general/defaultInterestSelectedCallback.js';
 
 export default {
