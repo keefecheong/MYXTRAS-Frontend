@@ -6,49 +6,49 @@
                 <div id="left-content" class="col-md-9">
                     <div class="banner">
                         <img :src="banner" alt="Banner" id="banner-picture" />
-                    </div>
+                    </div>                    
+                    
+                    <div id="header-content">
+                        <div id="header-user-details-container">
+                            <img :src="profilePicture" alt="Profile Picture" id="profile-picture" />
 
-                    <div class="image-container">
-                        <img :src="profilePicture" alt="Profile Picture" id="profile-picture" />
-                    </div>
+                            <div id="header-user-details">
+                                <div id="header-user-name">
+                                    <span id="user-realname">{{ realname }}</span>
+                                    <span id="user-username">@{{ username }}</span>
+                                </div>
 
+                                <div id="header-user-school">
+                                    <span>From the</span>
+                                    <span id="user-school">School of {{ school }} - Diploma in {{ course }}</span>
+                                </div>
+                                
+                                <div id="header-user-biography">
+                                    <span>About me:</span>
+                                    <span id="user-biography" v-if="biography != ''">{{ biography }}</span>
+                                </div>
 
-                    <div id="header-content" class="row">
-                        <div class="col-md-8" style="margin-top: 30px;">
-                            <h1 id="Name" style="display: inline;">{{ realname }}</h1>
-                            <p style="display: inline-block; margin-left: 20px; font-size: 20px;">@{{ username }}</p>
-                            <p style="margin-left: 200px;">School of {{ school }} - Diploma in {{ course }}</p>
-                            <p style="margin-left: 200px;">{{ biography }}</p>
-                            <button v-if="selectedOption.length > 0"
-                                :class="[getBadgeClass(selectedOption[0]), { 'selected': selectedButton === selectedOption[0] }]"
-                                type="button" id="interest-badge" style="margin-left: 200px;">
-                                {{ selectedOption[0] }}
-                            </button>
-                            <button v-for="option in selectedOption.slice(1)"
-                                :class="[getBadgeClass(option), { 'selected': selectedButton === option }]" type="button"
-                                id="interest-badge">{{ option }}</button>
-                            <!-- <span class="badge bg-primary" id="interest-badge" style="margin-left: 200px">
-                                {{ interests[0].label }}
-                            </span>
-                            <span v-for="interest in interests.slice(1)" :key="interest.label" :class="`badge ${interest.class}`" id="interest-badge">
-                                {{ interest.label }}
-                            </span> -->
+                                <div id="header-user-interests">
+                                    <span>Interested in: </span>
+                                    <InterestBadgeList :selectedOption="selectedOption" :selection="false" />
+                                </div>
+                            </div>
+                            
                         </div>
 
-                        <div class="col-md-2 offset-md-2" style="margin-top: 30px;">
+                        <div id="header-user-actions">
                             <a href="/profileManagement.html">
-                                <h3 style="margin-left: 100px; color: black;"><i class="bi bi-pencil"></i></h3>
+                                <span id="user-edit-icon" class="bi bi-pencil"></span>
                             </a>
 
-                            <div id="signOutContainer"
-                                style="display: flex; align-items: center; margin-left: 50px; margin-top: 31px; color: #dd1217"
-                                @click="signOut()">
-                                <h6><i class="bi bi-box-arrow-right" style="margin-left: 2px;"></i></h6>
-                                <h6 style="margin-left: 15px; margin-top:-1px;"><b>Sign out</b></h6>
+                            <div id="sign-out-container" @click="signOut()">
+                                <span id="user-sign-out-icon" class="bi bi-box-arrow-right"></span>
+                                <span id="user-sign-out-text">Sign out</span>
                             </div>
                         </div>
-
                     </div>
+
+                    <div id="header-content-border-bottom"></div>
 
                     <div id="user-blog-container">
                         <BlogLayout v-for="blog in blogs" :blog="blog" />
@@ -101,6 +101,7 @@ import profilePicture from '../../assets/NgeeAnnLogo.png';
 import banner from '../../assets/CustomBanner.png';
 import BlogLayout from '../../components/blog/BlogLayout.vue';
 import BlogCreateLayout from '../../components/blog/BlogCreateLayout.vue';
+import InterestBadgeList from '../../components/profile/InterestBadgeList.vue';
 
 export default {
     components: {
@@ -108,7 +109,8 @@ export default {
         SubscribedForums,
         CreatedForums,
         BlogLayout,
-        BlogCreateLayout
+        BlogCreateLayout,
+        InterestBadgeList
     },
     data() {
         return {
@@ -120,11 +122,6 @@ export default {
             school: '',
             course: '',
             selectedOption: [],
-            interests: [
-                { label: 'Kpop', class: 'bg-primary' },
-                { label: 'Games', class: 'bg-secondary' },
-                { label: 'Technology', class: 'bg-success' }
-            ],
             blogs: [],
             followers: [
                 { username: 'John', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png' },
@@ -185,7 +182,6 @@ export default {
                 });
         },
         signOut() {
-            console.log("1")
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/remove`, {
                 method: 'GET',
                 mode: "cors",
@@ -198,10 +194,6 @@ export default {
                     console.log(response)
                 }
             });
-        },
-
-        getBadgeClass(option) {
-            return 'badge badge-' + option.toLowerCase();
         },
 
         // get user's posts
@@ -231,10 +223,6 @@ export default {
 <style>
 @import url('../../styles/main.css');
 
-#signOutContainer:hover {
-    cursor: pointer !important;
-}
-
 .banner {
     display: flex;
     flex-direction: column;
@@ -257,37 +245,89 @@ export default {
 }
 
 #profile-picture {
-    margin: 30px auto;
-    text-align: center;
-    display: block;
-    margin-top: 78px;
-    margin-left: 30px;
     border-radius: 50%;
-    border: none;
-    height: 142px;
-    width: 142px;
+    height: var(--profile-pic-size);
+    width: var(--profile-pic-size);
     position: absolute;
-    top: 30px;
+    top: -40%;
 }
 
-#Name {
+#header-user-name {
     display: flex;
-    justify-content: center;
-    margin-left: 200px;
+    flex-direction: row;
+    column-gap: 15px;
+    align-items: baseline;
+}
+
+#user-realname {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+#user-username {
+    font-size: 20px;
 }
 
 #header-content {
     height: fit-content;
     width: 100%;
-    margin-left: 0px;
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    padding: 30px;
 }
 
-#interest-badge {
-    margin: 5px;
-    margin-right: 20px;
-    padding: 10px 15px;
-    border: none;
+#header-user-details-container {
+    --profile-pic-size: 170px;
+    flex: 1 0 auto;
+    position: relative;
+}
+
+#header-user-details {
+    margin-left: calc(var(--profile-pic-size) + 40px);
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+#header-user-school, #header-user-biography, #header-user-interests {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
+}
+
+#user-school, #user-biography {
+    font-style: italic;
+}
+
+#header-user-actions {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    align-items: center;
+}
+
+#sign-out-container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+}
+
+#user-sign-out-icon, #user-sign-out-text {
+    color: #dd1217;
+    font-size: 1.2rem;
+}
+
+#user-edit-icon {
+    font-size: 2rem;
+    color: black;
+}
+
+#header-content-border-bottom {
+    width: 80%;
+    border-bottom: 1px solid lightgray;
+    margin: 0 auto;
+    margin-bottom: 30px;
 }
 
 #user-blog-container {
@@ -311,7 +351,6 @@ export default {
     margin-right: 20px;
     margin-top: 15px;
     border-radius: 50%;
-
 }
 
 .follower-username {
@@ -340,7 +379,6 @@ export default {
     margin-top: -20px;
     font-weight: Quicksand;
     font-weight: medium;
-
 }
 
 #main-container {
@@ -376,37 +414,5 @@ export default {
 
 .plus-icon {
     font-size: 24px;
-}
-
-.badge-kpop {
-    background-color: #FF7BE2;
-}
-
-.badge-games {
-    background-color: #6FE5FF;
-}
-
-.badge-technology {
-    background-color: #6FFFA8;
-}
-
-.badge-sports {
-    background-color: #FFE27B;
-}
-
-.badge-dancing {
-    background-color: #7B88FF;
-}
-
-.badge-jpop {
-    background-color: #FFAB6F;
-}
-
-.badge-coding {
-    background-color: #6F74FF;
-}
-
-.badge-lifestyle {
-    background-color: #FC5454;
 }
 </style>

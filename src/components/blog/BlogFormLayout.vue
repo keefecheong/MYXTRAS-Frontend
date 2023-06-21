@@ -42,7 +42,8 @@
                 <span>Selected ({{ files.length }}):</span>
                 <div v-for="(link, index) in selectedLinks" class="preview-image-container">
                     <img :src="link" />
-                    <span>{{ files[index].name }} ({{ calculateSize(files[index].size) }})</span>
+                    <span class="hide-overflow-text">{{ files[index].name }}</span>
+                    <span>({{ calculateSize(files[index].size) }})</span>
                 </div>
             </div>
         </div>
@@ -63,8 +64,9 @@
         <div class="image-options-container">
             <label for="image-tags" id="tags-title" class="image-options-label">Tags:</label>
             <div id="image-tags-selection">
-                <AdditionButton :tags="selectedOption"/>
-
+                <AddInterestButton :selectedOption="tags" @selectedInterests="handlePostTags">
+                    Select Tags For Your Post (Optional):
+                </AddInterestButton>
             </div>
         </div>
 
@@ -94,14 +96,14 @@
 </template>
 
 <script>
-import AdditionButton from '../../components/profile/AdditionButton.vue';
+import AddInterestButton from '../profile/AddInterestButton.vue';
 import { useBlogStore } from '../../stores/BlogStore';
 import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 
 export default {
     components: {
-        AdditionButton,
+        AddInterestButton,
         LoadingOverlay
     },
     data() {
@@ -126,8 +128,7 @@ export default {
         }
     },
     props: [
-        'editMode',
-        'windowLocation'
+        'editMode'
     ],
     emits: [
         'close-image-form'
@@ -158,27 +159,16 @@ export default {
 
             // if in edit mode, check if user changed any fields
             if (this.editMode) {
-                console.log(this.caption)
-                console.log(this.blog.caption)
-                console.log(this.location)
-                console.log(this.blog.location)
-                console.log(this.commentsEnabled)
-                console.log(this.blog.comments_enabled)
                 let fieldsChanged = false;
                 const captionSame = this.caption == (this.blog.caption || '');
                 const locationSame = this.location == (this.blog.location || '');
                 const commentsEnabledSame = this.commentsEnabled == this.blog.comments_enabled;
+                const tagsSame = this.tags == this.blog.tags;
 
-                console.log(captionSame)
-                console.log(locationSame)
-                console.log(commentsEnabledSame)
-
-                if (!(captionSame && locationSame && commentsEnabledSame)) {
+                // if any field is changed continue to update
+                if (!(captionSame && locationSame && commentsEnabledSame && tagsSame)) {
                     fieldsChanged = true;
                 }
-
-                console.log(fieldsChanged)
-                console.log(this.fileUpdated)
 
                 // if user did not change any fields or files selected then do nothing
                 if (!fieldsChanged && !this.fileUpdated) {
@@ -223,9 +213,14 @@ export default {
                 formData.append('noFilesChanged', true);
             }
 
+            // add other fields' data to formData
             formData.append('caption', this.caption);
             formData.append('location', this.location);
             formData.append('commentsEnabled', this.commentsEnabled);
+
+            for (let i = 0; i < this.tags.length; i++) {
+                formData.append('tags', this.tags[i]);
+            }
 
             // send request to backend server with data
             const options = {
@@ -251,11 +246,7 @@ export default {
 
                     res.json().then((data) => {
                         alert(data.message);
-
-                        // return to original location if from edit mode
-                        if (this.editMode) {
-                            location.href = this.windowLocation;
-                        }
+                        location.reload();
                     });
                 }).catch((error) => {
                     console.log(error);
@@ -339,15 +330,13 @@ export default {
             await this.downloadExistingImages();
             
             // update other attributes of the blog
-            if (this.blog.caption) {
-                this.caption = this.blog.caption;
-            }
+            this.caption = this.blog.caption || '';
 
-            if (this.blog.location) {
-                this.location = this.blog.location;
-            }
+            this.location = this.blog.location || '';
 
             this.commentsEnabled = this.blog.comments_enabled;
+
+            this.tags = this.blog.tags ? [...this.blog.tags] : [];
 
             this.dataInitialized = true;
         },
@@ -377,6 +366,10 @@ export default {
             await Promise.all(imagePromises).catch((error) => {
                 console.log(error);
             });
+        },
+        // handle selection of interest tags
+        handlePostTags(newTags) {
+            this.tags = newTags;
         }
     },
     computed: {
@@ -393,13 +386,6 @@ export default {
 </script>
 
 <style>
-#custom-btn {
-    width: fit-content !important;
-    height: fit-content !important;
-    margin-left: 0 !important;
-    margin-top: 5px !important;
-}
-
 .form-header {
     align-items: center;
     margin-bottom: 1rem;
@@ -420,7 +406,8 @@ export default {
     text-align: center;
     background-color: #133B5B;
     color: white;
-    width: 35%;
+    width: 60%;
+    max-width: 80%;
     max-height: 90%;
     position: relative;
     overflow: auto;
@@ -436,7 +423,7 @@ export default {
     border-width: 1px;
     border-radius: 10px;
     padding: 10px;
-    width: 80% !important;
+    width: 80%;
     height: fit-content;
     display: grid;
     row-gap: 10px;
@@ -485,9 +472,11 @@ export default {
 
 #image-caption, #image-location, #image-tags-selection, #image-comments-options {
     width: 100%;
+}
+
+#image-caption, #image-location {
     border-radius: 10px;
-    padding: 15px;
-    font-size: 14px;
+    padding: 5px;
     resize: none;
 }
 
@@ -501,6 +490,7 @@ export default {
     height: 2em;
     padding: 0;
     position: relative;
+    font-size: 0.8em;
 }
 
 /* Hide default HTML checkbox */

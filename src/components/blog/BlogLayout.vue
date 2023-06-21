@@ -19,9 +19,18 @@
                 </div>
             </div>
 
-            <!-- location -->
-            <div class="blog-location" v-if="blog.location">
-                <span>At {{ blog.location }}</span>
+            <!-- tags and location -->
+            <div 
+                class="blog-tags-and-location"
+                :class="{
+                    'location-only': !hasTags,
+                    'tag-only': !blog.location,
+                    'tag-and-location': hasTags && blog.location
+                }"
+                v-if="showHeaderSecondRow"
+            >
+                <InterestBadgeList v-if="hasTags" :selectedOption="blog.tags" :selection="false" :maxWidth="'30%'" class="blog-tags" />
+                <span v-if="blog.location" class="blog-location hide-overflow-text" :title="blog.location">At {{ blog.location }}</span>
             </div>
         </div>
 
@@ -117,7 +126,6 @@
     <BlogEditLayout 
         v-if="editMode"
         @close-edit-blog="exitEditPost"
-        :location="currentLocation"
     />
 </template>
 
@@ -144,6 +152,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    row-gap: 10px;
 }
 
 .blog-header > div {
@@ -169,9 +178,20 @@
     max-width: 30%;
 }
 
-.blog-location {
-    display: flex;
+.blog-tags-and-location.location-only {
     justify-content: end;
+}
+
+.blog-tags-and-location.tag-only {
+    justify-content: start;
+}
+
+.blog-tags-and-location.tag-and-location {
+    justify-content: space-between;
+}
+
+.blog-location {
+    max-width: 60%;
 }
 
 .blog-caption {
@@ -329,6 +349,7 @@ import BlogCommentLayout from './BlogCommentLayout.vue';
 import calcDateDifference from '../../utils/general/calcDateDifference.js';
 import BlogEditLayout from './BlogEditLayout.vue';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
+import InterestBadgeList from '../profile/InterestBadgeList.vue';
 
 export default {
     data() {
@@ -355,7 +376,8 @@ export default {
         RouterLink,
         BlogCommentLayout,
         BlogEditLayout,
-        LoadingOverlay
+        LoadingOverlay,
+        InterestBadgeList
     },
     props: [
         'blog'
@@ -601,18 +623,22 @@ export default {
         }
     },
     computed: {
-        // get current path for redirection
-        currentLocation() {
-            return window.location.pathname;
-        },
         // generate tooltip text for comment button
         commentTitle() {
             if (this.blog.comments_enabled) {
                 return this.showComments ? 'Hide comments' : 'Show comments';
             }
             else {
-                return 'Comments disbled for this post';
+                return 'Comments disabled for this post';
             }
+        },
+        // check if the blog has tags
+        hasTags() {
+            return this.blog.tags && this.blog.tags.length > 0;
+        },
+        // check if the blog has tags or location to decide whether to show this part of the header
+        showHeaderSecondRow() {
+            return this.hasTags || this.blog.location;
         }
     }
 }

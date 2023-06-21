@@ -11,7 +11,7 @@
                         <textarea placeholder="Bio (Max 500 characters)" id="bioField" style="appearance: none;" v-model="biography" @input="limitCharacters"></textarea>
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
-                            <AdditionButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
+                            <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
                         </div>
                         
                         <select v-model="selectedSchool" :required="!showPopup">
@@ -136,10 +136,10 @@ textarea{
 </style>
 
 <script>
-import AdditionButton from '../../components/profile/AdditionButton.vue'
+import AddInterestButton from '../../components/profile/AddInterestButton.vue'
 export default {
     components: {
-       AdditionButton,
+       AddInterestButton,
   },
 
     data() {
