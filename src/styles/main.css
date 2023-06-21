@@ -17,22 +17,22 @@
     height: 10px;
   }
   
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
-    border-radius: 15px;
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: var(--dark);
-    border-radius: 15px;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary);
-  }
+/* Track */
+::-webkit-scrollbar-track {
+background: #f1f1f1; 
+border-radius: 15px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: var(--dark);
+border-radius: 15px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: var(--secondary);
+}
 body {
     font-family: 'Quicksand' !important;
     font-size: calc(.5em + 0.5vw) !important;
@@ -46,6 +46,27 @@ body {
     text-align: center;
 }
 
+.white-btn {
+    display: grid;
+    background-color: white;
+    border: white solid 3.5px;
+    border-radius: 10px;
+    height: 3rem;
+    width: 8.5rem;
+    place-items: center;
+    transition: all 0.3s;
+    margin-bottom: 5%;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.white-btn:hover {
+    background-color: transparent;
+    color: white;
+    border: white solid 3.5px;
+    cursor: pointer;
+    font-weight: bold;
+}
 .card-title {
     font-size: 2rem;
     text-align: center;

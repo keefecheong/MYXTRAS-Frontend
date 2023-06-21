@@ -35,6 +35,9 @@
             </div>
             <div id="white-container" class="row">
                 <div class="col-md-8 offset-md-1">
+                    <div class="card shadow" style="text-align: center; padding-top: 5vh;" v-if="threads.length === 0">
+                        <p>No threads found, <a id="noThreadCreateBtn" @click="showCreateThread">create</a> one now!</p>
+                    </div>
                     <threadLayout :threads="threads"/>
                 </div>
                 <div class="col-md-3">
@@ -43,8 +46,8 @@
             </div>
             <div class="row">
                 <div class="createThread-container center-align" v-if="showPopUp">
-                    <span class="material-symbols-outlined" @click="showCreateThread">back</span>
                     <div class="popup-content">
+                    <span class="material-symbols-outlined" @click="showCreateThread">arrow_back</span>
                         <div class="row"> 
                             <div class="col-3">
                             </div>
@@ -68,7 +71,7 @@
                             </div>
                             <div class="col-6 center-align">
                                 <input type="text" v-model="threadTitle" placeholder="Thread Title" required>
-                                <input type="text" v-model="threadDesc" :maxlength="500" placeholder="Thread Description" required>
+                                <textarea type="text" v-model="threadDesc" :maxlength="500" placeholder="Thread Description (optional)" ></textarea>
                                 <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
                                     <option value="" selected hidden disabled>Category</option>
                                     <option value="Sports">Sports</option>
@@ -150,7 +153,7 @@ export default {
         async createThread() {
             this.submitting = true
             // Validation
-            var threadDetails = [this.threadTitle, this.threadDesc, this.threadPicObject];
+            var threadDetails = [this.threadTitle, this.threadPicObject];
             
             if (threadDetails.some(item => item === '' || item === null)){
                 this.showErrMsg = true;
@@ -284,7 +287,13 @@ export default {
     width: 100%;
     margin: 0 !important;
 }
-
+#noThreadCreateBtn {
+    color: blue;
+}
+#noThreadCreateBtn:hover {
+    color: var(--primary);
+    cursor: pointer;
+}
 #main-container {
     margin-left: -12px;
 }
@@ -383,27 +392,6 @@ export default {
     border-radius: 50%;
 }
 
-.white-btn {
-    display: grid;
-    background-color: white;
-    border: white solid 3.5px;
-    border-radius: 10px;
-    height: 3rem;
-    width: 8.5rem;
-    place-items: center;
-    transition: all 0.3s;
-    margin-bottom: 5%;
-    text-decoration: none;
-    font-size: 1rem;
-}
-
-.white-btn:hover {
-    background-color: transparent;
-    color: white;
-    border: white solid 3.5px;
-    cursor: pointer;
-    font-weight: bold;
-}
 .subscribed {
     background-color: transparent;
     color: white;
@@ -415,7 +403,19 @@ export default {
     transition: all 0.3s;
     margin-bottom: 5%;
 }
-
+.subscribed:hover {
+    display: grid;
+    background-color: white;
+    border: white solid 3.5px;
+    color: black;
+    border-radius: 10px;
+    height: 3rem;
+    width: 8.5rem;
+    place-items: center;
+    margin-bottom: 5%;
+    text-decoration: none;
+    font-size: 1rem;
+}
 #threads{
     margin: 20px;
     margin-top: 50px;

@@ -8,17 +8,17 @@
             <div class="row">
                 <div class="col-md-3">
                    <CreatedForums />
-                   <SubscribedForums  v-on:subbedForums="retrieveRecentThreads"/>
+                   <SubscribedForums v-on:subbedForums="retrieveRecentThreads"/>
                 </div>
             
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="card shadow">
-                            <div class="center-align" style="margin: 3vh 1vh;">
-                                <p v-if="subbedForums.length === 0">No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
+                        <div class="card shadow" v-if="subbedForums.some(forum => forum.threads.length === 0)">
+                            <div class="center-align" style="margin: 3vh 0;">
+                                <p>No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
                             </div>
                         </div>
-                        <ForumLayout :subbedForums="subbedForums"/>
+                        <ForumLayout :subbedForums="subbedForums" style="margin: 3vh 0;"/>
                     </div>
                 </div>
 
@@ -28,8 +28,8 @@
             </div>
             <div class="row">
                 <div class="createForum-container center-align" v-if="showPopUp">
-                    <span class="material-symbols-outlined" @click="openPopUp">back</span>
                     <div class="popup-content">
+                        <span class="material-symbols-outlined" @click="openPopUp">arrow_back</span>
                         <div class="row"> 
                             <div class="col-3">
                             </div>
@@ -65,7 +65,7 @@
                                 <input type="text" v-model="forumID" @input="checkForumId" placeholder="Community ID: x/" required>
                                 <p v-if="duplicateID"></p>
                                 <input type="text" v-model="forumName" placeholder="Community Name:" required>
-                                <input type="text" v-model="forumDesc" :maxlength="500" placeholder="Community Description" required>
+                                <textarea type="text" v-model="forumDesc" :maxlength="500" placeholder="Community Description (optional)" ></textarea>
                                 <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
                                     <option value="" selected hidden disabled>Category</option>
                                     <option value="Sports">Sports</option>
@@ -258,9 +258,12 @@ export default {
         },
         retrieveRecentThreads(variable) {
             this.subbedForums = variable;
+            console.log(this.subbedForums.length)
         },
         openPopUp() {
             this.showPopUp = !this.showPopUp
+            const body = document.body;
+            body.classList.remove('disable-scroll');
         },
         selectImage(type){
             if (type === 'groupPic'){
@@ -311,7 +314,7 @@ export default {
         async createForum() {
             this.submitting = true
             // Validation
-            var forumDetails = [this.forumName, this.forumID, this.forumDesc, this.selectedCategory, this.selectedGroupPic,  this.selectedBanner];
+            var forumDetails = [this.forumName, this.forumID, this.selectedCategory, this.selectedGroupPic,  this.selectedBanner];
             if (forumDetails.some(item => item === '' || item === null)){
                 this.showErrMsg = true;
                 this.submitting = false;

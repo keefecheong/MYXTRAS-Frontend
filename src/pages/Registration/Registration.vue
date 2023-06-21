@@ -18,10 +18,11 @@
                         <form @submit.prevent="login">
                             <h1>Register Now!</h1>
                             <input v-model="emailAddress" type="email" placeholder="Email Address" id="emailField" required>
-
+                            <p class="genErr">{{ emailErr }}</p>
                             <!-- Phone Number Field -->
                             <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required>
                             <p v-if="showPhoneErr" id="phoneErr">Enter a valid phone number</p>
+                            <p class="genErr">{{ phoneErr }}</p>
                             <br>
                             <button @click="sendOTP" id="sendOtpBtn">Send OTP</button>
                             <br>
@@ -40,7 +41,7 @@
                             <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword" placeholder="Confirm Password" id="repeatPasswordField" :maxlength="20" required>
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressedrepeated': isPressedrepeated }" @click="hidePassword(2)">visibility_off</button>
                             
-                            <p v-if="registerFail" id="genErr"> {{ generalErrMsg }}</p>
+                            <p v-if="registerFail" class="genErr"> {{ generalErrMsg }}</p>
                             <button @click="registerUser()" id="registerBtn">
                                 Register
                             </button>
@@ -69,7 +70,7 @@ body {
 }
 
 #phoneErr,
-#genErr {
+.genErr {
     padding: 0 4em 0 4em;
     color: red; 
     font-weight: bold;
@@ -234,8 +235,7 @@ input:focus{
 </style>
 <script>
 import firebase from 'firebase';
-import Tooltip from 'v-tooltip';
-
+import { debounce } from 'lodash'
 export default {
     data() {
         return {
@@ -262,6 +262,80 @@ export default {
             registerFail: false,
             otpSent: false,
             verifiedotp: false,
+
+            // Error
+            emailErr: null,
+            phoneErr: null,
+            debouncedVerifyEmail: debounce(async function () {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+                body: JSON.stringify({ email: this.emailAddress })
+                });
+
+                if (response.ok) {
+                this.emailErr = null;
+                return;
+                } else if (response.status === 400) {
+                const data = await response.json();
+                if (data.error === 'Email already exists') {
+                    this.emailErr = "Email already taken";
+                    return;
+                } else {
+                    throw new Error('Error: ' + response.status);
+                }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            }, 2000),
+            debouncedVerifyPhone: debounce(async function () {
+            try {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify-phone`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+                body: JSON.stringify({ phoneNumber: this.phoneNumber })
+            });
+                if (response.ok) {
+                    this.phoneErr = null
+                    return;
+                } else if (response.status === 400){
+                    response.json().then(data => {
+                    if (data.error === 'Phone Number already exists') {
+                        this.phoneErr = "Phone Number already taken"
+                        return;
+                    }
+                    else {
+                        throw new Error('Error: ' + response.status);
+                    }
+                    });
+                    return;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            }, 2000)
+        }
+    },
+    watch: {
+        emailAddress: {
+            immediate: false,
+            handler(newVal, oldVal) {
+                this.verifyEmail();
+            }
+        },
+        phoneNumber: {
+            immediate: false,
+            handler(newVal, oldVal) {
+                this.verifyPhone();
+            }
         }
     },
     computed: {
@@ -346,7 +420,6 @@ export default {
         },
         
         //TO DO
-        // Fix +65 appearing in num field
         // Change tooltip for password
         // Fix UI
         async sendOTP(){
@@ -402,6 +475,12 @@ export default {
         filterNumber() {
             // Remove any non-numeric characters except the minus sign at the beginning
             this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
+        },
+        async verifyEmail() {
+            this.debouncedVerifyEmail.call(this)
+        },
+        async verifyPhone() {
+            this.debouncedVerifyPhone.call(this)
         },
         async registerUser() {
             if (!this.verifiedotp){
@@ -469,8 +548,6 @@ export default {
                 .catch(error => {
                     console.error('Error:', error);
                 });
-                
-            //console.log(this.userObject);
         },
         
     },

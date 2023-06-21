@@ -75,6 +75,9 @@
     margin-top: 15px;
     border-radius: 50%;
 }
+#threadGroupPic:hover{
+    cursor: pointer;
+}
 #thread-title {
     font-weight: bolder;
     font-size: larger;
@@ -84,7 +87,10 @@
     text-decoration: none;
     color: gray !important;
 }
-
+#commentsText:hover {
+    color: var(--primary) !important;
+    cursor: pointer;
+}
 .popularThreadContainer {
     display: flex;
     flex-direction: column;
@@ -210,7 +216,7 @@ export default {
             console.log(this.subbedForums)
             
             // Step 1: Retrieve the threads from the filtered forums
-
+            // Store forum details inside the thread array
             const threads = this.subbedForums.reduce((result, forum) => {
                 const threadsWithForumDetails = forum.threads.map((thread) => {
                     return {
@@ -219,8 +225,9 @@ export default {
                         forum_pic_link: forum.forum_pic_link,
                         ...thread,
                     };
-            });
-            return result.concat(threadsWithForumDetails);
+                });
+
+                return result.concat(threadsWithForumDetails);
             }, []);
             
             // Step 2: Flatten the threads array

@@ -14,7 +14,10 @@ const redirectIndexPlugin = {
             else if (req.url === '/explore.html/blogs' || req.url === '/explore.html/threads') {
                 req.url = '/explore.html';
             }
-
+            // redirect any 404 error to a custom error page (not working)
+            else if (res.statusCode === 404) {
+                req.url = '/error.html';
+            }
             next();
         })
     }

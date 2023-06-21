@@ -8,7 +8,11 @@
             <SearchResults :results="searchResults" :currentPage="currentPage"/>
         </div>
         <div v-if="currentPage === 'forums'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
-            <btn v-if="currentPage === 'forums'" id="createForumBtn" @click="sendBool">Create Community</btn>
+            <button v-if="currentPage === 'forums'" id="createForumBtn" class="white-btn" @click="sendBool">
+                Create Community
+                <span class="material-symbols-outlined" style="color: black;">add</span>
+            </button>
+            
         </div>
         <div v-if="currentPage === 'feed'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
             <!-- check for identity after authentication -->
@@ -43,17 +47,16 @@
   overflow-y: hidden;
 }
 #createForumBtn {
-    background-color: transparent;
-    padding: 1em;
-    margin-right: 8vh;
-    color: white;
-    border: 4px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2em 5em;
+    margin-top: 1vh;
+    margin-right: 5vw;
     border-radius: 10px;
 }
-#createForumBtn:hover {
-    border: 4px solid var(--dark);
-    color: var(--dark);
-    cursor: pointer;
+.button:hover .material-symbols-outlined{
+    color: white !important;
 }
 .centerElements {
     display: flex; align-items: center;
