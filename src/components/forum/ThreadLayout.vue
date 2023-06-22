@@ -2,7 +2,7 @@
     <div v-for="thread in threads">
         <div class="card shadow threadContainer">
             <div class="row">
-                <div class="col-md-1 d-flex justify-content-end">
+                <div class="col-md-1 d-flex justify-content-start">
                     <a><img id="threadGroupPic" :src="thread.creator_id.profile_pic_link" :draggable="isDraggable"></a>
                 </div>
                 <div class="col-11 threadContent">
@@ -16,7 +16,9 @@
                     </div>
                     <br>
                     <div class="d-flex justify-content-end">
-                        <a id="commentsText" @click="viewThread(thread)">View {{ thread.numOfComments }} comments</a>
+                        <RouterLink to="/thread">
+                            <a id="commentsText" @click="viewThread(thread)">View {{ thread.numOfComments }} comments</a>
+                        </RouterLink>
                     </div>
                 </div>
             </div>
@@ -148,7 +150,6 @@ export default {
     methods: {
         viewThread(thread) {
             localStorage.setItem("threadID", thread._id)
-            location.href = '/threadView.html'
         }, 
     }
 }

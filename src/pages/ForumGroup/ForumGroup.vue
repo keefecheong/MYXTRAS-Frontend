@@ -39,7 +39,10 @@
                     <div class="card shadow" style="text-align: center; padding-top: 5vh;" v-if="threads.length === 0">
                         <p>No threads found, <a id="noThreadCreateBtn" @click="showCreateThread">create</a> one now!</p>
                     </div>
-                    <threadLayout :threads="threads"/>
+                    <RouterLink to="/">
+                        <threadLayout :threads="threads"/>
+                    </RouterLink>
+                    <RouterView/>
                 </div>
                 <div class="col-md-3">
                     <recommendedForums />
