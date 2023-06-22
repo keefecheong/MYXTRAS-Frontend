@@ -363,10 +363,11 @@ export default {
 
 .groupicon {
     float:left;
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     margin-right: 20px;
     border-radius: 50%;
+    margin-top: 10px;
     object-fit: cover; /* Scale and crop the image to fit */
     object-position: center; /* Center the image within the div */
 }
