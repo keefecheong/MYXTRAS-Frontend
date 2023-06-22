@@ -5,23 +5,7 @@
     </AlertPrompt>
     
     <div id="main-container">
-        <NavSidebar/>
         <div id="main-content" v-if="contentLoaded">
-            <div class="row">
-                <div class="imageContainer">
-                    <img :src="forum.banner_link" alt="Banner" id="banner-picture"/>
-                </div>
-            </div>
-            <div class="row">
-                <div id="pink-container">
-                    <div id="image" class="col-md-1">
-                        <img class="imageIcon" :src="forum.forum_pic_link">
-                    </div>
-                    <div id="group-description" class="col-md-1">
-                        <h5 id="groupname">x/{{ forum.forumID }}</h5>
-                    </div>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-md-9">
                     <div class="card">
@@ -58,9 +42,6 @@
                         </div>
                         <hr>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <RecommendedForums />
                 </div>
             </div>
             <div class="row" v-if="!commentsLoaded">

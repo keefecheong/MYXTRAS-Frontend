@@ -21,11 +21,11 @@
                         <InterestBadgeList :selectedOption="forum.tags" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
                     </div>
                     <div class="forumOptions">
-                        <button :class="{ 'subscribed': isSubscribed, 'white-btn': !isSubscribed  }" v-if="!isCreator" @click="subscribeForum">{{ isSubscribed ? 'Unsubscribe' : 'Subscribe' }}</button>
-                        <button @click="showCreateThread" class="white-btn">Create Thread!</button>
-                        <div class="subs">
-                            <p>{{"Subscribers: " + forum.numOfSubs}}</p>
+                        <div class="forum-buttons">
+                            <button :class="{ 'subscribed': isSubscribed, 'white-btn': !isSubscribed  }" v-if="!isCreator" @click="subscribeForum">{{ isSubscribed ? 'Unsubscribe' : 'Subscribe' }}</button>
+                            <button @click="showCreateThread" class="white-btn">Create Thread!</button>
                         </div>
+                        <p class="subs">{{"Subscribers: " + forum.numOfSubs}}</p>
                     </div>
                 </div>
                 <div class="col-md-8 d-flex justify-content end">
@@ -360,6 +360,11 @@ export default {
 .forumOptions {
     float: right;
     margin-right: 40px;
+}
+
+.forum-buttons {
+    display: flex;
+    column-gap: 20px;
 }
 
 #group-description{

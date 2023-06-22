@@ -11,6 +11,7 @@ import * as directives from 'vuetify/directives'
 import { debounce } from 'lodash';
 import { createPinia } from 'pinia'
 
+
 const vuetify = createVuetify({
     components,
     directives,

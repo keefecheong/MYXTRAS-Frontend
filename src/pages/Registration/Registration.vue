@@ -24,17 +24,6 @@
                             <h1>Register Now!</h1>
                             <input v-model="emailAddress" type="email" placeholder="Email Address" id="emailField" required>
                             <p class="genErr">{{ emailErr }}</p>
-                            <!-- Phone Number Field -->
-                            <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required>
-                            <p v-if="showPhoneErr" id="phoneErr">Enter a valid phone number</p>
-                            <p class="genErr">{{ phoneErr }}</p>
-                            <br>
-                            <button @click="sendOTP" id="sendOtpBtn">Send OTP</button>
-                            <br>
-                            <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
-                            <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="6" required>
-                            <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn">Verify OTP</button>
-                            <p v-if="verifiedotp">OTP verified</p>
 
                             <!-- Password Field -->
                             <input title="Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters" :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" class="custom-input" :maxlength="20" required>
@@ -45,6 +34,16 @@
                             </div>
                             <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword" placeholder="Confirm Password" id="repeatPasswordField" :maxlength="20" required>
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressedrepeated': isPressedrepeated }" @click="hidePassword(2)">visibility_off</button>
+                            
+                            <!-- Phone Number Field -->
+                            <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required>
+                            <button @click="sendOTP" id="sendOtpBtn" class="overlay-button">Send OTP</button>
+                            <p v-if="showPhoneErr" id="phoneErr">Enter a valid phone number</p>
+                            <p class="genErr">{{ phoneErr }}</p>
+                            <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="6" required>
+                            <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn" class="overlay-button">Verify OTP</button>
+                            <p v-if="verifiedotp">OTP verified</p>
+                            <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
                             
                             <p v-if="registerFail" class="genErr"> {{ generalErrMsg }}</p>
                             <button @click="registerUser()" id="registerBtn">
@@ -106,8 +105,7 @@ h1 {
     text-align: center;
 
 }
-#ngeeAnnBanner,
-.whitebox {
+#ngeeAnnBanner, .whitebox {
     display:inline-block;
     width:50%;  
     vertical-align:middle;
@@ -116,15 +114,15 @@ h1 {
 input[type=text],
 input[type=password],
 input[type=email] {
-  border: none;
-  border-bottom: 2px solid transparent;
-  background-image: linear-gradient(45deg,#FF6363, var(--primary));
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  background-size: 100% 2px;
-  margin-bottom: 30px;
-  width: 80%;
-  padding-bottom: 10px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background-image: linear-gradient(45deg,#FF6363, var(--primary));
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 2px;
+    margin-bottom: 30px;
+    width: 80%;
+    padding-bottom: 10px;
 }
 input:focus{
     background-size: 0% 2px;
@@ -138,6 +136,7 @@ input:focus{
     margin-top: calc(.5em + 0.1vw);
     border: none;
     background: linear-gradient(45deg,#FF6363, var(--primary));
+    transform: translateX(-3.3rem);
 }
 #sendOtpBtn:hover {
     background: transparent;
@@ -165,9 +164,14 @@ input:focus{
     border: solid;
     border-color: var(--primary);
 }
-#passwordField, #repeatPasswordField {
-    transform: translatex(2.7vh);
+#passwordField, #repeatPasswordField{
+    transform: translatex(1.4vh);
 }
+
+#numberField, #otpField {
+    transform: translatex(5.5vh);
+}
+
 .overlay-button {
     border: none;
     transform: translateX(-100%);
@@ -244,6 +248,7 @@ import firebase from 'firebase';
 import { debounce } from 'lodash';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
 
 export default {
     data() {
@@ -399,7 +404,7 @@ export default {
                 // Send otp using Firebase
                 this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
                 this.recaptchaVerifier.render().then((widgetId)=>{
-                this.recaptchaWidgetId = widgetId    
+                    this.recaptchaWidgetId = widgetId    
                 })
                 
                 var phoneNum = "+65" + this.phoneNumber;

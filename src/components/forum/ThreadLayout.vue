@@ -2,15 +2,15 @@
     <div v-for="thread in threads">
         <div class="card shadow threadContainer">
             <div class="row">
-                <div class="col-md-2 d-flex justify-content-end">
+                <div class="col-md-1 d-flex justify-content-end">
                     <a><img id="threadGroupPic" :src="thread.creator_id.profile_pic_link" :draggable="isDraggable"></a>
                 </div>
-                <div class="col-10 threadContent">
+                <div class="col-11 threadContent">
                     <p id="meta">{{ "Posted by: @" + thread.creator_id.username }}</p>  
                     <p id="thread-title">{{ thread.thread_title }}</p>  
                     <p id="thread-description">{{ thread.thread_desc }}</p>
                     <InterestBadgeList :selectedOption="thread.tags" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
-
+                    <br>
                     <div class="imageContainer">
                         <img id="threadPic" :src="thread.content_links[0]" :draggable="isDraggable">
                     </div>
@@ -41,8 +41,9 @@
     border-style: solid 1rem;
     margin: auto;
 }
+
 .threadContainer {
-    padding: 2em 3em 1em 3em !important;
+    padding: 2em 3em 1em 3em;
 
 }
 .threadContent {
@@ -53,6 +54,8 @@
 }
 #meta {
     font-size: small;
+    margin-top: 13px;
+    margin-bottom: 5px;
 }
 .groupPic {
     overflow: hidden;
@@ -70,10 +73,12 @@
     height: 10vh;
     margin-top: 15px;
     border-radius: 50%;
+    border: #133B5B solid 1px;
 }
 #thread-title {
     font-weight: bolder;
     font-size: larger;
+    margin-bottom: 5px;
 }
 #commentsText {
     margin: 1em 0 0.5em 0;
