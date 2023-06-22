@@ -36,6 +36,8 @@
 
 <script>
 import calcDateDifference from '../../utils/general/calcDateDifference.js';
+import { useAlertStore } from '../../stores/AlertStore.js';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
 
 export default {
     data() {
@@ -55,7 +57,7 @@ export default {
     methods: {
         // handle delete comment
         async deleteComment() {
-            const confirmDelete = confirm('Are you sure you want to delete this comment?\n\nNote: This action is irreversible!');
+            const confirmDelete = await useConfirmStore().confirm('Are you sure you want to delete this comment? This action is irreversible!');
             
             if (!confirmDelete) {
                 return;
@@ -66,12 +68,12 @@ export default {
                 method: 'DELETE',
                 credentials: 'include'
             }).then(async (res) => {
-                await res.json().then((data) => {
+                await res.json().then(async(data) => {
                     if (res.status == 200) {
                         this.deleted = true;
                     }
 
-                    alert(data.message);
+                    await useAlertStore().alert(data.message);
                     this.$emit('commentDeleted', this.comment._id);
                 });
             }).catch((error) => {

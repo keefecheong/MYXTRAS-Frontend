@@ -1,4 +1,9 @@
 <template>
+
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
+    
     <div id="main-container">
         <div id="main-content">
             <div class="row">
@@ -165,64 +170,87 @@ input:focus{
   }
 }
 </style>
-<script>
-export default {
-        data() {
-            return {
-                isDraggable: false,
-                isPressed: false,
-                emailAddress: '',
-                password: '',
-                showPassword: false,
-            }
-        },
-        methods: {
-            hidePassword() {
-                this.showPassword = !this.showPassword;
-                this.isPressed = !this.isPressed;
-            },
-            async loginUser(){
-                var credentialList = [this.emailAddress, this.password];
-                console.log(this.password);
-                if (credentialList.some(item => item === null)){
-                    alert("Please enter all fields");
-                    return;
-                }
-                else {
-                    this.userObject = {
-                    'emailAddress': this.emailAddress,
-                    'password': this.password
-                    }
-                }
 
-                try {
-                    const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/login`, {
+<script>
+import { useAlertStore } from '../../stores/AlertStore.js';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
+
+export default {
+    data() {
+        return {
+            isDraggable: false,
+            isPressed: false,
+            emailAddress: '',
+            password: '',
+            showPassword: false,
+            alertStore: useAlertStore(),
+            alert: useAlertStore().alert
+        }
+    },
+    components: {
+        AlertPrompt
+    },
+    methods: {
+        hidePassword() {
+            this.showPassword = !this.showPassword;
+            this.isPressed = !this.isPressed;
+        },
+        async loginUser(){
+            var credentialList = [this.emailAddress, this.password];
+            console.log(this.password);
+            if (credentialList.some(item => item === null)){
+                await this.alert("Please enter all fields");
+                return;
+            }
+            else {
+                this.userObject = {
+                'emailAddress': this.emailAddress,
+                'password': this.password
+                }
+            }
+
+            try {
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json; charset=UTF-8'
                     },
                     credentials: 'include',
                     body: JSON.stringify(this.userObject)
-                    });
+                });
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('Success:', data);
-                        window.location = '/feed.html';
-                    } else {
-                        const errorData = await response.json();
-                        console.error('Error:', errorData.message);
-                        // Display the error message on the frontend
-                        alert(errorData.message);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    // Display a generic error message on the frontend
-                    alert('An error occurred. Please try again later.');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Success:', data);
+                    window.location = '/feed.html';
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error:', errorData.message);
+                    // Display the error message on the frontend
+                    await this.alert(errorData.message);
                 }
+            } catch (error) {
+                console.error('Error:', error);
+                // Display a generic error message on the frontend
+                await this.alert('An error occurred. Please try again later.');
             }
+        },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        }
+    },
+    computed: {
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
         }
     }
+}
     
 //document.getElementById('ngeeAnnBanner').setAttribute('draggable', false);
 </script>

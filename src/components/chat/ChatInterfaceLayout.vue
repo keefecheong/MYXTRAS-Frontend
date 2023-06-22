@@ -114,11 +114,12 @@
 
 <script>
 import ChatMessageLayout from './ChatMessageLayout.vue';
-import { useChatStore } from '../../stores/ChatStore';
+import { useChatStore } from '../../stores/ChatStore.js';
 import { socket } from '../../utils/chat/chatSocket.js';
 import ObjectID from 'bson-objectid';
 import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
+import { useAlertStore } from '../../stores/AlertStore.js';
 
 export default {
     data() {
@@ -139,7 +140,8 @@ export default {
             file: {},
             error: '',
             selectedLink: '',
-            uploadingFile: false
+            uploadingFile: false,
+            alert: useAlertStore().alert
         }
     },
     props: [
@@ -185,14 +187,14 @@ export default {
             else {
                 // if no file is selected do nothing
                 if (!this.fileSelected) {
-                    alert('No file selected.');
+                    await this.alert('No file selected.');
 
                     return;
                 }
 
                 // if there are any errors do nothing
                 if (this.invalidFile) {
-                    alert('Invalid file selected.');
+                    await this.alert('Invalid file selected.');
 
                     return;
                 }
@@ -219,11 +221,11 @@ export default {
                     newMessage.original_name = this.file.name;
                     newMessage.file_type = this.file.type;
 
-                    alert('File upload successful');
+                    await this.alert('File upload successful');
                 }
                 // otherwise tell user file upload failed and return
                 else {
-                    alert('File upload failed.');
+                    await this.alert('File upload failed.');
 
                     return;
                 }
@@ -447,7 +449,7 @@ export default {
                 credentials: 'include',
                 mode: 'cors'
             }).then(async (res) => {
-                await res.json().then((data) => {
+                await res.json().then(async (data) => {
                     if (data.messages) {
                         if (data.messages.length > 0) {
                             // if there are more history messages
@@ -457,7 +459,7 @@ export default {
                         else {
                             // if there are no more history messages then tell user no more messages found
                             // TODO: update UI (set up dialog box component and display messages)
-                            alert('No more messages found.');
+                            await this.alert('No more messages found.');
                         }
                     }
                     else {

@@ -1,4 +1,12 @@
 <template>
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
+
+    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+        {{ confirmMsg }}
+    </ConfirmPrompt>
+
     <div id="main-container">
         <NavSidebar/>
         
@@ -54,17 +62,25 @@
 import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
 import BlogLayout from '../../components/blog/BlogLayout.vue';
+import { useAlertStore } from '../../stores/AlertStore.js';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 
 export default {
     data() {
         return {
-            blogs: []
+            blogs: [],
+            alertStore: useAlertStore(),
+            confirmStore: useConfirmStore()
         }
     },
     components: {
         NavSidebar,
         SearchBar,
-        BlogLayout
+        BlogLayout,
+        AlertPrompt,
+        ConfirmPrompt
     },
     created() {
         // populate blog data once created
@@ -84,6 +100,32 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
+        },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        },
+        // to close confirm prompt
+        closeConfirm(decision) {
+            this.confirmStore.closeConfirm(decision);
+        }
+    },
+    computed: {
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
+        },
+        // to get showConfirm value
+        showConfirm() {
+            return this.confirmStore.showConfirm;
+        },
+        // to get confirmMsg value
+        confirmMsg() {
+            return this.confirmStore.confirmMsg;
         }
     }
 }

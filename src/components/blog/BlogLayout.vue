@@ -29,7 +29,7 @@
                 }"
                 v-if="showHeaderSecondRow"
             >
-                <InterestBadgeList v-if="hasTags" :selectedOption="blog.tags" :selection="false" :maxWidth="'30%'" class="blog-tags" />
+                <InterestBadgeList v-if="hasTags" :selectedOption="blog.tags" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
                 <span v-if="blog.location" class="blog-location hide-overflow-text" :title="blog.location">At {{ blog.location }}</span>
             </div>
         </div>
@@ -350,6 +350,8 @@ import calcDateDifference from '../../utils/general/calcDateDifference.js';
 import BlogEditLayout from './BlogEditLayout.vue';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import InterestBadgeList from '../general/InterestBadgeList.vue';
+import { useAlertStore } from '../../stores/AlertStore.js';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
 
 export default {
     data() {
@@ -370,7 +372,9 @@ export default {
             liked: false,
             likeTimeout: null,
             likeCount: 0,
-            editMode: false
+            editMode: false,
+            alert: useAlertStore().alert,
+            confirm: useConfirmStore().confirm
         }; 
     },
     components: {
@@ -527,7 +531,7 @@ export default {
         // handle deleting post
         async deletePost() {
             // ask for confirmation
-            const confirmDelete = confirm('Are you sure you want to delete this post?\n\nNote: This action is irreversible!');
+            const confirmDelete = await this.confirm('Are you sure you want to delete this post? This action is irreversible!');
 
             if (!confirmDelete) {
                 return;
@@ -538,12 +542,12 @@ export default {
                 method: 'DELETE',
                 credentials: 'include'
             }).then(async (res) => {
-                await res.json().then((data) => {
+                await res.json().then(async (data) => {
                     if (res.status == 200) {
                         this.deleted = true;
                     }
 
-                    alert(data.message);
+                    await this.alert(data.message);
                 });
             }).catch((error) => {
                 console.log(error);
@@ -606,9 +610,9 @@ export default {
                 },
                 credentials: 'include'
             }).then(async (res) => {
-                await res.json().then((data) => {
+                await res.json().then(async (data) => {
                     this.submittingComment = false;
-                    alert(data.message);
+                    await this.alert(data.message);
 
                     // update comments list to update dom immediately
                     if (res.status == 200) {

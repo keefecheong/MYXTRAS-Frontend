@@ -1,4 +1,9 @@
 <template>
+
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
+    
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content" v-if="contentLoaded">
@@ -75,12 +80,15 @@
 import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
 import RecommendedForums from '../../components/forum/RecommendedForums.vue';
+import { useAlertStore } from '../../stores/AlertStore.js';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
 
 export default {
     components: {
         NavSidebar,
         SearchBar,
-        RecommendedForums
+        RecommendedForums,
+        AlertPrompt
     },
     data() {
         return {
@@ -99,6 +107,8 @@ export default {
             dislikeCount: null,
             likeTimeout: null,
             dislikeTimeout: null,
+            alert: useAlertStore().alert,
+            alertStore: useAlertStore()
         }
     },
     mounted() {
@@ -158,9 +168,9 @@ export default {
                 },
                 credentials: 'include'
             }).then(async (res) => {
-                await res.json().then((data) => {
+                await res.json().then(async (data) => {
                     this.submittingComment = false;
-                    alert(data.message);
+                    await this.alert(data.message);
 
                     // update comments list to update dom immediately
                     if (res.status == 200) {
@@ -328,7 +338,21 @@ export default {
                 this.updateLike();
             }
         },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        }
     },
+    computed: {
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
+        }
+    }
 }
 
 </script>

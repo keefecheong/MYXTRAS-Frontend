@@ -97,14 +97,17 @@
 
 <script>
 import AddInterestButton from '../general/AddInterestButton.vue';
-import { useBlogStore } from '../../stores/BlogStore';
+import { useBlogStore } from '../../stores/BlogStore.js';
 import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
+import AlertPrompt from '../general/AlertPrompt.vue';
+import { useAlertStore } from '../../stores/AlertStore.js';
 
 export default {
     components: {
         AddInterestButton,
-        LoadingOverlay
+        LoadingOverlay,
+        AlertPrompt
     },
     data() {
         return {
@@ -117,6 +120,7 @@ export default {
             tags: [],
             commentsEnabled: true,
             submitting: false,
+            alert: useAlertStore().alert,
 
             // for edit mode
             blog: {},
@@ -124,7 +128,7 @@ export default {
             toInitFiles: true,
             dataTransfer: new DataTransfer(),
             fileUpdated: false,
-            store: useBlogStore()
+            blogStore: useBlogStore()
         }
     },
     props: [
@@ -163,7 +167,7 @@ export default {
                 const captionSame = this.caption == (this.blog.caption || '');
                 const locationSame = this.location == (this.blog.location || '');
                 const commentsEnabledSame = this.commentsEnabled == this.blog.comments_enabled;
-                const tagsSame = this.tags == this.blog.tags;
+                const tagsSame = this.tags.toString() == this.blog.tags.toString();
 
                 // if any field is changed continue to update
                 if (!(captionSame && locationSame && commentsEnabledSame && tagsSame)) {
@@ -174,7 +178,7 @@ export default {
                 if (!fieldsChanged && !this.fileUpdated) {
                     this.submitting = false;
 
-                    alert('No changes made.');
+                    await this.alert('No changes made.');
 
                     return;
                 }
@@ -184,7 +188,7 @@ export default {
             if (this.files.length <= 0) {
                 this.submitting = false;
 
-                alert('No files selected.');
+                await this.alert('No files selected.');
 
                 return;
             }
@@ -193,7 +197,7 @@ export default {
             if (this.errors.length > 0) {
                 this.submitting = false;
 
-                alert('Invalid files selected.');
+                await this.alert('Invalid files selected.');
                 
                 return;
             }
@@ -239,13 +243,14 @@ export default {
             await fetch(targetURL, options)
                 .then((res) => {
                     this.submitting = false;
-                    
-                    // reset and close form
-                    this.resetAll();
-                    this.closeForm();
 
-                    res.json().then((data) => {
-                        alert(data.message);
+                    res.json().then(async (data) => {
+                        await this.alert(data.message);
+                    
+                        // reset and close form
+                        this.resetAll();
+                        this.closeForm();
+
                         location.reload();
                     });
                 }).catch((error) => {
@@ -322,7 +327,7 @@ export default {
         // initialize data
         async initData() {
             // get blog data
-            this.blog = this.store.blogToEdit;
+            this.blog = this.blogStore.blogToEdit;
 
             // set links
             this.selectedLinks = this.blog.content_links;

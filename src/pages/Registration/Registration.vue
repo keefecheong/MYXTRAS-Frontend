@@ -1,4 +1,9 @@
 <template>
+
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
+
     <div id="main-container">
         <div id="main-content">
             <div class="row">
@@ -233,12 +238,21 @@ input:focus{
   }
 }
 </style>
+
 <script>
 import firebase from 'firebase';
-import { debounce } from 'lodash'
+import { debounce } from 'lodash';
+import { useAlertStore } from '../../stores/AlertStore.js';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
+
 export default {
     data() {
         return {
+            alert: useAlertStore().alert,
+            alertStore: useAlertStore(),
+            confirm: useConfirmStore().confirm,
+            confirmStore: useConfirmStore(),
+
             // Inputs
             emailAddress: '',
             phoneNumber: '',
@@ -324,6 +338,9 @@ export default {
             }, 2000)
         }
     },
+    components: {
+        AlertPrompt
+    },
     watch: {
         emailAddress: {
             immediate: false,
@@ -391,6 +408,14 @@ export default {
                 return 'very-strong';
             }
         },
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
+        }
     },
     mounted() {
         this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('registerBtn',{
@@ -435,12 +460,12 @@ export default {
                 
                 var phoneNum = "+65" + this.phoneNumber;
                 firebase.auth().signInWithPhoneNumber(phoneNum, this.recaptchaVerifier)
-                    .then((confirmationResult) => {
+                    .then(async (confirmationResult) => {
                     // SMS sent. Prompt user to type the code from the message, then sign the
                     // user in with confirmationResult.confirm(code).
                     this.confirmResult = confirmationResult
                     console.log(confirmationResult)
-                    alert("Sms Sent!")
+                    await this.alert("Sms Sent!")
                     this.otpSent = true;
                     }).catch((error) => {
                     // Error; SMS not sent
@@ -451,8 +476,8 @@ export default {
         },
         async verifyOTP() {
             this.confirmResult.confirm(this.otp)
-            .then((result)=>{
-                alert("OTP verified",result)
+            .then(async (result)=>{
+                await this.alert("OTP verified",result)
                 this.verifiedotp = true    
             })
             .catch((error)=>{
@@ -525,30 +550,35 @@ export default {
                 },
                 credentials: "include",
                 body: JSON.stringify(this.userObject)
-            }) .then(response => {
+            }).then((response) => {
                 if (response.ok) {
                     location.href = '/setupprofile.html';
-                } else if (response.status === 400){
-                    response.json().then(data => {
-                    if (data.error === 'Email already exists') {
-                        alert("Email already exists");
-                        throw new Error('Email already exists')
-                    }
-                    else if (data.error === 'Phone Number already exists') {
-                        alert("Phone Number already exists");
-                        throw new Error('Phone Number already exists')
-                    }
-                    else {
-                        throw new Error('Error: ' + response.status);
-                    }
+                }
+                else if (response.status === 400){
+                    response.json().then(async (data) => {
+                        if (data.error === 'Email already exists') {
+                            await this.alert("Email already exists");
+                            throw new Error('Email already exists')
+                        }
+                        else if (data.error === 'Phone Number already exists') {
+                            await this.alert("Phone Number already exists");
+                            throw new Error('Phone Number already exists')
+                        }
+                        else {
+                            throw new Error('Error: ' + response.status);
+                        }
                     });
                     return;
                 }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        }
         
     },
 }

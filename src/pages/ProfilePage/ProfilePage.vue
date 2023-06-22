@@ -1,4 +1,13 @@
 <template>
+
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
+
+    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+        {{ confirmMsg }}
+    </ConfirmPrompt>
+    
     <div id="main-container">
         <NavSidebar />
         <div id="main-content">
@@ -102,6 +111,10 @@ import banner from '../../assets/CustomBanner.png';
 import BlogLayout from '../../components/blog/BlogLayout.vue';
 import BlogCreateLayout from '../../components/blog/BlogCreateLayout.vue';
 import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
+import { useAlertStore } from '../../stores/AlertStore.js';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 
 export default {
     components: {
@@ -110,7 +123,9 @@ export default {
         CreatedForums,
         BlogLayout,
         BlogCreateLayout,
-        InterestBadgeList
+        InterestBadgeList,
+        AlertPrompt,
+        ConfirmPrompt
     },
     data() {
         return {
@@ -132,7 +147,9 @@ export default {
                 { name: 'muggingclub', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' },
                 { name: 'muggingclub', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' }
             ],
-            showCreateBlog: false
+            showCreateBlog: false,
+            alertStore: useAlertStore(),
+            confirmStore: useConfirmStore()
         }
     },
     created() {
@@ -218,6 +235,32 @@ export default {
         toggleCreateBlog(show) {
             this.showCreateBlog = show;
         },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        },
+        // to close confirm prompt
+        closeConfirm(decision) {
+            this.confirmStore.closeConfirm(decision);
+        }
+    },
+    computed: {
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
+        },
+        // to get showConfirm value
+        showConfirm() {
+            return this.confirmStore.showConfirm;
+        },
+        // to get confirmMsg value
+        confirmMsg() {
+            return this.confirmStore.confirmMsg;
+        }
     }
 
 }

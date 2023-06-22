@@ -1,4 +1,9 @@
 <template>
+
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
+
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
@@ -213,7 +218,10 @@ import ForumLayout from '../../components/forum/ForumLayout.vue';
 import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 import CreatedForums from '../../components/forum/CreatedForums.vue';
 import PopularThreads from '../../components/forum/PopularThreads.vue';
-import { debounce } from 'lodash'
+import { debounce } from 'lodash';
+import { useAlertStore } from '../../stores/AlertStore.js';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
+
 export default {
     components: {
         NavSidebar,
@@ -222,6 +230,7 @@ export default {
         CreatedForums,
         SubscribedForums,
         PopularThreads,
+        AlertPrompt
     },
     watch: {
         forumID: {
@@ -236,6 +245,8 @@ export default {
             // Misc
             isDraggable: false,
             showPopUp: false,
+            alertStore: useAlertStore(),
+            alert: useAlertStore().alert,
 
             // Data to display
             subbedForums: [],
@@ -261,34 +272,35 @@ export default {
             showErrMsg: false,
             idErr: null,
             debouncedVerifyForumID: debounce(async function () {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/verify-forumID`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-                body: JSON.stringify({ forumID: this.forumID })
-            });
-                if (response.ok) {
-                    this.idErr = null
-                    return;
-                } else if (response.status === 400){
-                    response.json().then(data => {
-                    if (data.error === 'ForumID already exists') {
-                        this.idErr = "ForumID already taken"
-                        console.log(this.idErr)
+                try {
+                    const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/verify-forumID`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json; charset=UTF-8',
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({ forumID: this.forumID })
+                    });
+
+                    if (response.ok) {
+                        this.idErr = null
+                        return;
+                    } else if (response.status === 400){
+                        response.json().then(data => {
+                        if (data.error === 'ForumID already exists') {
+                            this.idErr = "ForumID already taken"
+                            console.log(this.idErr)
+                            return;
+                        }
+                        else {
+                            throw new Error('Error: ' + response.status);
+                        }
+                        });
                         return;
                     }
-                    else {
-                        throw new Error('Error: ' + response.status);
-                    }
-                    });
-                    return;
+                } catch (error) {
+                    console.error('Error:', error);
                 }
-            } catch (error) {
-                console.error('Error:', error);
-            }
             }, 2000)
         }
     },
@@ -312,13 +324,13 @@ export default {
             if (type === 'groupPic'){
                 this.$refs.groupPicInput.value = ''; // Reset the file input value
                 this.$nextTick(() => {
-                this.$refs.groupPicInput.click(); // Open the file input dialog
+                    this.$refs.groupPicInput.click(); // Open the file input dialog
                 });            
             }
             else if (type === 'banner'){
                 this.$refs.bannerInput.value = ''; // Reset the file input value
                 this.$nextTick(() => {
-                this.$refs.bannerInput.click(); // Open the file input dialog
+                    this.$refs.bannerInput.click(); // Open the file input dialog
                 });
             }
         },
@@ -352,28 +364,28 @@ export default {
             try {
                 var forumObject = this.forumObject
                 forumObject = {
-                'forumName': this.forumName,
-                'forumID': this.forumID,
-                'forumDesc': this.forumDesc,
-                'category': this.selectedCategory
+                    'forumName': this.forumName,
+                    'forumID': this.forumID,
+                    'forumDesc': this.forumDesc,
+                    'category': this.selectedCategory
                 }
                 
                 uploadData.append('forumObject', JSON.stringify(forumObject))
                 console.log(uploadData)
                 await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create`, {
-                method: "POST",
-                credentials: "include",
-                body: uploadData
+                    method: "POST",
+                    credentials: "include",
+                    body: uploadData
                 })
                 .then(async response => {
                     if (response.ok){
                         localStorage.setItem('forumID', this.forumID);
                         location.href = "/forumGroup.html"
                     } else if (response.status === 400){
-                    response.json().then(data => {
-                    if (data.error === 'ForumID already exists') {
-                        alert("ForumID already exists");
-                    }
+                        response.json().then(async (data) => {
+                        if (data.error === 'ForumID already exists') {
+                            await this.alert("ForumID already exists");
+                        }
                     });
                     
                     this.submitting = false
@@ -388,6 +400,20 @@ export default {
             }
             
         },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        }
     },
+    computed: {
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
+        }
+    }
 }
 </script>

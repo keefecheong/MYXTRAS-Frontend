@@ -1,4 +1,9 @@
 <template>
+
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
+
     <div id="main-container">
         <div id="main-content">
             <div class="row">
@@ -136,11 +141,15 @@ textarea{
 </style>
 
 <script>
-import AddInterestButton from '../../components/general/AddInterestButton.vue'
+import AddInterestButton from '../../components/general/AddInterestButton.vue';
+import { useAlertStore } from '../../stores/AlertStore.js';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
+
 export default {
     components: {
        AddInterestButton,
-  },
+       AlertPrompt
+    },
 
     data() {
         return {
@@ -160,12 +169,21 @@ export default {
                 FMS: ['FILM', 'MEDIA'],
                 BS: ['MARKETING', 'HR']
             },
-                        
+            alert: useAlertStore().alert,
+            alertStore: useAlertStore()
         };
     },
     computed: {
         filteredCourses() {
             return this.courses[this.selectedSchool] || [];
+        },
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
         }
     },
     mounted() {
@@ -241,7 +259,7 @@ export default {
                 });
         },
 
-        validationCheck(){
+        async validationCheck(){
             var checkStatus = false
             var detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
             var realname = this.realname;
@@ -249,31 +267,32 @@ export default {
             var school = this.selectedSchool;
             var course = this.selectedCourse;
             console.log(Object.values(this.courses).flat())
+
             if (
-            detailsList.some(item => item === "") ||
-            /^[0-9]+$/.test(realname) ||
-            realname.length > 32 ||
-            username.length > 16 ||
-            !(school in this.courses) ||
-            !(Object.values(this.courses).flat().includes(course))
+                detailsList.some(item => item === "") ||
+                /^[0-9]+$/.test(realname) ||
+                realname.length > 32 ||
+                username.length > 16 ||
+                !(school in this.courses) ||
+                !(Object.values(this.courses).flat().includes(course))
             ) {
                 if (detailsList.some(item => item === "")) {
-                    alert("Please enter all fields");
+                    await this.alert("Please enter all fields");
 
                 } else if (/^[0-9]+$/.test(realname)) {
-                    alert("No integers in your real name");
+                    await this.alert("No integers in your real name");
 
                 } else if (realname.length > 32) {
-                    alert("Real name must not be more than 32 characters long");
+                    await this.alert("Real name must not be more than 32 characters long");
 
                 } else if (username.length > 16) {
-                    alert("Username must not be more than 16 characters long");
+                    await this.alert("Username must not be more than 16 characters long");
 
                 } else if (!(school in this.courses)) {
-                    alert("School does not exist");
+                    await this.alert("School does not exist");
 
                 } else if (!Object.values(this.courses).flat().includes(course)) {
-                    alert("Course does not exist");
+                    await this.alert("Course does not exist");
                 }
                 return checkStatus;
             }
@@ -321,6 +340,10 @@ export default {
         noIntegers() {
             this.realname = this.realname.replace(/[0-9]/g, '');
         },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        }
     }
 }
 </script>

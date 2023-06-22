@@ -1,4 +1,7 @@
 <template>
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
 
     <div id="main-container">
         <NavSidebar/>
@@ -61,12 +64,15 @@ import ChatListLayout from '../../components/chat/ChatListLayout.vue';
 import ChatInterfaceLayout from '../../components/chat/ChatInterfaceLayout.vue';
 import { useChatStore } from '../../stores/ChatStore.js';
 import ObjectID from 'bson-objectid';
+import { useAlertStore } from '../../stores/AlertStore.js';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
 
 export default {
     components: {
         NavSidebar,
         ChatListLayout,
-        ChatInterfaceLayout
+        ChatInterfaceLayout,
+        AlertPrompt
     },
     data() {
         return {
@@ -74,7 +80,8 @@ export default {
             users: [],
             store: useChatStore(),
             dataInitialized: false,
-            retrievedChatIds: []
+            retrievedChatIds: [],
+            alertStore: useAlertStore()
         }
     },
     async created() {
@@ -227,6 +234,10 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
+        },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
         }
     },
     computed: {
@@ -246,6 +257,14 @@ export default {
 
                 return timestampB - timestampA;
             });
+        },
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
         }
     }
 }
