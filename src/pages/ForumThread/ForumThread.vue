@@ -7,8 +7,7 @@
     <div id="main-container">
         <div id="main-content" v-if="contentLoaded">
             <div class="row">
-                <div class="col-md-9">
-                    <div class="card">
+                <div class="card">
                         <div class="row threadContent">
                             <h2> {{ thread.thread_title}}</h2>
                             <h6> {{ thread.thread_desc}} </h6>
@@ -42,7 +41,6 @@
                         </div>
                         <hr>
                     </div>
-                </div>
             </div>
             <div class="row" v-if="!commentsLoaded">
                 <div v-for="comment in commentData">
@@ -339,41 +337,30 @@ export default {
     color: red Im !important;
     font-variation-settings: 'FILL' 1;
 }
+
 .reactionContainer {
     display: inline-block;
 }
+
 .reactionBtns {
     color: black !important;
-}
-body {
-    background-color: white !important;
-    overflow-x: hidden;
 }
 
 .threadContent {
     padding: 1em 4em;
 }
+
 #threadImageContainer {
     max-height: 50vh;
     display: flex;
     justify-content: center;
 }
+
 #threadImage{
     max-height: 100%;
     max-width: 100%;
 }
 
-#pink-container{
-    background-color: var(--primary);
-}
-.group-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 50%;
-    float: left;
-}
 .profilepic {
     overflow: hidden;
     width: 6vh;
@@ -381,7 +368,6 @@ body {
     margin-right: 20px;
     margin-top: 15px;
     border-radius: 50%;
-
 }
 
 .text-below-pic {
