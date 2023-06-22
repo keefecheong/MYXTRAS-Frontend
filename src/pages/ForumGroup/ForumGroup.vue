@@ -47,43 +47,45 @@
             <div class="row">
                 <div class="createThread-container center-align" v-if="showPopUp">
                     <div class="popup-content">
-                    <span class="material-symbols-outlined" @click="showCreateThread">arrow_back</span>
-                        <div class="row"> 
-                            <div class="col-3">
-                            </div>
-                            <div class="col-6">
-                                <h3>Create a community</h3>
-                                <!-- Upload group pic container -->
-                                <div class="groupPicContainer">
-                                    <p v-if="selectedThreadPic === null">No image selected</p>
-                                    <img v-if="selectedThreadPic !== null" :src="selectedThreadPic" alt="Group Picture"  id="profile-picture" ref="cropperImage"/>
-                                    <input ref="threadPicInput" type="file" @change="uploadImage($event)" style="display: none" accept=".jpg, .jpeg, .png" required>
-                                    <br>
-                                </div>
-                                
-                                <button class="upload-banner-button" @click="selectImage()">Customize</button>
-                            </div>
-                            
-                            <div class="col-3"></div>
-                        </div>
+                        <button id="close-form" @click="showCreateThread" type="button">
+                            <span class="material-symbols-outlined">Close</span>
+                        </button>
+
+                        <h1>Create a new thread</h1>
+                        
+                        <!-- Upload group pic container -->
                         <div class="row">
-                            <div class="col-3">
+                            <div class="threadPicContainer">
+                                <p v-if="selectedThreadPic === null">No image selected</p>
+                                <img v-if="selectedThreadPic !== null" :src="selectedThreadPic" alt="Group Picture"  id="thread-picture" ref="cropperImage"/>
+                                <input ref="threadPicInput" type="file" @change="uploadImage($event)" style="display: none" accept=".jpg, .jpeg, .png">
                             </div>
-                            <div class="col-6 center-align">
-                                <input type="text" v-model="threadTitle" placeholder="Thread Title" required>
-                                <textarea type="text" v-model="threadDesc" :maxlength="500" placeholder="Thread Description (optional)" ></textarea>
-                                <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
-                                    <option value="" selected hidden disabled>Category</option>
-                                    <option value="Sports">Sports</option>
-                                    <option value="Dance">Dance</option>
-                                    <option value="Technology">Sports</option>
-                                    <option value="News">News</option>
-                                </select>
-                                <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
-                            </div>
-                            <div class="col-3"></div>
+                            <button class="image-form-control-button" @click="selectImage()">Customize</button>
                         </div>
-                        <button @click="createThread" :class="{ 'disabled': submitting }" :disabled="submitting">{{ submitting ? 'Creating...' : 'Create' }}</button>
+
+                        <div class="label-row">
+                            <label for="thread-title" class="thread-title" id="label">Thread Title:</label>
+                            <input type="text" v-model="threadTitle" placeholder="Required" id="title" required>
+                        </div>
+
+                        <div class="label-row">
+                            <label for="thread-desc" class="thread-desc" id="label">Thread Description:</label>
+                            <textarea type="text" v-model="threadDesc" :maxlength="500" placeholder="Thread Description (optional)" id="desc"></textarea>
+                        </div>
+
+                        <div class="label-row">
+                            <label for="categoryDropdown" class="categoryDropdown" id="label">Category:</label>
+                            <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
+                                <option value="" selected hidden disabled>Category</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Dance">Dance</option>
+                                <option value="Technology">Sports</option>
+                                <option value="News">News</option>
+                            </select>
+                            <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
+                        </div>
+
+                        <button @click="createThread" class="image-form-control-button" :class="{ 'disabled': submitting }" :disabled="submitting">{{ submitting ? 'Creating...' : 'Create' }}</button>
                     </div>
                 </div>
             </div>
@@ -313,9 +315,10 @@ export default {
     color: white;
     background-color: var(--dark);
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 20px;
     margin-bottom: 5vh;
     width: 50vw;
+    row-gap: 20px;
 }
 
 .forumMeta{
@@ -428,6 +431,69 @@ export default {
     text-align: center;
     width: 50%;
     float: left;
+}
+
+#close-form {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    float: right;
+}
+
+.image-form-control-button {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem;
+    background-color: #E53A73;
+    border: none;
+    width: 10rem !important;
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+#thread-picture {
+    width: 90%;
+    object-fit: cover; /* Scale and crop the image to fit */
+    object-position: center; /* Center the image within the div */
+    height: 150px;
+    border-radius: 10px;
+}
+
+#label {
+    float: left !important;
+
+}
+
+.label-row {
+    margin-bottom: 10px !important;
+    margin-left: 6%;
+    margin-right: 7%;
+}
+
+#title, #desc, #categoryDropdown {
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#title {
+    margin-left: 5.5rem;
+    width: 70%;
+}
+
+#desc {
+    margin-left: 2rem;
+    width: 70%;
+}
+
+#categoryDropdown {
+    margin-right: 13rem;
+    width: 20%;
+    justify-content: start;
 }
 
 </style>
