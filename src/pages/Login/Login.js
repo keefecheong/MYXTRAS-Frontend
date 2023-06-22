@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './Login.vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
-
+import { createPinia } from 'pinia';
 const app = createApp(App);
 
-app.mount('#app');
+app.use(createPinia()).mount('#app');

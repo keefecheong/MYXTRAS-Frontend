@@ -9,6 +9,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { debounce } from 'lodash';
+import { createPinia } from 'pinia'
 
 const vuetify = createVuetify({
     components,
@@ -27,4 +28,4 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const app = createApp(App);
-app.use(vuetify).mount('#app');
+app.use(createPinia()).use(vuetify).mount('#app');
