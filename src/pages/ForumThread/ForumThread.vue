@@ -93,6 +93,8 @@ export default {
             current_threadID: null,
             submittingComment: false,
             commentData: {},
+            liked_frontend: null,
+            disliked_frontend: null,
             likeCount: null,
             dislikeCount: null,
             likeTimeout: null,
@@ -121,9 +123,13 @@ export default {
                 console.log(this.thread)
                 this.forum = data.forum;
                 this.contentLoaded = true;
+
                 this.liked = this.thread.liked;
+                this.liked_frontend = this.liked;
                 this.likeCount =  this.thread.likes.length;
+
                 this.disliked = this.thread.disliked;
+                this.disliked_frontend = this.disliked;
                 this.dislikeCount =  this.thread.dislikes.length;
                 
             })
@@ -190,11 +196,13 @@ export default {
         toggleLike() {
             // toggle like on frontend only
             this.liked = !this.liked;
+            this.liked_frontend = !this.liked_frontend;
 
             // update likeCount
-            if (this.liked) {
+            if (this.liked_frontend) {
                 this.likeCount += 1;
-                if (this.disliked) {
+                if (this.disliked_frontend) {
+                    this.disliked_frontend = false
                     this.dislikeCount -= 1;
                 }
             }
@@ -210,11 +218,13 @@ export default {
         toggleDisike() {
             // toggle like on frontend only
             this.disliked = !this.disliked;
-
+            this.disliked_frontend = !this.disliked_frontend
+            
             // update dislikeCount
-            if (this.disliked) {
+            if (this.disliked_frontend) {
                 this.dislikeCount += 1;
-                if (this.liked) {
+                if (this.liked_frontend) {
+                    this.liked_frontend = false
                     this.likeCount -= 1;
                 }
             }
@@ -228,9 +238,8 @@ export default {
         },
         // handle updating of like status to backend
         async updateLike() {
-            
             // send request to update liked status
-            if (this.liked) {
+            if (this.liked_frontend) {
                 await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/like/${this.thread._id}`, {
                     mode: 'cors',
                     method: 'POST',
@@ -246,6 +255,7 @@ export default {
                     console.log(error);
                 });
                 if (this.disliked){
+                    console.log('1')
                     this.disliked = false;
                     this.updateDislike()
                 }
@@ -272,7 +282,7 @@ export default {
         async updateDislike() {
             
             // send request to update liked status
-            if (this.disliked) {
+            if (this.disliked_frontend) {
                 await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/dislike/${this.thread._id}`, {
                     mode: 'cors',
                     method: 'POST',
