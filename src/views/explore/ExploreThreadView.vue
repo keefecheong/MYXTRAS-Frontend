@@ -98,6 +98,7 @@
         },
         mounted() {
             this.retrieveAllThreads()
+            this.retrieveForums()
         },
         methods: {
             openForum(id) {
@@ -136,7 +137,28 @@
             handleInterestSelected(option) {
                 handleInterestSelected(option, this.selectedOption);
             },
-            
+            retrieveForums() {
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-popular-forums`, {
+                    mode: 'cors',
+                    method: 'GET',
+                    credentials: 'include'
+                }).then(res => {
+                    if (res.ok) {
+                    return res.json();
+                    }
+                    throw new Error('Response not OK');
+                })
+                .then(data => {
+                    this.forums = data;
+                    console.log(this.forums)
+                    this.contentLoaded = true;
+
+                })
+                .catch((error) => {
+                    console.log("This page could not be loaded: ", error);
+                });
+                
+            },
         },
         computed: {
             // get filtered threads

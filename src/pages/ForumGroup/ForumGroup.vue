@@ -172,11 +172,12 @@ export default {
             }
 
             const uploadData = new FormData();
-            uploadData.append('selectedImages', this.threadPicObject);
+            if (this.threadPicObject !== null){
+                uploadData.append('selectedImages', this.threadPicObject);
+            }
 
             try {
-                var threadObject = this.threadObject
-                threadObject = {
+                var threadObject = {
                 'thread_title': this.threadTitle,
                 'thread_desc': this.threadDesc,
                 'tags': this.tags
