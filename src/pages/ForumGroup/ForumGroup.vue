@@ -28,7 +28,10 @@
                     <div class="card shadow" style="text-align: center; padding-top: 5vh;" v-if="threads.length === 0">
                         <p>No threads found, <a id="noThreadCreateBtn" @click="showCreateThread">create</a> one now!</p>
                     </div>
-                    <threadLayout :threads="threads"/>
+                    <RouterLink to="/">
+                        <threadLayout :threads="threads"/>
+                    </RouterLink>
+                    <RouterView/>
                 </div>
                 <div class="col-md-3">
                     <recommendedForums />
@@ -65,16 +68,13 @@
 
                         <div class="label-row">
                             <label for="categoryDropdown" class="categoryDropdown" id="label">Category:</label>
-                            <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
-                                <option value="" selected hidden disabled>Category</option>
-                                <option value="Sports">Sports</option>
-                                <option value="Dance">Dance</option>
-                                <option value="Technology">Technology</option>
-                                <option value="News">News</option>
-                            </select>
-                            <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
+                            <div id="interestBtn">
+                                <AddInterestButton id="categoryDropdown" :selectedOption="tags" @selectedInterests="handlePostTags">
+                                    Select Tags For Your Post (Optional):
+                                </AddInterestButton>
+                            </div>
                         </div>
-
+                        <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
                         <button @click="createThread" class="image-form-control-button" :class="{ 'disabled': submitting }" :disabled="submitting">{{ submitting ? 'Creating...' : 'Create' }}</button>
                     </div>
                 </div>
@@ -95,7 +95,8 @@ import recommendedForums from '../../components/forum/RecommendedForums.vue';
 import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
 import ForumViewHeader from '../../components/forum/ForumViewHeader.vue';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
-import { useAlertStore } from '../../stores/AlertStore.js';
+import { useAlertStore } from '../../stores/AlertStore.js';import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
+import AddInterestButton from '../../components/general/AddInterestButton.vue';
 
 export default {
     components: {
@@ -105,7 +106,9 @@ export default {
         recommendedForums,
         ForumFormLayout,
         ForumViewHeader,
-        AlertPrompt
+        AlertPrompt,
+        InterestBadgeList,
+        AddInterestButton,
     },
 
     data() {
@@ -125,12 +128,12 @@ export default {
             threadPicObject: null,
             threadTitle: null,
             threadDesc: null,
-            selectedCategory: [],
             submitting: false,
             isSubscribed: false,
-
+            forumID: null,
+            forumObjId: null,
             recommendations: {},
-
+            tags: [],
             //Error handling
             errorMsg: null,
             showErrMsg: false,
@@ -138,7 +141,14 @@ export default {
     },
     mounted() {
         this.getForumPage()
-        this.getThreads()
+    },
+    watch: {
+        forumObjId: {
+            immediate: false,
+            handler(newVal, oldVal) {
+                this.getThreads();
+            }
+        },
     },
     methods: {
         // toggle forum form for editing
@@ -165,7 +175,7 @@ export default {
         async createThread() {
             this.submitting = true
             // Validation
-            var threadDetails = [this.threadTitle, this.threadPicObject];
+            var threadDetails = [this.threadTitle];
             
             if (threadDetails.some(item => item === '' || item === null)){
                 this.showErrMsg = true;
@@ -174,25 +184,26 @@ export default {
             }
 
             const uploadData = new FormData();
-            uploadData.append('selectedImages', this.threadPicObject);
+            if (this.threadPicObject !== null){
+                uploadData.append('selectedImages', this.threadPicObject);
+            }
 
             try {
-                var threadObject = this.threadObject
-                threadObject = {
+                var threadObject = {
                 'thread_title': this.threadTitle,
                 'thread_desc': this.threadDesc,
-                'category': this.selectedCategory
+                'tags': this.tags
                 }
                 
                 uploadData.append('threadObject', JSON.stringify(threadObject))
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/create/${this.current_forumID}`, {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/create/${this.forumObjId}`, {
                 method: "POST",
                 credentials: "include",
                 body: uploadData
                 })
                 .then(async response => {
                     if (response.ok){
-                        //localStorage.setItem('forumID', this.forumID);
+                        localStorage.setItem('forumID', this.forumID);
                         location.href = "/forumGroup.html"
                         this.submitting = false
                     return;
@@ -219,9 +230,9 @@ export default {
         
         },
         async getForumPage() {
-            this.current_forumID = localStorage.getItem('forumID');
+            this.forumID = localStorage.getItem('forumID');
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${this.current_forumID}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${this.forumID}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -235,18 +246,20 @@ export default {
             })
             .then(data => {
                 this.forum = data.forum;
+                this.forumObjId = data.forum._id
                 // Stores forumPic to be displayed in threadView.html
                 this.isCreator = data.isCreator;
                 this.isSubscribed = data.isSubscribed;
                 this.contentLoaded = true
-
             })
             .catch((error) => {
                 console.log(error);
             });
+            
         },
         async getThreads() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads/${this.current_forumID}`, {
+            console.log(this.forumObjId)
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads/${this.forumObjId}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -257,7 +270,8 @@ export default {
                 throw new Error('Response not OK');
             })
             .then(data => {
-                this.threads = data.threads;
+                this.threads = data;
+                console.log(data)
             })
             .catch((error) => {
                 console.log("The threads could not be loaded: ", error);
@@ -433,7 +447,10 @@ export default {
     margin-left: 5.5rem;
     width: 70%;
 }
-
+#interestBtn {
+    margin-left: 12vw;
+    width: 70%;
+}
 #desc {
     margin-left: 2rem;
     width: 70%;

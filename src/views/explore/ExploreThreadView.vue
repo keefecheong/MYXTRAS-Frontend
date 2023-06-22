@@ -1,10 +1,28 @@
 <template>
     <div class="row">
-        <div class="col-md-9">
-            <ForumLayout/>
+        <div id="gallery-interest-selection">
+            <span>Filter by:</span>
+
+            <InterestBadgeList
+                :selectedOption="selectedOption"
+                :selection="true"
+                @interest-selected="handleInterestSelected"
+            />
         </div>
-        <div class="col-md-3 scrolling-div">
-            <div class="popular-community">
+        <div id="no-filtered-blogs" v-if="!(contentLoaded && filteredThreads.length > 0)">
+            <p>No threads found.</p>
+            <p>Select another filter?</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9" >
+            <div v-if="contentLoaded && filteredThreads.length > 0">
+                <ThreadLayout :threads="filteredThreads"/>
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <div class="sticky-div">
+                <div class="popular-community">
                 <h1 class="pop-header">Popular Communities</h1>
                 <div class="interestCommunity">
                     <h4 class="cat" @click="openForum(1)">Interest 1<div class="triangle-down" id="1"></div></h4>
@@ -57,15 +75,30 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    import ForumLayout from '../../components/forum/ForumLayout.vue';
+    import ThreadLayout from '../../components/forum/ThreadLayout.vue';
+    import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
+    import handleInterestSelected from '../../utils/general/defaultInterestSelectedCallback.js';
+
     export default {
+        data() {
+            return {
+                selectedOption: [],
+                contentLoaded: false
+            }
+        },
         components: {
-            ForumLayout
+            ThreadLayout,
+            InterestBadgeList
+        },
+        mounted() {
+            this.retrieveAllThreads()
+            this.retrieveForums()
         },
         methods: {
             openForum(id) {
@@ -78,7 +111,65 @@
                     document.getElementById("dc"+id).className = "dropdown-content";
                     document.getElementById(id).className = "triangle-down";
                 }
-            }
+            },
+            retrieveAllThreads() {
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads`, {
+                    mode: 'cors',
+                    method: 'GET',
+                    credentials: 'include'
+                }).then(res => {
+                    if (res.ok) {
+                    return res.json();
+                    }
+                    throw new Error('Response not OK');
+                })
+                .then(data => {
+                    this.threads = data;
+                    this.contentLoaded = true;
+                    console.log(this.threads)
+
+                })
+                .catch((error) => {
+                    console.log("This page could not be loaded: ", error);
+                });
+                
+            },
+            handleInterestSelected(option) {
+                handleInterestSelected(option, this.selectedOption);
+            },
+            retrieveForums() {
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-popular-forums`, {
+                    mode: 'cors',
+                    method: 'GET',
+                    credentials: 'include'
+                }).then(res => {
+                    if (res.ok) {
+                    return res.json();
+                    }
+                    throw new Error('Response not OK');
+                })
+                .then(data => {
+                    this.forums = data;
+                    console.log(this.forums)
+                    this.contentLoaded = true;
+
+                })
+                .catch((error) => {
+                    console.log("This page could not be loaded: ", error);
+                });
+                
+            },
+        },
+        computed: {
+            // get filtered threads
+            filteredThreads() {
+                if (this.selectedOption.length <= 0) {
+                    return this.threads;
+                }
+                else {
+                    return this.threads.filter(thread => thread.tags && thread.tags.some(tag => this.selectedOption.includes(tag)));
+                }
+            },
         }
     }
 </script>
@@ -91,6 +182,21 @@
         width: 100%;
         border-bottom: 1px solid #443b3b;
         margin: 0;
+    }
+    #gallery-interest-selection {
+        display: flex;
+        flex-direction: row;
+        column-gap: 15px;
+        align-items: center;
+        justify-content: center;
+    }
+    .sticky-div {
+        position: sticky;
+        top: 15vh;
+        right: 5vw;
+        display: flex;
+        justify-content: flex-end;
+        z-index: 1;
     }
     .popular-community {
         border-radius: 13px;

@@ -18,12 +18,12 @@
             
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="card shadow" v-if="subbedForums.some(forum => forum.threads.length === 0)">
+                        <div class="card shadow" v-if="subbedForums.length === 0">
                             <div class="center-align" style="margin: 3vh 0;">
                                 <p>No new threads, <a href="/explore.html">Xplore</a> now!</p>
                             </div>
                         </div>
-                        <ForumLayout :subbedForums="subbedForums" style="margin: 3vh 0;"/>
+                        <ForumLayout :forums="subbedForums" style="margin: 3vh 0;"/>
                     </div>
                 </div>
 
@@ -121,7 +121,7 @@ export default {
             showForumForm: false,
             alertStore: useAlertStore(),
             alert: useAlertStore().alert,
-
+            tags: [],
             // Data to display
             subbedForums: [],
             createdForums: [],

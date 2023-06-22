@@ -91,7 +91,22 @@ div {
     column-gap: 10px;
     overflow-x: auto;
 }
+/* Track */
+::-webkit-scrollbar-track {
+background: #ffffff; 
+border-radius: 15px;
+}
 
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #c9c9c9c4;
+border-radius: 15px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #c9c9c98d;
+}
 .badge {
     padding: 10px;
     color: black;

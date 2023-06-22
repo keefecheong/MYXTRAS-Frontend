@@ -3,12 +3,12 @@
         <NavSidebar/>
         <div id="main-content">
             <SearchBar currentPage="feed"/>
-            <br>
             <div id="notfound">
                 <div class="notfound">
                     <div class="notfound-404">
                         <h1>Oops!</h1>
                     </div>
+                    <br>
                     <h2>404 - Page not found</h2>
                     <p>The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
                     <a href="http://127.0.0.1:5173/">Go To Homepage</a>
@@ -21,9 +21,6 @@
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
 
-#notfound {
-    position: relative;
-}
 
 #notfound .notfound {
     position: absolute;
@@ -46,6 +43,10 @@
     z-index: -1;
 }
 
+.notfound-404 {
+    color: var(--dark) !important;
+}
+
 .notfound .notfound-404 h1 {
     font-family: montserrat, sans-serif;
     font-size: 230px;
@@ -53,12 +54,7 @@
     font-weight: 900;
     position: absolute;
     left: 50%;
-    -webkit-transform: translateX(-50%);
-    -ms-transform: translateX(-50%);
     transform: translateX(-50%);
-    background: url(../img/bg.jpg) no-repeat;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-size: cover;
     background-position: center;
 }

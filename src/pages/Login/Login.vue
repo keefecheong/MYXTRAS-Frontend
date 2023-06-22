@@ -65,7 +65,7 @@ h1 {
 #passwordField{
     margin-bottom: 20px;
     width: 80%;
-    transform: translatex(2.7vh);
+    transform: translatex(2vh);
 }
 .whitebox {
     background-color: white;
@@ -149,7 +149,7 @@ input:focus{
 }
 .overlay-button {
     border: none;
-    transform: translateX(-100%);
+    transform: translateX(-50%);
     background-color: transparent;
     background-repeat: no-repeat;
     cursor: pointer;

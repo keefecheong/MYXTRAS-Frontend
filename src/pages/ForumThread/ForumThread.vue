@@ -5,23 +5,7 @@
     </AlertPrompt>
     
     <div id="main-container">
-        <NavSidebar/>
         <div id="main-content" v-if="contentLoaded">
-            <div class="row">
-                <div class="imageContainer">
-                    <img :src="forum.banner_link" alt="Banner" id="banner-picture"/>
-                </div>
-            </div>
-            <div class="row">
-                <div id="pink-container">
-                    <div id="image" class="col-md-1">
-                        <img class="imageIcon" :src="forum.forum_pic_link">
-                    </div>
-                    <div id="group-description" class="col-md-1">
-                        <h5 id="groupname">x/{{ forum.forumID }}</h5>
-                    </div>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-md-9">
                     <div class="card">
@@ -59,9 +43,6 @@
                         <hr>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <RecommendedForums />
-                </div>
             </div>
             <div class="row" v-if="!commentsLoaded">
                 <div v-for="comment in commentData">
@@ -77,17 +58,11 @@
 </template>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
-import SearchBar from '../../components/general/SearchBar.vue';
-import RecommendedForums from '../../components/forum/RecommendedForums.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 
 export default {
     components: {
-        NavSidebar,
-        SearchBar,
-        RecommendedForums,
         AlertPrompt
     },
     data() {
@@ -129,9 +104,8 @@ export default {
                 throw new Error('Response not OK');
             })
             .then(data => {
-                this.thread = data.thread;
+                this.thread = data;
                 console.log(this.thread)
-                this.forum = data.forum;
                 this.contentLoaded = true;
 
                 this.liked = this.thread.liked;
@@ -369,25 +343,13 @@ export default {
     display: inline-block;
 }
 .reactionBtns {
-    
     color: black !important;
 }
 body {
     background-color: white !important;
     overflow-x: hidden;
 }
-.card {
-    padding: 1em 0 1em 0;
-    border: none !important;
-    border-radius: 10px;
-    margin: 3vh 0;
-}
-#group-description {
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-    height: 10vh;
-}
+
 .threadContent {
     padding: 1em 4em;
 }
@@ -400,40 +362,7 @@ body {
     max-height: 100%;
     max-width: 100%;
 }
-/* .triangle {
-  position: relative;
-  height: 100px;
-  width: 325px;
-  background-color: var(--primary);
-  border-radius: 25px 25px 25px 0;
-}
 
-.triangle::before {
-  content: "";
-  position: absolute;
-  
-  background-color: transparent;
-  bottom: -50px;
-  height: 50px;
-  width: 25px;
-  border-top-left-radius: 25px;
-  box-shadow: 0 -25px 0 0 #F66969;
-} */
-#banner-picture {
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: cover;
-    padding: 0 !important;
-}
-.imageIcon {
-    float:left;
-    overflow: hidden;
-    width: 60px;
-    height: 60px;
-    margin-left: 150px;
-    margin-right: 20px;
-    border-radius: 50%;
-}
 #pink-container{
     background-color: var(--primary);
 }
