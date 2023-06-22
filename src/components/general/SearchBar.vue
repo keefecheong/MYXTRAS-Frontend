@@ -8,9 +8,8 @@
             <SearchResults :results="searchResults" :currentPage="currentPage"/>
         </div>
         <div v-if="currentPage === 'forums'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
-            <button v-if="currentPage === 'forums'" id="createForumBtn" class="white-btn" @click="sendBool">
-                Create Community
-                <span class="material-symbols-outlined" style="color: black;">add</span>
+            <button v-if="currentPage === 'forums'" id="createForumBtn" class="white-btn" @click="showForumForm">
+                Create Forum
             </button>
             
         </div>
@@ -182,24 +181,12 @@ export default {
         this.checkAuth();
         this.compensateSearchBar();
     },
+    emits: [
+        'show-forum-form'
+    ],
     methods: {
-        toggleScrolling() {
-            // Get the body element
-            const body = document.body;
-            body.classList.add('disable-scroll');
-        },
-        sendBool() {
-            this.toggleScrolling()
-            this.$emit('show-popup', !this.showPopUp);
-        },
-        redirectsetup(){
-            fetch("http://127.0.0.1:8081/api/users/setupprofile", {
-                method: "GET"
-            }).then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-            })
+        showForumForm() {
+            this.$emit('show-forum-form');
         },
         async performSearch() {
             let searchObject;

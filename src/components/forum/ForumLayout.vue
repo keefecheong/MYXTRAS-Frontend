@@ -3,28 +3,28 @@
         <div class="row">
             <div v-for="thread in this.sortedThreads">
                 <div class="card shadow threadContainer">
-                <div class="row">
-                    <div class="col-2"></div>
-                    <div class="col-10"><span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 d-flex justify-content-end">
-                        <a @click="viewForum(thread.forumID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-10"><span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span></div>
                     </div>
-                    <div class="col-10 threadContent">
-                        <p id="meta"><a @click="viewForum(thread.forumID)" class="forum-name">{{ "x/" + thread.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
-                        <p id="thread-title">{{ thread.thread_title }}</p>  
-                        <p id="thread-description">{{ thread.thread_desc }}</p>
-                        <div class="imageContainer">
-                            <img id="threadPic" :src="thread.content_links[0]" :draggable="isDraggable">
+                    <div class="row">
+                        <div class="col-md-2 d-flex justify-content-end">
+                            <a @click="viewForum(thread.forumID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
                         </div>
-                        <br>
-                        <div class="d-flex justify-content-end">
-                            <a id="commentsText" @click="viewThread(thread)" >View {{ thread.numOfComments }} comments</a>
+                        <div class="col-10 threadContent">
+                            <p id="meta"><a @click="viewForum(thread.forumID)" class="forum-name">{{ "x/" + thread.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
+                            <p id="thread-title">{{ thread.thread_title }}</p>  
+                            <p id="thread-description">{{ thread.thread_desc }}</p>
+                            <div class="imageContainer">
+                                <img id="threadPic" :src="thread.content_links[0]" :draggable="isDraggable">
+                            </div>
+                            <br>
+                            <div class="d-flex justify-content-end">
+                                <a id="commentsText" @click="viewThread(thread)" >View {{ thread.numOfComments }} comments</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>

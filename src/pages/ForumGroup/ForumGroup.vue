@@ -1,38 +1,28 @@
 <template>
+
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
+
     <div id="main-container">
     <NavSidebar />
     <div id="main-content" v-if="contentLoaded" >
         <div class="row">
-            <div class="imageContainer row">
-                <img :src="forum.banner_link[0]" alt="Banner" id="banner-picture"/>
-            </div>
-            <div class="row">
-                <div class="col-md-2" id="pink-container">
-                    <br>
-                    <div class="forumMeta">
-                        <div id="image">
-                            <img class="groupicon" :src="forum.forum_pic_link">
-                        </div>
-                        <div id="group-description">
-                            <h3 id="groupname">{{forum.forumName}}</h3>
-                            <p id="groupid">x/{{forum.forumID}}</p>
-                            <p id="groupdescription">{{forum.forumDesc}}</p>
-                        </div>
-                    </div>
-                    <div class="forumOptions">
-                        <button :class="{ 'subscribed': isSubscribed, 'white-btn': !isSubscribed  }" v-if="!isCreator" @click="subscribeForum">{{ isSubscribed ? 'Unsubscribe' : 'Subscribe' }}</button>
-                        <button @click="showCreateThread" class="white-btn">Create Thread!</button>
-                        <div class="subs">
-                            <p>{{"Subscribers: " + forum.numOfSubs}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8 d-flex justify-content end">
-                    <div style="margin-left: 5vw !important; ">
-                          
-                    </div>
-                </div>
-            </div>
+            <ForumViewHeader
+                :bannerLink="forum.banner_link"
+                :forumPicLink="forum.forum_pic_link"
+                :forumName="forum.forumName"
+                :forumID="forum.forumID"
+                :forumDesc="forum.forumDesc"
+                :numOfSubs="numOfSubs"
+                :isCreator="isCreator"
+                :isSubscribed="isSubscribed"
+                :showCreateThreadButton="true"
+                @show-forum-form="() => toggleForumForm(true)"
+                @show-thread-form="showCreateThread"
+                @subscribe="subscribeForum"
+            />
+            
             <div id="white-container" class="row">
                 <div class="col-md-8 offset-md-1">
                     <div class="card shadow" style="text-align: center; padding-top: 5vh;" v-if="threads.length === 0">
@@ -79,7 +69,7 @@
                                 <option value="" selected hidden disabled>Category</option>
                                 <option value="Sports">Sports</option>
                                 <option value="Dance">Dance</option>
-                                <option value="Technology">Sports</option>
+                                <option value="Technology">Technology</option>
                                 <option value="News">News</option>
                             </select>
                             <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
@@ -90,6 +80,8 @@
                 </div>
             </div>
         </div>
+
+        <ForumFormLayout v-if="showForumForm" :editMode="true" :forum="forum" @close-forum-form="() => toggleForumForm(false)" />
     </div>
 </div>
 
@@ -100,18 +92,28 @@ import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
 import threadLayout from '../../components/forum/ThreadLayout.vue';
 import recommendedForums from '../../components/forum/RecommendedForums.vue';
-
+import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
+import ForumViewHeader from '../../components/forum/ForumViewHeader.vue';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import { useAlertStore } from '../../stores/AlertStore.js';
 
 export default {
     components: {
         NavSidebar,
         SearchBar,
         threadLayout,
-        recommendedForums
+        recommendedForums,
+        ForumFormLayout,
+        ForumViewHeader,
+        AlertPrompt
     },
 
     data() {
         return {
+            showForumForm: false,
+            showThreadForm: false,
+            alertStore: useAlertStore(),
+
             forum: null,
             current_forumID: null,
             contentLoaded: false,
@@ -139,6 +141,14 @@ export default {
         this.getThreads()
     },
     methods: {
+        // toggle forum form for editing
+        toggleForumForm(show) {
+            this.showForumForm = show;
+        },
+        // toggle thread form for creating
+        toggleThreadCreateForm(show) {
+            this.showThreadForm = show;
+        },
         toggleScrolling() {
             // Get the body element
             const body = document.body;
@@ -217,9 +227,11 @@ export default {
                 credentials: 'include'
             }).then(res => {
                 if (res.ok) {
-                return res.json();
+                    return res.json();
                 }
-                throw new Error('Response not OK');
+                else {
+                    console.log('An error occured');
+                }
             })
             .then(data => {
                 this.forum = data.forum;
@@ -230,7 +242,7 @@ export default {
 
             })
             .catch((error) => {
-                console.log("This page could not be loaded: ", error);
+                console.log(error);
             });
         },
         async getThreads() {
@@ -261,34 +273,50 @@ export default {
                 if (res.ok) {
                     return res.json();
                 }
-                throw new Error('Response not OK');
+                else {
+                    console.log('An error occurred.');
+                }
             })
             .then(data => {   
                 this.isSubscribed = data.isSubscribed
 
                 if (this.isSubscribed){
-                    this.forum.numOfSubs += 1
+                    this.forum.subscribers.push(data.userId);
                 }
                 else{
-                    this.forum.numOfSubs -= 1
+                    const index = this.forum.subscribers.indexOf(data.userId);
+                    this.forum.subscribers.splice(index, 1);
                 }
             })
             .catch((error) => {
                 console.log("Unable to subscribe to forum: ", error);
             });
+        },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
         }
     },
+    computed: {
+        // get number of subscribers
+        numOfSubs() {
+            return this.forum.subscribers.length;
+        },
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
+        }
+    }
 }
 </script>
 
 <style>
 @import url('../../styles/main.css');
-@import url('../../styles/sub-navigation.css');
-.row {
-    padding: 0 !important;
-    width: 100%;
-    margin: 0 !important;
-}
+
 #noThreadCreateBtn {
     color: blue;
 }
@@ -321,63 +349,8 @@ export default {
     row-gap: 20px;
 }
 
-.forumMeta{
-    margin-top: 1rem;
-    margin-left: 100px;
-}
-
 .subs {
     float: right;
-}
-
-#banner-picture {
-    width: 100%;
-    object-fit: cover; /* Scale and crop the image to fit */
-    object-position: center; /* Center the image within the div */
-    height: 150px;
-    margin: 0;
-    padding: 0;
-}
-
-#pink-container{
-    background-color: var(--primary);
-    height: 100%;
-    width: 100%;
-    color: white;
-}
-
-.groupicon {
-    float:left;
-    width: 60px;
-    height: 60px;
-    margin-right: 20px;
-    border-radius: 50%;
-    object-fit: cover; /* Scale and crop the image to fit */
-    object-position: center; /* Center the image within the div */
-}
-
-.forumOptions {
-    float: right;
-    margin-right: 40px;
-}
-
-#group-description{
-    float:left;
-}
-
-#groupname{
-    color: white;
-    margin-bottom: 0px;
-}
-
-#groupid{
-    margin-bottom: 5px;
-    font-size: 14px;
-    margin-bottom: 0px;
-}
-
-#groupdescription{
-    font-size: 16px;
 }
 
 #white-container{
@@ -395,30 +368,6 @@ export default {
     border-radius: 50%;
 }
 
-.subscribed {
-    background-color: transparent;
-    color: white;
-    border: white solid 3.5px;
-    border-radius: 10px;
-    place-items: center;
-    height: 3rem;
-    width: 8.5rem;
-    transition: all 0.3s;
-    margin-bottom: 5%;
-}
-.subscribed:hover {
-    display: grid;
-    background-color: white;
-    border: white solid 3.5px;
-    color: black;
-    border-radius: 10px;
-    height: 3rem;
-    width: 8.5rem;
-    place-items: center;
-    margin-bottom: 5%;
-    text-decoration: none;
-    font-size: 1rem;
-}
 #threads{
     margin: 20px;
     margin-top: 50px;

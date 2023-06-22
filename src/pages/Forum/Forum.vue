@@ -7,9 +7,9 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
-            <SearchBar currentPage="forums" :showPopUp="showPopUp" @show-popup="handleVariableUpdate"/>
-            <br>
-            <h1 id="forumHeader">Latest Updates!</h1>
+            <SearchBar currentPage="forums" @show-forum-form="() => toggleForumForm(true)" />
+            
+            <h1 id="forum-header">Latest Updates!</h1>
             <div class="row">
                 <div class="col-md-3">
                    <CreatedForums />
@@ -20,7 +20,7 @@
                     <div class="row">
                         <div class="card shadow" v-if="subbedForums.some(forum => forum.threads.length === 0)">
                             <div class="center-align" style="margin: 3vh 0;">
-                                <p>No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
+                                <p>No new threads, <a href="/explore.html">Xplore</a> now!</p>
                             </div>
                         </div>
                         <ForumLayout :subbedForums="subbedForums" style="margin: 3vh 0;"/>
@@ -31,135 +31,20 @@
                     <PopularThreads/>
                 </div>
             </div>
-            <div class="row">
-                <div class="createForum-container center-align" v-if="showPopUp">
-                    <div class="popup-content">
-                        <span class="material-symbols-outlined" @click="openPopUp">arrow_back</span>
-                        <div class="row"> 
-                            <div class="col-3">
-                            </div>
-                            <div class="col-6">
-                                <h3>Create a community</h3>
-                                <!-- Upload group pic container -->
-                                <div class="groupPicContainer">
-                                    <p v-if="selectedGroupPic === null">No image selected</p>
-                                    <img v-if="selectedGroupPic !== null" :src="selectedGroupPic" alt="Group Picture"  id="profile-picture" ref="cropperImage"/>
-                                    <input ref="groupPicInput" type="file" @change="uploadImage($event, 'groupPic')" style="display: none" accept=".jpg, .jpeg, .png" required>
-                                    <br>
-                                </div>
-                                
-                                <button class="upload-banner-button" @click="selectImage('groupPic')">Customize</button>
-                                
-                                <!-- Upload banner container -->     
-                                <div class="bannerContainer">
-                                    <p v-if="selectedBanner === null">No image selected</p>
-                                    <img v-if="selectedBanner !== null" :src="selectedBanner" alt="Banner"  id="profile-picture" ref="cropperImage"/>
-                                    <input ref="bannerInput" type="file" @change="uploadImage($event, 'banner')" style="display: none" accept=".jpg, .jpeg, .png" required>
-                                    <br>
-                                </div>
-                                
-                                <button class="upload-banner-button" @click="selectImage('banner')">Customize</button>
-                            </div>
-                            
-                            <div class="col-3"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                            </div>
-                            <div class="col-6 center-align">
-                                <input type="text" v-model="forumID" placeholder="Community ID: x/" required>
-                                <p class="errMsg"> {{ idErr }}</p>
-                                <input type="text" v-model="forumName" placeholder="Community Name:" required>
-                                <textarea type="text" v-model="forumDesc" :maxlength="500" placeholder="Community Description (optional)" ></textarea>
-                                <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
-                                    <option value="" selected hidden disabled>Category</option>
-                                    <option value="Sports">Sports</option>
-                                    <option value="Dance">Dance</option>
-                                    <option value="Technology">Sports</option>
-                                    <option value="News">News</option>
-                                </select>
-                                <p v-if="showErrMsg" class="errMsg">Error: {{ errorMsg }}</p>
-                            </div>
-                            <div class="col-3"></div>
-                        </div>
-                        <button @click="createForum" :class="{ 'disabled': submitting }" :disabled="submitting">{{ submitting ? 'Creating...' : 'Create' }}</button>
-                    </div>
-                </div>
-            </div>
-        
+            
+            <ForumFormLayout v-if="showForumForm" @close-forum-form="() => toggleForumForm(false)" />
         </div>
     </div>
 
 </template>
+
 <style scoped>
 @import url('../../styles/main.css');
-@import url('../../styles/sub-navigation.css');
-.createForum-container {
-    overflow-y: scroll;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 3;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+
+#forum-header {
+    margin-top: 20px;
 }
-button {
-    margin: 2em;
-    color:white;
-    background-color: var(--primary);
-    border: none;
-    padding: 1em;
-    border-radius: 10px;
-}
-.errMsg{
-    color: red;
-    font-weight: bold;
-    margin-bottom: 0;
-}
-input[type=text],
-#categoryDropdown{
-    margin: 10px 0;
-    padding: 1em 0.5em;
-    border-radius: 5px;
-}
-.groupPicContainer {
-    background-color: white;
-    color: var(--dark);
-    height: 15vh;
-    width: 15vh;
-    margin: auto;
-    border-radius: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-.bannerContainer {
-    background-color: white;
-    color: var(--dark);
-    height: 45vh;
-    margin: auto;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-img {
-    height: 100%;
-    max-width: 100%;
-    object-fit: cover; /* Scale and crop the image to fit */
-    object-position: center; /* Center the image within the div */
-}
-.popup-content {
-    color: white;
-    background-color: var(--dark);
-    padding: 20px;
-    border-radius: 5px;
-    margin-top: 80vh !important;
-    margin-bottom: 5vh;
-    width: 50vw;
-}
+
 .card {
     padding: 1em 0 1em 0;
     border: none !important;
@@ -205,12 +90,8 @@ img {
     align-items: center;
     padding: 0 2em;
 }
-
-.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
 </style>
+
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
@@ -218,9 +99,9 @@ import ForumLayout from '../../components/forum/ForumLayout.vue';
 import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 import CreatedForums from '../../components/forum/CreatedForums.vue';
 import PopularThreads from '../../components/forum/PopularThreads.vue';
-import { debounce } from 'lodash';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
 
 export default {
     components: {
@@ -230,21 +111,14 @@ export default {
         CreatedForums,
         SubscribedForums,
         PopularThreads,
-        AlertPrompt
-    },
-    watch: {
-        forumID: {
-            immediate: false,
-            handler(newVal, oldVal) {
-                this.verifyForumID();
-            }
-        },
+        AlertPrompt,
+        ForumFormLayout
     },
     data() {
         return {
             // Misc
             isDraggable: false,
-            showPopUp: false,
+            showForumForm: false,
             alertStore: useAlertStore(),
             alert: useAlertStore().alert,
 
@@ -252,153 +126,17 @@ export default {
             subbedForums: [],
             createdForums: [],
             threads: [],
-            subbedForumThreads: [],
-            
-            // Creation of forum var
-            selectedBanner: null,
-            bannerObject: null,
-            selectedGroupPic: null,
-            groupPicObject: null,
-            images: [],
-            forumID: '',
-            forumName: '',
-            forumDesc: '',
-            forumObject: null,
-            selectedCategory: null,
-            submitting: false,
-            
-            //Error handling
-            errorMsg: null,
-            showErrMsg: false,
-            idErr: null,
-            debouncedVerifyForumID: debounce(async function () {
-                try {
-                    const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/verify-forumID`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json; charset=UTF-8',
-                        },
-                        credentials: "include",
-                        body: JSON.stringify({ forumID: this.forumID })
-                    });
-
-                    if (response.ok) {
-                        this.idErr = null
-                        return;
-                    } else if (response.status === 400){
-                        response.json().then(data => {
-                        if (data.error === 'ForumID already exists') {
-                            this.idErr = "ForumID already taken"
-                            console.log(this.idErr)
-                            return;
-                        }
-                        else {
-                            throw new Error('Error: ' + response.status);
-                        }
-                        });
-                        return;
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            }, 2000)
+            subbedForumThreads: []
         }
     },
     methods: {
-        verifyForumID(){
-            this.debouncedVerifyForumID.call(this)
-        },
-        handleVariableUpdate(variable) {
-            this.showPopUp = variable;
+        // toggle forum form
+        toggleForumForm(show) {
+            this.showForumForm = show;
         },
         retrieveRecentThreads(variable) {
             this.subbedForums = variable;
             console.log(this.subbedForums.length)
-        },
-        openPopUp() {
-            this.showPopUp = !this.showPopUp
-            const body = document.body;
-            body.classList.remove('disable-scroll');
-        },
-        selectImage(type){
-            if (type === 'groupPic'){
-                this.$refs.groupPicInput.value = ''; // Reset the file input value
-                this.$nextTick(() => {
-                    this.$refs.groupPicInput.click(); // Open the file input dialog
-                });            
-            }
-            else if (type === 'banner'){
-                this.$refs.bannerInput.value = ''; // Reset the file input value
-                this.$nextTick(() => {
-                    this.$refs.bannerInput.click(); // Open the file input dialog
-                });
-            }
-        },
-        uploadImage(event, type){
-            var object = event.target.files[0];
-            if (type === 'groupPic'){
-                this.groupPicObject = object;
-                this.selectedGroupPic = URL.createObjectURL(object);
-            }
-            else if (type === 'banner'){
-                this.bannerObject = object;
-                this.selectedBanner = URL.createObjectURL(object);
-            }
-        
-        },
-
-        async createForum() {
-            this.submitting = true
-            // Validation
-            var forumDetails = [this.forumName, this.forumID, this.selectedCategory, this.selectedGroupPic,  this.selectedBanner];
-            if (forumDetails.some(item => item === '' || item === null)){
-                this.showErrMsg = true;
-                this.submitting = false;
-                return this.errorMsg = "Please enter all fields";
-            }
-
-            const uploadData = new FormData();
-            uploadData.append('selectedImages', this.groupPicObject);
-            uploadData.append('selectedImages', this.bannerObject);
-            
-            try {
-                var forumObject = this.forumObject
-                forumObject = {
-                    'forumName': this.forumName,
-                    'forumID': this.forumID,
-                    'forumDesc': this.forumDesc,
-                    'category': this.selectedCategory
-                }
-                
-                uploadData.append('forumObject', JSON.stringify(forumObject))
-                console.log(uploadData)
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create`, {
-                    method: "POST",
-                    credentials: "include",
-                    body: uploadData
-                })
-                .then(async response => {
-                    if (response.ok){
-                        localStorage.setItem('forumID', this.forumID);
-                        location.href = "/forumGroup.html"
-                    } else if (response.status === 400){
-                        response.json().then(async (data) => {
-                        if (data.error === 'ForumID already exists') {
-                            await this.alert("ForumID already exists");
-                        }
-                    });
-                    
-                    this.submitting = false
-                    return;
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-            })
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            
         },
         // to close alert prompt
         closeAlert() {

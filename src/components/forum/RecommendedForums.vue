@@ -5,7 +5,7 @@
 
             <!-- max 6 groups -->
             <div class="group-container" @click="viewForum(forum)" v-for="forum in recommendations">
-                <img class="groupPic" :src="forum.forum_pic_link[0]" />
+                <img class="groupPic" :src="forum.forum_pic_link" />
                 <p class="text-below-pic">{{ forum.forumName }}</p>
             </div>
         </div>
