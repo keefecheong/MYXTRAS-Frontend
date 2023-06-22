@@ -18,7 +18,7 @@
                             <p id="groupid">x/{{forum.forumID}}</p>
                             <p id="groupdescription">{{forum.forumDesc}}</p>
                         </div>
-                        <InterestBadgeList :selectedOption="forum.category" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
+                        <InterestBadgeList :selectedOption="forum.tags" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
                     </div>
                     <div class="forumOptions">
                         <button :class="{ 'subscribed': isSubscribed, 'white-btn': !isSubscribed  }" v-if="!isCreator" @click="subscribeForum">{{ isSubscribed ? 'Unsubscribe' : 'Subscribe' }}</button>
@@ -171,7 +171,7 @@ export default {
                 threadObject = {
                 'thread_title': this.threadTitle,
                 'thread_desc': this.threadDesc,
-                'category': this.tags
+                'tags': this.tags
                 }
                 
                 uploadData.append('threadObject', JSON.stringify(threadObject))

@@ -207,7 +207,6 @@ export default {
     },
     data(){
         return{
-            selectedOption: ['Kpop','Games'],
             isDraggable: false,
         }
     },

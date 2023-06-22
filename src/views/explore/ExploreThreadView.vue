@@ -10,9 +10,9 @@
             />
         </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="contentLoaded">
         <div class="col-md-9">
-            <ForumLayout :forums="filteredForums"/>
+            <ThreadLayout :threads="filteredThreads"/>
         </div>
         <div class="col-md-3 scrolling-div">
             <div class="popular-community">
@@ -73,23 +73,24 @@
 </template>
 
 <script>
-    import ForumLayout from '../../components/forum/ForumLayout.vue';
+    import ThreadLayout from '../../components/forum/ThreadLayout.vue';
     import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
     import handleInterestSelected from '../../utils/general/defaultInterestSelectedCallback.js';
 
     export default {
         data() {
             return {
-                selectedOption: []
+                selectedOption: [],
+                contentLoaded: false
             }
         },
         components: {
-            ForumLayout,
+            ThreadLayout,
             InterestBadgeList
         },
-        props: [
-        'forums'
-        ],
+        mounted() {
+            this.retrieveAllThreads()
+        },
         methods: {
             openForum(id) {
                 const status = document.getElementById(id).className;
@@ -102,17 +103,43 @@
                     document.getElementById(id).className = "triangle-down";
                 }
             },
-            filteredForums() {
-                if (this.selectedOption.length <= 0) {
-                    return this.forums;
-                }
-                else {
-                    return this.forums.filter(forum => forum.category && forum.category.some(category => this.selectedOption.includes(category  )));
-                }
+            async retrieveAllThreads() {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads`, {
+                    mode: 'cors',
+                    method: 'GET',
+                    credentials: 'include'
+                }).then(res => {
+                    if (res.ok) {
+                    return res.json();
+                    }
+                    throw new Error('Response not OK');
+                })
+                .then(data => {
+                    this.threads = data;
+                    this.contentLoaded = true;
+                    console.log(this.threads)
+
+                })
+                .catch((error) => {
+                    console.log("This page could not be loaded: ", error);
+                });
+                
             },
             handleInterestSelected(option) {
                 handleInterestSelected(option, this.selectedOption);
-            }
+            },
+            
+        },
+        computed: {
+            // get filtered threads
+            filteredThreads() {
+                if (this.selectedOption.length <= 0) {
+                    return this.threads;
+                }
+                else {
+                    return this.threads.filter(thread => thread.tags && thread.tags.some(tag => this.selectedOption.includes(tag)));
+                }
+            },
         }
     }
 </script>

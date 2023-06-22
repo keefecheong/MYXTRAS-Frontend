@@ -2,10 +2,6 @@
     <div v-for="thread in threads">
         <div class="card shadow threadContainer">
             <div class="row">
-                <div class="col-2"></div>
-                <div class="col-10"><span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span></div>
-            </div>
-            <div class="row">
                 <div class="col-md-2 d-flex justify-content-end">
                     <a><img id="threadGroupPic" :src="thread.creator_id.profile_pic_link" :draggable="isDraggable"></a>
                 </div>
@@ -13,7 +9,7 @@
                     <p id="meta">{{ "Posted by: @" + thread.creator_id.username }}</p>  
                     <p id="thread-title">{{ thread.thread_title }}</p>  
                     <p id="thread-description">{{ thread.thread_desc }}</p>
-                    <InterestBadgeList :selectedOption="thread.category" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
+                    <InterestBadgeList :selectedOption="thread.tags" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
 
                     <div class="imageContainer">
                         <img id="threadPic" :src="thread.content_links[0]" :draggable="isDraggable">

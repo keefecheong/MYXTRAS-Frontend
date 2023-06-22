@@ -18,7 +18,7 @@
             
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="card shadow" v-if="subbedForums.some(forum => forum.threads.length === 0)">
+                        <div class="card shadow" v-if="subbedForums.length === 0">
                             <div class="center-align" style="margin: 3vh 0;">
                                 <p>No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
                             </div>
