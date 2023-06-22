@@ -13,6 +13,8 @@
                     <p id="meta">{{ "Posted by: @" + thread.creator_id.username }}</p>  
                     <p id="thread-title">{{ thread.thread_title }}</p>  
                     <p id="thread-description">{{ thread.thread_desc }}</p>
+                    <InterestBadgeList :selectedOption="thread.category" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
+
                     <div class="imageContainer">
                         <img id="threadPic" :src="thread.content_links[0]" :draggable="isDraggable">
                     </div>
@@ -126,48 +128,16 @@
     color: var(--primary);
 }
 
-#interest-badge{
-    margin: 5px;
-    padding: 10px;
-    width: 5rem;
-}
 
-.badge-kpop {
-    background-color: #FF7BE2;
-}
-
-.badge-games {
-    background-color: #6FE5FF;
-}
-
-.badge-technology {
-    background-color: #6FFFA8;
-}
-
-.badge-sports{
-    background-color: #FFE27B;
-}
-
-.badge-dancing{
-    background-color: #7B88FF;
-}
-
-.badge-jpop{
-    background-color: #FFAB6F;
-}
-
-.badge-coding{
-    background-color: #6F74FF;
-}
-
-.badge-lifestyle{
-    background-color: #FC5454;
-}
 </style>
 
 <script>
+import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
+
 export default {
-    
+    components: {
+        InterestBadgeList,
+    },
     data() {
         return {
             isDraggable: false,

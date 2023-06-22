@@ -23,7 +23,7 @@
                                 <p>No new threads, go <a href="/explore.html">Xplore</a> for more!</p>
                             </div>
                         </div>
-                        <ForumLayout :subbedForums="subbedForums" style="margin: 3vh 0;"/>
+                        <ForumLayout :forums="subbedForums" style="margin: 3vh 0;"/>
                     </div>
                 </div>
 
@@ -71,13 +71,9 @@
                                 <p class="errMsg"> {{ idErr }}</p>
                                 <input type="text" v-model="forumName" placeholder="Community Name:" required>
                                 <textarea type="text" v-model="forumDesc" :maxlength="500" placeholder="Community Description (optional)" ></textarea>
-                                <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
-                                    <option value="" selected hidden disabled>Category</option>
-                                    <option value="Sports">Sports</option>
-                                    <option value="Dance">Dance</option>
-                                    <option value="Technology">Sports</option>
-                                    <option value="News">News</option>
-                                </select>
+                                <AddInterestButton :selectedOption="tags" @selectedInterests="handlePostTags">
+                                    Select Tags For Your Post (Optional):
+                                </AddInterestButton>
                                 <p v-if="showErrMsg" class="errMsg">Error: {{ errorMsg }}</p>
                             </div>
                             <div class="col-3"></div>
@@ -221,6 +217,7 @@ import PopularThreads from '../../components/forum/PopularThreads.vue';
 import { debounce } from 'lodash';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import AddInterestButton from '../../components/general/AddInterestButton.vue';
 
 export default {
     components: {
@@ -230,7 +227,8 @@ export default {
         CreatedForums,
         SubscribedForums,
         PopularThreads,
-        AlertPrompt
+        AlertPrompt,
+        AddInterestButton,
     },
     watch: {
         forumID: {
@@ -247,7 +245,7 @@ export default {
             showPopUp: false,
             alertStore: useAlertStore(),
             alert: useAlertStore().alert,
-
+            tags: [],
             // Data to display
             subbedForums: [],
             createdForums: [],
@@ -264,14 +262,22 @@ export default {
             forumName: '',
             forumDesc: '',
             forumObject: null,
-            selectedCategory: null,
             submitting: false,
-            
+            tags: [],
+
             //Error handling
             errorMsg: null,
             showErrMsg: false,
             idErr: null,
-            debouncedVerifyForumID: debounce(async function () {
+            
+        }
+    },
+    methods: {
+        handlePostTags(newTags) {
+            this.tags = newTags;
+        },
+        verifyForumID(){
+            const debouncedVerifyForumID = debounce(async () => {
                 try {
                     const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/verify-forumID`, {
                         method: 'POST',
@@ -301,12 +307,8 @@ export default {
                 } catch (error) {
                     console.error('Error:', error);
                 }
-            }, 2000)
-        }
-    },
-    methods: {
-        verifyForumID(){
-            this.debouncedVerifyForumID.call(this)
+            }, 2000);
+            debouncedVerifyForumID()
         },
         handleVariableUpdate(variable) {
             this.showPopUp = variable;
@@ -350,7 +352,7 @@ export default {
         async createForum() {
             this.submitting = true
             // Validation
-            var forumDetails = [this.forumName, this.forumID, this.selectedCategory, this.selectedGroupPic,  this.selectedBanner];
+            var forumDetails = [this.forumName, this.forumID, this.selectedGroupPic,  this.selectedBanner];
             if (forumDetails.some(item => item === '' || item === null)){
                 this.showErrMsg = true;
                 this.submitting = false;
@@ -367,7 +369,7 @@ export default {
                     'forumName': this.forumName,
                     'forumID': this.forumID,
                     'forumDesc': this.forumDesc,
-                    'category': this.selectedCategory
+                    'category': this.tags
                 }
                 
                 uploadData.append('forumObject', JSON.stringify(forumObject))

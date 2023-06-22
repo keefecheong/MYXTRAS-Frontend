@@ -18,6 +18,7 @@
                             <p id="groupid">x/{{forum.forumID}}</p>
                             <p id="groupdescription">{{forum.forumDesc}}</p>
                         </div>
+                        <InterestBadgeList :selectedOption="forum.category" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
                     </div>
                     <div class="forumOptions">
                         <button :class="{ 'subscribed': isSubscribed, 'white-btn': !isSubscribed  }" v-if="!isCreator" @click="subscribeForum">{{ isSubscribed ? 'Unsubscribe' : 'Subscribe' }}</button>
@@ -75,16 +76,13 @@
 
                         <div class="label-row">
                             <label for="categoryDropdown" class="categoryDropdown" id="label">Category:</label>
-                            <select v-model="selectedCategory" name="categoryDropdown" id="categoryDropdown" >
-                                <option value="" selected hidden disabled>Category</option>
-                                <option value="Sports">Sports</option>
-                                <option value="Dance">Dance</option>
-                                <option value="Technology">Sports</option>
-                                <option value="News">News</option>
-                            </select>
-                            <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
+                            <div id="interestBtn">
+                                <AddInterestButton id="categoryDropdown" :selectedOption="tags" @selectedInterests="handlePostTags">
+                                    Select Tags For Your Post (Optional):
+                                </AddInterestButton>
+                            </div>
                         </div>
-
+                        <p v-if="showErrMsg" style="color: red;">Error: {{ errorMsg }}</p>
                         <button @click="createThread" class="image-form-control-button" :class="{ 'disabled': submitting }" :disabled="submitting">{{ submitting ? 'Creating...' : 'Create' }}</button>
                     </div>
                 </div>
@@ -100,14 +98,17 @@ import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
 import threadLayout from '../../components/forum/ThreadLayout.vue';
 import recommendedForums from '../../components/forum/RecommendedForums.vue';
-
+import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
+import AddInterestButton from '../../components/general/AddInterestButton.vue';
 
 export default {
     components: {
         NavSidebar,
         SearchBar,
         threadLayout,
-        recommendedForums
+        recommendedForums,
+        InterestBadgeList,
+        AddInterestButton,
     },
 
     data() {
@@ -123,12 +124,11 @@ export default {
             threadPicObject: null,
             threadTitle: null,
             threadDesc: null,
-            selectedCategory: [],
             submitting: false,
             isSubscribed: false,
 
             recommendations: {},
-
+            tags: [],
             //Error handling
             errorMsg: null,
             showErrMsg: false,
@@ -171,7 +171,7 @@ export default {
                 threadObject = {
                 'thread_title': this.threadTitle,
                 'thread_desc': this.threadDesc,
-                'category': this.selectedCategory
+                'category': this.tags
                 }
                 
                 uploadData.append('threadObject', JSON.stringify(threadObject))
@@ -246,6 +246,7 @@ export default {
             })
             .then(data => {
                 this.threads = data.threads;
+                console.log(this.threads)
             })
             .catch((error) => {
                 console.log("The threads could not be loaded: ", error);
@@ -484,7 +485,10 @@ export default {
     margin-left: 5.5rem;
     width: 70%;
 }
-
+#interestBtn {
+    margin-left: 12vw;
+    width: 70%;
+}
 #desc {
     margin-left: 2rem;
     width: 70%;

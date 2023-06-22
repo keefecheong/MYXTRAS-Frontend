@@ -280,62 +280,6 @@ export default {
             // Error
             emailErr: null,
             phoneErr: null,
-            debouncedVerifyEmail: debounce(async function () {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify-email`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-                body: JSON.stringify({ email: this.emailAddress })
-                });
-
-                if (response.ok) {
-                this.emailErr = null;
-                return;
-                } else if (response.status === 400) {
-                const data = await response.json();
-                if (data.error === 'Email already exists') {
-                    this.emailErr = "Email already taken";
-                    return;
-                } else {
-                    throw new Error('Error: ' + response.status);
-                }
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            }, 2000),
-            debouncedVerifyPhone: debounce(async function () {
-            try {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify-phone`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-                body: JSON.stringify({ phoneNumber: this.phoneNumber })
-            });
-                if (response.ok) {
-                    this.phoneErr = null
-                    return;
-                } else if (response.status === 400){
-                    response.json().then(data => {
-                    if (data.error === 'Phone Number already exists') {
-                        this.phoneErr = "Phone Number already taken"
-                        return;
-                    }
-                    else {
-                        throw new Error('Error: ' + response.status);
-                    }
-                    });
-                    return;
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            }, 2000)
         }
     },
     components: {
@@ -502,10 +446,66 @@ export default {
             this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
         },
         async verifyEmail() {
-            this.debouncedVerifyEmail.call(this)
+            const debouncedVerifyEmail = debounce(async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+                body: JSON.stringify({ email: this.emailAddress })
+                });
+
+                if (response.ok) {
+                this.emailErr = null;
+                return;
+                } else if (response.status === 400) {
+                const data = await response.json();
+                if (data.error === 'Email already exists') {
+                    this.emailErr = "Email already taken";
+                    return;
+                } else {
+                    throw new Error('Error: ' + response.status);
+                }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            }, 2000);
+
+            debouncedVerifyEmail()
         },
         async verifyPhone() {
-            this.debouncedVerifyPhone.call(this)
+            const debouncedVerifyPhone = debounce(async () => {
+            try {
+            const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify-phone`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+                body: JSON.stringify({ phoneNumber: this.phoneNumber })
+            });
+
+            if (response.ok) {
+                this.phoneErr = null;
+                return;
+            } else if (response.status === 400) {
+                const data = await response.json();
+                if (data.error === 'Phone Number already exists') {
+                this.phoneErr = "Phone Number already taken";
+                return;
+                } else {
+                throw new Error('Error: ' + response.status);
+                }
+            }
+            } catch (error) {
+            console.error('Error:', error);
+            }
+        }, 2000);
+
+        debouncedVerifyPhone();
         },
         async registerUser() {
             if (!this.verifiedotp){

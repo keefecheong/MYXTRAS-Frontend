@@ -192,7 +192,7 @@ export default {
             type: Array,
             default: () => [],
         },
-        subbedForums: {
+        forums: {
             type: Array,
             default: {}
         }
@@ -213,11 +213,9 @@ export default {
     },
     methods:{
         filterThreads() {
-            console.log(this.subbedForums)
-            
             // Step 1: Retrieve the threads from the filtered forums
             // Store forum details inside the thread array
-            const threads = this.subbedForums.reduce((result, forum) => {
+            const threads = this.forums.reduce((result, forum) => {
                 const threadsWithForumDetails = forum.threads.map((thread) => {
                     return {
                         forumID: forum.forumID,
@@ -250,35 +248,35 @@ export default {
             localStorage.setItem('threadID', thread._id)
             location.href="/threadView.html"
         },
-        getBadgeClass(option) {
-            if (this.selectedOption.includes(option)) {
-                return `badge ${this.getBadgeColor(option)} selected`;
-            }
-            return `badge ${this.getBadgeColor(option)}`;
-        },
+        // getBadgeClass(option) {
+        //     if (this.selectedOption.includes(option)) {
+        //         return `badge ${this.getBadgeColor(option)} selected`;
+        //     }
+        //     return `badge ${this.getBadgeColor(option)}`;
+        // },
 
-        getBadgeColor(option) {
-            // Return a class name based on the selected option
-            switch (option) {
-            case 'Kpop':
-                return 'badge badge-kpop';
-            case 'Games':
-                return 'badge badge-games';
-            case 'Technology':
-                return 'badge badge-technology';
-            case 'Sports':
-                return 'badge badge-sports'
-            case 'Dancing':
-                return 'badge badge-dancing'
-            case 'JPOP':
-                return 'badge badge-jpop'
-            case 'Coding':
-                return 'badge badge-coding'
-            case 'Lifestyle':
-                return 'badge badge-lifestyle'
-            }
-            return `badge-${bg-info}`;
-        },
+        // getBadgeColor(option) {
+        //     // Return a class name based on the selected option
+        //     switch (option) {
+        //     case 'Kpop':
+        //         return 'badge badge-kpop';
+        //     case 'Games':
+        //         return 'badge badge-games';
+        //     case 'Technology':
+        //         return 'badge badge-technology';
+        //     case 'Sports':
+        //         return 'badge badge-sports'
+        //     case 'Dancing':
+        //         return 'badge badge-dancing'
+        //     case 'JPOP':
+        //         return 'badge badge-jpop'
+        //     case 'Coding':
+        //         return 'badge badge-coding'
+        //     case 'Lifestyle':
+        //         return 'badge badge-lifestyle'
+        //     }
+        //     return `badge-${bg-info}`;
+        // },
     }
 }
 
