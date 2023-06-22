@@ -1,7 +1,18 @@
 <template>
     <div class="row">
+        <div id="gallery-interest-selection">
+            <span>Filter by:</span>
+
+            <InterestBadgeList
+                :selectedOption="selectedOption"
+                :selection="true"
+                @interest-selected="handleInterestSelected"
+            />
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-9">
-            <ForumLayout/>
+            <ForumLayout :forums="filteredForums"/>
         </div>
         <div class="col-md-3 scrolling-div">
             <div class="popular-community">
@@ -63,10 +74,22 @@
 
 <script>
     import ForumLayout from '../../components/forum/ForumLayout.vue';
+    import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
+    import handleInterestSelected from '../../utils/general/defaultInterestSelectedCallback.js';
+
     export default {
-        components: {
-            ForumLayout
+        data() {
+            return {
+                selectedOption: []
+            }
         },
+        components: {
+            ForumLayout,
+            InterestBadgeList
+        },
+        props: [
+        'forums'
+        ],
         methods: {
             openForum(id) {
                 const status = document.getElementById(id).className;
@@ -78,6 +101,17 @@
                     document.getElementById("dc"+id).className = "dropdown-content";
                     document.getElementById(id).className = "triangle-down";
                 }
+            },
+            filteredForums() {
+                if (this.selectedOption.length <= 0) {
+                    return this.forums;
+                }
+                else {
+                    return this.forums.filter(forum => forum.category && forum.category.some(category => this.selectedOption.includes(category  )));
+                }
+            },
+            handleInterestSelected(option) {
+                handleInterestSelected(option, this.selectedOption);
             }
         }
     }
@@ -91,6 +125,13 @@
         width: 100%;
         border-bottom: 1px solid #443b3b;
         margin: 0;
+    }
+    #gallery-interest-selection {
+        display: flex;
+        flex-direction: row;
+        column-gap: 15px;
+        align-items: center;
+        justify-content: center;
     }
     .popular-community {
         border-radius: 13px;
