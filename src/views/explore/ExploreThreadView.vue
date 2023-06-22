@@ -10,9 +10,15 @@
             />
         </div>
     </div>
-    <div class="row" v-if="contentLoaded">
-        <div class="col-md-9">
-            <ThreadLayout :threads="filteredThreads"/>
+    <div class="row">
+        <div class="col-md-9" >
+            <div v-if="contentLoaded && filteredThreads.length > 0">
+                <ThreadLayout :threads="filteredThreads"/>
+            </div>
+            <div v-else id="no-filtered-blogs">
+                <p>No threads found.</p>
+                <p>Select another filter?</p>
+            </div>
         </div>
         <div class="col-md-3 scrolling-div">
             <div class="popular-community">
@@ -103,8 +109,8 @@
                     document.getElementById(id).className = "triangle-down";
                 }
             },
-            async retrieveAllThreads() {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads`, {
+            retrieveAllThreads() {
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads`, {
                     mode: 'cors',
                     method: 'GET',
                     credentials: 'include'
