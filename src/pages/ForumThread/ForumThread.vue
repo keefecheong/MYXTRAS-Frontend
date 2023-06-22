@@ -9,16 +9,16 @@
         <div id="main-content" v-if="contentLoaded">
             <div class="row">
                 <div class="imageContainer">
-                    <img :src="forum.banner_link" alt="Banner" id="banner-picture"/>
+                    <img :src="thread.parent_id.banner_link" alt="Banner" id="banner-picture"/>
                 </div>
             </div>
             <div class="row">
                 <div id="pink-container">
                     <div id="image" class="col-md-1">
-                        <img class="imageIcon" :src="forum.forum_pic_link">
+                        <img class="imageIcon" :src="thread.parent_id.forum_pic_link">
                     </div>
                     <div id="group-description" class="col-md-1">
-                        <h5 id="groupname">x/{{ forum.forumID }}</h5>
+                        <h5 id="groupname">x/{{ thread.parent_id.forumID }}</h5>
                     </div>
                 </div>
             </div>
@@ -129,9 +129,8 @@ export default {
                 throw new Error('Response not OK');
             })
             .then(data => {
-                this.thread = data.thread;
+                this.thread = data;
                 console.log(this.thread)
-                this.forum = data.forum;
                 this.contentLoaded = true;
 
                 this.liked = this.thread.liked;

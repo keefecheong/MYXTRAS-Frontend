@@ -244,6 +244,7 @@ import firebase from 'firebase';
 import { debounce } from 'lodash';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
 
 export default {
     data() {

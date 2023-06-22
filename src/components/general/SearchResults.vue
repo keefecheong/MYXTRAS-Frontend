@@ -1,8 +1,9 @@
 <template>
     <div class="resultsContainer">
         <ul>
-            <li v-if="currentPage === 'forums'" v-for="result in results" @click="viewForum(result)">{{ "x/" + result.forumID + " ~ " + result.forumName }}</li>
-            <li v-if="currentPage === 'feed'" v-for="result in results" @click="viewProfile(result)">{{ result.real_name + " ~ " + result.username }}</li>
+            <li v-for="result in results" @click="handleClick(result)">
+                {{ displayText(result) }}
+            </li>
         </ul>
     </div>
 </template>
@@ -53,6 +54,13 @@ export default {
     },
     props: ['results', 'currentPage'],
     methods: {
+        handleClick(result) {
+            if (result.hasOwnProperty('forumID')) {
+                this.viewForum(result);
+            } else if (result.hasOwnProperty('real_name')) {
+                this.viewProfile(result);
+            }
+        },
         // Taken from ForumGroup.vue
         async viewForum(forum){
             localStorage.setItem('forumID', forum.forumID);
@@ -60,9 +68,18 @@ export default {
         },
 
         async viewProfile(user){
-            localStorage.setItem('real_name', user.real_name);
+            // TO DO VIEW PROFILE
             location.href = "/ProfilePage.html"
-        }
+        },
+        displayText(result) {
+
+            if (result.hasOwnProperty('forumID')) {
+                return `x/${result.forumID} ~ ${result.forumName}`;
+            } else if (result.hasOwnProperty('real_name')) {
+                return `${result.real_name} ~ ${result.username}`;
+            } 
+            return '';
+        },
     }
 };
 </script>

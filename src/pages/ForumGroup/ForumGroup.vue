@@ -126,7 +126,8 @@ export default {
             threadDesc: null,
             submitting: false,
             isSubscribed: false,
-
+            forumID: null,
+            forumObjId: null,
             recommendations: {},
             tags: [],
             //Error handling
@@ -136,7 +137,14 @@ export default {
     },
     mounted() {
         this.getForumPage()
-        this.getThreads()
+    },
+    watch: {
+        forumObjId: {
+            immediate: false,
+            handler(newVal, oldVal) {
+                this.getThreads();
+            }
+        },
     },
     methods: {
         toggleScrolling() {
@@ -155,7 +163,7 @@ export default {
         async createThread() {
             this.submitting = true
             // Validation
-            var threadDetails = [this.threadTitle, this.threadPicObject];
+            var threadDetails = [this.threadTitle];
             
             if (threadDetails.some(item => item === '' || item === null)){
                 this.showErrMsg = true;
@@ -175,14 +183,14 @@ export default {
                 }
                 
                 uploadData.append('threadObject', JSON.stringify(threadObject))
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/create/${this.current_forumID}`, {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/create/${this.forumObjId}`, {
                 method: "POST",
                 credentials: "include",
                 body: uploadData
                 })
                 .then(async response => {
                     if (response.ok){
-                        //localStorage.setItem('forumID', this.forumID);
+                        localStorage.setItem('forumID', this.forumID);
                         location.href = "/forumGroup.html"
                         this.submitting = false
                     return;
@@ -209,9 +217,9 @@ export default {
         
         },
         async getForumPage() {
-            this.current_forumID = localStorage.getItem('forumID');
+            this.forumID = localStorage.getItem('forumID');
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${this.current_forumID}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${this.forumID}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -223,18 +231,20 @@ export default {
             })
             .then(data => {
                 this.forum = data.forum;
+                this.forumObjId = data.forum._id
                 // Stores forumPic to be displayed in threadView.html
                 this.isCreator = data.isCreator;
                 this.isSubscribed = data.isSubscribed;
                 this.contentLoaded = true
-
             })
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);
             });
+            
         },
         async getThreads() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads/${this.current_forumID}`, {
+            console.log(this.forumObjId)
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads/${this.forumObjId}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -245,8 +255,8 @@ export default {
                 throw new Error('Response not OK');
             })
             .then(data => {
-                this.threads = data.threads;
-                console.log(this.threads)
+                this.threads = data;
+                console.log(data)
             })
             .catch((error) => {
                 console.log("The threads could not be loaded: ", error);
