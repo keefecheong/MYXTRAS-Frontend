@@ -215,7 +215,9 @@ export default {
             else if (this.currentPage === 'forums'){
                 searchObject = this.currentPage
             }
-
+            else if (this.currentPage === 'xplore'){
+                searchObject = 'users-forums'
+            }
             try {
                 const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search/${searchObject}?term=${this.searchTerm}`);
                 const data = await response.json();

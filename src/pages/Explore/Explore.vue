@@ -3,7 +3,7 @@
         <NavSidebar/>
 
         <div id="main-content">
-            <SearchBar currentPage="feed"/>
+            <SearchBar currentPage="xplore"/>
 
             <div class="container-fluid explore-container">
                 <div class="row">
@@ -19,7 +19,7 @@
                         </div>                    
                     </div>
 
-                    <div class="col-md-9">
+                    <div class="col-md-10">
                         <h1>Explore</h1>
                         <hr />
                         <router-view :blogs="blogs" />

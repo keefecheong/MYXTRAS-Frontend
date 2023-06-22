@@ -9,19 +9,20 @@
                 @interest-selected="handleInterestSelected"
             />
         </div>
+        <div id="no-filtered-blogs" v-if="!(contentLoaded && filteredThreads.length > 0)">
+            <p>No threads found.</p>
+            <p>Select another filter?</p>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-9" >
             <div v-if="contentLoaded && filteredThreads.length > 0">
                 <ThreadLayout :threads="filteredThreads"/>
             </div>
-            <div v-else id="no-filtered-blogs">
-                <p>No threads found.</p>
-                <p>Select another filter?</p>
-            </div>
         </div>
-        <div class="col-md-3 scrolling-div">
-            <div class="popular-community">
+        <div class="col-md-3 ">
+            <div class="sticky-div">
+                <div class="popular-community">
                 <h1 class="pop-header">Popular Communities</h1>
                 <div class="interestCommunity">
                     <h4 class="cat" @click="openForum(1)">Interest 1<div class="triangle-down" id="1"></div></h4>
@@ -73,6 +74,7 @@
                         <a href="#" class="forum5-5">Link 5</a>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -165,6 +167,14 @@
         column-gap: 15px;
         align-items: center;
         justify-content: center;
+    }
+    .sticky-div {
+        position: sticky;
+        top: 15vh;
+        right: 5vw;
+        display: flex;
+        justify-content: flex-end;
+        z-index: 1;
     }
     .popular-community {
         border-radius: 13px;
