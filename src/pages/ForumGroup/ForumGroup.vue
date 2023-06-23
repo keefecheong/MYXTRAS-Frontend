@@ -225,7 +225,7 @@ export default {
         },
         async getForumPage() {
             this.forumID = localStorage.getItem('forumID');
-
+            console.log(this.forumID)
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${this.forumID}`, {
                 mode: 'cors',
                 method: 'GET',

@@ -13,17 +13,19 @@
             <div class="row">
                 <div class="col-md-3">
                    <CreatedForums />
-                   <SubscribedForums @got-subbed-forums="retrieveRecentThreads"/>
+                   <SubscribedForums />
                 </div>
             
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="card shadow" v-if="subbedForums.length === 0">
+                        <div class="card shadow" v-if="subscribedCreatedForums.length === 0">
                             <div class="center-align" style="margin: 3vh 0;">
                                 <p>No new threads, <a href="/explore.html">Xplore</a> now!</p>
                             </div>
                         </div>
-                        <ForumLayout :forums="subbedForums" style="margin: 3vh 0;"/>
+                        <div>
+                            <ForumLayout v-if="subscribedCreatedForums.length !== 0" :forums="subscribedCreatedForums" style="margin: 3vh 0;"/>
+                        </div>
                     </div>
                 </div>
 
@@ -126,22 +128,40 @@ export default {
             subbedForums: [],
             createdForums: [],
             threads: [],
-            subbedForumThreads: []
+            subscribedCreatedForums: []
         }
+    },
+    created() {
+        this.retrieveRecentThreads()
     },
     methods: {
         // toggle forum form
         toggleForumForm(show) {
             this.showForumForm = show;
         },
-        retrieveRecentThreads(variable) {
-            this.subbedForums = variable;
-            console.log(this.subbedForums.length)
+        async retrieveRecentThreads() {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-created-subscribed-threads/`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('Response not OK');
+            })
+            .then(data => {
+                this.subscribedCreatedForums = data;
+            })
+            .catch((error) => {
+                console.log("The recent threads could not be loaded: ", error);
+            });
         },
         // to close alert prompt
         closeAlert() {
             this.alertStore.closeAlert();
         }
+
     },
     computed: {
         // to get showAlert value

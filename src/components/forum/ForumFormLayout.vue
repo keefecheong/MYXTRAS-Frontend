@@ -46,8 +46,9 @@
                     <input type="text" id="forum-id-input" v-model="forumID" placeholder="Unique Forum ID:" @input="debounceVerifyForumID" />
                 </div>
     
-                <span id="forum-id-available" v-if="!idErr && forumIDVerified">Forum ID available.</span>
-                <span class="errMsg" v-if="idErr && forumIDVerified">Forum ID already taken.</span>
+                <span id="forum-id-available" v-if="!idErr && forumIDVerified && !illegalChar">Forum ID available.</span>
+                <span class="errMsg" v-if="idErr && forumIDVerified && !illegalChar">Forum ID already taken.</span>
+                <span class="errMsg" v-if="illegalChar" >Illegal chararcter detected</span>
             </div>
     
             <!-- forum name input -->
@@ -103,7 +104,7 @@ export default {
             debouncedVerifyForumID: null,
             groupPicErrors: [],
             bannerErrors: [],
-
+            illegalChar: false,
             // for edit mode
             dataInitialized: false,
             pictureUpdated: false,
@@ -168,7 +169,10 @@ export default {
         // debounce verifyForumID
         debounceVerifyForumID() {
             this.forumIDVerified = false;
-            
+            if (this.checkForIllegalChar()){
+                return this.illegalChar = true
+            }
+            this.illegalChar = false
             this.debouncedVerifyForumID()
         },
         // to handle change in selected files
@@ -245,6 +249,14 @@ export default {
                 this.selectedBanner = URL.createObjectURL(this.bannerObject);
             }
         },
+        checkForIllegalChar(){
+            console.log('1')
+            if (this.forumID.includes('#')){
+                return true;
+            }
+            
+            return false
+        }, 
         // submit forum form
         async submitForm() {
             this.submitting = true
@@ -288,6 +300,9 @@ export default {
             }
             
             try {
+                if (forumID.includes("#")){
+                    return;
+                }
                 var forumObject = {
                     'forumName': this.forumName.trim(),
                     'forumID': this.forumID.trim(),
@@ -347,7 +362,7 @@ export default {
         // handle selected tags
         handleInterestSelected(newTags) {
             this.tags = newTags;
-        }
+        },
     },
     computed: {
         // check if required fields are all filled up

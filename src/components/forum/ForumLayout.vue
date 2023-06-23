@@ -1,11 +1,8 @@
 <template>
-    <div class="forum-container">
+    <div class="forum-container" v-if="forums">
         <div class="row">
-            <div v-for="thread in this.sortedThreads">
+            <div v-for="thread in sortedThreads">
                 <div class="card shadow threadContainer">
-                    <!-- show interests -->
-
-                    
                     <div class="row">
                         <div class="col-md-2 d-flex justify-content-end">
                             <a @click="viewForum(thread.forumID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
@@ -126,26 +123,15 @@
     font-weight: bold;
     color: var(--primary);
 }
-/* 
-.forum-caption {
-    text-align: justify;
-    word-wrap: break-word;
-}
-
-.forum-image {
-    border-radius: 10px;
-    max-width: 100%;
-    max-height: 500px;
-    display: flex;
-    margin: auto;
-} */
 </style>
 
 <script>
+
 export default {
     data() {
         return {
-            sortedThreads: []
+            sortedThreads: [],
+            isDraggable: false,
         }
     },
     props: {
@@ -154,28 +140,42 @@ export default {
             default: () => [],
         },
         forums: {
-            type: Array,
+            type: Object,
             default: {}
         }
     },
-    // watch: {
-    //     subbedForums: {
-    //         immediate: false,
-    //         handler(newVal, oldVal) {
-    //             this.filterThreads();
-    //         }
-    //     }
-    // },
-    data(){
-        return{
-            isDraggable: false,
-        }
+    mounted() {
+        this.filterThreads()
     },
     methods:{
+        viewForum(forumID){
+            localStorage.setItem('forumID', forumID)
+            location.href="/forumGroup.html"
+        },
+
+        viewThread(thread){
+            localStorage.setItem('threadID', thread._id)
+            location.href="/threadView.html"
+        },
         filterThreads() {
             // Step 1: Retrieve the threads from the filtered forums
             // Store forum details inside the thread array
-            const threads = this.forums.reduce((result, forum) => {
+            
+            console.log(this.forums)
+            const createdForumThreads = this.forums.created_forums.reduce((result, forum) => {
+                const threadsWithForumDetails = forum.threads.map((thread) => {
+                    return {
+                        forumID: forum.forumID,
+                        forumName: forum.forumName,
+                        forum_pic_link: forum.forum_pic_link,
+                        ...thread,
+                    };
+                });
+
+                return result.concat(threadsWithForumDetails);
+            }, []);
+
+            const subbedForumThreads = this.forums.subscribed_forums.reduce((result, forum) => {
                 const threadsWithForumDetails = forum.threads.map((thread) => {
                     return {
                         forumID: forum.forumID,
@@ -189,55 +189,16 @@ export default {
             }, []);
             
             // Step 2: Flatten the threads array
-            const mergedThreads = [].concat(...threads);
+            const mergedThreads = createdForumThreads.concat(...subbedForumThreads);
             
             // Step 3: Sort the merged threads array in chronological order
             this.sortedThreads = mergedThreads.sort((a, b) => {
                 return new Date(b.creation_time) - new Date(a.creation_time);
             });
-
             console.log(this.sortedThreads)
+            return this.sortedThreads
         },
-
-        viewForum(forumID){
-            localStorage.setItem('forumID', forumID)
-            location.href="/forumGroup.html"
-        },
-
-        viewThread(thread){
-            localStorage.setItem('threadID', thread._id)
-            location.href="/threadView.html"
-        },
-        // getBadgeClass(option) {
-        //     if (this.selectedOption.includes(option)) {
-        //         return `badge ${this.getBadgeColor(option)} selected`;
-        //     }
-        //     return `badge ${this.getBadgeColor(option)}`;
-        // },
-
-        // getBadgeColor(option) {
-        //     // Return a class name based on the selected option
-        //     switch (option) {
-        //     case 'Kpop':
-        //         return 'badge badge-kpop';
-        //     case 'Games':
-        //         return 'badge badge-games';
-        //     case 'Technology':
-        //         return 'badge badge-technology';
-        //     case 'Sports':
-        //         return 'badge badge-sports'
-        //     case 'Dancing':
-        //         return 'badge badge-dancing'
-        //     case 'JPOP':
-        //         return 'badge badge-jpop'
-        //     case 'Coding':
-        //         return 'badge badge-coding'
-        //     case 'Lifestyle':
-        //         return 'badge badge-lifestyle'
-        //     }
-        //     return `badge-${bg-info}`;
-        // },
-    }
+    },
 }
 
 

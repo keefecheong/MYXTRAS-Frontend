@@ -97,7 +97,7 @@
                 handleInterestSelected(option, this.selectedOption);
             },
             retrieveForums() {
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-popular-forums`, {
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-categorized-forums`, {
                     mode: 'cors',
                     method: 'GET',
                     credentials: 'include'
