@@ -66,13 +66,7 @@
             <div class="forum-field-container">
                 <label for="forum-category-input" class="forum-label">Category:</label>
                 <div id="forum-category-container">
-                    <select v-model="selectedCategory" id="forum-category-input">
-                        <option value="" selected disabled>Select a Category</option>
-                        <option value="Sports">Sports</option>
-                        <option value="Dance">Dance</option>
-                        <option value="Technology">Technology</option>
-                        <option value="News">News</option>
-                    </select>
+                    <AddInterestButton :selectedOption="tags" @selectedInterests="handleForumTags"/>
                 </div>
             </div>
                 
@@ -84,6 +78,7 @@
 <script>
 import { useAlertStore } from '../../stores/AlertStore.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
+import AddInterestButton from '../../components/general/AddInterestButton.vue';
 
 export default {
     data() {
@@ -98,7 +93,7 @@ export default {
             forumID: '',
             forumName: '',
             forumDesc: '',
-            selectedCategory: null,
+            tags: [],
             submitting: false,
             
             //Error handling
@@ -118,7 +113,8 @@ export default {
         }
     },
     components: {
-        LoadingOverlay
+        LoadingOverlay,
+        AddInterestButton
     },
     props: [
         'editMode',
@@ -134,6 +130,9 @@ export default {
         }
     },
     methods: {
+        handleForumTags(newTags) {
+            this.tags = newTags;
+        },
         // close forum form
         closeForm() {
             this.$emit('close-forum-form');
@@ -290,7 +289,7 @@ export default {
                     'forumName': this.forumName,
                     'forumID': this.forumID,
                     'forumDesc': this.forumDesc,
-                    'category': this.selectedCategory
+                    'category': this.tags
                 }
                 
                 uploadData.append('forumObject', JSON.stringify(forumObject));
@@ -348,7 +347,7 @@ export default {
         requiredFields() {
             const nameValid = this.forumName.length > 0;
             const idValid = this.forumID.length > 0 && this.forumIDVerified && !this.idErr;
-            const categoryValid = this.selectedCategory;
+            const categoryValid = this.tags;
             let picValid = this.selectedGroupPic && this.groupPicObject;
             let bannerValid = this.selectedBanner && this.bannerObject;
 
