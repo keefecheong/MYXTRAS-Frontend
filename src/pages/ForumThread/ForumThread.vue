@@ -7,6 +7,16 @@
     <div id="main-container">
         <div id="main-content" v-if="contentLoaded">
             <div class="row">
+                <ForumViewHeader
+                    :forum="forum"
+                    :isCreator="isCreator"
+                    :isSubscribed="isSubscribed"
+                    :showCreateThreadButton="true"
+                    @show-forum-form="() => toggleForumForm(true)"
+                    @show-thread-form="showCreateThread"
+                    @subscribe="subscribeForum"
+                />
+                
                 <div class="card">
                         <div class="row threadContent">
                             <h2> {{ thread.thread_title}}</h2>
@@ -58,19 +68,22 @@
 <script>
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import ForumViewHeader from '../../components/forum/ForumViewHeader.vue';
 
 export default {
     components: {
-        AlertPrompt
+        AlertPrompt,
+        ForumViewHeader
     },
     data() {
         return {
+            forum: null,
+            isCreator: false,
+            isSubscribed: false,
             commentText: null,
             contentLoaded: false,
             commentsLoaded: false,
-            forumID: null,
-            forumGroupPic: null,
-            forumBannerPic: null,
+            
             current_threadID: null,
             submittingComment: false,
             commentData: {},
@@ -80,18 +93,46 @@ export default {
             dislikeCount: null,
             likeTimeout: null,
             dislikeTimeout: null,
+
             alert: useAlertStore().alert,
             alertStore: useAlertStore()
         }
     },
-    mounted() {
+    created() {
         this.getThreadPage()
         this.getComments()
     },
     methods: {
         async getThreadPage() {
+            // to get forum data
+            const forumID = localStorage.getItem('forumID');
+
+            const forumPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${forumID}`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                else {
+                    console.log('An error occured');
+                }
+            })
+            .then(data => {
+                this.forum = data.forum;
+                // Stores forumPic to be displayed in threadView.html
+                this.isCreator = data.isCreator;
+                this.isSubscribed = data.isSubscribed;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+            // to get thread data
             this.current_threadID = localStorage.getItem('threadID');
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-thread/${this.current_threadID}`, {
+
+            const threadPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-thread/${this.current_threadID}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -104,7 +145,6 @@ export default {
             .then(data => {
                 this.thread = data;
                 console.log(this.thread)
-                this.contentLoaded = true;
 
                 this.liked = this.thread.liked;
                 this.liked_frontend = this.liked;
@@ -117,6 +157,10 @@ export default {
             })
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);
+            });
+
+            await Promise.all([forumPromise, threadPromise]).then(() => {
+                this.contentLoaded = true;
             });
         },
         async createComment() {
