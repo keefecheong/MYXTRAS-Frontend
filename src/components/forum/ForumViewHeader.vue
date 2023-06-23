@@ -15,6 +15,7 @@
             
         <div id="forum-header-below">
             <div id="group-description">
+                <span>Description: </span>
                 <span class="hide-overflow-text">{{forumDesc}}</span>
             </div>
 
@@ -38,10 +39,17 @@
                 </div>
             </div>
         </div>
+
+        <div id="forum-header-below-tags" v-if="tags.length > 0">
+            <span>Tags: </span>
+            <InterestBadgeList :selectedOption="tags" :selection="false" />
+        </div>
     </div>
 </template>
 
 <script>
+import InterestBadgeList from '../general/InterestBadgeList.vue';
+
 export default {
     props: [
         'bannerLink',
@@ -52,13 +60,17 @@ export default {
         'numOfSubs',
         'isCreator',
         'isSubscribed',
-        'showCreateThreadButton'
+        'showCreateThreadButton',
+        'tags'
     ],
     emits: [
         'show-forum-form',
         'show-thread-form',
         'subscribe'
     ],
+    components: {
+        InterestBadgeList
+    },
     methods: {
         // to show edit forum form
         showForumForm() {
@@ -95,7 +107,7 @@ export default {
     width: 100%;
     color: white;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     padding: 15px 5%;
     position: relative;
 }
@@ -192,10 +204,14 @@ export default {
     background-color: white;
     border: white solid 3.5px;
     color: black;
-    border-radius: 10px;
-    height: 3rem;
-    width: 8.5rem;
     text-decoration: none;
-    font-size: 1rem;
+}
+
+#forum-header-below-tags {
+    margin-left: calc(var(--group-icon-size) + 10px);
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
 }
 </style>

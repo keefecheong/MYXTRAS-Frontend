@@ -18,6 +18,7 @@
                 :isCreator="isCreator"
                 :isSubscribed="isSubscribed"
                 :showCreateThreadButton="true"
+                :tags="forum.tags"
                 @show-forum-form="() => toggleForumForm(true)"
                 @show-thread-form="showCreateThread"
                 @subscribe="subscribeForum"
@@ -29,12 +30,12 @@
                         <p>No threads found, <a id="noThreadCreateBtn" @click="showCreateThread">create</a> one now!</p>
                     </div>
                     <RouterLink to="/">
-                        <threadLayout :threads="threads"/>
+                        <ThreadLayout :threads="threads"/>
                     </RouterLink>
                     <RouterView/>
                 </div>
                 <div class="col-md-3">
-                    <recommendedForums />
+                    <RecommendedForums />
                 </div>
             </div>
             <div class="row">
@@ -90,8 +91,8 @@
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
-import threadLayout from '../../components/forum/ThreadLayout.vue';
-import recommendedForums from '../../components/forum/RecommendedForums.vue';
+import ThreadLayout from '../../components/forum/ThreadLayout.vue';
+import RecommendedForums from '../../components/forum/RecommendedForums.vue';
 import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
 import ForumViewHeader from '../../components/forum/ForumViewHeader.vue';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
@@ -102,8 +103,8 @@ export default {
     components: {
         NavSidebar,
         SearchBar,
-        threadLayout,
-        recommendedForums,
+        ThreadLayout,
+        RecommendedForums,
         ForumFormLayout,
         ForumViewHeader,
         AlertPrompt,
@@ -271,7 +272,6 @@ export default {
             })
             .then(data => {
                 this.threads = data;
-                console.log(data)
             })
             .catch((error) => {
                 console.log("The threads could not be loaded: ", error);

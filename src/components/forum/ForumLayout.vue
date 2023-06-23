@@ -3,10 +3,9 @@
         <div class="row">
             <div v-for="thread in this.sortedThreads">
                 <div class="card shadow threadContainer">
-                    <div class="row">
-                        <div class="col-2"></div>
-                        <div class="col-10"><span v-for="option in selectedOption" id="interest-badge" :class="[getBadgeClass(option), { 'selected': selectedButton === option }]">{{ option }}</span></div>
-                    </div>
+                    <!-- show interests -->
+
+                    
                     <div class="row">
                         <div class="col-md-2 d-flex justify-content-end">
                             <a @click="viewForum(thread.forumID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
@@ -16,7 +15,7 @@
                             <p id="thread-title">{{ thread.thread_title }}</p>  
                             <p id="thread-description">{{ thread.thread_desc }}</p>
                             <div class="imageContainer">
-                                <img id="threadPic" :src="thread.content_links[0]" :draggable="isDraggable">
+                                <img id="threadPic" :src="thread.content_links" :draggable="isDraggable">
                             </div>
                             <br>
                             <div class="d-flex justify-content-end">
@@ -140,44 +139,6 @@
     display: flex;
     margin: auto;
 } */
-
-#interest-badge{
-    margin: 5px;
-    padding: 10px;
-    width: 5rem;
-}
-
-.badge-kpop {
-    background-color: #FF7BE2;
-}
-
-.badge-games {
-    background-color: #6FE5FF;
-}
-
-.badge-technology {
-    background-color: #6FFFA8;
-}
-
-.badge-sports{
-    background-color: #FFE27B;
-}
-
-.badge-dancing{
-    background-color: #7B88FF;
-}
-
-.badge-jpop{
-    background-color: #FFAB6F;
-}
-
-.badge-coding{
-    background-color: #6F74FF;
-}
-
-.badge-lifestyle{
-    background-color: #FC5454;
-}
 </style>
 
 <script>
@@ -197,14 +158,14 @@ export default {
             default: {}
         }
     },
-    watch: {
-        subbedForums: {
-            immediate: false,
-            handler(newVal, oldVal) {
-                this.filterThreads();
-            }
-        }
-    },
+    // watch: {
+    //     subbedForums: {
+    //         immediate: false,
+    //         handler(newVal, oldVal) {
+    //             this.filterThreads();
+    //         }
+    //     }
+    // },
     data(){
         return{
             isDraggable: false,

@@ -11,8 +11,8 @@
                     <p id="thread-description">{{ thread.thread_desc }}</p>
                     <InterestBadgeList :selectedOption="thread.tags" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
                     <br>
-                    <div class="imageContainer">
-                        <img id="threadPic" :src="thread.content_links[0]" :draggable="isDraggable">
+                    <div class="imageContainer" v-if="thread.content_links">
+                        <img id="threadPic" :src="thread.content_links" :draggable="isDraggable">
                     </div>
                     <br>
                     <div class="d-flex justify-content-end">
