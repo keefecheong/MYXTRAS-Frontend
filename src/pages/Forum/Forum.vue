@@ -18,13 +18,13 @@
             
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="card shadow" v-if="subscribedCreatedForums.length === 0">
+                        <div class="card shadow" v-if="recentThreads.length === 0">
                             <div class="center-align" style="margin: 3vh 0;">
                                 <p>No new threads, <a href="/explore.html">Xplore</a> now!</p>
                             </div>
                         </div>
                         <div>
-                            <ForumLayout v-if="subscribedCreatedForums.length !== 0" :forums="subscribedCreatedForums" style="margin: 3vh 0;"/>
+                            <ForumLayout v-if="recentThreads.length !== 0" :recentThreads="recentThreads" style="margin: 3vh 0;"/>
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@ export default {
             subbedForums: [],
             createdForums: [],
             threads: [],
-            subscribedCreatedForums: []
+            recentThreads: []
         }
     },
     created() {
@@ -140,7 +140,7 @@ export default {
             this.showForumForm = show;
         },
         async retrieveRecentThreads() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-created-subscribed-threads/`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-recent-threads/`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -151,7 +151,8 @@ export default {
                 throw new Error('Response not OK');
             })
             .then(data => {
-                this.subscribedCreatedForums = data;
+                this.recentThreads = data;
+                console.log(this.recentThreads)
             })
             .catch((error) => {
                 console.log("The recent threads could not be loaded: ", error);

@@ -61,7 +61,6 @@ p {
                 throw new Error('Response not OK');
             })
             .then(data => {
-                console.log(data)
                 this.popularThreads = data;
             })
             .catch((error) => {

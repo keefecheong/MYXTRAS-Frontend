@@ -1,14 +1,14 @@
 <template>
-    <div class="forum-container" v-if="forums">
+    <div class="forum-container" v-if="recentThreads">
         <div class="row">
-            <div v-for="thread in sortedThreads">
+            <div v-for="thread in recentThreads">
                 <div class="card shadow threadContainer">
                     <div class="row">
                         <div class="col-md-2 d-flex justify-content-end">
-                            <a @click="viewForum(thread.forumObjID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
+                            <a @click="viewForum(thread.parent_id._id)"><img id="threadGroupPic" :src="thread.parent_id.forum_pic_link" :draggable="isDraggable"></a>
                         </div>
                         <div class="col-10 threadContent">
-                            <p id="meta"><a @click="viewForum(thread.forumObjID)" class="forum-name">{{ "x/" + thread.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
+                            <p id="meta"><a @click="viewForum(thread.parent_id._id)" class="forum-name">{{ "x/" + thread.parent_id.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
                             <p id="thread-title">{{ thread.thread_title }}</p>  
                             <p id="thread-description">{{ thread.thread_desc }}</p>
                             <div class="imageContainer">
@@ -130,7 +130,7 @@
 export default {
     data() {
         return {
-            sortedThreads: [],
+            recentThreads: [],
             isDraggable: false,
         }
     },
@@ -139,65 +139,13 @@ export default {
             type: Array,
             default: () => [],
         },
-        forums: {
-            type: Object,
-            default: {}
+        recentThreads: {
+            type: Array,
+            default: []
         }
     },
-    mounted() {
-        this.filterThreads()
-    },
     methods:{
-        viewForum(forumID){
-            localStorage.setItem('forumID', forumID)
-            location.href="/forumGroup.html"
-        },
-
-        viewThread(thread){
-            localStorage.setItem('threadID', thread._id)
-            location.href="/threadView.html"
-        },
-        filterThreads() {
-            // Step 1: Retrieve the threads from the filtered forums
-            // Store forum details inside the thread array
-            console.log('1')
-            const createdForumThreads = this.forums.created_forums.reduce((result, forum) => {
-                const threadsWithForumDetails = forum.threads.map((thread) => {
-                    return {
-                        forumID: forum.forumID,
-                        forumObjID: forum._id,
-                        forumName: forum.forumName,
-                        forum_pic_link: forum.forum_pic_link,
-                        ...thread,
-                    };
-                });
-
-                return result.concat(threadsWithForumDetails);
-            }, []);
-
-            const subbedForumThreads = this.forums.subscribed_forums.reduce((result, forum) => {
-                const threadsWithForumDetails = forum.threads.map((thread) => {
-                    return {
-                        forumID: forum.forumID,
-                        forumObjID: forum._id,
-                        forumName: forum.forumName,
-                        forum_pic_link: forum.forum_pic_link,
-                        ...thread,
-                    };
-                });
-
-                return result.concat(threadsWithForumDetails);
-            }, []);
-            
-            console.log(this.forums)
-            // Step 2: Flatten the threads array
-            const mergedThreads = createdForumThreads.concat(...subbedForumThreads);
-            // Step 3: Sort the merged threads array in chronological order
-            this.sortedThreads = mergedThreads.sort((a, b) => {
-                return new Date(b.creation_time) - new Date(a.creation_time);
-            });
-        },
-
+        
         viewForum(forumID){
             sessionStorage.setItem('forumID', forumID)
             location.href="/forumGroup.html"

@@ -309,7 +309,7 @@ export default {
             }
             
             try {
-                if (forumID.includes("#")){
+                if (this.forumID.includes("#")){
                     return;
                 }
                 var forumObject = {
