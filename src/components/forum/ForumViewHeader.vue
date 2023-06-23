@@ -1,22 +1,22 @@
 <!-- standardized forum header (includes banner and header with forum details and edit forum, subscribe, and create thread buttons) -->
 
 <template>
-    <img :src="bannerLink" alt="Banner" id="banner-picture"/>
+    <img :src="forum.banner_link" alt="Banner" id="banner-picture"/>
 
     <div id="forum-header-container">
         <div id="forum-header-above">
-            <img id="group-icon" :src="forumPicLink">
+            <img id="group-icon" :src="forum.forum_pic_link">
             
             <div id="forum-header-above-name">
-                <span id="group-name">{{forumName}}</span>
-                <span id="group-id">x/{{forumID}}</span>
+                <span id="group-name">{{forum.forumName}}</span>
+                <span id="group-id">x/{{forum.forumID}}</span>
             </div>
         </div>
             
         <div id="forum-header-below">
             <div id="group-description">
                 <span>Description: </span>
-                <span class="hide-overflow-text">{{forumDesc}}</span>
+                <span class="hide-overflow-text">{{forum.forumDesc}}</span>
             </div>
 
             <div id="forum-header-subscribers">
@@ -40,9 +40,9 @@
             </div>
         </div>
 
-        <div id="forum-header-below-tags" v-if="tags.length > 0">
+        <div id="forum-header-below-tags" v-if="forum.tags.length > 0">
             <span>Tags: </span>
-            <InterestBadgeList :selectedOption="tags" :selection="false" />
+            <InterestBadgeList :selectedOption="forum.tags" :selection="false" />
         </div>
     </div>
 </template>
@@ -52,16 +52,10 @@ import InterestBadgeList from '../general/InterestBadgeList.vue';
 
 export default {
     props: [
-        'bannerLink',
-        'forumPicLink',
-        'forumName',
-        'forumID',
-        'forumDesc',
-        'numOfSubs',
+        'forum',
         'isCreator',
         'isSubscribed',
-        'showCreateThreadButton',
-        'tags'
+        'showCreateThreadButton'
     ],
     emits: [
         'show-forum-form',
@@ -83,6 +77,11 @@ export default {
         // to subscribe/unsubscribe from forum
         subscribeForum() {
             this.$emit('subscribe');
+        }
+    },
+    computed: {
+        numOfSubs() {
+            return this.forum.subscribers.length
         }
     }
 }
@@ -178,6 +177,7 @@ export default {
 #privileged-options .material-symbols-outlined {
     background: transparent;
     font-size: 2em;
+    color: white;
 }
 
 #normal-options {

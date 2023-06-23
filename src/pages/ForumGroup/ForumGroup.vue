@@ -9,16 +9,10 @@
     <div id="main-content" v-if="contentLoaded" >
         <div class="row">
             <ForumViewHeader
-                :bannerLink="forum.banner_link"
-                :forumPicLink="forum.forum_pic_link"
-                :forumName="forum.forumName"
-                :forumID="forum.forumID"
-                :forumDesc="forum.forumDesc"
-                :numOfSubs="numOfSubs"
+                :forum="forum"
                 :isCreator="isCreator"
                 :isSubscribed="isSubscribed"
                 :showCreateThreadButton="true"
-                :tags="forum.tags"
                 @show-forum-form="() => toggleForumForm(true)"
                 @show-thread-form="showCreateThread"
                 @subscribe="subscribeForum"
@@ -118,11 +112,12 @@ export default {
             showThreadForm: false,
             alertStore: useAlertStore(),
 
-            forum: null,
-            current_forumID: null,
+            forum: {},
             contentLoaded: false,
             isCreator: false,
+            isSubscribed: false,
             threads: [],
+
             showPopUp: false,
 
             selectedThreadPic: null,
@@ -130,9 +125,7 @@ export default {
             threadTitle: null,
             threadDesc: null,
             submitting: false,
-            isSubscribed: false,
             forumID: null,
-            forumObjId: null,
             recommendations: {},
             tags: [],
             //Error handling
@@ -140,11 +133,11 @@ export default {
             showErrMsg: false,
         }
     },
-    mounted() {
+    created() {
         this.getForumPage()
     },
     watch: {
-        forumObjId: {
+        'forum._id': {
             immediate: false,
             handler(newVal, oldVal) {
                 this.getThreads();
@@ -197,7 +190,7 @@ export default {
                 }
                 
                 uploadData.append('threadObject', JSON.stringify(threadObject))
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/create/${this.forumObjId}`, {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/create/${this.forum._id}`, {
                 method: "POST",
                 credentials: "include",
                 body: uploadData
@@ -247,8 +240,6 @@ export default {
             })
             .then(data => {
                 this.forum = data.forum;
-                this.forumObjId = data.forum._id
-                // Stores forumPic to be displayed in threadView.html
                 this.isCreator = data.isCreator;
                 this.isSubscribed = data.isSubscribed;
                 this.contentLoaded = true
@@ -259,8 +250,7 @@ export default {
             
         },
         async getThreads() {
-            console.log(this.forumObjId)
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads/${this.forumObjId}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads/${this.forum._id}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
