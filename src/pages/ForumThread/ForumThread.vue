@@ -11,12 +11,11 @@
                     :forum="forum"
                     :isCreator="isCreator"
                     :isSubscribed="isSubscribed"
-                    :showCreateThreadButton="true"
+                    :showCreateThreadButton="false"
                     @show-forum-form="() => toggleForumForm(true)"
-                    @show-thread-form="showCreateThread"
                     @subscribe="subscribeForum"
                 />
-                
+
                 <div class="card">
                         <div class="row threadContent">
                             <h2> {{ thread.thread_title}}</h2>
@@ -60,6 +59,8 @@
                     <p>{{comment.content }}</p>
                 </div>
             </div>
+
+            <ForumFormLayout v-if="showForumForm" :editMode="true" :forum="forum" @close-forum-form="() => toggleForumForm(false)" />
         </div>
     </div>
 
@@ -69,14 +70,18 @@
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import ForumViewHeader from '../../components/forum/ForumViewHeader.vue';
+import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
 
 export default {
     components: {
         AlertPrompt,
-        ForumViewHeader
+        ForumViewHeader,
+        ForumFormLayout
     },
     data() {
         return {
+            showForumForm: false,
+
             forum: null,
             isCreator: false,
             isSubscribed: false,
@@ -99,13 +104,16 @@ export default {
         }
     },
     created() {
-        this.getThreadPage()
-        this.getComments()
+        this.initData()
     },
     methods: {
-        async getThreadPage() {
+        // to toggle edit forum form
+        toggleForumForm(show) {
+            this.showForumForm = show;
+        },
+        async initData() {
             // to get forum data
-            const forumID = localStorage.getItem('forumID');
+            const forumID = sessionStorage.getItem('forumID');
 
             const forumPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${forumID}`, {
                 mode: 'cors',
@@ -130,7 +138,7 @@ export default {
             });
 
             // to get thread data
-            this.current_threadID = localStorage.getItem('threadID');
+            this.current_threadID = sessionStorage.getItem('threadID');
 
             const threadPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-thread/${this.current_threadID}`, {
                 mode: 'cors',
@@ -138,7 +146,7 @@ export default {
                 credentials: 'include'
             }).then(res => {
                 if (res.ok) {
-                return res.json();
+                    return res.json();
                 }   
                 throw new Error('Response not OK');
             })
@@ -159,7 +167,25 @@ export default {
                 console.log("This page could not be loaded: ", error);
             });
 
-            await Promise.all([forumPromise, threadPromise]).then(() => {
+            const commentPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.current_threadID}`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('Response not OK');
+            })
+            .then(data => {
+                this.commentData = data.comments;
+                console.log(this.commentData)
+            })
+            .catch((error) => {
+                console.log("This page could not be loaded: ", error);
+            });
+
+            await Promise.all([forumPromise, threadPromise, commentPromise]).then(() => {
                 this.contentLoaded = true;
             });
         },
@@ -199,25 +225,6 @@ export default {
             }).catch((error) => {
                 console.log(error);
             })
-        },
-        async getComments() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.current_threadID}`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-                throw new Error('Response not OK');
-            })
-            .then(data => {
-                this.commentData = data.comments;
-                console.log(this.commentData)
-            })
-            .catch((error) => {
-                console.log("This page could not be loaded: ", error);
-            });
         },
         toggleLike() {
             // toggle like on frontend only

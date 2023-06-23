@@ -14,9 +14,16 @@
         </div>
             
         <div id="forum-header-below">
-            <div id="group-description">
-                <span>Description: </span>
-                <span class="hide-overflow-text">{{forum.forumDesc}}</span>
+            <div id="forum-header-below-info">
+                <div v-if="forum.forumDesc">
+                    <span>Description: </span>
+                    <span class="hide-overflow-text">{{forum.forumDesc}}</span>
+                </div>
+
+                <div id="forum-header-below-tags" v-if="forum.tags.length > 0">
+                    <span>Tags: </span>
+                    <InterestBadgeList :selectedOption="forum.tags" :selection="false" />
+                </div>
             </div>
 
             <div id="forum-header-subscribers">
@@ -24,8 +31,8 @@
             </div>
 
             <div id="forum-options">
-                <div id="privileged-options">
-                    <button v-if="isCreator" @click="showForumForm">
+                <div id="privileged-options" v-if="isCreator">
+                    <button @click="showForumForm">
                         <span class="material-symbols-outlined">Edit</span>
                     </button>
                 </div>
@@ -40,10 +47,6 @@
             </div>
         </div>
 
-        <div id="forum-header-below-tags" v-if="forum.tags.length > 0">
-            <span>Tags: </span>
-            <InterestBadgeList :selectedOption="forum.tags" :selection="false" />
-        </div>
     </div>
 </template>
 
@@ -144,7 +147,7 @@ export default {
 
 #forum-header-below {
     width: 100%;
-    margin-top: 10px;
+    margin-top: 20px;
     margin-left: calc(var(--group-icon-size) + 10px);
     display: flex;
     flex-direction: row;
@@ -152,8 +155,18 @@ export default {
     align-items: center;
 }
 
-#group-description {
+#forum-header-below-info {
     flex: 0 0 50%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+}
+
+#forum-header-below-tags {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
 }
 
 #forum-header-subscribers {
@@ -205,13 +218,5 @@ export default {
     border: white solid 3.5px;
     color: black;
     text-decoration: none;
-}
-
-#forum-header-below-tags {
-    margin-left: calc(var(--group-icon-size) + 10px);
-    display: flex;
-    flex-direction: row;
-    column-gap: 10px;
-    align-items: center;
 }
 </style>

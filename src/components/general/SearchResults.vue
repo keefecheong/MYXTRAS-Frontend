@@ -63,7 +63,7 @@ export default {
         },
         // Taken from ForumGroup.vue
         async viewForum(forum){
-            localStorage.setItem('forumID', forum.forumID);
+            sessionStorage.setItem('forumID', forum._id);
             location.href = "/forumGroup.html"
         },
 

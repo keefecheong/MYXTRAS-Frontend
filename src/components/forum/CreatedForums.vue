@@ -72,7 +72,7 @@ export default {
     methods: {
        
         viewForum(forum){
-            localStorage.setItem('forumID', forum.forumID);
+            sessionStorage.setItem('forumID', forum._id);
             location.href = "/forumGroup.html"
         },
     
@@ -80,7 +80,8 @@ export default {
             
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-created-forums/`, {
                 method: "GET",
-                credentials: "include"
+                credentials: "include",
+                mode: 'cors'
                 })
                 .then(async response => {
                 if (response.ok) {

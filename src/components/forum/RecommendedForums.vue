@@ -12,7 +12,16 @@
     </div>
 </template>
 <style scoped>
-p:hover {
+.group-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 50%;
+    float: left;
+}
+
+.text-below-pic:hover {
     color: var(--primary);
     cursor:pointer
 }
@@ -44,7 +53,7 @@ export default {
     },
     methods: {
         viewForum(forum) {
-            localStorage.setItem('forumID', forum.forumID)
+            sessionStorage.setItem('forumID', forum._id)
             location.href = "/forumGroup.html"
         },
         

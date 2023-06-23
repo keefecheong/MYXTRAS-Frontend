@@ -21,10 +21,10 @@
                 <input id="forum-pic-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
     
                 <!-- inform user about invalid file -->
-                <div v-if="groupPicErrors.length > 0" id="forum-invalid-pic">
+                <div v-if="groupPicErrors.length > 0">
                     <span>Error:</span>
                     <br />
-                    <span v-for="error in groupPicErrors" class="errmsg">{{ error }}</span>
+                    <span v-for="error in groupPicErrors" class="errMsg">{{ error }}</span>
                 </div>
             </div>
             
@@ -37,6 +37,13 @@
                 <span v-if="bannerObject && bannerErrors.length > 0" class="errMsg">Invalid file</span>
                 <img v-if="selectedBanner" :src="selectedBanner" alt="Banner"  id="forum-banner-picture" />
                 <input id="forum-banner-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
+                
+                <!-- inform user about invalid file -->
+                <div v-if="bannerErrors.length > 0">
+                    <span>Error:</span>
+                    <br />
+                    <span v-for="error in bannerErrors" class="errMsg">{{ error }}</span>
+                </div>
             </div>
             
             <!-- forum id input -->
@@ -59,14 +66,16 @@
             <!-- forum description input -->
             <div class="forum-field-container">
                 <label for="forum-desc-input" class="forum-label">Description:</label>
-                <textarea type="text" id="forum-desc-input" v-model="forumDesc" :maxlength="500" placeholder="Forum Description (optional)" ></textarea>
+                <textarea id="forum-desc-input" v-model="forumDesc" :maxlength="500" placeholder="Forum Description (optional)" ></textarea>
             </div>
             
             <!-- forum tags input -->
             <div class="forum-field-container">
                 <label for="forum-tags-input" class="forum-label">Tags:</label>
                 <div id="forum-tags-container">
-                    <AddInterestButton :selectedOption="tags" @selectedInterests="handleInterestSelected" />
+                    <AddInterestButton :selectedOption="tags" @selectedInterests="handleForumTags">
+                        Select Tags For Your Forum (Optional):
+                    </AddInterestButton>
                 </div>
             </div>
                 
@@ -86,7 +95,6 @@ export default {
         return {
             alert: useAlertStore().alert,
 
-            // Creation of forum var
             selectedBanner: null,
             bannerObject: null,
             selectedGroupPic: null,
@@ -131,6 +139,7 @@ export default {
         this.debouncedVerifyForumID = debounce(this.verifyForumID, 2000);
     },
     methods: {
+        // handle selected tags
         handleForumTags(newTags) {
             this.tags = newTags;
         },
@@ -247,7 +256,7 @@ export default {
         },
         // submit forum form
         async submitForm() {
-            this.submitting = true
+            this.submitting = true;
 
             // if in edit mode, check if user changed any fields
             if (this.editMode) {
@@ -298,7 +307,7 @@ export default {
                 uploadData.append('forumObject', JSON.stringify(forumObject));
                 
                 // send request to server with data
-                const targetURL = this.editMode ? `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forum._id}` : `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create`
+                const targetURL = this.editMode ? `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forum._id}` : `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create`;
                 
                 const options = {
                     mode: 'cors',
@@ -314,8 +323,17 @@ export default {
                         if (response.ok){
                             await this.alert(successMessage);
 
-                            localStorage.setItem('forumID', this.forumID);
-                            location.href = "/forumGroup.html";
+                            // if have forum object (from edit mode) immediately set forumID with current id
+                            if (this.forum) {
+                                sessionStorage.setItem('forumID', this.forum._id);
+                            }
+                            // otherwise parse server response and set forum id
+                            else {
+                                await response.json().then(data => {
+                                    sessionStorage.setItem('forumID', data.forumID);
+                                    location.href = "/forumGroup.html";
+                                });
+                            }
                         } else {
                             console.log('An error occurred.');
                         };
@@ -334,8 +352,6 @@ export default {
         async initData() {
             this.selectedGroupPic = this.forum.forum_pic_link;
             this.selectedBanner = this.forum.banner_link;
-
-            // update other attributes of the blog
             this.forumID = this.forum.forumID;
             this.forumIDVerified = true;
             this.forumName = this.forum.forumName;
@@ -343,10 +359,6 @@ export default {
             this.tags = [...this.forum.tags];
 
             this.dataInitialized = true;
-        },
-        // handle selected tags
-        handleInterestSelected(newTags) {
-            this.tags = newTags;
         }
     },
     computed: {
@@ -417,6 +429,7 @@ export default {
 
 #close-form {
     background-color: transparent;
+    color: white;
     border: none;
     outline: none;
     position: absolute;
@@ -475,6 +488,7 @@ export default {
 
 .forum-label {
     color: white;
+    flex-basis: 30%;
 }
 
 .errMsg{
@@ -506,15 +520,11 @@ export default {
     text-align: start;
 }
 
-.forum-label {
-    flex-basis: 30%;
-}
-
 #forum-id-input, #forum-name-input, #forum-desc-input, #forum-tags-container {
     width: 100%;
 }
 
-#forum-id-input, #forum-name-input, #forum-desc-input, #forum-category-input {
+#forum-id-input, #forum-name-input, #forum-desc-input {
     padding: 10px;
     border-radius: 10px;
     resize: none;

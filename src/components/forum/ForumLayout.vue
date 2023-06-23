@@ -8,10 +8,10 @@
                     
                     <div class="row">
                         <div class="col-md-2 d-flex justify-content-end">
-                            <a @click="viewForum(thread.forumID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
+                            <a @click="viewForum(thread.forumObjID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
                         </div>
                         <div class="col-10 threadContent">
-                            <p id="meta"><a @click="viewForum(thread.forumID)" class="forum-name">{{ "x/" + thread.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
+                            <p id="meta"><a @click="viewForum(thread.forumObjID)" class="forum-name">{{ "x/" + thread.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
                             <p id="thread-title">{{ thread.thread_title }}</p>  
                             <p id="thread-description">{{ thread.thread_desc }}</p>
                             <div class="imageContainer">
@@ -158,14 +158,6 @@ export default {
             default: {}
         }
     },
-    // watch: {
-    //     subbedForums: {
-    //         immediate: false,
-    //         handler(newVal, oldVal) {
-    //             this.filterThreads();
-    //         }
-    //     }
-    // },
     data(){
         return{
             isDraggable: false,
@@ -179,6 +171,7 @@ export default {
                 const threadsWithForumDetails = forum.threads.map((thread) => {
                     return {
                         forumID: forum.forumID,
+                        forumObjID: forum._id,
                         forumName: forum.forumName,
                         forum_pic_link: forum.forum_pic_link,
                         ...thread,
@@ -200,43 +193,14 @@ export default {
         },
 
         viewForum(forumID){
-            localStorage.setItem('forumID', forumID)
+            sessionStorage.setItem('forumID', forumID)
             location.href="/forumGroup.html"
         },
 
         viewThread(thread){
-            localStorage.setItem('threadID', thread._id)
+            sessionStorage.setItem('threadID', thread._id)
             location.href="/threadView.html"
-        },
-        // getBadgeClass(option) {
-        //     if (this.selectedOption.includes(option)) {
-        //         return `badge ${this.getBadgeColor(option)} selected`;
-        //     }
-        //     return `badge ${this.getBadgeColor(option)}`;
-        // },
-
-        // getBadgeColor(option) {
-        //     // Return a class name based on the selected option
-        //     switch (option) {
-        //     case 'Kpop':
-        //         return 'badge badge-kpop';
-        //     case 'Games':
-        //         return 'badge badge-games';
-        //     case 'Technology':
-        //         return 'badge badge-technology';
-        //     case 'Sports':
-        //         return 'badge badge-sports'
-        //     case 'Dancing':
-        //         return 'badge badge-dancing'
-        //     case 'JPOP':
-        //         return 'badge badge-jpop'
-        //     case 'Coding':
-        //         return 'badge badge-coding'
-        //     case 'Lifestyle':
-        //         return 'badge badge-lifestyle'
-        //     }
-        //     return `badge-${bg-info}`;
-        // },
+        }
     }
 }
 
