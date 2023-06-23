@@ -1,6 +1,6 @@
-<template>
-    <div class="row">
-        <div id="gallery-interest-selection">
+<template v-if="tags && threads">
+    <div class="row" id="filterRow">
+        <div id="gallery-interest-selection" class="sticky-filter">
             <span>Filter by:</span>
 
             <InterestBadgeList
@@ -9,21 +9,21 @@
                 @interest-selected="handleInterestSelected"
             />
         </div>
-        <div id="no-filtered-blogs" v-if="!(contentLoaded)">
+        <div id="no-filtered-threads" v-if="filteredThreads.length == 0">
             <p>No threads found.</p>
             <p>Select another filter?</p>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-9" >
-            <div v-if="contentLoaded && filteredThreads.length > 0">
+    <div class="row" v-if="this.threads">
+        <div class="col-md-9">
+            <div>
                 <ThreadLayout v-for="(thread, index) in filteredThreads" :thread="thread" :key="index" />
             </div>
         </div>
         <div class="col-md-3 ">
             <div class="sticky-div">
                 <div class="popular-community">
-                    <h1 class="pop-header">Popular Communities</h1>
+                    <h1 class="pop-header" v-if="tagsLoaded">Popular Communities</h1>
                     <div class="interestCommunity" v-for="(tag, index) in tags">
                         <h4 class="cat" @click="openForum(index)">{{ tag._id }}<div class="triangle-down" :id="index"></div></h4>
                         <div class="dropdown-content" :id="'dc'+index" >
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                 </div>
+                </div>
             </div>
         </div>
     </div>
@@ -47,8 +47,8 @@
         data() {
             return {
                 selectedOption: [],
-                contentLoaded: false,
-                tags: []
+                tags: [],
+                threads: [],
             }
         },
         components: {
@@ -84,8 +84,6 @@
                 })
                 .then(data => {
                     this.threads = data;
-                    this.contentLoaded = true;
-                    console.log(this.threads)
 
                 })
                 .catch((error) => {
@@ -109,9 +107,7 @@
                 })
                 .then(data => {
                     this.tags = data;
-                    console.log(this.tags)
-                    this.contentLoaded = true;
-
+                    this.tagsLoaded = true
                 })
                 .catch((error) => {
                     console.log("This page could not be loaded: ", error);
@@ -127,9 +123,12 @@
             // get filtered threads
             filteredThreads() {
                 if (this.selectedOption.length <= 0) {
+                    this.tagsLoaded = true;
+                    console.log(this.threads.length)
                     return this.threads;
                 }
                 else {
+                    this.tagsLoaded = true;
                     return this.threads.filter(thread => thread.tags && thread.tags.some(tag => this.selectedOption.includes(tag)));
                 }
             },
@@ -139,6 +138,13 @@
 
 <style>
     @import url('../../styles/main.css');
+    #filterRow {
+        margin-bottom: 5vh;
+    }
+    #no-filtered-threads {
+        text-align: center;
+        margin-top: 5vh;
+    }
     #forumContainer {
         padding-top: 10px;
     }
@@ -163,7 +169,15 @@
     }
     .sticky-div {
         position: sticky;
-        top: 15vh;
+        top: 20vh;
+        right: 5vw;
+        display: flex;
+        justify-content: flex-end;
+        z-index: 1;
+    }
+    .sticky-filter {
+        position: sticky;
+        top: 12vh;
         right: 5vw;
         display: flex;
         justify-content: flex-end;
