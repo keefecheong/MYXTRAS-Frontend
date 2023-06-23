@@ -42,7 +42,7 @@
                                 <h3>Create a community</h3>
                                 <!-- Upload group pic container -->
                                 <div class="groupPicContainer">
-                                    <p v-if="selectedGroupPic === null">No image selected</p>
+                                    <p v-if="selectedGroupPic === null">No image selected <br> (Required)</p>
                                     <img v-if="selectedGroupPic !== null" :src="selectedGroupPic" alt="Group Picture"  id="profile-picture" ref="cropperImage"/>
                                     <input ref="groupPicInput" type="file" @change="uploadImage($event, 'groupPic')" style="display: none" accept=".jpg, .jpeg, .png" required>
                                     <br>
@@ -52,7 +52,7 @@
                                 
                                 <!-- Upload banner container -->     
                                 <div class="bannerContainer">
-                                    <p v-if="selectedBanner === null">No image selected</p>
+                                    <p v-if="selectedBanner === null">No image selected <br> (Required)</p>
                                     <img v-if="selectedBanner !== null" :src="selectedBanner" alt="Banner"  id="profile-picture" ref="cropperImage"/>
                                     <input ref="bannerInput" type="file" @change="uploadImage($event, 'banner')" style="display: none" accept=".jpg, .jpeg, .png" required>
                                     <br>
@@ -64,19 +64,35 @@
                             <div class="col-3"></div>
                         </div>
                         <div class="row">
-                            <div class="col-3">
+                        
+                            <div class="label-row">
+                                <label for="forum-id" class="forum-id" id="label" >Community ID: </label>
+                                <input type="text" v-model="forumID" placeholder="XtraS" required title="Enter a unqiue forumID">
+                                
                             </div>
-                            <div class="col-6 center-align">
-                                <input type="text" v-model="forumID" placeholder="Community ID: x/" required>
+                            <div class="label-row">
+                                <label id="label" ></label>
                                 <p class="errMsg"> {{ idErr }}</p>
-                                <input type="text" v-model="forumName" placeholder="Community Name:" required>
-                                <textarea type="text" v-model="forumDesc" :maxlength="500" placeholder="Community Description (optional)" ></textarea>
-                                <AddInterestButton :selectedOption="tags" @selectedInterests="handlePostTags">
-                                    Select Tags For Your Post (Optional):
-                                </AddInterestButton>
-                                <p v-if="showErrMsg" class="errMsg">Error: {{ errorMsg }}</p>
+                                
                             </div>
-                            <div class="col-3"></div>
+                            
+                            <div class="label-row">
+                                <label for="forum-name" id="label" >Community Name:</label>
+                                <input type="text" v-model="forumName" placeholder="Be Xtras!" required title="Enter a community name">
+                            </div>
+                            <div class="label-row">
+                                <label for="forum-desc" id="label">Community Description:</label>
+                                <textarea type="text" v-model="forumDesc" :maxlength="500" placeholder="(optional)" ></textarea>
+                            </div>
+                            <div class="label-row">
+                                <label for="forum-interests" id="label">Interests:</label>
+                                <div class="forum-interests">
+                                    <AddInterestButton :selectedOption="tags" @selectedInterests="handlePostTags">
+                                    </AddInterestButton>
+                                </div>
+                            </div>
+                                
+                            <p v-if="showErrMsg" class="errMsg">Error: {{ errorMsg }}</p>
                         </div>
                         <button @click="createForum" :class="{ 'disabled': submitting }" :disabled="submitting">{{ submitting ? 'Creating...' : 'Create' }}</button>
                     </div>
@@ -90,6 +106,9 @@
 <style scoped>
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
+button {
+    font-weight: bold
+}
 .createForum-container {
     overflow-y: scroll;
     position: fixed;
@@ -108,16 +127,26 @@ button {
     padding: 1em;
     border-radius: 10px;
 }
+
+#label {
+    float: left;
+    margin-bottom: 4vh;
+    margin-left: 2.5vw; 
+}
+
 .errMsg{
     color: red;
     font-weight: bold;
-    margin-bottom: 0;
+    margin-bottom: 4vh;
 }
-input[type=text],
+input[type=text], textarea, .forum-interests,
 #categoryDropdown{
-    margin: 10px 0;
+    float: right;
+    margin-bottom: 4vh;
+    margin-right: 2.5vw;
     padding: 1em 0.5em;
-    border-radius: 5px;
+    border-radius: 10px;
+    width: 60%
 }
 .groupPicContainer {
     background-color: white;
