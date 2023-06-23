@@ -79,6 +79,7 @@
 import { useAlertStore } from '../../stores/AlertStore.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import AddInterestButton from '../../components/general/AddInterestButton.vue';
+import { debounce } from 'lodash';
 
 export default {
     data() {
@@ -164,9 +165,35 @@ export default {
         // debounce verifyForumID
         debounceVerifyForumID() {
             this.forumIDVerified = false;
-            clearTimeout(this.verifyForumIDTimeout);
+            const debouncedVerifyForumID = debounce(async () => {
+                try {
+                    await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/verify-forumID`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json; charset=UTF-8',
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({ forumID: this.forumID })
+                    }).then((res) => {
+                    if (res.ok) {
+                        this.idErr = false;
+                    }
+                    else if (res.status == 400) {
+                        res.json().then(data => {
+                            if (data.error == 'ForumID already exists') {
+                                this.idErr = true;
+                            }
+                        })
+                    }
 
-            this.verifyForumIDTimeout = setTimeout(this.verifyForumID, 2000);
+                    this.forumIDVerified = true;
+                });
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }, 2000);
+            
+            debouncedVerifyForumID()
         },
         // to handle change in selected files
         fileChanged(e) {
