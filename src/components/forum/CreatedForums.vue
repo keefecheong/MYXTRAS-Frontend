@@ -87,7 +87,6 @@ export default {
                 if (response.ok) {
                     await response.json().then(data => {
                         this.createdForums = data
-                        console.log(this.createdForums)
                     })
                 } else {
                     console.log('Error:', response);

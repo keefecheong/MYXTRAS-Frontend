@@ -13,17 +13,19 @@
             <div class="row">
                 <div class="col-md-3">
                    <CreatedForums />
-                   <SubscribedForums @got-subbed-forums="retrieveRecentThreads"/>
+                   <SubscribedForums />
                 </div>
             
                 <div class="col-md-6">
                     <div class="row" v-if="!showDetailedThread">
-                        <div class="card shadow" v-if="subbedForums.length === 0">
+                        <div class="card shadow" v-if="recentThreads.length === 0">
                             <div class="center-align" style="margin: 3vh 0;">
                                 <p>No new threads, <a href="/explore.html">Xplore</a> now!</p>
                             </div>
                         </div>
-                        <ForumLayout :forums="subbedForums" style="margin: 3vh 0;"/>
+                        <div>
+                            <ForumLayout v-if="recentThreads.length !== 0" :recentThreads="recentThreads" style="margin: 3vh 0;"/>
+                        </div>
                     </div>
 
                     <div class="row" v-else>
@@ -132,19 +134,36 @@ export default {
             subbedForums: [],
             createdForums: [],
             threads: [],
-            subbedForumThreads: [],
+            recentThreads: [],
             selectedPopularThread: null,
             showDetailedThread: false
         }
+    },
+    created() {
+        this.retrieveRecentThreads()
     },
     methods: {
         // toggle forum form
         toggleForumForm(show) {
             this.showForumForm = show;
         },
-        retrieveRecentThreads(variable) {
-            this.subbedForums = variable;
-            console.log(this.subbedForums.length)
+        async retrieveRecentThreads() {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-recent-threads/`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('Response not OK');
+            })
+            .then(data => {
+                this.recentThreads = data;
+            })
+            .catch((error) => {
+                console.log("The recent threads could not be loaded: ", error);
+            });
         },
         // to close alert prompt
         closeAlert() {
@@ -161,6 +180,7 @@ export default {
 
             this.showDetailedThread = show;
         }
+
     },
     computed: {
         // to get showAlert value

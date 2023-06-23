@@ -129,6 +129,7 @@ export default {
             })
             .then(data => {
                 this.forum = data;
+                console.log(this.forum)
                 this.contentLoaded = true
             })
             .catch((error) => {

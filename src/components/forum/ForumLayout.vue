@@ -1,17 +1,14 @@
 <template>
-    <div class="forum-container">
+    <div class="forum-container" v-if="recentThreads">
         <div class="row">
-            <div v-for="thread in this.sortedThreads">
+            <div v-for="thread in recentThreads">
                 <div class="card shadow threadContainer">
-                    <!-- show interests -->
-
-                    
                     <div class="row">
                         <div class="col-md-2 d-flex justify-content-end">
-                            <a @click="viewForum(thread.forumObjID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
+                            <a @click="viewForum(thread.parent_id._id)"><img id="threadGroupPic" :src="thread.parent_id.forum_pic_link" :draggable="isDraggable"></a>
                         </div>
                         <div class="col-10 threadContent">
-                            <p id="meta"><a @click="viewForum(thread.forumObjID)" class="forum-name">{{ "x/" + thread.forum_id}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
+                            <p id="meta"><a @click="viewForum(thread.parent_id._id)" class="forum-name">{{ "x/" + thread.parent_id.forum_id}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
                             <p id="thread-title">{{ thread.title }}</p>  
                             <p id="thread-description">{{ thread.content }}</p>
                             <div class="imageContainer">
@@ -126,26 +123,15 @@
     font-weight: bold;
     color: var(--primary);
 }
-/* 
-.forum-caption {
-    text-align: justify;
-    word-wrap: break-word;
-}
-
-.forum-image {
-    border-radius: 10px;
-    max-width: 100%;
-    max-height: 500px;
-    display: flex;
-    margin: auto;
-} */
 </style>
 
 <script>
+
 export default {
     data() {
         return {
-            sortedThreads: []
+            recentThreads: [],
+            isDraggable: false,
         }
     },
     props: {
@@ -153,7 +139,7 @@ export default {
             type: Array,
             default: () => [],
         },
-        forums: {
+        recentThreads: {
             type: Array,
             default: {}
         }
@@ -163,40 +149,12 @@ export default {
             isDraggable: false,
         }
     },
-    mounted() {
-        this.filterThreads();
-    },
     methods:{
-        filterThreads() {
-            // Step 1: Retrieve the threads from the filtered forums
-            // Store forum details inside the thread array
-            const threads = this.forums.reduce((result, forum) => {
-                const threadsWithForumDetails = forum.threads.map((thread) => {
-                    return {
-                        forumID: forum.forum_id,
-                        forumName: forum.forum_name,
-                        forum_pic_link: forum.forum_pic_link,
-                        ...thread,
-                    };
-                });
-
-                return result.concat(threadsWithForumDetails);
-            }, []);
-            
-            // Step 2: Flatten the threads array
-            const mergedThreads = [].concat(...threads);
-            
-            // Step 3: Sort the merged threads array in chronological order
-            this.sortedThreads = mergedThreads.sort((a, b) => {
-                return new Date(b.creation_time) - new Date(a.creation_time);
-            });
-
-            console.log(this.sortedThreads)
-        },
-
+        
         viewForum(forumID){
             sessionStorage.setItem('forum_id', forumID)
             location.href="/forumGroup.html"
+            return this.sortedThreads
         },
 
         viewThread(thread){

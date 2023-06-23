@@ -61,8 +61,8 @@ p {
                 throw new Error('Response not OK');
             })
             .then(data => {
-                console.log(data)
                 this.popularThreads = data;
+                console.log(this.popularThreads)
             })
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);

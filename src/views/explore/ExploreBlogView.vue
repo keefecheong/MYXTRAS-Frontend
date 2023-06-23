@@ -2,7 +2,7 @@
     <div id="explore-blog-container">
         <!-- layout for blog pictures -->
         <div v-if="!showSingleBlog" id="gallery-container">
-            <div id="gallery-interest-selection">
+            <div id="gallery-interest-selection" class="sticky-filter">
                 <span>Filter by:</span>
 
                 <InterestBadgeList
@@ -127,6 +127,14 @@ export default {
 </script>
 
 <style>
+.sticky-filter {
+    position: sticky;
+    top: 12vh;
+    right: 5vw;
+    display: flex;
+    justify-content: flex-end;
+    z-index: 1;
+}
 figure {
     margin: 0;
 }

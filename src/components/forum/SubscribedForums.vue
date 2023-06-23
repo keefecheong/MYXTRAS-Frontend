@@ -80,9 +80,6 @@ export default {
     created(){
         this.retrieveSubbedForums()
     },
-    emits: [
-        'got-subbed-forums'
-    ],
     methods: {
         async retrieveSubbedForums() {            
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/subscribed`, {
@@ -94,7 +91,6 @@ export default {
                     if (response.ok) {
                         await response.json().then(data => {
                             this.subbedForums = data;
-                            this.$emit('got-subbed-forums', this.subbedForums);
                         })
                     } else {
                         console.log('Error:', response);
