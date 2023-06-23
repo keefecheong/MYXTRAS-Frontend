@@ -160,7 +160,7 @@ export default {
         filterThreads() {
             // Step 1: Retrieve the threads from the filtered forums
             // Store forum details inside the thread array
-            
+            console.log('1')
             const createdForumThreads = this.forums.created_forums.reduce((result, forum) => {
                 const threadsWithForumDetails = forum.threads.map((thread) => {
                     return {
@@ -189,14 +189,13 @@ export default {
                 return result.concat(threadsWithForumDetails);
             }, []);
             
+            console.log(this.forums)
             // Step 2: Flatten the threads array
             const mergedThreads = createdForumThreads.concat(...subbedForumThreads);
-            
             // Step 3: Sort the merged threads array in chronological order
             this.sortedThreads = mergedThreads.sort((a, b) => {
                 return new Date(b.creation_time) - new Date(a.creation_time);
             });
-            console.log(this.sortedThreads)
         },
 
         viewForum(forumID){
