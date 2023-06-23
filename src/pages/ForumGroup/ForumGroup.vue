@@ -272,7 +272,6 @@ export default {
             })
             .then(data => {
                 this.threads = data;
-                console.log(data)
             })
             .catch((error) => {
                 console.log("The threads could not be loaded: ", error);
