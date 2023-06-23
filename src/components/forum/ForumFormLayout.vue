@@ -78,7 +78,7 @@
 <script>
 import { useAlertStore } from '../../stores/AlertStore.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
-import AddInterestButton from '../../components/general/AddInterestButton.vue';
+import AddInterestButton from '../general/AddInterestButton.vue';
 import { debounce } from 'lodash';
 
 export default {
@@ -100,15 +100,12 @@ export default {
             //Error handling
             idErr: false,
             forumIDVerified: false,
-            verifyForumIDTimeout: null,
+            debouncedVerifyForumID: null,
             groupPicErrors: [],
             bannerErrors: [],
 
             // for edit mode
             dataInitialized: false,
-            toInitFiles: true,
-            pictureDataTransfer: new DataTransfer(),
-            bannerDataTransfer: new DataTransfer(),
             pictureUpdated: false,
             bannerUpdated: false
         }
@@ -129,6 +126,9 @@ export default {
         if (this.editMode) {
             this.initData();
         }
+
+        // set debounce function
+        this.debouncedVerifyForumID = debounce(this.verifyForumID, 2000);
     },
     methods: {
         handleForumTags(newTags) {
@@ -140,13 +140,16 @@ export default {
         },
         // verify if forum ID exists
         async verifyForumID(){
+            if (this.forumID.trim() == '') {
+                return;
+            }
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/verify-forumID`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
                 credentials: "include",
-                body: JSON.stringify({ forumID: this.forumID })
+                body: JSON.stringify({ forumID: this.forumID.trim() })
             }).then((res) => {
                 if (res.ok) {
                     this.idErr = false;
@@ -165,35 +168,8 @@ export default {
         // debounce verifyForumID
         debounceVerifyForumID() {
             this.forumIDVerified = false;
-            const debouncedVerifyForumID = debounce(async () => {
-                try {
-                    await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/verify-forumID`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json; charset=UTF-8',
-                        },
-                        credentials: "include",
-                        body: JSON.stringify({ forumID: this.forumID })
-                    }).then((res) => {
-                    if (res.ok) {
-                        this.idErr = false;
-                    }
-                    else if (res.status == 400) {
-                        res.json().then(data => {
-                            if (data.error == 'ForumID already exists') {
-                                this.idErr = true;
-                            }
-                        })
-                    }
-
-                    this.forumIDVerified = true;
-                });
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            }, 2000);
             
-            debouncedVerifyForumID()
+            this.debouncedVerifyForumID()
         },
         // to handle change in selected files
         fileChanged(e) {
@@ -313,9 +289,9 @@ export default {
             
             try {
                 var forumObject = {
-                    'forumName': this.forumName,
-                    'forumID': this.forumID,
-                    'forumDesc': this.forumDesc,
+                    'forumName': this.forumName.trim(),
+                    'forumID': this.forumID.trim(),
+                    'forumDesc': this.forumDesc.trim(),
                     'tags': this.tags
                 }
                 
@@ -376,8 +352,8 @@ export default {
     computed: {
         // check if required fields are all filled up
         requiredFields() {
-            const nameValid = this.forumName.length > 0;
-            const idValid = this.forumID.length > 0 && this.forumIDVerified && !this.idErr;
+            const nameValid = this.forumName.trim().length > 0;
+            const idValid = this.forumID.trim().length > 0 && this.forumIDVerified && !this.idErr;
             let picValid = this.selectedGroupPic && this.groupPicObject;
             let bannerValid = this.selectedBanner && this.bannerObject;
 
