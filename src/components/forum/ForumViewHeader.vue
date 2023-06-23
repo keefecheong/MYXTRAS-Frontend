@@ -38,7 +38,7 @@
                 </div>
 
                 <div id="normal-options">
-                    <button :class="{ 'subscribed': workingSubscribe, 'white-btn': !workingSubscribe  }" @click="toggleSubscribe">
+                    <button v-if="!forum.isCreator" :class="{ 'subscribed': workingSubscribe, 'white-btn': !workingSubscribe  }" @click="toggleSubscribe">
                         {{ workingSubscribe ? 'Unsubscribe' : 'Subscribe' }}
                     </button>
 

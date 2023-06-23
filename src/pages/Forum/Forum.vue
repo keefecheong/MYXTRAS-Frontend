@@ -152,7 +152,6 @@ export default {
             })
             .then(data => {
                 this.recentThreads = data;
-                console.log(this.recentThreads)
             })
             .catch((error) => {
                 console.log("The recent threads could not be loaded: ", error);
