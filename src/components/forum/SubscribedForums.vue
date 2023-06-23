@@ -102,7 +102,7 @@ export default {
         },
 
         viewForum(forum){
-            localStorage.setItem('forumID', forum.forumID);
+            sessionStorage.setItem('forumID', forum._id);
             location.href = "/forumGroup.html"
         },
     }

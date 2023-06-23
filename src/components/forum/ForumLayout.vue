@@ -5,10 +5,10 @@
                 <div class="card shadow threadContainer">
                     <div class="row">
                         <div class="col-md-2 d-flex justify-content-end">
-                            <a @click="viewForum(thread.forumID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
+                            <a @click="viewForum(thread.forumObjID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
                         </div>
                         <div class="col-10 threadContent">
-                            <p id="meta"><a @click="viewForum(thread.forumID)" class="forum-name">{{ "x/" + thread.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
+                            <p id="meta"><a @click="viewForum(thread.forumObjID)" class="forum-name">{{ "x/" + thread.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
                             <p id="thread-title">{{ thread.thread_title }}</p>  
                             <p id="thread-description">{{ thread.thread_desc }}</p>
                             <div class="imageContainer">
@@ -161,11 +161,11 @@ export default {
             // Step 1: Retrieve the threads from the filtered forums
             // Store forum details inside the thread array
             
-            console.log(this.forums)
             const createdForumThreads = this.forums.created_forums.reduce((result, forum) => {
                 const threadsWithForumDetails = forum.threads.map((thread) => {
                     return {
                         forumID: forum.forumID,
+                        forumObjID: forum._id,
                         forumName: forum.forumName,
                         forum_pic_link: forum.forum_pic_link,
                         ...thread,
@@ -179,6 +179,7 @@ export default {
                 const threadsWithForumDetails = forum.threads.map((thread) => {
                     return {
                         forumID: forum.forumID,
+                        forumObjID: forum._id,
                         forumName: forum.forumName,
                         forum_pic_link: forum.forum_pic_link,
                         ...thread,
@@ -196,9 +197,19 @@ export default {
                 return new Date(b.creation_time) - new Date(a.creation_time);
             });
             console.log(this.sortedThreads)
+        },
+
+        viewForum(forumID){
+            sessionStorage.setItem('forumID', forumID)
+            location.href="/forumGroup.html"
             return this.sortedThreads
         },
-    },
+
+        viewThread(thread){
+            sessionStorage.setItem('threadID', thread._id)
+            location.href="/threadView.html"
+        }
+    }
 }
 
 

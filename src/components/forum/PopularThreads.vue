@@ -45,7 +45,7 @@ p {
     methods: {
         viewThread(thread) {
             console.log(thread)
-            localStorage.setItem('threadID', thread._id)
+            sessionStorage.setItem('threadID', thread._id)
             location.href = "/threadView.html"
         },
         

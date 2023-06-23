@@ -155,16 +155,8 @@ export default {
 
             // if in edit mode, check if user changed any fields
             if (this.editMode) {
-                const captionSame = this.caption == (this.blog.caption || '');
-                const locationSame = this.location == (this.blog.location || '');
-                const commentsEnabledSame = this.commentsEnabled == this.blog.comments_enabled;
-                const tagsSame = this.tags.toString() == this.blog.tags.toString();
-
-                // if any field is changed continue to update
-                const fieldsChanged = !(captionSame && locationSame && commentsEnabledSame && tagsSame);
-
                 // if user did not change any fields or files selected then do nothing
-                if (!fieldsChanged && !this.fileUpdated) {
+                if (!this.fieldsChanged && !this.fileUpdated) {
                     this.submitting = false;
 
                     await this.alert('No changes made.');
@@ -340,6 +332,15 @@ export default {
         // get selected files count
         selectedFileCount() {
             return Math.max(this.files.length, this.selectedLinks.length);
+        },
+        // check if fields are changed for edit mode
+        fieldsChanged() {
+            const captionSame = this.caption == (this.blog.caption || '');
+            const locationSame = this.location == (this.blog.location || '');
+            const commentsEnabledSame = this.commentsEnabled == this.blog.comments_enabled;
+            const tagsSame = this.tags.toString() == this.blog.tags.toString();
+
+            return !(captionSame && locationSame && commentsEnabledSame && tagsSame);
         }
     }
 }

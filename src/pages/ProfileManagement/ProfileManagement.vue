@@ -40,7 +40,7 @@
         <div class="mb-3 row" id="position" >
           <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
           <div class="col-sm-4">
-            <AddInterestButton :selectedOption="selectedOption"/>
+            <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
           </div>
         </div>
           
@@ -291,6 +291,10 @@ export default {
       catch (error){
         console.log('Error:', error);
       }
+    },
+
+    handleSelectedInterests(selectedOption) {
+        this.selectedOption = selectedOption;
     }
 
   },

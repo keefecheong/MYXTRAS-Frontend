@@ -17,7 +17,7 @@
     <div class="row">
         <div class="col-md-9" >
             <div v-if="contentLoaded && filteredThreads.length > 0">
-                <ThreadLayout :threads="filteredThreads"/>
+                <ThreadLayout v-for="(thread, index) in filteredThreads" :thread="thread" :key="index" />
             </div>
         </div>
         <div class="col-md-3 ">
@@ -119,7 +119,7 @@
                 
             },
             viewForum(forum) {
-                localStorage.setItem('forumID', forum.forumID)
+                sessionStorage.setItem('forumID', forum._id)
                 location.href = '../forumGroup.html'
             }
         },

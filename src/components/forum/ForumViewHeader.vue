@@ -14,9 +14,16 @@
         </div>
             
         <div id="forum-header-below">
-            <div id="group-description">
-                <span>Description: </span>
-                <span class="hide-overflow-text">{{forum.forumDesc}}</span>
+            <div id="forum-header-below-info">
+                <div v-if="forum.forumDesc">
+                    <span>Description: </span>
+                    <span class="hide-overflow-text">{{forum.forumDesc}}</span>
+                </div>
+
+                <div id="forum-header-below-tags" v-if="forum.tags.length > 0">
+                    <span>Tags: </span>
+                    <InterestBadgeList :selectedOption="forum.tags" :selection="false" />
+                </div>
             </div>
 
             <div id="forum-header-subscribers">
@@ -24,15 +31,15 @@
             </div>
 
             <div id="forum-options">
-                <div id="privileged-options">
-                    <button v-if="isCreator" @click="showForumForm">
+                <div id="privileged-options" v-if="forum.isCreator">
+                    <button @click="showForumForm">
                         <span class="material-symbols-outlined">Edit</span>
                     </button>
                 </div>
 
                 <div id="normal-options">
-                    <button :class="{ 'subscribed': isSubscribed, 'white-btn': !isSubscribed  }" v-if="!isCreator" @click="subscribeForum">
-                        {{ isSubscribed ? 'Unsubscribe' : 'Subscribe' }}
+                    <button :class="{ 'subscribed': workingSubscribe, 'white-btn': !workingSubscribe  }" @click="toggleSubscribe">
+                        {{ workingSubscribe ? 'Unsubscribe' : 'Subscribe' }}
                     </button>
 
                     <button v-if="showCreateThreadButton" @click="showCreateThread" class="white-btn">Create Thread!</button>
@@ -40,10 +47,6 @@
             </div>
         </div>
 
-        <div id="forum-header-below-tags" v-if="forum.tags.length > 0">
-            <span>Tags: </span>
-            <InterestBadgeList :selectedOption="forum.tags" :selection="false" />
-        </div>
     </div>
 </template>
 
@@ -51,10 +54,16 @@
 import InterestBadgeList from '../general/InterestBadgeList.vue';
 
 export default {
+    data() {
+        return {
+            workingSubscribe: false,
+            savedSubscribe: false,
+            subscribeTimeout: null,
+            numOfSubs: 0
+        }
+    },
     props: [
         'forum',
-        'isCreator',
-        'isSubscribed',
         'showCreateThreadButton'
     ],
     emits: [
@@ -65,6 +74,16 @@ export default {
     components: {
         InterestBadgeList
     },
+    created() {
+        this.workingSubscribe = this.forum.isSubscribed;
+        this.savedSubscribe = this.forum.isSubscribed;
+        this.numOfSubs = this.forum.subscribers.length;
+
+        window.addEventListener('beforeunload', this.completeSubscribeRequest);
+    },
+    beforeUnmount() {
+        this.completeSubscribeRequest();
+    },
     methods: {
         // to show edit forum form
         showForumForm() {
@@ -74,14 +93,69 @@ export default {
         showCreateThread() {
             this.$emit('show-thread-form');
         },
-        // to subscribe/unsubscribe from forum
-        subscribeForum() {
-            this.$emit('subscribe');
-        }
-    },
-    computed: {
-        numOfSubs() {
-            return this.forum.subscribers.length
+        // to toggle subscribe status
+        toggleSubscribe() {
+            // toggle subscribe on frontend
+            this.workingSubscribe = !this.workingSubscribe;
+
+            // update subscriber count
+            if (this.workingSubscribe) {
+                this.numOfSubs += 1;
+            }
+            else {
+                this.numOfSubs -= 1;
+            }
+
+            // set timeout and only send request to update backend if user has not toggled subscribe button for 3 seconds
+            clearTimeout(this.subscribeTimeout);
+
+            this.subscribeTimeout = setTimeout(this.updateSubscribe, 3000);
+        },
+        // to send request to subscribe/unsubscribe
+        async updateSubscribe(){
+            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/subscribe/${this.forum._id}`;
+            const options = {
+                mode: 'cors',
+                credentials: 'include'
+            }
+
+            // only send request to subscribe if saved value is false and new value is true
+            if (this.workingSubscribe && !this.savedSubscribe) {
+                options.method = 'POST';
+
+                await fetch(targetURL, options).then(res => {
+                    if (res.ok) {
+                        this.savedSubscribe = true;
+                    }
+                    else {
+                        console.log('An error occurred.');
+                    }
+                }).catch(error => {
+                    console.log('Unable to subscribe to forum.');
+                });
+            }
+            // only send request to unsubscribe if saved value is true and new value is false
+            else if (!this.workingSubscribe && this.savedSubscribe) {
+                options.method = 'DELETE';
+
+                await fetch(targetURL, options).then(res => {
+                    if (res.ok) {
+                        this.savedSubscribe = false;
+                    }
+                    else {
+                        console.log('An error occurred.');
+                    }
+                }).catch(error => {
+                    console.log('Unable to unsubscribe from forum.');
+                });
+            }
+        },
+        // handle updating of subscribe status if pending
+        completeSubscribeRequest() {
+            if (this.subscribeTimeout) {
+                clearTimeout(this.subscribeTimeout);
+                this.updateSubscribe();
+            }
         }
     }
 }
@@ -144,7 +218,7 @@ export default {
 
 #forum-header-below {
     width: 100%;
-    margin-top: 10px;
+    margin-top: 20px;
     margin-left: calc(var(--group-icon-size) + 10px);
     display: flex;
     flex-direction: row;
@@ -152,8 +226,18 @@ export default {
     align-items: center;
 }
 
-#group-description {
+#forum-header-below-info {
     flex: 0 0 50%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+}
+
+#forum-header-below-tags {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
 }
 
 #forum-header-subscribers {
@@ -205,13 +289,5 @@ export default {
     border: white solid 3.5px;
     color: black;
     text-decoration: none;
-}
-
-#forum-header-below-tags {
-    margin-left: calc(var(--group-icon-size) + 10px);
-    display: flex;
-    flex-direction: row;
-    column-gap: 10px;
-    align-items: center;
 }
 </style>
