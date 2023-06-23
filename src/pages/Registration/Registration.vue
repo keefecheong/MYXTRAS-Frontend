@@ -405,7 +405,7 @@ export default {
                     this.recaptchaWidgetId = widgetId    
                 })
                 
-                var phoneNum = "+65" + this.phoneNumber;
+                let phoneNum = "+65" + this.phoneNumber;
                 firebase.auth().signInWithPhoneNumber(phoneNum, this.recaptchaVerifier)
                     .then(async (confirmationResult) => {
                     // SMS sent. Prompt user to type the code from the message, then sign the
@@ -514,7 +514,7 @@ export default {
             if (!this.verifiedotp){
                 return this.generalErrMsg = "Verify your phone number";
             }
-            var userDetailsList = [this.emailAddress, this.phoneNumber, this.password];
+            let userDetailsList = [this.emailAddress, this.phoneNumber, this.password];
             if (this.phoneNumber.length != 8){
                 this.showNumError = true;
                 this.registerFail = true;

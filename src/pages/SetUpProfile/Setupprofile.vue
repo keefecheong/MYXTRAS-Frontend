@@ -260,12 +260,12 @@ export default {
         },
 
         async validationCheck(){
-            var checkStatus = false
-            var detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
-            var realname = this.realname;
-            var username = this.username;
-            var school = this.selectedSchool;
-            var course = this.selectedCourse;
+            let checkStatus = false
+            let detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
+            let realname = this.realname;
+            let username = this.username;
+            let school = this.selectedSchool;
+            let course = this.selectedCourse;
             console.log(Object.values(this.courses).flat())
 
             if (

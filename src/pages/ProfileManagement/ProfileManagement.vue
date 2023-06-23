@@ -251,7 +251,7 @@ export default {
     //   // console.log(this.userObject);
     // },
     async updateProfile(){
-      var formData = new FormData();
+      let formData = new FormData();
 
       this.userObject = {
         'userName': this.username,

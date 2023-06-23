@@ -9,7 +9,7 @@
                 @interest-selected="handleInterestSelected"
             />
         </div>
-        <div id="no-filtered-blogs" v-if="!(contentLoaded && filteredThreads.length > 0)">
+        <div id="no-filtered-blogs" v-if="!(contentLoaded)">
             <p>No threads found.</p>
             <p>Select another filter?</p>
         </div>
@@ -23,58 +23,16 @@
         <div class="col-md-3 ">
             <div class="sticky-div">
                 <div class="popular-community">
-                <h1 class="pop-header">Popular Communities</h1>
-                <div class="interestCommunity">
-                    <h4 class="cat" @click="openForum(1)">Interest 1<div class="triangle-down" id="1"></div></h4>
-                    <div class="dropdown-content" id="dc1">
-                        <a href="#" class="forum1-1"><img class="forum-pic" src="https://upload.wikimedia.org/wikipedia/commons/5/51/Mr._Smiley_Face.svg">Link 1</a>
-                        <a href="#" class="forum1-2">Link 2</a>
-                        <a href="#" class="forum1-3">Link 3</a>
-                        <a href="#" class="forum1-4">Link 4</a>
-                        <a href="#" class="forum1-5">Link 5</a>
+                    <h1 class="pop-header">Popular Communities</h1>
+                    <div class="interestCommunity" v-for="(tag, index) in tags">
+                        <h4 class="cat" @click="openForum(index)">{{ tag._id }}<div class="triangle-down" :id="index"></div></h4>
+                        <div class="dropdown-content" :id="'dc'+index" >
+                            <div v-for="forum in tag.forums" @click="viewForum(forum)" id="forumContainer">
+                                <p><img class="forum-pic" :src="forum.forum_pic_link">{{forum.forumName}}</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="interestCommunity">
-                    <h4 class="cat" @click="openForum(2)">Interest 2<div class="triangle-down" id="2"></div></h4>
-                    <div class="dropdown-content" id="dc2">
-                        <a href="#" class="forum2-1">Link 1</a>
-                        <a href="#" class="forum2-2">Link 2</a>
-                        <a href="#" class="forum2-3">Link 3</a>
-                        <a href="#" class="forum2-4">Link 4</a>
-                        <a href="#" class="forum2-5">Link 5</a>
-                    </div>
-                </div>
-                <div class="interestCommunity">
-                    <h4 class="cat" @click="openForum(3)">Interest 3<div class="triangle-down" id="3"></div></h4>
-                    <div class="dropdown-content" id="dc3">
-                        <a href="#" class="forum3-1">Link 1</a>
-                        <a href="#" class="forum3-2">Link 2</a>
-                        <a href="#" class="forum3-3">Link 3</a>
-                        <a href="#" class="forum3-4">Link 4</a>
-                        <a href="#" class="forum3-5">Link 5</a>
-                    </div>
-                </div>
-                <div class="interestCommunity">
-                    <h4 class="cat" @click="openForum(4)">Interest 4<div class="triangle-down" id="4"></div></h4>
-                    <div class="dropdown-content" id="dc4">
-                        <a href="#" class="forum4-1">Link 1</a>
-                        <a href="#" class="forum4-2">Link 2</a>
-                        <a href="#" class="forum4-3">Link 3</a>
-                        <a href="#" class="forum4-4">Link 4</a>
-                        <a href="#" class="forum4-5">Link 5</a>
-                    </div>
-                </div>
-                <div class="interestCommunity last">
-                    <h4 class="cat" @click="openForum(5)">Interest 5<div class="triangle-down" id="5"></div></h4>
-                    <div class="dropdown-content" id="dc5">
-                        <a href="#" class="forum5-1">Link 1</a>
-                        <a href="#" class="forum5-2">Link 2</a>
-                        <a href="#" class="forum5-3">Link 3</a>
-                        <a href="#" class="forum5-4">Link 4</a>
-                        <a href="#" class="forum5-5">Link 5</a>
-                    </div>
-                </div>
-            </div>
+                 </div>
             </div>
         </div>
     </div>
@@ -89,7 +47,8 @@
         data() {
             return {
                 selectedOption: [],
-                contentLoaded: false
+                contentLoaded: false,
+                tags: []
             }
         },
         components: {
@@ -149,8 +108,8 @@
                     throw new Error('Response not OK');
                 })
                 .then(data => {
-                    this.forums = data;
-                    console.log(this.forums)
+                    this.tags = data;
+                    console.log(this.tags)
                     this.contentLoaded = true;
 
                 })
@@ -159,6 +118,10 @@
                 });
                 
             },
+            viewForum(forum) {
+                localStorage.setItem('forumID', forum.forumID)
+                location.href = '../forumGroup.html'
+            }
         },
         computed: {
             // get filtered threads
@@ -176,6 +139,14 @@
 
 <style>
     @import url('../../styles/main.css');
+    #forumContainer {
+        padding-top: 10px;
+    }
+    #forumContainer:hover {
+        border: 1px solid var(--primary);
+        border-radius: 10px;
+        cursor: pointer;
+    }
     .interestCommunity{
         font-size: 1.2rem;
         background-color: rgba(255, 150, 183, 0.6);

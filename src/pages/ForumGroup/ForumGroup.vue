@@ -176,7 +176,7 @@ export default {
         async createThread() {
             this.submitting = true
             // Validation
-            var threadDetails = [this.threadTitle];
+            let threadDetails = [this.threadTitle];
             
             if (threadDetails.some(item => item === '' || item === null)){
                 this.showErrMsg = true;
@@ -190,7 +190,7 @@ export default {
             }
 
             try {
-                var threadObject = {
+                let threadObject = {
                 'thread_title': this.threadTitle,
                 'thread_desc': this.threadDesc,
                 'tags': this.tags
@@ -225,7 +225,7 @@ export default {
             });            
         },
         uploadImage(event){
-            var object = event.target.files[0];
+            let object = event.target.files[0];
             this.threadPicObject = object;
             this.selectedThreadPic = URL.createObjectURL(object);
         

@@ -196,7 +196,7 @@ export default {
             this.isPressed = !this.isPressed;
         },
         async loginUser(){
-            var credentialList = [this.emailAddress, this.password];
+            let credentialList = [this.emailAddress, this.password];
             console.log(this.password);
             if (credentialList.some(item => item === null)){
                 await this.alert("Please enter all fields");
