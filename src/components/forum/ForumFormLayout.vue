@@ -130,6 +130,9 @@ export default {
         }
     },
     methods: {
+        handleForumTags(newTags) {
+            this.tags = newTags;
+        },
         // close forum form
         closeForm() {
             this.$emit('close-forum-form');
