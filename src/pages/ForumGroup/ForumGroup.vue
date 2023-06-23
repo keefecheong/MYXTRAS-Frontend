@@ -10,12 +10,9 @@
         <div class="row">
             <ForumViewHeader
                 :forum="forum"
-                :isCreator="isCreator"
-                :isSubscribed="isSubscribed"
                 :showCreateThreadButton="true"
                 @show-forum-form="() => toggleForumForm(true)"
                 @show-thread-form="() => toggleThreadForm(true)"
-                @subscribe="subscribeForum"
             />
             
             <div id="threads-container">
@@ -71,8 +68,6 @@ export default {
 
             forum: {},
             contentLoaded: false,
-            isCreator: false,
-            isSubscribed: false,
             threads: [],
         }
     },
@@ -112,9 +107,7 @@ export default {
                 }
             })
             .then(data => {
-                this.forum = data.forum;
-                this.isCreator = data.isCreator;
-                this.isSubscribed = data.isSubscribed;
+                this.forum = data;
                 this.contentLoaded = true
             })
             .catch((error) => {
@@ -138,35 +131,6 @@ export default {
             })
             .catch((error) => {
                 console.log("The threads could not be loaded: ", error);
-            });
-        },
-        subscribeForum(){
-            this.isSubscribed = true
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/subscribe-forum/${this.forum._id}`, {
-                mode: 'cors',
-                method: 'POST',
-                credentials: 'include'
-            }).then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-                else {
-                    console.log('An error occurred.');
-                }
-            })
-            .then(data => {   
-                this.isSubscribed = data.isSubscribed
-
-                if (this.isSubscribed){
-                    this.forum.subscribers.push(data.userId);
-                }
-                else{
-                    const index = this.forum.subscribers.indexOf(data.userId);
-                    this.forum.subscribers.splice(index, 1);
-                }
-            })
-            .catch((error) => {
-                console.log("Unable to subscribe to forum: ", error);
             });
         },
         // to close alert prompt

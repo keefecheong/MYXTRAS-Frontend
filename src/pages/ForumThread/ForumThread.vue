@@ -13,7 +13,6 @@
                     :isSubscribed="isSubscribed"
                     :showCreateThreadButton="false"
                     @show-forum-form="() => toggleForumForm(true)"
-                    @subscribe="subscribeForum"
                 />
 
                 <div class="card">

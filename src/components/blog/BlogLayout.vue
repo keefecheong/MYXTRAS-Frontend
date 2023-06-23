@@ -524,16 +524,19 @@ export default {
         },
         // handle updating of like status to backend
         async updateLike() {
+            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/likes/${this.blog._id}`;
+            const options = {
+                mode: 'cors',
+                credentials: 'include'
+            }
+
             // send request to update liked status
             // only send to add like if new like value is true and currently saved like value is false
             if (this.liked && !this.savedLike) {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/likes/${this.blog._id}`, {
-                    mode: 'cors',
-                    method: 'POST',
-                    credentials: 'include'
-                }).then(async (res) => {
+                options.method = 'POST';
+
+                await fetch(targetURL, options).then(async (res) => {
                     if (res.status == 201) {
-                        console.log('Liked.');
                         this.savedLike = true;
                     }
                     else {
@@ -545,13 +548,10 @@ export default {
             }
             // only send to remove like if new like value is false and currently saved like value is true
             else if (!this.liked && this.savedLike) {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/likes/${this.blog._id}`, {
-                    mode: 'cors',
-                    method: 'DELETE',
-                    credentials: 'include'
-                }).then(async (res) => {
+                options.method = 'DELETE';
+
+                await fetch(targetURL, options).then(async (res) => {
                     if (res.status == 204) {
-                        console.log('Removed like.');
                         this.savedLike = false;
                     }
                     else {

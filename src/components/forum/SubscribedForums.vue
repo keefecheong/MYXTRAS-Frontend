@@ -93,7 +93,7 @@ export default {
                 .then(async response => {
                     if (response.ok) {
                         await response.json().then(data => {
-                            this.subbedForums = data.subscribed_forums;
+                            this.subbedForums = data;
                             this.$emit('got-subbed-forums', this.subbedForums);
                         })
                     } else {
