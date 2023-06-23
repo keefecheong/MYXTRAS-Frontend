@@ -11,11 +11,11 @@
                             <a @click="viewForum(thread.forumObjID)"><img id="threadGroupPic" :src="thread.forum_pic_link" :draggable="isDraggable"></a>
                         </div>
                         <div class="col-10 threadContent">
-                            <p id="meta"><a @click="viewForum(thread.forumObjID)" class="forum-name">{{ "x/" + thread.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
-                            <p id="thread-title">{{ thread.thread_title }}</p>  
-                            <p id="thread-description">{{ thread.thread_desc }}</p>
+                            <p id="meta"><a @click="viewForum(thread.forumObjID)" class="forum-name">{{ "x/" + thread.forum_id}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
+                            <p id="thread-title">{{ thread.title }}</p>  
+                            <p id="thread-description">{{ thread.content }}</p>
                             <div class="imageContainer">
-                                <img id="threadPic" :src="thread.content_links" :draggable="isDraggable">
+                                <img id="threadPic" :src="thread.content_link" :draggable="isDraggable">
                             </div>
                             <br>
                             <div class="d-flex justify-content-end">
@@ -163,6 +163,9 @@ export default {
             isDraggable: false,
         }
     },
+    mounted() {
+        this.filterThreads();
+    },
     methods:{
         filterThreads() {
             // Step 1: Retrieve the threads from the filtered forums
@@ -170,9 +173,8 @@ export default {
             const threads = this.forums.reduce((result, forum) => {
                 const threadsWithForumDetails = forum.threads.map((thread) => {
                     return {
-                        forumID: forum.forumID,
-                        forumObjID: forum._id,
-                        forumName: forum.forumName,
+                        forumID: forum.forum_id,
+                        forumName: forum.forum_name,
                         forum_pic_link: forum.forum_pic_link,
                         ...thread,
                     };
@@ -193,7 +195,7 @@ export default {
         },
 
         viewForum(forumID){
-            sessionStorage.setItem('forumID', forumID)
+            sessionStorage.setItem('forum_id', forumID)
             location.href="/forumGroup.html"
         },
 

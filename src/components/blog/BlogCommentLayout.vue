@@ -13,7 +13,7 @@
 
             <!-- creation time (time difference) -->
             <div class="comment-creation-time">
-                <time :datetime="comment.creation_time" :title="new Date(comment.creation_time)">{{ dateCreated }}</time>
+                <span :title="new Date(comment.creation_time)">{{ dateCreated }}</span>
             </div>
 
             <!-- only if the comment is posted by the current user -->

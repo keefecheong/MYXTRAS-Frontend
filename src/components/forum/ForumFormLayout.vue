@@ -158,7 +158,7 @@ export default {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
                 credentials: "include",
-                body: JSON.stringify({ forumID: this.forumID.trim() })
+                body: JSON.stringify({ forum_id: this.forumID.trim() })
             }).then((res) => {
                 if (res.ok) {
                     this.idErr = false;
@@ -298,16 +298,16 @@ export default {
             
             try {
                 var forumObject = {
-                    'forumName': this.forumName.trim(),
-                    'forumID': this.forumID.trim(),
-                    'forumDesc': this.forumDesc.trim(),
+                    'forum_name': this.forumName.trim(),
+                    'forum_id': this.forumID.trim(),
+                    'forum_desc': this.forumDesc.trim(),
                     'tags': this.tags
                 }
                 
                 uploadData.append('forumObject', JSON.stringify(forumObject));
                 
                 // send request to server with data
-                const targetURL = this.editMode ? `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forum._id}` : `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/create`;
+                const targetURL = this.editMode ? `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forum._id}` : `${import.meta.env.VITE_APP_SERVER_URL}/api/forums`;
                 
                 const options = {
                     mode: 'cors',
@@ -325,12 +325,12 @@ export default {
 
                             // if have forum object (from edit mode) immediately set forumID with current id
                             if (this.forum) {
-                                sessionStorage.setItem('forumID', this.forum._id);
+                                sessionStorage.setItem('forum_id', this.forum._id);
                             }
                             // otherwise parse server response and set forum id
                             else {
                                 await response.json().then(data => {
-                                    sessionStorage.setItem('forumID', data.forumID);
+                                    sessionStorage.setItem('forum_id', data.forum_id);
                                     location.href = "/forumGroup.html";
                                 });
                             }
@@ -352,10 +352,10 @@ export default {
         async initData() {
             this.selectedGroupPic = this.forum.forum_pic_link;
             this.selectedBanner = this.forum.banner_link;
-            this.forumID = this.forum.forumID;
+            this.forumID = this.forum.forum_id;
             this.forumIDVerified = true;
-            this.forumName = this.forum.forumName;
-            this.forumDesc = this.forum.forumDesc || '';
+            this.forumName = this.forum.forum_name;
+            this.forumDesc = this.forum.forum_desc || '';
             this.tags = [...this.forum.tags];
 
             this.dataInitialized = true;
@@ -379,10 +379,10 @@ export default {
         },
         // to check if any fields are changed
         fieldsChanged() {
-            const nameSame = this.forumName == this.forum.forumName;
-            const idSame = this.forumID == this.forum.forumID;
+            const nameSame = this.forumName == this.forum.forum_name;
+            const idSame = this.forumID == this.forum.forum_id;
             const tagSame = this.tags == this.forum.tags;
-            const descSame = this.forumDesc == this.forum.forumDesc;
+            const descSame = this.forumDesc == this.forum.forum_desc;
 
             return !(nameSame && idSame && tagSame && descSame);
         }

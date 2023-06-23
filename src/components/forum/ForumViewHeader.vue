@@ -8,16 +8,16 @@
             <img id="group-icon" :src="forum.forum_pic_link">
             
             <div id="forum-header-above-name">
-                <span id="group-name">{{forum.forumName}}</span>
-                <span id="group-id">x/{{forum.forumID}}</span>
+                <span id="group-name">{{forum.forum_name}}</span>
+                <span id="group-id">x/{{forum.forum_id}}</span>
             </div>
         </div>
             
         <div id="forum-header-below">
             <div id="forum-header-below-info">
-                <div v-if="forum.forumDesc">
+                <div v-if="forum.forum_desc">
                     <span>Description: </span>
-                    <span class="hide-overflow-text">{{forum.forumDesc}}</span>
+                    <span class="hide-overflow-text">{{forum.forum_desc}}</span>
                 </div>
 
                 <div id="forum-header-below-tags" v-if="forum.tags.length > 0">
