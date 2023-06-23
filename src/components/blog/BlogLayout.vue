@@ -5,7 +5,7 @@
             <div>
                 <!-- creator profile pic -->
                 <div class="profile-pic-container">
-                    <img class="profile-pic" :src="blog.creator_id.profile_pic_link"/>
+                    <img class="profile-pic" :src="blog.creator_id.profile_pic_link" />
                 </div>
 
                 <!-- creator username -->
@@ -21,7 +21,7 @@
 
             <!-- tags and location -->
             <div 
-                class="blog-tags-and-location"
+                class="blog-tags-and-location" 
                 :class="{
                     'location-only': !hasTags,
                     'tag-only': !blog.location,
@@ -29,8 +29,16 @@
                 }"
                 v-if="showHeaderSecondRow"
             >
-                <InterestBadgeList v-if="hasTags" :selectedOption="blog.tags" :selection="false" :maxWidth="'30%'" class="blog-tags" title="Tags" />
-                <span v-if="blog.location" class="blog-location hide-overflow-text" :title="blog.location">At {{ blog.location }}</span>
+                <InterestBadgeList 
+                    v-if="hasTags"
+                    :selectedOption="blog.tags"
+                    :selection="false"
+                    :maxWidth="'30%'"
+                    class="blog-tags"
+                    title="Tags"
+                />
+                <span v-if="blog.location" class="blog-location hide-overflow-text" :title="blog.location">At {{
+                    blog.location }}</span>
             </div>
         </div>
 
@@ -38,10 +46,14 @@
         <div class="row blog-content">
             <div class="blog-image-container">
                 <!-- one blog-item per image -->
-                <div class="blog-item" v-for="(link, index) in blog.content_links" :class="{active: currentId == index + 1}">
+                <div 
+                    class="blog-item" 
+                    v-for="(link, index) in blog.content_links"
+                    :class="{ active: currentId == index + 1 }"
+                >
                     <img class="blog-image" :src="link" />
                 </div>
-                <p></p>
+                
                 <!-- show controls only if more than one image and the active image is not the first/last -->
                 <a class="blog-prev" @click="prevSlide" v-if="showPrev">&#10094;</a>
                 <a class="blog-next" @click="nextSlide" v-if="showNext">&#10095;</a>
@@ -49,7 +61,13 @@
 
             <!-- show indicators only if more than one image, one indicator per image -->
             <div class="blog-indicator-container" v-if="blog.content_links.length > 1">
-                <span class="blog-indicator" v-for="(value, index) in blog.content_links" :class="{active: currentId == index + 1}" :id="index + 1" @click="toggleSlide"></span>
+                <span
+                    class="blog-indicator"
+                    v-for="(value, index) in blog.content_links"
+                    :class="{ active: currentId == index + 1 }"
+                    :id="index + 1"
+                    @click="toggleSlide"
+                ></span>
             </div>
         </div>
 
@@ -63,14 +81,27 @@
             <!-- actions for all users -->
             <div class="blog-normal-actions row">
                 <!-- like button -->
-                <div class="like-blog col align-items-center justify-content-center" :class="{liked: liked}">
-                    <span class="material-symbols-outlined" @click="toggleLike" :title="liked ? 'Remove like' : 'Like this post'">favorite</span>
+                <div class="like-blog col align-items-center justify-content-center" :class="{ liked: liked }">
+                    <span 
+                        class="material-symbols-outlined"
+                        @click="toggleLike"
+                        :title="liked ? 'Remove like' : 'Like this post'"
+                    >
+                        favorite
+                    </span>
                     <span title="Number of likes">({{ likeCount }})</span>
                 </div>
-                
+
                 <!-- comments button -->
                 <div class="col align-items-center justify-content-center">
-                    <span class="material-symbols-outlined" :class="{ 'disabled': !blog.comments_enabled }" @click="toggleComments" :title="commentTitle">comment</span>
+                    <span
+                        class="material-symbols-outlined"
+                        :class="{ 'disabled': !blog.comments_enabled }"
+                        @click="toggleComments"
+                        :title="commentTitle"
+                    >
+                        comment
+                    </span>
                     <span title="Number of comments" v-if="blog.comments_enabled">({{ blog.comment_count }})</span>
                 </div>
             </div>
@@ -79,7 +110,7 @@
             <div class="blog-privilege-actions row" v-if="blog.isOwner">
                 <!-- edit button -->
                 <div class="blog-edit col" title="Edit this post">
-                    <span class="material-symbols-outlined" @click="editPost">edit</span>
+                    <span class="material-symbols-outlined" @click="() => editPost(true)">edit</span>
                 </div>
 
                 <!-- delete button -->
@@ -95,7 +126,16 @@
             <form class="create-comment-form" @submit.prevent="createComment">
                 <textarea class="create-comment-text" wrap="soft" placeholder="Add a comment..." v-model="commentText"></textarea>
                 <hr />
-                <input class="create-comment-button" type="submit" :value="submittingComment ? 'Creating...' : 'Create!'" :disabled="commentText.trim().length <= 0 || submittingComment" />
+                <div class="create-comment-submit-container">
+                    <LoadingOverlay v-if="submittingComment" :horizontalCenter="true" :backgroundColor="'rgba(0, 0, 0, 0.5)'" />
+
+                    <input 
+                        class="create-comment-button"
+                        type="submit"
+                        :value="submittingComment ? 'Creating...' : 'Create!'"
+                        :disabled="commentText.trim().length <= 0 || submittingComment"
+                    />
+                </div>
             </form>
 
             <hr />
@@ -108,12 +148,8 @@
                 <LoadingOverlay v-if="!commentsLoaded" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
 
                 <div v-else class="blog-comments-container">
-                    <BlogCommentLayout
-                        v-for="comment in commentData"
-                        :comment="comment"
-                        :postId="blog._id"
-                        @commentDeleted="deleteComment"
-                    />
+                    <BlogCommentLayout v-for="comment in commentData" :comment="comment" :postId="blog._id"
+                        @commentDeleted="deleteComment" />
                 </div>
             </div>
         </div>
@@ -123,10 +159,7 @@
         <p>Post deleted.</p>
     </div>
 
-    <BlogEditLayout 
-        v-if="editMode"
-        @close-edit-blog="exitEditPost"
-    />
+    <BlogFormLayout v-if="editMode" :editMode="true" :blog="blog" @close-blog-form="() => editPost(false)" />
 </template>
 
 <style>
@@ -138,7 +171,8 @@
     border-style: solid 1rem;
     margin: auto;
     width: 100%;
-    box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);;
+    box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);
+    ;
     border-radius: 30px;
     padding: 50px;
     margin-bottom: 50px;
@@ -155,7 +189,7 @@
     row-gap: 10px;
 }
 
-.blog-header > div {
+.blog-header>div {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -217,7 +251,8 @@
 }
 
 /* Next & previous buttons */
-.blog-prev, .blog-next {
+.blog-prev,
+.blog-next {
     cursor: pointer;
     position: absolute;
     top: 50%;
@@ -228,7 +263,7 @@
     transition: 0.6s ease;
     border-radius: 0 10px 10px 0 !important;
     user-select: none;
-    text-decoration:none;
+    text-decoration: none;
 }
 
 /* Position the "next button" to the right */
@@ -238,7 +273,8 @@
 }
 
 /* On hover, add a black background color with a little bit see-through */
-.blog-prev:hover, .blog-next:hover {
+.blog-prev:hover,
+.blog-next:hover {
     background-color: #f1f1f1;
     color: black;
 }
@@ -258,8 +294,9 @@
     display: inline-block;
     transition: background-color 0.6s ease;
 }
-  
-.blog-indicator.active, .blog-indicator:hover {
+
+.blog-indicator.active,
+.blog-indicator:hover {
     background-color: #717171;
 }
 
@@ -322,7 +359,6 @@
     border-color: black;
     border-radius: 5px;
     margin-bottom: 10px;
-    text-align: end;
 }
 
 .create-comment-text {
@@ -332,9 +368,17 @@
     margin-bottom: 10px;
 }
 
-.create-comment-text, .create-comment-text:focus {
+.create-comment-text,
+.create-comment-text:focus {
     outline: none;
     border: none;
+}
+
+.create-comment-submit-container {
+    position: relative;
+    width: fit-content;
+    left: 100%;
+    transform: translateX(-100%);
 }
 
 .create-comment-button {
@@ -344,10 +388,9 @@
 
 <script>
 import { RouterLink } from 'vue-router';
-import { useBlogStore } from '../../stores/BlogStore.js';
 import BlogCommentLayout from './BlogCommentLayout.vue';
 import calcDateDifference from '../../utils/general/calcDateDifference.js';
-import BlogEditLayout from './BlogEditLayout.vue';
+import BlogFormLayout from './BlogFormLayout.vue';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import InterestBadgeList from '../general/InterestBadgeList.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
@@ -375,12 +418,12 @@ export default {
             editMode: false,
             alert: useAlertStore().alert,
             confirm: useConfirmStore().confirm
-        }; 
+        };
     },
     components: {
         RouterLink,
         BlogCommentLayout,
-        BlogEditLayout,
+        BlogFormLayout,
         LoadingOverlay,
         InterestBadgeList
     },
@@ -404,7 +447,7 @@ export default {
     },
     updated() {
         this.toggleControls();
-        
+
         if (this.showComments) {
             if (!this.commentsLoaded) {
                 this.getComments();
@@ -430,7 +473,7 @@ export default {
             if (this.currentId == '1') {
                 return;
             }
-            
+
             this.currentId -= 1;
         },
         // show the slide for the corresponding blog indicator
@@ -518,7 +561,7 @@ export default {
                     console.log(error);
                 });
             }
-            
+
             this.likeTimeout = null;
         },
         // complete updateLike request if pending
@@ -553,18 +596,9 @@ export default {
                 console.log(error);
             });
         },
-        // handle edit post
-        editPost() {
-            // update the store to hold the current blog to edit
-            const store = useBlogStore();
-            store.blogToEdit = this.blog;
-
-            // toggle edit blog view
-            this.editMode = true;
-        },
-        // to exist edit blog view
-        exitEditPost() {
-            this.editMode = false;
+        // toggle edit post
+        editPost(show) {
+            this.editMode = show;
         },
         // retrieve comments for the post
         async getComments() {
@@ -644,7 +678,7 @@ export default {
         },
         // check if the blog has tags
         hasTags() {
-            return this.blog.tags && this.blog.tags.length > 0;
+            return this.blog.tags.length > 0;
         },
         // check if the blog has tags or location to decide whether to show this part of the header
         showHeaderSecondRow() {

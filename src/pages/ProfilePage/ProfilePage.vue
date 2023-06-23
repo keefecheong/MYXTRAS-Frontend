@@ -96,7 +96,7 @@
                 </div>
             </div>
 
-            <BlogCreateLayout v-if="showCreateBlog" @close-create-blog="() => { toggleCreateBlog(false) }" />
+            <BlogFormLayout v-if="showCreateBlog" @close-blog-form="() => { toggleCreateBlog(false) }" />
         </div>
 
     </div>
@@ -109,7 +109,7 @@ import CreatedForums from '../../components/forum/CreatedForums.vue';
 import profilePicture from '../../assets/NgeeAnnLogo.png';
 import banner from '../../assets/CustomBanner.png';
 import BlogLayout from '../../components/blog/BlogLayout.vue';
-import BlogCreateLayout from '../../components/blog/BlogCreateLayout.vue';
+import BlogFormLayout from '../../components/blog/BlogFormLayout.vue';
 import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
@@ -122,7 +122,7 @@ export default {
         SubscribedForums,
         CreatedForums,
         BlogLayout,
-        BlogCreateLayout,
+        BlogFormLayout,
         InterestBadgeList,
         AlertPrompt,
         ConfirmPrompt

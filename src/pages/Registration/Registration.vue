@@ -255,8 +255,6 @@ export default {
         return {
             alert: useAlertStore().alert,
             alertStore: useAlertStore(),
-            confirm: useConfirmStore().confirm,
-            confirmStore: useConfirmStore(),
 
             // Inputs
             emailAddress: '',

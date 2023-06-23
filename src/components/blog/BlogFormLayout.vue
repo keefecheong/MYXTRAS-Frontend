@@ -1,103 +1,105 @@
 <template>
-    <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="isSubmitting || (editMode && !isDataInitialized)" />
+    <div id="blog-form-overlay">
+        <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="isSubmitting || (editMode && !isDataInitialized)" />
 
-    <!-- form to upload images -->
-    <form id="blog-form" @submit.prevent="submitForm">
-        <button id="close-form" @click="closeForm" type="button">
-            <span class="material-symbols-outlined">Close</span>
-        </button>
-        
-        <h1 class="form-header">{{ editMode ? 'Edit Post' : 'Create New Post' }}</h1>
-        
-        <div id="upload-image-container">
-            <!-- input to select images -->
-            <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
-            <label for="upload-image" id="upload-image-label">
-                <p>Drag and drop 
-                    <br>
-                    or
-                    <br> 
-                    click <u>here</u> to upload.
-                </p>
-            </label>
+        <!-- form to upload images -->
+        <form id="blog-form" @submit.prevent="submitForm">
+            <button id="close-form" @click="closeForm" type="button">
+                <span class="material-symbols-outlined">Close</span>
+            </button>
+            
+            <h1 class="form-header">{{ editMode ? 'Edit Post' : 'Create New Post' }}</h1>
+            
+            <div id="upload-image-container">
+                <!-- input to select images -->
+                <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
+                <label for="upload-image" id="upload-image-label">
+                    <p>Drag and drop 
+                        <br>
+                        or
+                        <br> 
+                        click <u>here</u> to upload.
+                    </p>
+                </label>
 
-            <!-- display errors -->
-            <div id="upload-image-errors" v-if="files.length > 0 && errors.length > 0">
-                <span>Error{{ errors.length > 1 ? 's' : '' }}:</span>
-                <ul>
-                    <li v-for="error in errors">{{ error }}</li>
-                </ul>
-            </div>
+                <!-- display errors -->
+                <div id="upload-image-errors" v-if="files.length > 0 && errors.length > 0">
+                    <span>Error{{ errors.length > 1 ? 's' : '' }}:</span>
+                    <ul>
+                        <li v-for="error in errors">{{ error }}</li>
+                    </ul>
+                </div>
 
-            <!-- display selected file names if there are errors -->
-            <div id="selected-image-names" v-if="files.length > 0 && invalidFiles.length > 0">
-                <span>Selected ({{ files.length }}):</span>
-                <ul>
-                    <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
-                </ul>
-            </div>
+                <!-- display selected file names if there are errors -->
+                <div id="selected-image-names" v-if="files.length > 0 && invalidFiles.length > 0">
+                    <span>Selected ({{ selectedFileCount }}):</span>
+                    <ul>
+                        <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
+                    </ul>
+                </div>
 
-            <!-- preview images if there are files selected with no errors -->
-            <div v-if="files.length > 0 && errors.length == 0">
-                <span>Selected ({{ files.length }}):</span>
-                <div v-for="(link, index) in selectedLinks" class="preview-image-container">
-                    <img :src="link" />
-                    <span class="hide-overflow-text">{{ files[index].name }}</span>
-                    <span>({{ calculateSize(files[index].size) }})</span>
+                <!-- preview images if there are files selected with no errors -->
+                <div v-if="selectedLinks.length > 0 && errors.length == 0">
+                    <span>Selected ({{ selectedFileCount }}):</span>
+                    <div v-for="(link, index) in selectedLinks" class="preview-image-container">
+                        <img :src="link" />
+                        <span class="hide-overflow-text">{{ this.editMode && !this.fileUpdated ? blog.original_names[index] : files[index].name }}</span>
+                        <!-- show size only if new files are uploaded -->
+                        <span v-if="files[index]">({{ calculateSize(files[index].size) }})</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- input for blog caption -->
-        <div class="image-options-container">
-            <label for="image-caption" id="caption-title" class="image-options-label">Caption:</label>
-            <textarea id="image-caption" name="image-caption" placeholder="Provide a caption (Optional)" v-model="caption"></textarea>
-        </div>
-        
-        <!-- input for blog location -->
-        <div class="image-options-container">
-            <label for="image-location" id="location-title" class="image-options-label">Location:</label>
-            <input type="text" id="image-location" name="image-location" placeholder="Location (Optional)" v-model="location"/>
-        </div>
-        
-        <!-- input for blog interest tags -->
-        <div class="image-options-container">
-            <label for="image-tags" id="tags-title" class="image-options-label">Tags:</label>
-            <div id="image-tags-selection">
-                <AddInterestButton :selectedOption="tags" @selectedInterests="handlePostTags">
-                    Select Tags For Your Post (Optional):
-                </AddInterestButton>
+            <!-- input for blog caption -->
+            <div class="image-options-container">
+                <label for="image-caption" id="caption-title" class="image-options-label">Caption:</label>
+                <textarea id="image-caption" name="image-caption" placeholder="Provide a caption (Optional)" v-model="caption"></textarea>
             </div>
-        </div>
-
-        <!-- input for blog comments enabled option -->
-        <div class="image-options-container">
-            <span id="comments-title" class="image-options-label">Turn on comments:</span>
-            <div id="image-comments-options">
-                <div id="image-comments-checkbox-container">
-                    <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
-                    <label class="switch" for="image-comments-checkbox">
-                        <span class="slider"></span>
-                    </label>
+            
+            <!-- input for blog location -->
+            <div class="image-options-container">
+                <label for="image-location" id="location-title" class="image-options-label">Location:</label>
+                <input type="text" id="image-location" name="image-location" placeholder="Location (Optional)" v-model="location"/>
+            </div>
+            
+            <!-- input for blog interest tags -->
+            <div class="image-options-container">
+                <label for="image-tags" id="tags-title" class="image-options-label">Tags:</label>
+                <div id="image-tags-selection">
+                    <AddInterestButton :selectedOption="tags" @selectedInterests="handlePostTags">
+                        Select Tags For Your Post (Optional):
+                    </AddInterestButton>
                 </div>
             </div>
-        </div>
 
-        <div id="image-form-controls">
-            <input class="image-form-control-button" type="reset" value="Clear All" @click="resetAll" />
-            <!-- 
-                disable submit button if 
-                1. there are no files selected
-                2. there are files selected but contains errors
-            -->
-            <input class="image-form-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0) || submitting" />
-        </div>
-    </form>
+            <!-- input for blog comments enabled option -->
+            <div class="image-options-container">
+                <span id="comments-title" class="image-options-label">Turn on comments:</span>
+                <div id="image-comments-options">
+                    <div id="image-comments-checkbox-container">
+                        <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
+                        <label class="switch" for="image-comments-checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="image-form-controls">
+                <input class="image-form-control-button" type="reset" value="Clear All" @click="resetAll" />
+                <!-- 
+                    disable submit button if 
+                    1. there are no files selected
+                    2. there are files selected but contains errors
+                -->
+                <input class="image-form-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0) || submitting" />
+            </div>
+        </form>
+    </div>
 </template>
 
 <script>
 import AddInterestButton from '../general/AddInterestButton.vue';
-import { useBlogStore } from '../../stores/BlogStore.js';
 import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import AlertPrompt from '../general/AlertPrompt.vue';
@@ -123,19 +125,18 @@ export default {
             alert: useAlertStore().alert,
 
             // for edit mode
-            blog: {},
             dataInitialized: false,
             toInitFiles: true,
             dataTransfer: new DataTransfer(),
-            fileUpdated: false,
-            blogStore: useBlogStore()
+            fileUpdated: false
         }
     },
     props: [
-        'editMode'
+        'editMode',
+        'blog'
     ],
     emits: [
-        'close-image-form'
+        'close-blog-form'
     ],
     created() {
         // initialize data during edit mode
@@ -143,19 +144,10 @@ export default {
             this.initData();
         }
     },
-    mounted() {
-        // check if need to init files of file input during edit mode
-        // if true then set the existing files and set toInitFiles to false
-        if (this.editMode && this.toInitFiles) {
-            document.getElementById('upload-image').files = this.dataTransfer.files;
-
-            this.toInitFiles = false;
-        }
-    },
     methods: {
         // to close the form
         closeForm() {
-            this.$emit('close-image-form');
+            this.$emit('close-blog-form');
         },
         // to handle form submission
         async submitForm() {
@@ -163,16 +155,13 @@ export default {
 
             // if in edit mode, check if user changed any fields
             if (this.editMode) {
-                let fieldsChanged = false;
                 const captionSame = this.caption == (this.blog.caption || '');
                 const locationSame = this.location == (this.blog.location || '');
                 const commentsEnabledSame = this.commentsEnabled == this.blog.comments_enabled;
                 const tagsSame = this.tags.toString() == this.blog.tags.toString();
 
                 // if any field is changed continue to update
-                if (!(captionSame && locationSame && commentsEnabledSame && tagsSame)) {
-                    fieldsChanged = true;
-                }
+                const fieldsChanged = !(captionSame && locationSame && commentsEnabledSame && tagsSame);
 
                 // if user did not change any fields or files selected then do nothing
                 if (!fieldsChanged && !this.fileUpdated) {
@@ -229,14 +218,10 @@ export default {
             // send request to backend server with data
             const options = {
                 mode: 'cors',
-                method: 'POST',
+                method: this.editMode ? 'PATCH' : 'POST',
                 body: formData,
                 credentials: 'include'
             };
-
-            if (this.editMode) {
-                options.method = 'PATCH';
-            }
 
             const targetURL = this.editMode ? `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}` : `${import.meta.env.VITE_APP_SERVER_URL}/api/posts`;
 
@@ -326,51 +311,17 @@ export default {
         },
         // initialize data
         async initData() {
-            // get blog data
-            this.blog = this.blogStore.blogToEdit;
-
-            // set links
             this.selectedLinks = this.blog.content_links;
-
-            await this.downloadExistingImages();
             
-            // update other attributes of the blog
             this.caption = this.blog.caption || '';
 
             this.location = this.blog.location || '';
 
             this.commentsEnabled = this.blog.comments_enabled;
 
-            this.tags = this.blog.tags ? [...this.blog.tags] : [];
+            this.tags = [...this.blog.tags];
 
             this.dataInitialized = true;
-        },
-        // download images and save as files
-        async downloadExistingImages() {
-            const imagePromises = this.selectedLinks.map((link, index) => {
-                return fetch(link).then(async (res) => {
-                    if (res.status == 200) {
-                        await res.blob().then((blob) => {
-                            const imageName = `${this.blog.original_names[index]}`;
-                            const image = new File([blob], imageName, {
-                                type: blob.type
-                            });
-
-                            this.files.push(image);
-                            this.dataTransfer.items.add(image);
-                        });
-                    }
-                    else {
-                        console.log('Failed to retrieve image.');
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
-            });
-
-            await Promise.all(imagePromises).catch((error) => {
-                console.log(error);
-            });
         },
         // handle selection of interest tags
         handlePostTags(newTags) {
@@ -385,12 +336,29 @@ export default {
         // check if data is initialized
         isDataInitialized() {
             return this.dataInitialized;
+        },
+        // get selected files count
+        selectedFileCount() {
+            return Math.max(this.files.length, this.selectedLinks.length);
         }
     }
 }
 </script>
 
 <style>
+#blog-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0, 0.5);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .form-header {
     align-items: center;
     margin-bottom: 1rem;
@@ -449,6 +417,7 @@ export default {
     width: fit-content;
     height: fit-content;
     margin: auto;
+    cursor: pointer;
 }
 
 #upload-image-errors, .invalidFile {
@@ -553,6 +522,7 @@ export default {
     flex-direction: row;
     column-gap: 10px;
     align-items: center;
+    justify-content: center;
 }
 
 .preview-image-container img {

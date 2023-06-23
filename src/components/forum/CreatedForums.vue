@@ -5,7 +5,7 @@
                 <h5 class="card-title">Created Forums</h5>
                 <div v-for="forum in createdForums" class="row">
                     <div class="col-md-4 d-flex justify-content-end">
-                        <img class="groupPic" :src="forum.forum_pic_link[0]" :draggable="isDraggable" @click="viewForum(forum)">
+                        <img class="groupPic" :src="forum.forum_pic_link" :draggable="isDraggable" @click="viewForum(forum)">
                     </div>
                     <div class="col-md-8">
                         <p class="forum-name" @click="viewForum(forum)">{{ forum.forumName }}</p>  
