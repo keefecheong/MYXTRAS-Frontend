@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-md-3">
                    <CreatedForums />
-                   <SubscribedForums v-on:subbedForums="retrieveRecentThreads"/>
+                   <SubscribedForums @got-subbed-forums="retrieveRecentThreads"/>
                 </div>
             
                 <div class="col-md-6">

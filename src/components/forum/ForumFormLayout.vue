@@ -1,6 +1,6 @@
 <template>
     <div id="forum-form-overlay">
-        <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="isSubmitting || (editMode && !dataInitialized)" />
+        <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="submitting || (editMode && !dataInitialized)" />
     
         <!-- form -->
         <form id="forum-form-container" @submit.prevent="submitForm">
@@ -62,21 +62,15 @@
                 <textarea type="text" id="forum-desc-input" v-model="forumDesc" :maxlength="500" placeholder="Forum Description (optional)" ></textarea>
             </div>
             
-            <!-- forum category input -->
+            <!-- forum tags input -->
             <div class="forum-field-container">
-                <label for="forum-category-input" class="forum-label">Category:</label>
-                <div id="forum-category-container">
-                    <select v-model="selectedCategory" id="forum-category-input">
-                        <option value="" selected disabled>Select a Category</option>
-                        <option value="Sports">Sports</option>
-                        <option value="Dance">Dance</option>
-                        <option value="Technology">Technology</option>
-                        <option value="News">News</option>
-                    </select>
+                <label for="forum-tags-input" class="forum-label">Tags:</label>
+                <div id="forum-tags-container">
+                    <AddInterestButton :selectedOption="tags" @selectedInterests="handleInterestSelected" />
                 </div>
             </div>
                 
-            <button class="forum-form-control-button" :disabled="submitting || !requiredFields">{{ submitting ? 'Creating...' : 'Create' }}</button>
+            <button class="forum-form-control-button" :disabled="submitting || !requiredFields">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
         </form>
     </div>
 </template>
@@ -84,6 +78,7 @@
 <script>
 import { useAlertStore } from '../../stores/AlertStore.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
+import AddInterestButton from '../general/AddInterestButton.vue';
 
 export default {
     data() {
@@ -98,7 +93,7 @@ export default {
             forumID: '',
             forumName: '',
             forumDesc: '',
-            selectedCategory: null,
+            tags: [],
             submitting: false,
             
             //Error handling
@@ -118,7 +113,8 @@ export default {
         }
     },
     components: {
-        LoadingOverlay
+        LoadingOverlay,
+        AddInterestButton
     },
     props: [
         'editMode',
@@ -290,7 +286,7 @@ export default {
                     'forumName': this.forumName,
                     'forumID': this.forumID,
                     'forumDesc': this.forumDesc,
-                    'category': this.selectedCategory
+                    'tags': this.tags
                 }
                 
                 uploadData.append('forumObject', JSON.stringify(forumObject));
@@ -338,9 +334,13 @@ export default {
             this.forumIDVerified = true;
             this.forumName = this.forum.forumName;
             this.forumDesc = this.forum.forumDesc || '';
-            this.selectedCategory = this.forum.category;
+            this.tags = [...this.forum.tags];
 
             this.dataInitialized = true;
+        },
+        // handle selected tags
+        handleInterestSelected(newTags) {
+            this.tags = newTags;
         }
     },
     computed: {
@@ -348,7 +348,6 @@ export default {
         requiredFields() {
             const nameValid = this.forumName.length > 0;
             const idValid = this.forumID.length > 0 && this.forumIDVerified && !this.idErr;
-            const categoryValid = this.selectedCategory;
             let picValid = this.selectedGroupPic && this.groupPicObject;
             let bannerValid = this.selectedBanner && this.bannerObject;
 
@@ -358,16 +357,16 @@ export default {
                 bannerValid = bannerValid ? bannerValid : !this.bannerUpdated && this.selectedBanner;
             }
 
-            return nameValid && idValid && categoryValid && picValid && bannerValid;
+            return nameValid && idValid && picValid && bannerValid;
         },
         // to check if any fields are changed
         fieldsChanged() {
             const nameSame = this.forumName == this.forum.forumName;
             const idSame = this.forumID == this.forum.forumID;
-            const categorySame = this.selectedCategory == this.forum.category;
+            const tagSame = this.tags == this.forum.tags;
             const descSame = this.forumDesc == this.forum.forumDesc;
 
-            return !(nameSame && idSame && categorySame && descSame);
+            return !(nameSame && idSame && tagSame && descSame);
         }
     }
 }
@@ -505,7 +504,7 @@ export default {
     flex-basis: 30%;
 }
 
-#forum-id-input, #forum-name-input, #forum-desc-input, #forum-category-container {
+#forum-id-input, #forum-name-input, #forum-desc-input, #forum-tags-container {
     width: 100%;
 }
 

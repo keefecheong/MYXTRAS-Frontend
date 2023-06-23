@@ -22,7 +22,7 @@
 <template>
     <div id="current-interests-container">
         <InterestBadgeList 
-            :selectedOption="selectedOption" 
+            :selectedOption="workingSelectedOption" 
             :selection="false"
             :maxWidth="'80%'"
             @interest-selected="handleSelection"
@@ -45,7 +45,7 @@
                 </div>
 
                 <InterestBadgeList 
-                    :selectedOption="selectedOption" 
+                    :selectedOption="workingSelectedOption" 
                     :selection="true"
                     @interest-selected="handleSelection"
                     style="margin-bottom: 15px"
@@ -62,21 +62,23 @@ import InterestBadgeList from './InterestBadgeList.vue';
 import handleSelectedInterests from '../../utils/general/defaultInterestSelectedCallback';
 
 export default{
-    props: {
-        selectedOption: {
-            type: Array,
-            default: () => [],
-        },
-        maxWidth: {
-            type: String
-        }
-    },
+    props: [
+        'selectedOption',
+        'maxWidth'
+    ],
     components: {
         InterestBadgeList
     },
     data(){
         return{
-            showPopup: false
+            showPopup: false,
+            workingSelectedOption: []
+        }
+    },
+    created() {
+        // if there are existing options selected set workingSelectionOption to the existing values
+        if (this.selectedOption.length > 0) {
+            this.workingSelectedOption = this.selectedOption;
         }
     },
     emits: [
@@ -89,13 +91,13 @@ export default{
         },
         // confirm selected interests and close popup
         confirmSelection() {
-            this.$emit('selectedInterests', this.selectedOption);
+            this.$emit('selectedInterests', this.workingSelectedOption);
             
             this.togglePopup(false);
         },
         // add/remove selected interest
         handleSelection(option) {
-            handleSelectedInterests(option, this.selectedOption);
+            handleSelectedInterests(option, this.workingSelectedOption);
         }
     },
     

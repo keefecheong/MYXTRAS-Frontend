@@ -14,7 +14,7 @@
                         </div>
                         <div class="row">
                             <div id="threadImageContainer">
-                                <img id="threadImage" :src="thread.content_links[0]">
+                                <img id="threadImage" :src="thread.content_links">
                             </div>
                         </div>
                         <div class="row">

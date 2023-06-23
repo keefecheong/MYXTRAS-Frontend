@@ -77,27 +77,28 @@ export default {
             subbedForums: []
         }
     },
-    mounted(){
+    created(){
         this.retrieveSubbedForums()
     },
+    emits: [
+        'got-subbed-forums'
+    ],
     methods: {
-       
-        
-        async retrieveSubbedForums() {
-            
+        async retrieveSubbedForums() {            
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-subbed-forums/`, {
-                method: "GET",
-                credentials: "include"
+                    method: "GET",
+                    credentials: "include",
+                    mode: 'cors'
                 })
                 .then(async response => {
-                if (response.ok) {
-                    await response.json().then(data => {
-                        this.subbedForums = data.subscribed_forums
-                        this.$emit('subbedForums', this.subbedForums);
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
+                    if (response.ok) {
+                        await response.json().then(data => {
+                            this.subbedForums = data.subscribed_forums;
+                            this.$emit('got-subbed-forums', this.subbedForums);
+                        })
+                    } else {
+                        console.log('Error:', response);
+                    }
                 })
                 .catch(error => {
                     console.error('Error:', error);
