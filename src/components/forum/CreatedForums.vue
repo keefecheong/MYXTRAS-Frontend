@@ -18,10 +18,7 @@
 
 <style scoped>
 .card {
-    padding: 1em 0 1em 0;
-    border: none !important;
     border-radius: 10px;
-    margin: 3vh 1vh;
     min-height: 50vh;
     max-height: 60vh;
     overflow-y: scroll;

@@ -23,12 +23,20 @@
 
                     <div v-if="!showDetailedView">
                         <keep-alive>
-                            <ThreadMiniLayout v-for="(thread, index) in threads" :thread="thread" :key="index" @show-detailed-view="() => toggleDetailedView(true, index)" />
+                            <ThreadMiniLayout 
+                                v-for="(thread, index) in threads" 
+                                :thread="thread" 
+                                :index="index"
+                                :key="index"
+                                @show-detailed-view="() => toggleDetailedView(true, index)" />
                         </keep-alive>
                     </div>
 
                     <div v-if="showDetailedView">
-                        <ThreadDetailedLayout :thread="threads[selectedIndex]" :showBackArrow="true" @close-detailed-view="() => toggleDetailedView(false, null)" />
+                        <ThreadDetailedLayout 
+                            :thread="threads[selectedIndex]" 
+                            :showBackArrow="true" 
+                            @close-detailed-view="() => toggleDetailedView(false, selectedIndex)" />
                     </div>
                 </div>
 
@@ -78,11 +86,25 @@ export default {
             forum: {},
             contentLoaded: false,
             threads: [],
-            selectedIndex: null
+            selectedIndex: null,
+            scrollBack: false
         }
     },
     created() {
         this.getForumPage()
+    },
+    updated() {
+        // if scrollBack is true then scroll to that thread
+        if (this.scrollBack) {
+            document.getElementById(this.selectedIndex).scrollIntoView({
+                block: 'center'
+            });
+
+            // set timeout to clear scrollBackIndex
+            setTimeout(() => {
+                this.scrollBack = false;
+            }, 1000);
+        }
     },
     watch: {
         'forum._id': {
@@ -95,11 +117,10 @@ export default {
     methods: {
         // handle toggling of detailed thread view
         toggleDetailedView(show, index) {
-            if (index != null) {
-                this.selectedIndex = index;
-            }
-            else {
-                this.selectedIndex = null;
+            this.selectedIndex = index;
+
+            if (!show) {
+                this.scrollBack = true;
             }
 
             this.showDetailedView = show;

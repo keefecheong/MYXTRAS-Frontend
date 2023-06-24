@@ -1,14 +1,17 @@
 <template>
-    <div class="card shadow thread-layout-container" @click="showDetailedView" title="Click to view this thread">
+    <div class="card shadow thread-layout-container" @click="showDetailedView" title="Click to view this thread" :id="index">
         <div class="thread-layout-left">
-            <img class="thread-creator-profile-pic" :src="thread.creator_id.profile_pic_link" />
+            <img class="thread-creator-profile-pic" :src="showForumDetails ? thread.parent_id.forum_pic_link : thread.creator_id.profile_pic_link" />
         </div>
 
         <div class="thread-layout-right">
             <div class="thread-layout-right-header">
                 <div class="thread-layout-header-top">
                     <div>
-                        <span class="thread-creator">Posted by: @{{ thread.creator_id.username }}</span>
+                        <div class="thread-creator">
+                            <span v-if="showForumDetails" @click="showForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
+                            <span>Posted by: @{{ thread.creator_id.username }}</span>
+                        </div>
                         <span class="thread-title">{{ thread.title }}</span>
                     </div>
 
@@ -54,10 +57,12 @@ export default {
         ThreadFormLayout
     },
     props: [
-        'thread'
+        'thread',
+        'showForumDetails',
+        'index'
     ],
     emits: [
-        'show-detailed-view'
+        'show-detailed-view',
     ],
     created() {
         this.dateCreated = calcDateDifference(this.thread.creation_time);
@@ -71,15 +76,26 @@ export default {
         toggleThreadForm(show) {
             this.showThreadForm = show;
         },
-        viewThread(thread) {
-            sessionStorage.setItem("threadID", thread._id)
-        }, 
+        // to go to forumgroup for selected forum
+        showForum() {
+            sessionStorage.setItem('forum_id', thread.parent_id._id);
+        }
     }
 }
 </script>
 
 <style>
 @import url('../../styles/forums/similar-thread-layout-styles.css');
+
+.thread-layout-forum-name {
+    color: rgb(0, 102, 204);
+    cursor: pointer;
+}
+
+.thread-layout-forum-name:hover {
+    color: var(--primary);
+    font-weight: bold;
+}
 
 .thread-content {
     --line-height: 1.5em;

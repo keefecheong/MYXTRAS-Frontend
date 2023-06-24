@@ -4,9 +4,12 @@
             <div v-for="thread in recentThreads">
                 <div class="card shadow threadContainer">
                     <div class="row">
-                        <div class="col-md-2 d-flex justify-content-end">
-                            <a @click="viewForum(thread.parent_id._id)"><img id="threadGroupPic" :src="thread.parent_id.forum_pic_link" :draggable="isDraggable"></a>
+                        <div class="col-md-2">
+                            <span @click="viewForum(thread.parent_id._id)">
+                                <img id="threadGroupPic" :src="thread.parent_id.forum_pic_link">
+                            </span>
                         </div>
+
                         <div class="col-10 threadContent">
                             <p id="meta"><a @click="viewForum(thread.parent_id._id)" class="forum-name">{{ "x/" + thread.parent_id.forum_id}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
                             <p id="thread-title">{{ thread.title }}</p>  
@@ -32,14 +35,6 @@
     padding: 1em 0 1em 0;
     border: none !important;
     margin: 0 1vh 3vh 1vh;
-}
-.col-10, .col-2 {
-    padding: 0;
-}
-.forum-container {
-    border: #133B5B;
-    border-style: solid 1rem;
-    margin: auto;
 }
 .threadContainer {
     padding: 2em 3em 1em 3em !important;
@@ -155,11 +150,6 @@ export default {
             sessionStorage.setItem('forum_id', forumID)
             location.href="/forumGroup.html"
             return this.sortedThreads
-        },
-
-        viewThread(thread){
-            sessionStorage.setItem('threadID', thread._id)
-            location.href="/threadView.html"
         }
     }
 }

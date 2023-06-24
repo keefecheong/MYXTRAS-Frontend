@@ -72,7 +72,7 @@
                 }
             },
             retrieveAllThreads() {
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/`, {
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread`, {
                     mode: 'cors',
                     method: 'GET',
                     credentials: 'include'
