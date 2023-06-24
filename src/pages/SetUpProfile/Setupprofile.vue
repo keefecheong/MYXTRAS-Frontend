@@ -201,7 +201,6 @@ export default {
 
         handleSelectedInterests(selectedInterests) {
             // Retrieve the selected interests here and perform necessary actions
-            console.log(selectedInterests);
             // You can store the selected interests in a data property or send them to an API, etc.
             this.selectedOption = selectedInterests;
         },
@@ -305,7 +304,6 @@ export default {
                 return;
             }
             else {
-                console.log('gu');
                 this.userObject = {
                     'realName': this.realname,
                     'userName': this.username,

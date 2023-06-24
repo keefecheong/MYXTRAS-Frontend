@@ -124,7 +124,6 @@
             filteredThreads() {
                 if (this.selectedOption.length <= 0) {
                     this.tagsLoaded = true;
-                    console.log(this.threads.length)
                     return this.threads;
                 }
                 else {

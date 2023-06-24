@@ -12,11 +12,6 @@
                         <span class="material-symbols-outlined" style="color: white; margin: 15px 0 0 15px">home</span>
                     </a>
                 </div>
-                <!-- <v-tooltip text="Tooltip">
-                <template v-slot:activator="{ props }">
-                    <v-input v-bind="props"></v-input>
-                </template>
-                </v-tooltip> -->
                 <div class="col-md-10 loginContainer">
                     <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
                     <div class="whitebox">
@@ -411,7 +406,6 @@ export default {
                         // SMS sent. Prompt user to type the code from the message, then sign the
                         // user in with confirmationResult.confirm(code).
                         this.confirmResult = confirmationResult
-                        console.log(confirmationResult)
                         await this.alert("Sms Sent!")
                         this.otpSent = true;
                         document.getElementById("recaptcha-container").style.display = "none";
@@ -523,7 +517,6 @@ export default {
             }
             // Password complexity check
             if (this.passwordStrength < 2){
-                console.log(this.passwordStrength)
                 this.registerFail = true;
                 return this.generalErrMsg = "Password is weak";
             }

@@ -259,7 +259,6 @@ export default {
             }
         },
         checkForIllegalChar(){
-            console.log('1')
             if (this.forumID.includes('#')){
                 return true;
             }
