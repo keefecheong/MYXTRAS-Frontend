@@ -19,18 +19,24 @@
                             <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
                         </div>
                         
-                        <select v-model="selectedSchool" :required="!showPopup">
+                        <select v-model="selectedSchool" :required="!showPopup" @change="retrieveCourses">
                             <option value="" disabled selected hidden>Select a school</option>
                             <option value="ICT">School of ICT</option>
                             <option value="HS">School of HS</option>
+                            <option value="BA">School of BA</option>
+                            <option value="DE">School of DE</option>
+                            <option value="SoE">School of SoE</option>
                             <option value="FMS">School of FMS</option>
-                            <option value="BS">School of BS</option>
+                            <option value="HS">School of HS</option>
+                            <option value="HMS">School of HSM</option>
+                            <option value="ICT">School of ICT</option>
+                            <option value="LSCT">School of LSCT</option>
                         </select>
                         <br>
                         <br>
-                        <select v-model="selectedCourse" :required="!showPopup">
-                            <option value="" disabled selected hidden>Select a course</option>
-                            <option v-for="course in filteredCourses" :value="course" :disabled="course === 'Select a school first'">{{ course }}</option>
+                        <select v-model="selectedCourse" :required="!showPopup" :disabled="selectedSchool === '' || selectedSchool === null">
+                            <option value="" disabled selected hidden>Select a Course</option>
+                            <option v-for="course in courses" :value="course">{{ course }}</option>
                         </select>
                         <br>
                         <br>
@@ -162,21 +168,12 @@ export default {
             selectedOption: [],
             userId: '',
             // schools: ['ICT','HS','FMS','BMS'],
-            courses: {
-                '': ["Select a school first"],
-                ICT: ['CSF', 'IM', 'CICT'],
-                HS: ['CHEM', 'BIO'],
-                FMS: ['FILM', 'MEDIA'],
-                BS: ['MARKETING', 'HR']
-            },
+            courses: [],
             alert: useAlertStore().alert,
             alertStore: useAlertStore()
         };
     },
     computed: {
-        filteredCourses() {
-            return this.courses[this.selectedSchool] || [];
-        },
         // to get showAlert value
         showAlert() {
             return this.alertStore.showAlert;
@@ -198,7 +195,24 @@ export default {
             this.biography = this.biography.slice(0, this.maxCharacters); // Truncate the input value to the maximum number of characters
             }
         },
-
+        retrieveCourses() {
+            const id = this.selectedSchool
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/school/get-courses/${id}`, {
+                method: 'GET',
+            }) .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error: ' + response.error);
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    this.courses = data.courseList;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        },
         handleSelectedInterests(selectedInterests) {
             // Retrieve the selected interests here and perform necessary actions
             console.log(selectedInterests);

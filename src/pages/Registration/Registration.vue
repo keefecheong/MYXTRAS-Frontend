@@ -37,9 +37,12 @@
                             
                             <!-- Phone Number Field -->
                             <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required>
-                            <button @click="sendOTP" id="sendOtpBtn" class="overlay-button">Send OTP</button>
+                            <button @click="sendOTP" id="sendOtpBtn" class="overlay-button" :class="{ 'disabled': disableOTP }" :disabled="disableOTP">Send OTP</button>
+
                             <p v-if="showPhoneErr" id="phoneErr">Enter a valid phone number</p>
                             <p class="genErr">{{ phoneErr }}</p>
+
+                            <!-- Reveals after OTP is sent -->
                             <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="6" required>
                             <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn" class="overlay-button">Verify OTP</button>
                             <p v-if="verifiedotp">OTP verified</p>
@@ -144,6 +147,10 @@ input:focus{
     font-weight: bolder;
     border: solid;
     border-color: var(--primary);
+}
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 #hint {
     padding: 0 5em 0 5em;
@@ -283,6 +290,7 @@ export default {
             // Error
             emailErr: null,
             phoneErr: null,
+            disableOTP: false,
         }
     },
     components: {
@@ -493,14 +501,16 @@ export default {
 
             if (response.ok) {
                 this.phoneErr = null;
+                this.disableOTP = false;
                 return;
             } else if (response.status === 400) {
                 const data = await response.json();
                 if (data.error === 'Phone Number already exists') {
-                this.phoneErr = "Phone Number already taken";
+                    this.phoneErr = "Phone Number already taken";
+                    this.disableOTP = true;
                 return;
                 } else {
-                throw new Error('Error: ' + response.status);
+                    throw new Error('Error: ' + response.status);
                 }
             }
             } catch (error) {
