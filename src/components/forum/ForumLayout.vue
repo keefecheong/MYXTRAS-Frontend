@@ -8,11 +8,11 @@
                             <a @click="viewForum(thread.parent_id._id)"><img id="threadGroupPic" :src="thread.parent_id.forum_pic_link" :draggable="isDraggable"></a>
                         </div>
                         <div class="col-10 threadContent">
-                            <p id="meta"><a @click="viewForum(thread.parent_id._id)" class="forum-name">{{ "x/" + thread.parent_id.forumID}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
-                            <p id="thread-title">{{ thread.thread_title }}</p>  
-                            <p id="thread-description">{{ thread.thread_desc }}</p>
+                            <p id="meta"><a @click="viewForum(thread.parent_id._id)" class="forum-name">{{ "x/" + thread.parent_id.forum_id}}</a>{{ " ~ Posted by: @" + thread.creator_id.username }}</p>  
+                            <p id="thread-title">{{ thread.title }}</p>  
+                            <p id="thread-description">{{ thread.content }}</p>
                             <div class="imageContainer">
-                                <img id="threadPic" :src="thread.content_links" :draggable="isDraggable">
+                                <img id="threadPic" :src="thread.content_link" :draggable="isDraggable">
                             </div>
                             <br>
                             <div class="d-flex justify-content-end">
@@ -141,13 +141,18 @@ export default {
         },
         recentThreads: {
             type: Array,
-            default: []
+            default: {}
+        }
+    },
+    data(){
+        return{
+            isDraggable: false,
         }
     },
     methods:{
         
         viewForum(forumID){
-            sessionStorage.setItem('forumID', forumID)
+            sessionStorage.setItem('forum_id', forumID)
             location.href="/forumGroup.html"
             return this.sortedThreads
         },

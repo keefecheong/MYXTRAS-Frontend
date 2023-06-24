@@ -55,7 +55,7 @@ export default {
     props: ['results', 'currentPage'],
     methods: {
         handleClick(result) {
-            if (result.hasOwnProperty('forumID')) {
+            if (result.hasOwnProperty('forum_id')) {
                 this.viewForum(result);
             } else if (result.hasOwnProperty('real_name')) {
                 this.viewProfile(result);
@@ -63,7 +63,7 @@ export default {
         },
         // Taken from ForumGroup.vue
         async viewForum(forum){
-            sessionStorage.setItem('forumID', forum._id);
+            sessionStorage.setItem('forum_id', forum._id);
             location.href = "/forumGroup.html"
         },
 
@@ -73,8 +73,8 @@ export default {
         },
         displayText(result) {
 
-            if (result.hasOwnProperty('forumID')) {
-                return `x/${result.forumID} ~ ${result.forumName}`;
+            if (result.hasOwnProperty('forum_id')) {
+                return `x/${result.forum_id} ~ ${result.forum_name}`;
             } else if (result.hasOwnProperty('real_name')) {
                 return `${result.real_name} ~ ${result.username}`;
             } 

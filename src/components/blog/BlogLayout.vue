@@ -15,7 +15,7 @@
 
                 <!-- creation time (time difference) -->
                 <div class="blog-creation-time">
-                    <time :datetime="blog.creation_time" :title="new Date(blog.creation_time)">{{ dateCreated }}</time>
+                    <span :datetime="blog.creation_time" :title="new Date(blog.creation_time)">{{ dateCreated }}</span>
                 </div>
             </div>
 

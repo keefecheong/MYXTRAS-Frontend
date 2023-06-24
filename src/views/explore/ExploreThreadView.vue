@@ -17,7 +17,7 @@
     <div class="row" v-if="this.threads">
         <div class="col-md-9">
             <div>
-                <ThreadLayout v-for="(thread, index) in filteredThreads" :thread="thread" :key="index" />
+                <ThreadMiniLayout v-for="(thread, index) in filteredThreads" :thread="thread" :key="index" />
             </div>
         </div>
         <div class="col-md-3 ">
@@ -28,7 +28,7 @@
                         <h4 class="cat" @click="openForum(index)">{{ tag._id }}<div class="triangle-down" :id="index"></div></h4>
                         <div class="dropdown-content" :id="'dc'+index" >
                             <div v-for="forum in tag.forums" @click="viewForum(forum)" id="forumContainer">
-                                <p><img class="forum-pic" :src="forum.forum_pic_link">{{forum.forumName}}</p>
+                                <p><img class="forum-pic" :src="forum.forum_pic_link">{{forum.forum_name}}</p>
                             </div>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-    import ThreadLayout from '../../components/forum/ThreadLayout.vue';
+    import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
     import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
     import handleInterestSelected from '../../utils/general/defaultInterestSelectedCallback.js';
 
@@ -52,7 +52,7 @@
             }
         },
         components: {
-            ThreadLayout,
+            ThreadMiniLayout,
             InterestBadgeList
         },
         mounted() {
@@ -72,7 +72,7 @@
                 }
             },
             retrieveAllThreads() {
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads`, {
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/`, {
                     mode: 'cors',
                     method: 'GET',
                     credentials: 'include'
@@ -95,7 +95,7 @@
                 handleInterestSelected(option, this.selectedOption);
             },
             retrieveForums() {
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-categorized-forums`, {
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/categorized`, {
                     mode: 'cors',
                     method: 'GET',
                     credentials: 'include'
@@ -115,7 +115,7 @@
                 
             },
             viewForum(forum) {
-                sessionStorage.setItem('forumID', forum._id)
+                sessionStorage.setItem('forum_id', forum._id)
                 location.href = '../forumGroup.html'
             }
         },

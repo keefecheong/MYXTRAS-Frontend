@@ -21,8 +21,8 @@
     
             <!-- thread description (content) input -->
             <div class="thread-field-container">
-                <label for="thread-description-input" class="thread-label">Content:</label>
-                <textarea id="thread-description-input" v-model="threadDesc" :maxlength="500" placeholder="Thread content"></textarea>
+                <label for="thread-content-input" class="thread-label">Content:</label>
+                <textarea id="thread-content-input" v-model="threadContent" :maxlength="500" placeholder="Thread content"></textarea>
             </div>
             
             <!-- thread tags input -->
@@ -70,7 +70,7 @@ export default {
             selectedImageLink: null,
             selectedImageObject: null,
             threadTitle: '',
-            threadDesc: '',
+            threadContent: '',
             tags: [],
             submitting: false,
             
@@ -189,15 +189,15 @@ export default {
             
             try {
                 let threadObject = {
-                    'thread_title': this.threadTitle,
-                    'thread_desc': this.threadDesc,
+                    'title': this.threadTitle,
+                    'content': this.threadContent,
                     'tags': this.tags
                 }
                 
                 uploadData.append('threadObject', JSON.stringify(threadObject));
                 
                 // send request to server with data
-                const targetURL = this.editMode ? `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}` : `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/create/${this.forumID}`;
+                const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.forumID}`;
                 
                 const options = {
                     mode: 'cors',
@@ -213,7 +213,7 @@ export default {
                         if (response.ok){
                             await this.alert(successMessage);
 
-                            sessionStorage.setItem('forumID', this.forumID || this.thread.parent_id);
+                            sessionStorage.setItem('forum_id', this.forumID || this.thread.parent_id);
                             location.href = "/forumGroup.html";
                         } else {
                             console.log('An error occurred.');
@@ -231,9 +231,9 @@ export default {
         },
         // initialize data
         initData() {
-            this.selectedImageLink = this.thread.content_links || null;
-            this.threadTitle = this.thread.thread_title;
-            this.threadDesc = this.thread.thread_desc;
+            this.selectedImageLink = this.thread.content_link || null;
+            this.threadTitle = this.thread.title;
+            this.threadContent = this.thread.content;
             this.tags = [...this.thread.tags];
 
             this.dataInitialized = true;
@@ -243,14 +243,14 @@ export default {
         // check if required fields are all filled up
         requiredFields() {
             const titleValid = this.threadTitle.trim().length > 0;
-            const descValid = this.threadDesc.trim().length > 0;
+            const descValid = this.threadContent.trim().length > 0;
 
             return titleValid && descValid;
         },
         // to check if any fields are changed
         fieldsChanged() {
-            const titleSame = this.threadTitle == this.thread.thread_title;
-            const descSame = this.threadDesc == this.thread.thread_desc;
+            const titleSame = this.threadTitle == this.thread.title;
+            const descSame = this.threadContent == this.thread.content;
             const tagSame = this.tags == this.thread.tags;
 
             return !(titleSame && descSame && tagSame);
@@ -363,11 +363,11 @@ export default {
     text-align: start;
 }
 
-#thread-title-input, #thread-description-input, #thread-tags-container {
+#thread-title-input, #thread-content-input, #thread-tags-container {
     width: 100%;
 }
 
-#thread-title-input, #thread-description-input {
+#thread-title-input, #thread-content-input {
     padding: 10px;
     border-radius: 10px;
     resize: none;

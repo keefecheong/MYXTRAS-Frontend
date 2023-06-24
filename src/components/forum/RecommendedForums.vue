@@ -6,7 +6,7 @@
             <!-- max 6 groups -->
             <div class="group-container" @click="viewForum(forum)" v-for="forum in recommendations">
                 <img class="groupPic" :src="forum.forum_pic_link" />
-                <p class="text-below-pic">{{ forum.forumName }}</p>
+                <p class="text-below-pic">{{ forum.forum_name }}</p>
             </div>
         </div>
     </div>
@@ -53,12 +53,12 @@ export default {
     },
     methods: {
         viewForum(forum) {
-            sessionStorage.setItem('forumID', forum._id)
+            sessionStorage.setItem('forum_id', forum._id)
             location.href = "/forumGroup.html"
         },
         
         async getRecommendations() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-recommended-forums/`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/recommended`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'

@@ -17,7 +17,7 @@
                 </div>
             
                 <div class="col-md-6">
-                    <div class="row">
+                    <div class="row" v-if="!showDetailedThread">
                         <div class="card shadow" v-if="recentThreads.length === 0">
                             <div class="center-align" style="margin: 3vh 0;">
                                 <p>No new threads, <a href="/explore.html">Xplore</a> now!</p>
@@ -27,10 +27,14 @@
                             <ForumLayout v-if="recentThreads.length !== 0" :recentThreads="recentThreads" style="margin: 3vh 0;"/>
                         </div>
                     </div>
+
+                    <div class="row" v-else>
+                        <ThreadDetailedLayout :thread="selectedPopularThread" />
+                    </div>
                 </div>
 
                 <div class="col-md-3">
-                    <PopularThreads/>
+                    <PopularThreads @show-thread="(thread) => toggleDetailedThread(true, thread)" />
                 </div>
             </div>
             
@@ -104,6 +108,7 @@ import PopularThreads from '../../components/forum/PopularThreads.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
+import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
 
 export default {
     components: {
@@ -114,7 +119,8 @@ export default {
         SubscribedForums,
         PopularThreads,
         AlertPrompt,
-        ForumFormLayout
+        ForumFormLayout,
+        ThreadDetailedLayout
     },
     data() {
         return {
@@ -128,7 +134,9 @@ export default {
             subbedForums: [],
             createdForums: [],
             threads: [],
-            recentThreads: []
+            recentThreads: [],
+            selectedPopularThread: null,
+            showDetailedThread: false
         }
     },
     created() {
@@ -160,6 +168,17 @@ export default {
         // to close alert prompt
         closeAlert() {
             this.alertStore.closeAlert();
+        },
+        // show detailed view of popular thread
+        toggleDetailedThread(show, thread) {
+            if (thread) {
+                this.selectedPopularThread = thread;
+            }
+            else {
+                this.selectedPopularThread = null;
+            }
+
+            this.showDetailedThread = show;
         }
 
     },

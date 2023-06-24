@@ -17,12 +17,12 @@
 
                 <div class="card">
                         <div class="row threadContent">
-                            <h2> {{ thread.thread_title}}</h2>
-                            <h6> {{ thread.thread_desc}} </h6>
+                            <h2> {{ thread.title}}</h2>
+                            <h6> {{ thread.content}} </h6>
                         </div>
                         <div class="row">
                             <div id="threadImageContainer">
-                                <img id="threadImage" :src="thread.content_links">
+                                <img id="threadImage" :src="thread.content_link">
                             </div>
                         </div>
                         <div class="row">
@@ -112,9 +112,9 @@ export default {
         },
         async initData() {
             // to get forum data
-            const forumID = sessionStorage.getItem('forumID');
+            const forumID = sessionStorage.getItem('forum_id');
 
-            const forumPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${forumID}`, {
+            const forumPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${forumID}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -139,7 +139,7 @@ export default {
             // to get thread data
             this.current_threadID = sessionStorage.getItem('threadID');
 
-            const threadPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-thread/${this.current_threadID}`, {
+            const threadPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.current_threadID}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'

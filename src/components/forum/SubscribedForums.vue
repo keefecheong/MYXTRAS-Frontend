@@ -12,7 +12,7 @@
                         <a @click="viewForum(forum)"><img class="groupPic" :src="forum.forum_pic_link" :draggable="isDraggable"></a> 
                     </div>
                     <div class="col-md-8">
-                        <p class="forum-name" @click="viewForum(forum)">{{ forum.forumName }}</p>  
+                        <p class="forum-name" @click="viewForum(forum)">{{ forum.forum_name }}</p>  
                     </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@ export default {
     },
     methods: {
         async retrieveSubbedForums() {            
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-subbed-forums/`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/subscribed`, {
                     method: "GET",
                     credentials: "include",
                     mode: 'cors'
@@ -102,7 +102,7 @@ export default {
         },
 
         viewForum(forum){
-            sessionStorage.setItem('forumID', forum._id);
+            sessionStorage.setItem('forum_id', forum._id);
             location.href = "/forumGroup.html"
         },
     }

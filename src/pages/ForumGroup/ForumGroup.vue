@@ -21,8 +21,14 @@
                         <p>No threads found, <span id="noThreadCreateBtn" @click="() => toggleThreadForm(true)">create</span> one?</p>
                     </div>
 
-                    <div>
-                        <ThreadLayout v-for="(thread, index) in threads" :thread="thread" :key="index" />
+                    <div v-if="!showDetailedView">
+                        <keep-alive>
+                            <ThreadMiniLayout v-for="(thread, index) in threads" :thread="thread" :key="index" @show-detailed-view="() => toggleDetailedView(true, index)" />
+                        </keep-alive>
+                    </div>
+
+                    <div v-if="showDetailedView">
+                        <ThreadDetailedLayout :thread="threads[selectedIndex]" :showBackArrow="true" @close-detailed-view="() => toggleDetailedView(false, null)" />
                     </div>
                 </div>
 
@@ -41,34 +47,38 @@
 
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
-import ThreadLayout from '../../components/forum/ThreadLayout.vue';
+import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
 import RecommendedForums from '../../components/forum/RecommendedForums.vue';
 import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
 import ForumViewHeader from '../../components/forum/ForumViewHeader.vue';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import ThreadFormLayout from '../../components/forum/ThreadFormLayout.vue';
+import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
 
 export default {
     components: {
         NavSidebar,
-        ThreadLayout,
+        ThreadMiniLayout,
         RecommendedForums,
         ForumFormLayout,
         ForumViewHeader,
         AlertPrompt,
-        ThreadFormLayout
+        ThreadFormLayout,
+        ThreadDetailedLayout
     },
 
     data() {
         return {
             showForumForm: false,
             showThreadForm: false,
+            showDetailedView: false,
             alertStore: useAlertStore(),
 
             forum: {},
             contentLoaded: false,
             threads: [],
+            selectedIndex: null
         }
     },
     created() {
@@ -83,6 +93,17 @@ export default {
         },
     },
     methods: {
+        // handle toggling of detailed thread view
+        toggleDetailedView(show, index) {
+            if (index != null) {
+                this.selectedIndex = index;
+            }
+            else {
+                this.selectedIndex = null;
+            }
+
+            this.showDetailedView = show;
+        },
         // toggle forum form for editing
         toggleForumForm(show) {
             this.showForumForm = show;
@@ -92,9 +113,9 @@ export default {
             this.showThreadForm = show;
         },
         async getForumPage() {
-            this.forumID = sessionStorage.getItem('forumID');
+            this.forumID = sessionStorage.getItem('forum_id');
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/get-forum/${this.forumID}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forumID}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -117,7 +138,7 @@ export default {
             
         },
         async getThreads() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-threads/${this.forum._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/forum/${this.forum._id}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
