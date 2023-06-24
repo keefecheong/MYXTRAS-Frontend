@@ -20,6 +20,9 @@
 #thread_title {
     margin: 2vh 0;
 }
+.card {
+min-height: 50vh;
+}
 p {
     margin-top: 10vh;
     text-align: center;
