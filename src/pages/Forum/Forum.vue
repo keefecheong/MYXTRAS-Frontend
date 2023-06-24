@@ -123,6 +123,7 @@ export default {
             if (!document.getElementById(this.selectedIndex)) {
                 return; 
             }
+
             document.getElementById(this.selectedIndex).scrollIntoView({
                 block: 'center'
             });

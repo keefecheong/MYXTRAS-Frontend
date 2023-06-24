@@ -9,7 +9,7 @@
                 <div class="thread-layout-header-top">
                     <div>
                         <div class="thread-creator">
-                            <span v-if="showForumDetails" @click="showForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
+                            <span v-if="showForumDetails" @click.stop="showForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
                             <span>Posted by: @{{ thread.creator_id.username }}</span>
                         </div>
                         <span class="thread-title">{{ thread.title }}</span>
@@ -78,7 +78,8 @@ export default {
         },
         // to go to forumgroup for selected forum
         showForum() {
-            sessionStorage.setItem('forum_id', thread.parent_id._id);
+            sessionStorage.setItem('forum_id', this.thread.parent_id._id);
+            location.href = '/forumGroup.html';
         }
     }
 }
