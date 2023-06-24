@@ -45,7 +45,15 @@
         <!-- container for message input -->
         <div id="chat-interface-input">
             <form @submit.prevent="sendMessage">
-                <input id="chat-message-input" type="text" placeholder="Message..." title="Enter your message" v-model="messageText" @input="updateTypingStatus" />
+                    <DynamicTextarea 
+                    title="Enter your message"
+                    :id="'chat-message-input'"
+                    :maxRows="5"
+                    :placeholder="'Message...'"
+                    v-model="messageText"
+                    @input="updateTypingStatus"
+                    @keydown.enter.exact.prevent="sendMessage"
+                ></DynamicTextarea>
 
                 <button title="Add a file" type="button" @click="() => toggleFileInput(true)">
                     <span class="material-symbols-outlined">Attach_file</span>
@@ -97,7 +105,15 @@
                     </div>
 
                     <div id="chat-file-interface-input" v-if="fileSelected && !invalidFile">
-                        <input id="chat-file-message-input" type="text" placeholder="Message... (Optional)" title="Enter your message" v-model="messageText" @input="updateTypingStatus" />
+                        <DynamicTextarea 
+                            title="Enter your message (Optional)"
+                            :id="'chat-file-message-input'"
+                            :maxRows="5"
+                            :placeholder="'Message...'"
+                            v-model="messageText"
+                            @input="updateTypingStatus"
+                            @keydown.enter.exact.prevent="sendMessage"
+                        ></DynamicTextarea>
                         
                         <button title="Send file" type="submit">
                             <span class="material-symbols-outlined" id="chat-message-send">Send</span>
@@ -120,6 +136,7 @@ import ObjectID from 'bson-objectid';
 import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
+import DynamicTextarea from '../general/DynamicTextarea.vue';
 
 export default {
     data() {
@@ -150,12 +167,13 @@ export default {
     ],
     components: {
         ChatMessageLayout,
-        LoadingOverlay
+        LoadingOverlay,
+        DynamicTextarea
     },
     // when mounted/restored from cache
     activated() {
         // focus on message input
-        document.getElementById('chat-message-input').focus();
+        document.querySelector('#chat-message-input').focus();
 
         // initialize user status and user status listeners
         this.getUserStatus();
@@ -251,7 +269,7 @@ export default {
             this.toggleFileInput(false);
 
             // give focus to input field
-            document.getElementById('chat-message-input').focus();
+            document.querySelector('#chat-message-input').focus();
         },
         // to process and send file to server
         sendFile(message) {
@@ -654,8 +672,8 @@ export default {
     column-gap: 5px;
     border: 1px solid black;
     border-radius: 100px;
-    padding: 10px !important;
-    padding-left: 15px !important;
+    padding: 10px;
+    padding-left: 25px;
     align-items: center;
     background-color: white;
     flex-direction: row;
@@ -665,6 +683,7 @@ export default {
     outline: none;
     border: none;
     width: 100%;
+    background-color: transparent;
 }
 
 #chat-interface-input button, #chat-file-upload-container button {

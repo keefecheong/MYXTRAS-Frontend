@@ -25,9 +25,10 @@
                         <keep-alive>
                             <ThreadMiniLayout 
                                 v-for="(thread, index) in threads" 
+                                :key="index"
                                 :thread="thread" 
                                 :index="index"
-                                :key="index"
+                                :showForumDetails="true"
                                 @show-detailed-view="() => toggleDetailedView(true, index)" />
                         </keep-alive>
                     </div>
@@ -104,7 +105,7 @@ export default {
                 block: 'center'
             });
 
-            // set timeout to clear scrollBackIndex
+            // set timeout to clear scrollBack
             setTimeout(() => {
                 this.scrollBack = false;
             }, 500);

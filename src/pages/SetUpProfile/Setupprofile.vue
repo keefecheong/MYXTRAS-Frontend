@@ -13,7 +13,7 @@
                         <h2 id="header">Set up your profile</h2>
                         <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" :maxlength="32" @input="noIntegers">
                         <input type="text" placeholder="Username" id="usernameField" v-model="username" :maxlength="16" :required="!showPopup">
-                        <textarea placeholder="Bio (Max 500 characters)" id="bioField" style="appearance: none;" v-model="biography" @input="limitCharacters"></textarea>
+                        <DynamicTextarea :placeholder="'Bio (Max 500 characters)'" v-model="biography" :maxlength="maxCharacters"></DynamicTextarea>
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
                             <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
@@ -141,11 +141,13 @@ textarea{
 import AddInterestButton from '../../components/general/AddInterestButton.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import DynamicTextarea from '../../components/general/DynamicTextarea.vue';
 
 export default {
     components: {
        AddInterestButton,
-       AlertPrompt
+       AlertPrompt,
+       DynamicTextarea
     },
 
     data() {
@@ -181,12 +183,6 @@ export default {
         this.getSchools();
     },
     methods: {
-        limitCharacters() {
-            if (this.biography.length > this.maxCharacters) {
-                // If the number of characters exceeds the limit
-                this.biography = this.biography.slice(0, this.maxCharacters); // Truncate the input value to the maximum number of characters
-            }
-        },
         getSchools() {
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/schools`, {
                 method: 'GET',

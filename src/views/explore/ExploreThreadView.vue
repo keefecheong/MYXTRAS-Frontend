@@ -1,6 +1,6 @@
 <template v-if="tags && threads">
     <div class="row sticky-filter" id="filterRow">
-        <div id="gallery-interest-selection" class="">
+    <div id="gallery-interest-selection" class="">
             <span>Filter by:</span>
 
             <InterestBadgeList
@@ -15,9 +15,24 @@
         </div>
     </div>
     <div class="row" v-if="this.threads">
-        <div class="col-md-9">
-            <div>
-                <ThreadMiniLayout v-for="(thread, index) in filteredThreads" :thread="thread" :key="index" />
+        <div class="col-md-9" style="position: relative;">
+            <div v-if="!showDetailedThread">
+                <ThreadMiniLayout
+                    v-for="(thread, index) in filteredThreads"
+                    :key="index"
+                    :thread="thread"
+                    :index="index"
+                    :showForumDetails="true"
+                    @show-detailed-view="() => toggleDetailedThread(true, index)"
+                />
+            </div>
+
+            <div v-else>
+                <ThreadDetailedLayout
+                    :thread="filteredThreads[selectedIndex]"
+                    :showBackArrow="false"
+                    @close-detailed-view="() => toggleDetailedThread(false, selectedIndex)"
+                />
             </div>
         </div>
         <div class="col-md-3 ">
@@ -39,100 +54,132 @@
 </template>
 
 <script>
-    import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
-    import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
-    import handleInterestSelected from '../../utils/general/defaultInterestSelectedCallback.js';
+import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
+import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
+import handleInterestSelected from '../../utils/general/defaultInterestSelectedCallback.js';
+import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
 
-    export default {
-        data() {
-            return {
-                selectedOption: [],
-                tags: [],
-                threads: [],
-            }
-        },
-        components: {
-            ThreadMiniLayout,
-            InterestBadgeList
-        },
-        mounted() {
-            this.retrieveAllThreads()
-            this.retrieveForums()
-        },
-        methods: {
-            openForum(id) {
-                const status = document.getElementById(id).className;
-                
-                if (status == "triangle-down") {
-                    document.getElementById("dc"+id).className += " open-forum";
-                    document.getElementById(id).className = "triangle-up";
-                } else {
-                    document.getElementById("dc"+id).className = "dropdown-content";
-                    document.getElementById(id).className = "triangle-down";
-                }
-            },
-            retrieveAllThreads() {
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread`, {
-                    mode: 'cors',
-                    method: 'GET',
-                    credentials: 'include'
-                }).then(res => {
-                    if (res.ok) {
-                    return res.json();
-                    }
-                    throw new Error('Response not OK');
-                })
-                .then(data => {
-                    this.threads = data;
-
-                })
-                .catch((error) => {
-                    console.log("This page could not be loaded: ", error);
-                });
-                
-            },
-            handleInterestSelected(option) {
-                handleInterestSelected(option, this.selectedOption);
-            },
-            retrieveForums() {
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/categorized`, {
-                    mode: 'cors',
-                    method: 'GET',
-                    credentials: 'include'
-                }).then(res => {
-                    if (res.ok) {
-                    return res.json();
-                    }
-                    throw new Error('Response not OK');
-                })
-                .then(data => {
-                    this.tags = data;
-                    this.tagsLoaded = true
-                })
-                .catch((error) => {
-                    console.log("This page could not be loaded: ", error);
-                });
-                
-            },
-            viewForum(forum) {
-                sessionStorage.setItem('forum_id', forum._id)
-                location.href = '../forumGroup.html'
-            }
-        },
-        computed: {
-            // get filtered threads
-            filteredThreads() {
-                if (this.selectedOption.length <= 0) {
-                    this.tagsLoaded = true;
-                    return this.threads;
-                }
-                else {
-                    this.tagsLoaded = true;
-                    return this.threads.filter(thread => thread.tags && thread.tags.some(tag => this.selectedOption.includes(tag)));
-                }
-            },
+export default {
+    data() {
+        return {
+            selectedOption: [],
+            tags: [],
+            threads: [],
+            showDetailedThread: false,
+            selectedIndex: null,
+            scrollBack: false
         }
+    },
+    components: {
+        ThreadMiniLayout,
+        InterestBadgeList,
+        ThreadDetailedLayout
+    },
+    mounted() {
+        this.retrieveAllThreads()
+        this.retrieveForums()
+    },
+    updated() {
+        // if scrollBack is true then scroll to that thread
+        if (this.scrollBack && this.selectedIndex != null) {
+            if (!document.getElementById(this.selectedIndex)) {
+                return;
+            }
+
+            document.getElementById(this.selectedIndex).scrollIntoView({
+                block: 'center'
+            });
+
+            // set timeout to clear scrollBack
+            setTimeout(() => {
+                this.scrollBack = false;
+            }, 500);
+        }
+    },
+    methods: {
+        // show detailed view of popular thread
+        toggleDetailedThread(show, index) {
+            this.selectedIndex = index;
+
+            if (!show && index != null) {
+                this.scrollBack = true;
+            }
+
+            this.showDetailedThread = show;
+        },
+        openForum(id) {
+            const status = document.getElementById(id).className;
+            
+            if (status == "triangle-down") {
+                document.getElementById("dc"+id).className += " open-forum";
+                document.getElementById(id).className = "triangle-up";
+            } else {
+                document.getElementById("dc"+id).className = "dropdown-content";
+                document.getElementById(id).className = "triangle-down";
+            }
+        },
+        retrieveAllThreads() {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(res => {
+                if (res.ok) {
+                return res.json();
+                }
+                throw new Error('Response not OK');
+            })
+            .then(data => {
+                this.threads = data;
+
+            })
+            .catch((error) => {
+                console.log("This page could not be loaded: ", error);
+            });
+            
+        },
+        handleInterestSelected(option) {
+            handleInterestSelected(option, this.selectedOption);
+        },
+        retrieveForums() {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/categorized`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(res => {
+                if (res.ok) {
+                return res.json();
+                }
+                throw new Error('Response not OK');
+            })
+            .then(data => {
+                this.tags = data;
+                this.tagsLoaded = true
+            })
+            .catch((error) => {
+                console.log("This page could not be loaded: ", error);
+            });
+            
+        },
+        viewForum(forum) {
+            sessionStorage.setItem('forum_id', forum._id)
+            location.href = '../forumGroup.html'
+        }
+    },
+    computed: {
+        // get filtered threads
+        filteredThreads() {
+            if (this.selectedOption.length <= 0) {
+                this.tagsLoaded = true;
+                return this.threads;
+            }
+            else {
+                this.tagsLoaded = true;
+                return this.threads.filter(thread => thread.tags && thread.tags.some(tag => this.selectedOption.includes(tag)));
+            }
+        },
     }
+}
 </script>
 
 <style>

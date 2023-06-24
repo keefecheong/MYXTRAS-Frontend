@@ -124,7 +124,7 @@
         <div v-if="showComments && blog.comments_enabled" class="row blog-comments-container">
             <!-- form to create new comment -->
             <form class="create-comment-form" @submit.prevent="createComment">
-                <textarea class="create-comment-text" wrap="soft" placeholder="Add a comment..." v-model="commentText"></textarea>
+                <DynamicTextarea v-model="commentText" :placeholder="'Add a comment...'" :maxRows="5" />
                 <hr />
                 <div class="create-comment-submit-container">
                     <LoadingOverlay v-if="submittingComment" :horizontalCenter="true" :backgroundColor="'rgba(0, 0, 0, 0.5)'" />
@@ -361,19 +361,6 @@
     margin-bottom: 10px;
 }
 
-.create-comment-text {
-    resize: none;
-    width: 100%;
-    display: block;
-    margin-bottom: 10px;
-}
-
-.create-comment-text,
-.create-comment-text:focus {
-    outline: none;
-    border: none;
-}
-
 .create-comment-submit-container {
     position: relative;
     width: fit-content;
@@ -395,6 +382,7 @@ import LoadingOverlay from '../general/LoadingOverlay.vue';
 import InterestBadgeList from '../general/InterestBadgeList.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import DynamicTextarea from '../general/DynamicTextarea.vue';
 
 export default {
     data() {
@@ -425,7 +413,8 @@ export default {
         BlogCommentLayout,
         BlogFormLayout,
         LoadingOverlay,
-        InterestBadgeList
+        InterestBadgeList,
+        DynamicTextarea
     },
     props: [
         'blog'

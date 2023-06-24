@@ -22,7 +22,7 @@
             <!-- thread description (content) input -->
             <div class="thread-field-container">
                 <label for="thread-content-input" class="thread-label">Content:</label>
-                <textarea id="thread-content-input" v-model="threadContent" :maxlength="500" placeholder="Thread content"></textarea>
+                <DynamicTextarea :id="'thread-content-input'" v-model="threadContent" :maxlength="500" :placeholder="'Thread content'"></DynamicTextarea>
             </div>
             
             <!-- thread tags input -->
@@ -61,6 +61,7 @@
 import { useAlertStore } from '../../stores/AlertStore.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import AddInterestButton from '../general/AddInterestButton.vue';
+import DynamicTextarea from '../general/DynamicTextarea.vue';
 
 export default {
     data() {
@@ -84,7 +85,8 @@ export default {
     },
     components: {
         LoadingOverlay,
-        AddInterestButton
+        AddInterestButton,
+        DynamicTextarea
     },
     props: [
         'editMode',
