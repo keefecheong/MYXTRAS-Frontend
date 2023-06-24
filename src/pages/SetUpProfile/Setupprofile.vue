@@ -19,28 +19,19 @@
                             <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
                         </div>
                         
-                        <select v-model="selectedSchool" :required="!showPopup" @change="retrieveCourses">
+                        <select v-model="selectedSchool" :required="!showPopup">
                             <option value="" disabled selected hidden>Select a school</option>
-                            <option value="ICT">School of ICT</option>
-                            <option value="HS">School of HS</option>
-                            <option value="BA">School of BA</option>
-                            <option value="DE">School of DE</option>
-                            <option value="SoE">School of SoE</option>
-                            <option value="FMS">School of FMS</option>
-                            <option value="HS">School of HS</option>
-                            <option value="HMS">School of HSM</option>
-                            <option value="ICT">School of ICT</option>
-                            <option value="LSCT">School of LSCT</option>
+                            <option v-for="school in schools" :value="school">{{ school }}</option>
                         </select>
-                        <br>
-                        <br>
-                        <select v-model="selectedCourse" :required="!showPopup" :disabled="selectedSchool === '' || selectedSchool === null">
+                        <br/>
+                        <br/>
+                        <select v-if="selectedSchool != '' || selectedSchool != null" v-model="selectedCourse" :required="!showPopup">
                             <option value="" disabled selected hidden>Select a Course</option>
-                            <option v-for="course in courses" :value="course">{{ course }}</option>
+                            <option v-for="course in selectedSchoolCourses" :value="course">{{ course }}</option>
                         </select>
                         <br>
                         <br>
-                        <p class="warning">Warning: Discipline and course cannot be modified in a later date. Ensure that <br> 
+                        <p class="warning">Warning: School and course cannot be modified in a later date. Ensure that <br> 
                             you have chosen the most accurate description of your course of study</p>
                         <br>
                         <button @click="setupprofile()" id="getStartedBtn">
@@ -167,8 +158,9 @@ export default {
             maxCharacters: 100,
             selectedOption: [],
             userId: '',
-            // schools: ['ICT','HS','FMS','BMS'],
+            schools: [],
             courses: [],
+            schoolData: null,
             alert: useAlertStore().alert,
             alertStore: useAlertStore()
         };
@@ -183,22 +175,22 @@ export default {
             return this.alertStore.alertMsg;
         }
     },
-    mounted() {
+    created() {
         this.checkForCookie();
         this.checkAuth();
-
+        this.getSchools();
     },
     methods: {
         limitCharacters() {
-        if (this.biography.length > this.maxCharacters) {
-            // If the number of characters exceeds the limit
-            this.biography = this.biography.slice(0, this.maxCharacters); // Truncate the input value to the maximum number of characters
+            if (this.biography.length > this.maxCharacters) {
+                // If the number of characters exceeds the limit
+                this.biography = this.biography.slice(0, this.maxCharacters); // Truncate the input value to the maximum number of characters
             }
         },
-        retrieveCourses() {
-            const id = this.selectedSchool
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/school/get-courses/${id}`, {
+        getSchools() {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/schools`, {
                 method: 'GET',
+                mode: 'cors'
             }) .then(response => {
                     if (!response.ok) {
                         throw new Error('Error: ' + response.error);
@@ -207,7 +199,13 @@ export default {
                     }
                 })
                 .then(data => {
-                    this.courses = data.courseList;
+                    this.schoolData = data;
+                    for (const key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            this.schools.push(key);
+                            this.courses.push(Object.keys(data[key]["courses"]));
+                        }
+                    }
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -273,43 +271,39 @@ export default {
         },
 
         async validationCheck(){
-            let checkStatus = false
             let detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
-            let realname = this.realname;
-            let username = this.username;
-            let school = this.selectedSchool;
-            let course = this.selectedCourse;
-            console.log(Object.values(this.courses).flat())
-
-            if (
-                detailsList.some(item => item === "") ||
-                /^[0-9]+$/.test(realname) ||
-                realname.length > 32 ||
-                username.length > 16 ||
-                !(school in this.courses) ||
-                !(Object.values(this.courses).flat().includes(course))
-            ) {
-                if (detailsList.some(item => item === "")) {
-                    await this.alert("Please enter all fields");
-
-                } else if (/^[0-9]+$/.test(realname)) {
-                    await this.alert("No integers in your real name");
-
-                } else if (realname.length > 32) {
-                    await this.alert("Real name must not be more than 32 characters long");
-
-                } else if (username.length > 16) {
-                    await this.alert("Username must not be more than 16 characters long");
-
-                } else if (!(school in this.courses)) {
-                    await this.alert("School does not exist");
-
-                } else if (!Object.values(this.courses).flat().includes(course)) {
-                    await this.alert("Course does not exist");
-                }
-                return checkStatus;
+            
+            if (detailsList.some(item => item.trim() === "")) {
+                await this.alert("Please enter all fields");
+                return false;
             }
-            return checkStatus = true;
+            
+            if (/^[0-9]+$/.test(this.realname)) {
+                await this.alert("No integers in your real name");
+                return false;
+            }
+            
+            if (this.realname.length > 32) {
+                await this.alert("Real name must not be more than 32 characters long");
+                return false;
+            }
+            
+            if (this.username.length > 16) {
+                await this.alert("Username must not be more than 16 characters long");
+                return false;
+            }
+            
+            if (!(this.selectedSchool in this.schools)) {
+                await this.alert("School does not exist");
+                return false;
+            }
+            
+            if (!this.selectedCourse in this.selectedSchoolCourses) {
+                await this.alert("Course does not exist");
+                return false;
+            }
+
+            return true;
         },
         async setupprofile() {
             // const dataObject = JSON.parse(localStorage.getItem('dataObject'));
@@ -322,8 +316,8 @@ export default {
                     'realName': this.realname,
                     'userName': this.username,
                     'biography': this.biography,
-                    'selectedSchool': this.selectedSchool,
-                    'selectedCourse': this.selectedCourse,
+                    'selectedSchool': this.schoolData[this.selectedSchool]["short"],
+                    'selectedCourse': this.schoolData[this.selectedSchool]["courses"][this.selectedCourse],
                     'selectedInterests': this.selectedOption,
                 }
             }
@@ -355,6 +349,16 @@ export default {
         // to close alert prompt
         closeAlert() {
             this.alertStore.closeAlert();
+        }
+    },
+    computed: {
+        selectedSchoolCourses() {
+            if (this.selectedSchool != '' || this.selectedSchool != null) {
+                return this.courses[this.schools.indexOf(this.selectedSchool)];
+            }
+            else {
+                return this.courses[0];
+            }
         }
     }
 }
