@@ -89,10 +89,13 @@
                 <input class="image-form-control-button" type="reset" value="Clear All" @click="resetAll" />
                 <!-- 
                     disable submit button if 
-                    1. there are no files selected
-                    2. there are files selected but contains errors
+                    1. not in edit mode and no files are selected
+                    2. files are selected but there are errors
+                    3. in edit mode and no fields are changed
+                    4. submit in progress
                 -->
-                <input class="image-form-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" :disabled="(files.length > 0 && errors.length <= 0) || (editMode && !fieldsChanged) || submitting" />
+                <input class="image-form-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" 
+                    :disabled="(!editMode && files.length <= 0) || (files.length > 0 && errors.length > 0) || (editMode && !fieldsChanged) || submitting" />
             </div>
         </form>
     </div>
