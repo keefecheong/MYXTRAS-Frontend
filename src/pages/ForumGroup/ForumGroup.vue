@@ -129,7 +129,6 @@ export default {
             })
             .then(data => {
                 this.forum = data;
-                console.log(this.forum)
                 this.contentLoaded = true
             })
             .catch((error) => {
@@ -150,6 +149,7 @@ export default {
             })
             .then(data => {
                 this.threads = data;
+                console.log(data)
             })
             .catch((error) => {
                 console.log("The threads could not be loaded: ", error);

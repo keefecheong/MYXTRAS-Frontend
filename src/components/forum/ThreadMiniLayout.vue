@@ -79,7 +79,7 @@ export default {
 </script>
 
 <style>
-@import url('../../styles/forums/similar-thread-styles.css');
+@import url('../../styles/forums/similar-thread-layout-styles.css');
 
 .thread-content {
     --line-height: 1.5em;

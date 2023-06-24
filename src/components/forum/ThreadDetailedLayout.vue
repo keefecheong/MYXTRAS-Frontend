@@ -344,7 +344,7 @@ export default {
 </script>
 
 <style>
-@import url('../../styles/forums/similar-thread-styles.css');
+@import url('../../styles/forums/similar-thread-layout-styles.css');
 
 #thread-detailed-layout-content {
     cursor: auto;

@@ -148,7 +148,7 @@ export default {
             this.showForumForm = show;
         },
         async retrieveRecentThreads() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-recent-threads/`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/recent`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
