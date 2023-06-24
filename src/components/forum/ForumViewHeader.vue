@@ -277,6 +277,7 @@ export default {
 
 .subscribed {
     background-color: transparent;
+    border: white solid 3.5px;
     color: white;
     border-radius: 10px;
     height: 3rem;
