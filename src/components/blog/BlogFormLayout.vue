@@ -92,7 +92,7 @@
                     1. there are no files selected
                     2. there are files selected but contains errors
                 -->
-                <input class="image-form-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" :disabled="files.length == 0 || (files.length > 0 && errors.length > 0) || submitting" />
+                <input class="image-form-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" :disabled="(files.length > 0 && errors.length <= 0) || (editMode && !fieldsChanged) || submitting" />
             </div>
         </form>
     </div>

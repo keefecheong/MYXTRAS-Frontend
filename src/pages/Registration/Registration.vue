@@ -12,11 +12,6 @@
                         <span class="material-symbols-outlined" style="color: white; margin: 15px 0 0 15px">home</span>
                     </a>
                 </div>
-                <!-- <v-tooltip text="Tooltip">
-                <template v-slot:activator="{ props }">
-                    <v-input v-bind="props"></v-input>
-                </template>
-                </v-tooltip> -->
                 <div class="col-md-10 loginContainer">
                     <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
                     <div class="whitebox">
@@ -45,7 +40,7 @@
                             <!-- Reveals after OTP is sent -->
                             <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="6" required>
                             <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn" class="overlay-button">Verify OTP</button>
-                            <p v-if="verifiedotp">OTP verified</p>
+                            <p v-if="verifiedotp" class="otp-verified">OTP verified</p>
                             <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
                             
                             <p v-if="registerFail" class="genErr"> {{ generalErrMsg }}</p>
@@ -236,6 +231,9 @@ input:focus{
 .very-strong {
     color: rgb(30, 196, 30);
 }
+.otp-verified {
+    color: rgb(30, 196, 30);
+}
 
 @keyframes gradientAnimation {
   0% {
@@ -399,9 +397,6 @@ export default {
         return false;
         },
         
-        //TO DO
-        // Change tooltip for password
-        // Fix UI
         async sendOTP(){
             if (this.phoneNumber.length != 8 || this.phoneNumber === ''){
                 return this.showPhoneErr = true;
@@ -416,12 +411,12 @@ export default {
                 let phoneNum = "+65" + this.phoneNumber;
                 firebase.auth().signInWithPhoneNumber(phoneNum, this.recaptchaVerifier)
                     .then(async (confirmationResult) => {
-                    // SMS sent. Prompt user to type the code from the message, then sign the
-                    // user in with confirmationResult.confirm(code).
-                    this.confirmResult = confirmationResult
-                    console.log(confirmationResult)
-                    await this.alert("Sms Sent!")
-                    this.otpSent = true;
+                        // SMS sent. Prompt user to type the code from the message, then sign the
+                        // user in with confirmationResult.confirm(code).
+                        this.confirmResult = confirmationResult
+                        await this.alert("Sms Sent!")
+                        this.otpSent = true;
+                        document.getElementById("recaptcha-container").style.display = "none";
                     }).catch((error) => {
                     // Error; SMS not sent
                         console.log(error)
@@ -532,7 +527,6 @@ export default {
             }
             // Password complexity check
             if (this.passwordStrength < 2){
-                console.log(this.passwordStrength)
                 this.registerFail = true;
                 return this.generalErrMsg = "Password is weak";
             }

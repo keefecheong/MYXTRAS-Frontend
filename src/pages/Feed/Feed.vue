@@ -16,7 +16,7 @@
             <div class="feed-container container-fluid">
                 <div class="row">
                     <div class="feed-content justify-content-center">
-                        <h1>Your Feed</h1>
+                        <h1 class="feed-header">Your Feed</h1>
 
                         <hr/>
                         
@@ -45,7 +45,6 @@
 
 <style>
 @import url('../../styles/main.css');
-@import url('../../styles/sub-navigation.css');
 
 .feed-container {
     max-width: 50%;
@@ -55,6 +54,12 @@
 .no-more-blogs {
     text-align: center;
     margin-bottom: 40px;
+}
+
+.feed-header {
+    text-align: center;
+    font-weight: bolder !important;
+    color: #E53A73 !important;
 }
 </style>
 

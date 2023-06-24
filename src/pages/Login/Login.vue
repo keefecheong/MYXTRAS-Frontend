@@ -21,6 +21,8 @@
                         <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" required>
                         <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword">visibility_off</button>
                         <br/>
+                        <!-- Add Recaptcha -->
+                        <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
                         <button @click="loginUser()" id="loginBtn">
                             Log in
                         </button>
@@ -90,12 +92,12 @@ h1 {
 input[type=text],
 input[type=email],
 input[type=password] {
-  border: none;
-  border-bottom: 2px solid transparent;
-  background-image: linear-gradient(45deg,#FF6363, var(--primary));
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  background-size: 100% 2px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background-image: linear-gradient(45deg,#FF6363, var(--primary));
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 2px;
 }
 input:focus{
     background-size: 0% 2px;
@@ -126,15 +128,15 @@ input:focus{
     transform: translateX(-50%);
 }
 #registerBtn::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(45deg,#FF6363, var(--primary));
-  transform: scaleX(0);
-  transition: transform 0.3s ease-in-out;
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(45deg,#FF6363, var(--primary));
+    transform: scaleX(0);
+    transition: transform 0.3s ease-in-out;
 }
 
 #registerBtn:hover::after {
@@ -197,7 +199,6 @@ export default {
         },
         async loginUser(){
             let credentialList = [this.emailAddress, this.password];
-            console.log(this.password);
             if (credentialList.some(item => item === null)){
                 await this.alert("Please enter all fields");
                 return;
@@ -221,7 +222,6 @@ export default {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Success:', data);
                     window.location = '/feed.html';
                 } else {
                     const errorData = await response.json();

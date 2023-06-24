@@ -653,8 +653,9 @@ export default {
     display: flex;
     column-gap: 5px;
     border: 1px solid black;
-    border-radius: 20px;
+    border-radius: 100px;
     padding: 10px !important;
+    padding-left: 15px !important;
     align-items: center;
     background-color: white;
     flex-direction: row;

@@ -194,7 +194,7 @@ export default {
                 } else {
                     console.log('Error:', response);
                 }
-            })
+                })
                 .then(data => {
                     console.log('Success:', data);
                 })

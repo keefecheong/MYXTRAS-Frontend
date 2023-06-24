@@ -174,7 +174,6 @@ export default {
     },
 
     chooseFile(imageType){
-      console.log(imageType);
       if (imageType === "profilePicture") {
         this.$refs.fileInput.value = ''; // Reset the file input value
         this.$nextTick(() => {
@@ -186,7 +185,6 @@ export default {
     },
 
     upload(event, imageType){
-      console.log(imageType);
       const file = event.target.files[0];
       // if (imageType === "profilePicture"){
       //   this.profilePicture = URL.createObjectURL(file);
@@ -261,7 +259,6 @@ export default {
         // 'profilePicture': this.$refs.fileInput.files[0],
         
       };
-      console.log(this.userObject);
       formData.append('userObject', JSON.stringify(this.userObject));
 
       formData.append('selectedImages', this.$refs.fileInput.files[0]);
