@@ -12,8 +12,8 @@
                     <form @submit.prevent="login">
                         <h2 id="header">Set up your profile</h2>
                         <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" :maxlength="32" @input="noIntegers">
-                        <input type="text" placeholder="Username" id="usernameField" v-model="username" :maxlength="16" :required="!showPopup">
-                        <textarea placeholder="Bio (Max 500 characters)" id="bioField" style="appearance: none;" v-model="biography" @input="limitCharacters"></textarea>
+                        <input type="text" placeholder="Username" id="usernameField" v-model="username" :maxlength="25" :required="!showPopup">
+                        <textarea placeholder="Bio (Max 100 characters)" id="bioField" style="appearance: none;" v-model="biography" :maxlength="100"></textarea>
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
                             <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
@@ -155,7 +155,6 @@ export default {
             selectedSchool: '',
             selectedCourse: '',
             biography: '',
-            maxCharacters: 100,
             selectedOption: [],
             userId: '',
             schools: [],
@@ -181,12 +180,6 @@ export default {
         this.getSchools();
     },
     methods: {
-        limitCharacters() {
-            if (this.biography.length > this.maxCharacters) {
-                // If the number of characters exceeds the limit
-                this.biography = this.biography.slice(0, this.maxCharacters); // Truncate the input value to the maximum number of characters
-            }
-        },
         getSchools() {
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/schools`, {
                 method: 'GET',
@@ -330,10 +323,16 @@ export default {
                 body: JSON.stringify(this.userObject),
                 credentials: "include",
             }) .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error: ' + response.error);
-                    } else {
+                    if (response.status === 400) {
+                        response.json().then(async (data) => {
+                            await this.alert(data.error);
+                            throw new Error(data.error)
+                        });
+                        return;
+                    } else if (response.ok){
                         window.location.href = '/feed.html';
+                    } else {
+                        throw new Error(response.error)
                     }
                 })
                 .catch(error => {
