@@ -50,7 +50,7 @@
             <div id="forum-id-container">
                 <div class="forum-field-container">
                     <label for="forum-id-input" class="forum-label">ID: </label>
-                    <input type="text" id="forum-id-input" v-model="forumID" placeholder="Unique Forum ID:" @input="debounceVerifyForumID" />
+                    <input type="text" id="forum-id-input" v-model="forumID" placeholder="Unique Forum ID:" @input="debounceVerifyForumID" :maxlength="25"/>
                 </div>
     
                 <span id="forum-id-available" v-if="!idErr && forumIDVerified && !illegalChar">Forum ID available.</span>
@@ -61,13 +61,13 @@
             <!-- forum name input -->
             <div class="forum-field-container">
                 <label for="forum-name-input" class="forum-label">Name:</label>
-                <input type="text" id="forum-name-input" v-model="forumName" placeholder="Forum Name" />
+                <input type="text" id="forum-name-input" v-model="forumName" placeholder="Forum Name" :maxlength="50"/>
             </div>
             
             <!-- forum description input -->
             <div class="forum-field-container">
                 <label for="forum-desc-input" class="forum-label">Description:</label>
-                <textarea id="forum-desc-input" v-model="forumDesc" :maxlength="500" placeholder="Forum Description (optional)" ></textarea>
+                <textarea id="forum-desc-input" v-model="forumDesc" :maxlength="250" placeholder="Forum Description (optional)" ></textarea>
             </div>
             
             <!-- forum tags input -->
@@ -348,7 +348,11 @@ export default {
                                     location.href = "/forumGroup.html";
                                 });
                             }
-                        } else {
+                        } else if (response.status === 400) {
+                            const data = await response.json();
+                            await this.alert(data.error);
+                        }
+                        else {
                             console.log('An error occurred.');
                         };
                         

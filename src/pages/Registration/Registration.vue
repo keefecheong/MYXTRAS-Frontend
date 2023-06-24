@@ -31,15 +31,15 @@
                             <button class="material-symbols-outlined overlay-button" :class="{ 'pressedrepeated': isPressedrepeated }" @click="hidePassword(2)">visibility_off</button>
                             
                             <!-- Phone Number Field -->
-                            <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required>
+                            <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required :class="{ 'disabled': verifiedotp }" :disabled="verifiedotp">
                             <button @click="sendOTP" id="sendOtpBtn" class="overlay-button" :class="{ 'disabled': disableOTP }" :disabled="disableOTP">Send OTP</button>
 
                             <p v-if="showPhoneErr" id="phoneErr">Enter a valid phone number</p>
                             <p class="genErr">{{ phoneErr }}</p>
 
                             <!-- Reveals after OTP is sent -->
-                            <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="6" required>
-                            <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn" class="overlay-button">Verify OTP</button>
+                            <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="6" required :class="{ 'disabled': verifiedotp }">
+                            <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn" class="overlay-button" :class="{ 'disabled': verifiedotp }">Verify OTP</button>
                             <p v-if="verifiedotp" class="otp-verified">OTP verified</p>
                             <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
                             
@@ -284,11 +284,10 @@ export default {
             registerFail: false,
             otpSent: false,
             verifiedotp: false,
-
+            disableOTP: true,
             // Error
             emailErr: null,
             phoneErr: null,
-            disableOTP: false,
         }
     },
     components: {
@@ -428,7 +427,8 @@ export default {
             this.confirmResult.confirm(this.otp)
             .then(async (result)=>{
                 await this.alert("OTP verified",result)
-                this.verifiedotp = true    
+                this.verifiedotp = true
+                this.disableOTP = true;
             })
             .catch((error)=>{
                 console.log(error)
@@ -478,11 +478,14 @@ export default {
             } catch (error) {
                 console.error('Error:', error);
             }
-            }, 2000);
+            }, 1000);
 
             debouncedVerifyEmail()
         },
         async verifyPhone() {
+            if (this.phoneNumber.length !== 8){
+                return;
+            }
             const debouncedVerifyPhone = debounce(async () => {
             try {
             const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify-phone`, {
@@ -511,7 +514,7 @@ export default {
             } catch (error) {
             console.error('Error:', error);
             }
-        }, 2000);
+        }, 1000);
 
         debouncedVerifyPhone();
         },
@@ -563,17 +566,8 @@ export default {
                 }
                 else if (response.status === 400){
                     response.json().then(async (data) => {
-                        if (data.error === 'Email already exists') {
-                            await this.alert("Email already exists");
-                            throw new Error('Email already exists')
-                        }
-                        else if (data.error === 'Phone Number already exists') {
-                            await this.alert("Phone Number already exists");
-                            throw new Error('Phone Number already exists')
-                        }
-                        else {
-                            throw new Error('Error: ' + response.status);
-                        }
+                        await this.alert(data.error);
+                        throw new Error(data.error)
                     });
                     return;
                 }
