@@ -38,7 +38,7 @@
                         </div>
                     </div>
 
-                    <div class="row" v-else>
+                    <div class="row" v-else style="position: relative;">
                         <ThreadDetailedLayout 
                             :thread="threadToDisplay"
                             :showBackArrow="false"
@@ -123,6 +123,7 @@ export default {
             if (!document.getElementById(this.selectedIndex)) {
                 return; 
             }
+
             document.getElementById(this.selectedIndex).scrollIntoView({
                 block: 'center'
             });
