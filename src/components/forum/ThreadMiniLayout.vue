@@ -33,6 +33,7 @@
 
             <div class="thread-layout-right-content">
                 <p class="thread-content hide-overflow-text">{{ thread.content }}</p>
+                <img id="thread-image" v-if="thread.content_link" :src="thread.content_link" alt="Thread Image" />
             </div>
         </div>
     </div>

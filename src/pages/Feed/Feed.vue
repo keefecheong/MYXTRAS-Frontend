@@ -45,7 +45,6 @@
 
 <style>
 @import url('../../styles/main.css');
-@import url('../../styles/sub-navigation.css');
 
 .feed-container {
     max-width: 50%;
@@ -55,6 +54,12 @@
 .no-more-blogs {
     text-align: center;
     margin-bottom: 40px;
+}
+
+h1 {
+    text-align: center;
+    font-weight: bolder !important;
+    color: #E53A73 !important;
 }
 </style>
 
