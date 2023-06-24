@@ -150,11 +150,6 @@ export default {
             sessionStorage.setItem('forum_id', forumID)
             location.href="/forumGroup.html"
             return this.sortedThreads
-        },
-
-        viewThread(thread){
-            sessionStorage.setItem('threadID', thread._id)
-            location.href="/threadView.html"
         }
     }
 }
