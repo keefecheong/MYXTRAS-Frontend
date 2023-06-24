@@ -109,4 +109,9 @@ export default {
     max-height: calc(var(--line-height) * 2);
     white-space: normal !important;
 }
+
+#thread-image {
+    max-width: 100%;
+}
+
 </style>

@@ -16,7 +16,7 @@
             <div class="feed-container container-fluid">
                 <div class="row">
                     <div class="feed-content justify-content-center">
-                        <h1>Your Feed</h1>
+                        <h1 class="feed-header">Your Feed</h1>
 
                         <hr/>
                         
@@ -56,7 +56,7 @@
     margin-bottom: 40px;
 }
 
-h1 {
+.feed-header {
     text-align: center;
     font-weight: bolder !important;
     color: #E53A73 !important;
