@@ -16,7 +16,10 @@
                     <!-- thread creator, title, creation_time -->
                     <div class="thread-layout-header-top">
                         <div>
-                            <span class="thread-creator">Posted by: @{{ thread.creator_id.username }}</span>
+                            <div class="thread-creator">
+                                <span>Posted by: @{{ thread.creator_id.username }}</span>
+                            </div>
+
                             <span class="thread-title">{{ thread.title }}</span>
                         </div>
 
@@ -353,6 +356,10 @@ export default {
 #thread-detailed-layout-content {
     cursor: auto;
     margin-bottom: 0;
+}
+
+#thread-detailed-layout-container > .material-symbols-outlined {
+    user-select: none;
 }
 
 #close-detailed-thread-container-arrow {

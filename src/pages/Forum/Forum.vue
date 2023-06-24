@@ -120,6 +120,9 @@ export default {
     updated() {
         // if scrollBack is true then scroll to that thread
         if (this.scrollBack && this.selectedIndex != null) {
+            if (!document.getElementById(this.selectedIndex)) {
+                return; 
+            }
             document.getElementById(this.selectedIndex).scrollIntoView({
                 block: 'center'
             });
