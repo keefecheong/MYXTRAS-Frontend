@@ -157,7 +157,6 @@ export default {
             selectedSchool: '',
             selectedCourse: '',
             biography: '',
-            maxCharacters: 100,
             selectedOption: [],
             userId: '',
             schools: [],
