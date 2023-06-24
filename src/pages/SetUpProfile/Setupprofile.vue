@@ -208,6 +208,7 @@ export default {
                 })
                 .then(data => {
                     this.courses = data.courseList;
+                    console.log(this.courses)
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -277,17 +278,12 @@ export default {
             let detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
             let realname = this.realname;
             let username = this.username;
-            let school = this.selectedSchool;
-            let course = this.selectedCourse;
-            console.log(Object.values(this.courses).flat())
 
             if (
                 detailsList.some(item => item === "") ||
                 /^[0-9]+$/.test(realname) ||
                 realname.length > 32 ||
-                username.length > 16 ||
-                !(school in this.courses) ||
-                !(Object.values(this.courses).flat().includes(course))
+                username.length > 16 
             ) {
                 if (detailsList.some(item => item === "")) {
                     await this.alert("Please enter all fields");
@@ -301,12 +297,7 @@ export default {
                 } else if (username.length > 16) {
                     await this.alert("Username must not be more than 16 characters long");
 
-                } else if (!(school in this.courses)) {
-                    await this.alert("School does not exist");
-
-                } else if (!Object.values(this.courses).flat().includes(course)) {
-                    await this.alert("Course does not exist");
-                }
+                } 
                 return checkStatus;
             }
             return checkStatus = true;

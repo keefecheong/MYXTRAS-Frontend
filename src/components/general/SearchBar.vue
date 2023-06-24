@@ -224,9 +224,9 @@ export default {
             }).then(async response => {
                 if (response.ok) {
                     await response.json().then(data => {
-                        
+                        console.log(data.is_profile_setup)
                         if (data.is_profile_setup === false){
-                            window.location.href = '/feed.html';
+                            location.href = '/setupprofile.html';
                             return;
                         }
                         else {
