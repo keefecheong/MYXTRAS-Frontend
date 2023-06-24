@@ -2,7 +2,7 @@
     <div class="card shadow">
         <div class="card-body card-position">
             <h5 class="card-title">Popular Threads</h5>
-            <p v-if="popularThreads.length == 0">No popular threads found!</p>
+            <p v-if="popularThreads.length === 0">No popular threads found!</p>
             <div v-for="thread in popularThreads" class="row align-center">
                 <div class="col-md-12 d-flex popularThreadContainer" @click="viewThread(thread)">
                     <h5 id="thread_title">{{ thread.title }}</h5>
@@ -17,10 +17,6 @@
     </div>
 </template>
 <style scoped> 
-.card {
-    min-height: 50vh;
-    margin: 3vh 1vh;
-}
 #thread_title {
     margin: 2vh 0;
 }
@@ -28,7 +24,7 @@ p {
     margin-top: 10vh;
     text-align: center;
 }
-.popularThreadContainer:hover:hover{
+.popularThreadContainer:hover{
     cursor: pointer;
 }
 </style>

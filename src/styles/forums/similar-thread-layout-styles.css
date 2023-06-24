@@ -42,10 +42,6 @@
     column-gap: 50px;
 }
 
-.thread-layout-header-top div span {
-    display: block;
-}
-
 .thread-privileged-options .material-symbols-outlined {
     color: black;
     font-size: 1.5em;

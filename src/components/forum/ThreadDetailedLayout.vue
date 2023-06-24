@@ -2,7 +2,8 @@
     <LoadingOverlay v-if="submittingComment || !dataInitialized" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
 
     <div class="card shadow" id="thread-detailed-layout-container">
-        <span v-if="showBackArrow" class="material-symbols-outlined" id="close-detailed-thread-container" title="Go back" @click="closeDetailedView">arrow_back</span>
+        <span v-if="showBackArrow" class="material-symbols-outlined" id="close-detailed-thread-container-arrow" title="Go back" @click="closeDetailedView">arrow_back</span>
+        <span v-else class="material-symbols-outlined" id="close-detailed-thread-container-cross" title="Go back" @click="closeDetailedView">close</span>
 
         <div class="thread-layout-container" id="thread-detailed-layout-content">
             <!-- thread creator's profile pic -->
@@ -139,6 +140,9 @@ export default {
         // get time difference from when thread was created and current datetime
         this.dateCreated = calcDateDifference(this.thread.creation_time);
     },
+    mounted() {
+        window.scrollTo(0, 0);
+    },
     methods: {
         // to get comment data
         async initData() {
@@ -206,7 +210,7 @@ export default {
             // check if user currently dislikes the thread
             // if user dislikes the thread do nothing
             if (this.disliked) {
-                this.alert('Unable to like and dislike the thread simultaneously.');
+                this.alert('Remove dislike first.');
                 return;
             }
 
@@ -231,7 +235,7 @@ export default {
             // check if user currently likes the thread
             // if user likes the thread do nothing
             if (this.liked) {
-                this.alert('Unable to like and dislike the thread simultaneously.');
+                this.alert('Remove like first.');
                 return;
             }
 
@@ -344,20 +348,29 @@ export default {
 </script>
 
 <style>
-@import url('../../styles/forums/similar-thread-styles.css');
+@import url('../../styles/forums/similar-thread-layout-styles.css');
 
 #thread-detailed-layout-content {
     cursor: auto;
     margin-bottom: 0;
 }
 
-#close-detailed-thread-container {
+#close-detailed-thread-container-arrow {
     color: black;
     font-size: 2em;
     width: fit-content;
     position: absolute;
     top: 20px;
     left: -5%;
+}
+
+#close-detailed-thread-container-cross {
+    color: black;
+    font-size: 2em;
+    width: fit-content;
+    position: absolute;
+    right: 5%;
+    top: 20px;
 }
 
 #thread-image {

@@ -10,31 +10,44 @@
             <SearchBar currentPage="forums" @show-forum-form="() => toggleForumForm(true)" />
             
             <h1 id="forum-header">Latest Updates!</h1>
-            <div class="row">
+
+            <div class="row" id="forum-view-container">
                 <div class="col-md-3">
                    <CreatedForums />
                    <SubscribedForums />
                 </div>
             
-                <div class="col-md-6">
+                <div class="col-md-6 forum-middle-content">
                     <div class="row" v-if="!showDetailedThread">
                         <div class="card shadow" v-if="recentThreads.length === 0">
-                            <div class="center-align" style="margin: 3vh 0;">
+                            <div class="center-align">
                                 <p>No new threads, <a href="/explore.html">Xplore</a> now!</p>
                             </div>
                         </div>
-                        <div>
-                            <ForumLayout v-if="recentThreads.length !== 0" :recentThreads="recentThreads" style="margin: 3vh 0;"/>
+
+                        <div v-if="recentThreads.length !== 0">
+                            <ThreadMiniLayout 
+                                v-for="(thread, index) in recentThreads"
+                                :key="index" 
+                                :thread="thread"
+                                :index="index"
+                                :showForumDetails="true"
+                                @show-detailed-view="() => toggleDetailedThread(true, index)"
+                            />
+                            <!-- <ForumLayout :recentThreads="recentThreads"/> -->
                         </div>
                     </div>
 
                     <div class="row" v-else>
-                        <ThreadDetailedLayout :thread="selectedPopularThread" />
+                        <ThreadDetailedLayout 
+                            :thread="threadToDisplay"
+                            :showBackArrow="false"
+                            @close-detailed-view="() => toggleDetailedThread(false, selectedIndex)" />
                     </div>
                 </div>
 
                 <div class="col-md-3">
-                    <PopularThreads @show-thread="(thread) => toggleDetailedThread(true, thread)" />
+                    <PopularThreads @show-thread="(thread) => toggleDetailedThread(true, null, thread)" />
                 </div>
             </div>
             
@@ -51,50 +64,8 @@
     margin-top: 20px;
 }
 
-.card {
-    padding: 1em 0 1em 0;
-    border: none !important;
-    border-radius: 10px;
-    margin: 3vh 1vh;
-}
-
-.line {
-    margin: 2em !important;
-    border-top: 1px solid black;
-}
-
-#meta {
-    font-size: small;
-}
-
-
-#threadGroupPic {
-    overflow: hidden;
-    float:left;
-    width: 10vh;
-    height: 10vh;
-    margin-top: 15px;
-    border-radius: 50%;
-}
-#thread-title {
-    font-weight: bolder;
-    font-size: larger;
-}
-#commentsText {
-    margin: 1em 0 0.5em 0;
-    text-decoration: none;
-    color: gray !important;
-}
-
-.popularThreadContainer {
-    display: flex;
-    flex-direction: column;
-}
-.align-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 2em;
+#forum-view-container {
+    padding: 20px;
 }
 </style>
 
@@ -109,19 +80,21 @@ import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
 import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
+import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
 
 export default {
     components: {
-        NavSidebar,
-        ForumLayout,
-        SearchBar,
-        CreatedForums,
-        SubscribedForums,
-        PopularThreads,
-        AlertPrompt,
-        ForumFormLayout,
-        ThreadDetailedLayout
-    },
+    NavSidebar,
+    ForumLayout,
+    SearchBar,
+    CreatedForums,
+    SubscribedForums,
+    PopularThreads,
+    AlertPrompt,
+    ForumFormLayout,
+    ThreadDetailedLayout,
+    ThreadMiniLayout
+},
     data() {
         return {
             // Misc
@@ -135,12 +108,27 @@ export default {
             createdForums: [],
             threads: [],
             recentThreads: [],
+            selectedIndex: null,
             selectedPopularThread: null,
-            showDetailedThread: false
+            showDetailedThread: false,
+            scrollBack: false
         }
     },
     created() {
         this.retrieveRecentThreads()
+    },
+    updated() {
+        // if scrollBack is true then scroll to that thread
+        if (this.scrollBack && this.selectedIndex != null) {
+            document.getElementById(this.selectedIndex).scrollIntoView({
+                block: 'center'
+            });
+
+            // set timeout to clear scrollBackIndex
+            setTimeout(() => {
+                this.scrollBack = false;
+            }, 500);
+        }
     },
     methods: {
         // toggle forum form
@@ -148,7 +136,7 @@ export default {
             this.showForumForm = show;
         },
         async retrieveRecentThreads() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/get-recent-threads/`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/recent`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -170,12 +158,12 @@ export default {
             this.alertStore.closeAlert();
         },
         // show detailed view of popular thread
-        toggleDetailedThread(show, thread) {
-            if (thread) {
-                this.selectedPopularThread = thread;
-            }
-            else {
-                this.selectedPopularThread = null;
+        toggleDetailedThread(show, index, thread) {
+            this.selectedPopularThread = thread;
+            this.selectedIndex = index;
+
+            if (!show && index != null) {
+                this.scrollBack = true;
             }
 
             this.showDetailedThread = show;
@@ -190,6 +178,10 @@ export default {
         // to get alertMsg value
         alertMsg() {
             return this.alertStore.alertMsg;
+        },
+        // get thread to display in detailed layout
+        threadToDisplay() {
+            return this.selectedPopularThread || this.recentThreads[this.selectedIndex];
         }
     }
 }
