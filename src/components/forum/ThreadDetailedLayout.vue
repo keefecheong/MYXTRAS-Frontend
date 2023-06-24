@@ -142,10 +142,16 @@ export default {
 
         // get time difference from when thread was created and current datetime
         this.dateCreated = calcDateDifference(this.thread.creation_time);
+
+        // set event listener to complete pending like/dislike requests when the page is closed
+        window.addEventListener('beforeunload', this.completeRequests);
     },
     mounted() {
         // scroll to top
         window.scrollTo(0, 0);
+    },
+    beforeUnmount() {
+        this.completeRequests();
     },
     watch: {
         // watch for changes in thread and update comments if thread id changes
