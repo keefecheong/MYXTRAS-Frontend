@@ -1,6 +1,6 @@
 <template v-if="tags && threads">
-    <div class="row" id="filterRow">
-        <div id="gallery-interest-selection" class="sticky-filter">
+    <div class="row sticky-filter" id="filterRow">
+        <div id="gallery-interest-selection" class="">
             <span>Filter by:</span>
 
             <InterestBadgeList

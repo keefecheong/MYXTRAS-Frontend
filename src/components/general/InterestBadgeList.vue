@@ -48,13 +48,13 @@ export default {
     data() {
         return {
             options:[
-                'Kpop',
+                'Music',
                 'Games',
                 'Technology',
                 'Sports',
                 'Dancing',
-                'JPOP',
-                'Coding',
+                'Instruments',
+                'Goth',
                 'Lifestyle'
             ]
         }
@@ -120,8 +120,8 @@ background: #c9c9c98d;
     cursor: pointer;
 }
 
-.badge-kpop {
-    background-color: #FF7BE2;
+.badge-goth {
+    background-color: #8f8f8f;
 }
 
 .badge-games {
@@ -140,7 +140,7 @@ background: #c9c9c98d;
     background-color: #7B88FF;
 }
 
-.badge-jpop{
+.badge-instruments{
     background-color: #FFAB6F;
 }
 
