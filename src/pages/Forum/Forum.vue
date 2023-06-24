@@ -38,7 +38,7 @@
                         </div>
                     </div>
 
-                    <div class="row" v-else>
+                    <div class="row" v-else style="position: relative;">
                         <ThreadDetailedLayout 
                             :thread="threadToDisplay"
                             :showBackArrow="false"

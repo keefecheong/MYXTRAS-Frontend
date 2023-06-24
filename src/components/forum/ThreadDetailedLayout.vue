@@ -144,7 +144,18 @@ export default {
         this.dateCreated = calcDateDifference(this.thread.creation_time);
     },
     mounted() {
+        // scroll to top
         window.scrollTo(0, 0);
+    },
+    watch: {
+        // watch for changes in thread and update comments if thread id changes
+        'thread._id': {
+            handler(newVal, oldVal) {
+                if (newVal != oldVal) {
+                    this.initData();
+                }
+            }
+        }
     },
     methods: {
         // to get comment data
