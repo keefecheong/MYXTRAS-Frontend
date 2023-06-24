@@ -13,7 +13,7 @@
             </button>
             
         </div>
-        <div v-if="currentPage === 'feed'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
+        <div v-if="currentPage === 'feed' || currentPage === 'xplore'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
             <!-- check for identity after authentication -->
             <div v-if="login" class="col-md-4 margin-top">
                 <p class="realname">{{ realname }}</p>
