@@ -21,8 +21,8 @@
                         <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" required>
                         <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword">visibility_off</button>
                         <br/>
-                        <!-- Add Recaptcha -->
                         <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
+
                         <button @click="loginUser()" id="loginBtn">
                             Log in
                         </button>
@@ -36,7 +36,6 @@
             </div>
         </div>
     </div>
-    <!-- https://vuejs.org/guide/essentials/component-basics.html#listening-to-events -->
 </template>
   
 <style>
@@ -69,6 +68,13 @@ h1 {
     width: 80%;
     transform: translatex(2vh);
 }
+#emailField,
+#passwordField {
+    padding-bottom: 10px;
+}
+#numberField, #otpField {
+    transform: translatex(6vh);
+}
 .whitebox {
     background-color: white;
     position: relative;
@@ -98,6 +104,15 @@ input[type=password] {
     background-position: 0 100%;
     background-repeat: no-repeat;
     background-size: 100% 2px;
+}
+#sendOtpBtn {
+    width: 6em;
+    height: 2em;
+    color: white;
+    margin-top: calc(.5em + 0.1vw);
+    border: none;
+    background: linear-gradient(45deg,#FF6363, var(--primary));
+    transform: translateX(-3.3rem);
 }
 input:focus{
     background-size: 0% 2px;
@@ -145,10 +160,6 @@ input:focus{
 #registerBtn:hover{
     color: var(--primary);
 }
-#emailField,
-#passwordField {
-    padding-bottom: 10px;
-}
 .overlay-button {
     border: none;
     transform: translateX(-50%);
@@ -176,6 +187,7 @@ input:focus{
 <script>
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import firebase from 'firebase';
 
 export default {
     data() {
@@ -185,6 +197,8 @@ export default {
             emailAddress: '',
             password: '',
             showPassword: false,
+            recaptchaVerifier: null,
+            recaptchaClicked: false,
             alertStore: useAlertStore(),
             alert: useAlertStore().alert
         }
@@ -192,14 +206,37 @@ export default {
     components: {
         AlertPrompt
     },
+    mounted() {
+        const self = this;
+        this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        size: 'normal',
+        callback: function (response) {
+            // reCAPTCHA verified, handle the callback
+            console.log('reCAPTCHA clicked!', response);
+            self.recaptchaClicked = true
+        },
+        'expired-callback': () => {
+            // reCAPTCHA expired, handle the expired callback
+            console.log('reCAPTCHA expired!');
+        }
+        });
+        this.recaptchaVerifier.render().then((widgetId)=>{
+            this.recaptchaWidgetId = widgetId    
+        })
+    },
     methods: {
         hidePassword() {
             this.showPassword = !this.showPassword;
             this.isPressed = !this.isPressed;
         },
         async loginUser(){
+            console.log(this.recaptchaClicked)
+            if (!this.recaptchaClicked){
+                await this.alert("Please click on reCAPTCHA")
+                return;
+            }
             let credentialList = [this.emailAddress, this.password];
-            if (credentialList.some(item => item === null)){
+            if (credentialList.some(item => item === "")){
                 await this.alert("Please enter all fields");
                 return;
             }
@@ -217,7 +254,7 @@ export default {
                         'Content-Type': 'application/json; charset=UTF-8'
                     },
                     credentials: 'include',
-                    body: JSON.stringify(this.userObject)
+                    body: JSON.stringify(this.userObject),
                 });
 
                 if (response.ok) {
@@ -238,7 +275,7 @@ export default {
         // to close alert prompt
         closeAlert() {
             this.alertStore.closeAlert();
-        }
+        },
     },
     computed: {
         // to get showAlert value
@@ -251,7 +288,6 @@ export default {
         }
     }
 }
-    
-//document.getElementById('ngeeAnnBanner').setAttribute('draggable', false);
+
 </script>
 

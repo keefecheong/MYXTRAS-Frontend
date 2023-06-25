@@ -171,7 +171,7 @@ input:focus{
 }
 
 #numberField, #otpField {
-    transform: translatex(5.5vh);
+    transform: translatex(6vh);
 }
 
 .overlay-button {
@@ -291,7 +291,7 @@ export default {
         }
     },
     components: {
-        AlertPrompt
+        AlertPrompt,
     },
     watch: {
         emailAddress: {
@@ -311,22 +311,26 @@ export default {
         passwordRequirements() {
             const password = this.password;
             const consecutiveLimit = 3;
+
+            // Minimum password length of 4 chars
             if (password.length < 4 || this.isPasswordSingleType(password)) {
                 this.passwordStrengthMessage = "Password is very weak"
             return 'very-weak';
             }
             this.passwordStrength = 0;
-
+            // Upper case char
             if (/[A-Z]/.test(password)) {
                 this.passwordStrength++;
             }
-
+            // Digits
             if (/\d/.test(password)) {
                 this.passwordStrength++;
             }
+            // Length >14 characters
             if (password.length > 14) {
                 this.passwordStrength++;
             }
+            // Special symbols
             if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
                 this.passwordStrength++;
             }
