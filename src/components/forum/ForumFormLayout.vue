@@ -395,7 +395,7 @@ export default {
                 bannerValid = bannerValid ? bannerValid : !this.bannerUpdated && this.selectedBanner;
             }
 
-            return nameValid && idValid && picValid && bannerValid;
+            return nameValid && idValid && picValid && bannerValid && !this.illegalChar;
         },
         // to check if any fields are changed
         fieldsChanged() {
