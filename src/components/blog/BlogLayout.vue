@@ -200,8 +200,8 @@
 .profile-pic {
     border-radius: 100%;
     object-fit: cover;
-    height: 40px;
-    width: 40px;
+    height: 50px;
+    width: 50px;
 }
 
 .blog-username-container {

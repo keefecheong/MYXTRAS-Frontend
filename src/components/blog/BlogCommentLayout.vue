@@ -2,7 +2,7 @@
     <div class="comment-container" v-if="!deleted">
         <div class="comment-header">
             <!-- creator profile pic -->
-            <img class="profile-pic" :src="comment.creator_id.profile_pic_link"/>
+            <img class="comment-profile-pic" :src="comment.creator_id.profile_pic_link"/>
             <div class="right-content">
                 <div class="top-content">
                     <!-- creator username -->
@@ -103,10 +103,14 @@ export default {
 .comment-header {
     position:relative;
 }
-.profile-pic {
+.comment-profile-pic {
     position:absolute;
     top: 20px;
     left: -25px;
+    border-radius: 100%;
+    object-fit: cover;
+    height: 40px;
+    width: 40px;
 }
 /* comment header styles */
 .comment-container {
