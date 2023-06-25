@@ -128,7 +128,7 @@ export default {
                 block: 'center'
             });
 
-            // set timeout to clear scrollBackIndex
+            // set timeout to clear scrollBack
             setTimeout(() => {
                 this.scrollBack = false;
             }, 500);

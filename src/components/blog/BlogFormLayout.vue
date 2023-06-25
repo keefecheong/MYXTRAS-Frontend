@@ -53,7 +53,7 @@
             <!-- input for blog caption -->
             <div class="image-options-container">
                 <label for="image-caption" id="caption-title" class="image-options-label">Caption:</label>
-                <textarea id="image-caption" name="image-caption" placeholder="Provide a caption (Optional)" v-model="caption"></textarea>
+                <DynamicTextarea :id="'image-caption'" :placeholder="'Provide a caption (Optional)'" v-model="caption"></DynamicTextarea>
             </div>
             
             <!-- input for blog location -->
@@ -107,12 +107,14 @@ import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import AlertPrompt from '../general/AlertPrompt.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
+import DynamicTextarea from '../general/DynamicTextarea.vue';
 
 export default {
     components: {
         AddInterestButton,
         LoadingOverlay,
-        AlertPrompt
+        AlertPrompt,
+        DynamicTextarea
     },
     data() {
         return {
@@ -454,8 +456,10 @@ export default {
 
 #image-caption, #image-location {
     border-radius: 10px;
-    padding: 5px;
+    padding: 10px;
     resize: none;
+    border: none;
+    outline: none;
 }
 
 #interest-badges {

@@ -70,7 +70,13 @@
             <!-- layout for editing message (only for senders) -->
             <div class="edit-message" v-if="editMode && message.is_sender">
                 <form :id="'form-' + index">
-                    <input type="text" title="Enter your message" v-model="editedMessage" :id="'edit-' + index" placeholder="New message..." />
+                    <DynamicTextarea 
+                        title="Enter your message"
+                        :maxRows="5"
+                        :placeholder="'New message...'"
+                        v-model="editedMessage"
+                        :id="'edit-' + index"
+                    ></DynamicTextarea>
 
                     <div>
                         <button class="cancel" @click="exitEdit" title="Discard changes">
@@ -88,6 +94,7 @@
 
 <script>
 import ChatFileLayout from './ChatFileLayout.vue';
+import DynamicTextarea from '../general/DynamicTextarea.vue';
 
 export default {
     data() {
@@ -105,7 +112,8 @@ export default {
         'index'
     ],
     components: {
-        ChatFileLayout
+        ChatFileLayout,
+        DynamicTextarea
     },
     emits: [
         'edit-message',
@@ -411,6 +419,11 @@ export default {
     display: flex;
     justify-content: end;
     column-gap: 5px;
+}
+
+.edit-message textarea {
+    border: 1px solid lightgray;
+    border-radius: 5px;
 }
 
 .edit-message form button {

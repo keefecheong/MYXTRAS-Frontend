@@ -13,7 +13,7 @@
                         <h2 id="header">Set up your profile</h2>
                         <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" :maxlength="32" @input="noIntegers">
                         <input type="text" placeholder="Username" id="usernameField" v-model="username" :maxlength="25" :required="!showPopup">
-                        <textarea placeholder="Bio (Max 100 characters)" id="bioField" style="appearance: none;" v-model="biography" :maxlength="100"></textarea>
+                        <DynamicTextarea :placeholder="'Bio (Max 100 characters)'" v-model="biography" :maxlength="100"></DynamicTextarea>
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
                             <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
@@ -141,11 +141,13 @@ textarea{
 import AddInterestButton from '../../components/general/AddInterestButton.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import DynamicTextarea from '../../components/general/DynamicTextarea.vue';
 
 export default {
     components: {
        AddInterestButton,
-       AlertPrompt
+       AlertPrompt,
+       DynamicTextarea
     },
 
     data() {
@@ -334,8 +336,7 @@ export default {
                     } else {
                         throw new Error(response.error)
                     }
-                })
-                .catch(error => {
+                }).catch(error => {
                     console.error('Error:', error);
                 });
                 

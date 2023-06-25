@@ -63,7 +63,7 @@
 
                     <div id="thread-comment-creation-container">
                         <form @submit.prevent="createComment">
-                            <textarea id="thread-comment-input" rows="4" placeholder="Add a comment..." v-model="commentText"></textarea>
+                            <DynamicTextarea :id="'thread-comment-input'" :maxRows="4" :placeholder="'Add a comment...'" v-model="commentText"></DynamicTextarea>
 
                             <button type="submit" id="thread-comment-submit">Comment</button>
                         </form>
@@ -94,6 +94,7 @@ import ThreadCommentLayout from './ThreadCommentLayout.vue';
 import { useAlertStore } from '../../stores/AlertStore';
 import calcDateDifference from '../../utils/general/calcDateDifference';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
+import DynamicTextarea from '../general/DynamicTextarea.vue';
 
 export default {
     data() {
@@ -126,7 +127,8 @@ export default {
     components: {
         InterestBadgeList,
         ThreadCommentLayout,
-        LoadingOverlay
+        LoadingOverlay,
+        DynamicTextarea
     },
     created() {
         // set like/dislike fields
@@ -393,8 +395,8 @@ export default {
     font-size: 2em;
     width: fit-content;
     position: absolute;
-    right: 5%;
-    top: 20px;
+    right: 2%;
+    top: 2%;
 }
 
 #thread-image {
@@ -448,11 +450,8 @@ export default {
 
 #thread-comment-input {
     width: 100%;
-    resize: none;
     border-radius: 15px;
-    padding: 10px;
-    border: none;
-    outline: none;
+    padding: 15px;
     border: 1px solid lightgray;
 }
 

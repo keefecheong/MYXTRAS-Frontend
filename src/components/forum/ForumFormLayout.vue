@@ -67,7 +67,7 @@
             <!-- forum description input -->
             <div class="forum-field-container">
                 <label for="forum-desc-input" class="forum-label">Description:</label>
-                <textarea id="forum-desc-input" v-model="forumDesc" :maxlength="250" placeholder="Forum Description (optional)" ></textarea>
+                <DynamicTextarea :id="'forum-desc-input'" :maxRows="5" v-model="forumDesc" :maxlength="250" :placeholder="'Forum Description (optional)'" ></DynamicTextarea>
             </div>
             
             <!-- forum tags input -->
@@ -90,6 +90,7 @@ import { useAlertStore } from '../../stores/AlertStore.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import AddInterestButton from '../general/AddInterestButton.vue';
 import { debounce } from 'lodash';
+import DynamicTextarea from '../general/DynamicTextarea.vue';
 
 export default {
     data() {
@@ -121,7 +122,8 @@ export default {
     },
     components: {
         LoadingOverlay,
-        AddInterestButton
+        AddInterestButton,
+        DynamicTextarea
     },
     props: [
         'editMode',
