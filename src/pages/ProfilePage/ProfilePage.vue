@@ -292,6 +292,7 @@ export default {
 }
 
 #profile-picture {
+    border: 5px solid white;
     border-radius: 50%;
     height: var(--profile-pic-size);
     width: var(--profile-pic-size);

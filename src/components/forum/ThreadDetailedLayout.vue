@@ -467,4 +467,8 @@ export default {
     background-color: var(--primary);
     color: white;
 }
+#thread-comment-submit:hover {
+    border: none;
+    background-color: var(--secondary);
+}
 </style>

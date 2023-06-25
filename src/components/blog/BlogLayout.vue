@@ -370,6 +370,15 @@
 
 .create-comment-button {
     height: fit-content;
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: none;
+    background-color: var(--primary);
+    color: white;
+}
+.create-comment-button:hover {
+    border: none;
+    background-color: var(--secondary);
 }
 </style>
 
