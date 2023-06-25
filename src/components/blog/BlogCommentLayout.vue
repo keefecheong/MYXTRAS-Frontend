@@ -142,7 +142,6 @@ export default {
     margin-right: 5px;
 }
 hr {
-    width: 100%;
     margin-top: 5px !important;
     margin-bottom: 5px !important
 }
