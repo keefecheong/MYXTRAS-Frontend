@@ -61,13 +61,13 @@
             <!-- forum name input -->
             <div class="forum-field-container">
                 <label for="forum-name-input" class="forum-label">Name:</label>
-                <input type="text" id="forum-name-input" v-model="forumName" placeholder="Forum Name" :maxlength="50"/>
+                <input type="text" id="forum-name-input" v-model="forumName" placeholder="Forum Name" :maxlength="25"/>
             </div>
             
             <!-- forum description input -->
             <div class="forum-field-container">
                 <label for="forum-desc-input" class="forum-label">Description:</label>
-                <DynamicTextarea :id="'forum-desc-input'" :maxRows="5" v-model="forumDesc" :maxlength="250" :placeholder="'Forum Description (optional)'" ></DynamicTextarea>
+                <DynamicTextarea :id="'forum-desc-input'" :maxRows="5" v-model="forumDesc" :maxlength="100" :placeholder="'Forum Description (optional)'" ></DynamicTextarea>
             </div>
             
             <!-- forum tags input -->
@@ -190,7 +190,6 @@ export default {
         fileChanged(e) {
             // check if event is triggered by picture input
             const forPicture = e.target.id == 'forum-pic-input';
-
             // if no files selected then clear relevant fields and return
             if (e.target.files.length <= 0) {
                 if (forPicture) {
