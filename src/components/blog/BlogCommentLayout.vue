@@ -103,7 +103,7 @@ export default {
 .comment-header {
     position:relative;
 }
-.profile-pic{
+.profile-pic {
     position:absolute;
     top: 20px;
     left: -25px;
