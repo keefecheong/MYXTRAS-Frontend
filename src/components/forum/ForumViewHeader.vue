@@ -242,7 +242,7 @@ export default {
 
 #forum-header-subscribers {
     font-size: 1.2em;
-    flex: 0 0 20%;
+    flex: 0 0 15%;
 }
 
 #forum-options {
