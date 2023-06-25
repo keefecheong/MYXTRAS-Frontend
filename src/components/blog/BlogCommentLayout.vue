@@ -2,31 +2,32 @@
     <div class="comment-container" v-if="!deleted">
         <div class="comment-header">
             <!-- creator profile pic -->
-            <div class="profile-pic-container">
-                <img class="profile-pic" :src="comment.creator_id.profile_pic_link"/>
-            </div>
+            <img class="profile-pic" :src="comment.creator_id.profile_pic_link"/>
+            <div class="right-content">
+                <div class="top-content">
+                    <!-- creator username -->
+                    <div class="comment-username-container hide-overflow-text">
+                        <span id="username-text">{{ comment.creator_id.username }}</span>
+                    </div>
 
-            <!-- creator username -->
-            <div class="comment-username-container hide-overflow-text">
-                <span>{{ comment.creator_id.username }}</span>
-            </div>
+                    <!-- creation time (time difference) -->
+                    <div class="comment-creation-time">
+                        <span :title="new Date(comment.creation_time)">{{ dateCreated }}</span>
+                    </div>
 
-            <!-- creation time (time difference) -->
-            <div class="comment-creation-time">
-                <span :title="new Date(comment.creation_time)">{{ dateCreated }}</span>
-            </div>
-
-            <!-- only if the comment is posted by the current user -->
-            <div class="comment-privilege-actions" v-if="comment.isOwner">
-                <span class="material-symbols-outlined" @click="deleteComment">delete</span>
+                    <!-- only if the comment is posted by the current user -->
+                    <div class="comment-privilege-actions" v-if="comment.isOwner">
+                        <span class="material-symbols-outlined" @click="deleteComment">delete</span>
+                    </div>
+                </div>
+                <div class="bottom-content">
+                    <div class="row comment-content">
+                        <p>{{ comment.content }}</p>
+                    </div>
+                </div>
             </div>
         </div>
-
         <hr />
-
-        <div class="row comment-content">
-            <p>{{ comment.content }}</p>
-        </div>
     </div>
 
     <div class="comment-container" v-else>
@@ -86,14 +87,30 @@ export default {
 
 <style>
 @import url('../../styles/main.css');
-
+#username-text {
+    font-weight: bold;
+}
+.right-content {
+    margin-left: 30px;
+    width: 100%;
+}
+.top-content {
+    display: flex;
+    flex-direction: row;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+.comment-header {
+    position:relative;
+}
+.profile-pic{
+    position:absolute;
+    top: 20px;
+    left: -25px;
+}
 /* comment header styles */
 .comment-container {
-    border-style:dotted;
-    border-color: gray;
     border-width: 1px;
-    margin-bottom: 10px;
-    padding: 10px;
     border-radius: 10px;
 }
 
@@ -121,6 +138,12 @@ export default {
     font-variation-settings: 'FILL' 0;
     user-select: none;
     display: inline;
+    margin-left: 15px;
     margin-right: 5px;
+}
+hr {
+    width: 100%;
+    margin-top: 5px !important;
+    margin-bottom: 5px !important
 }
 </style>
