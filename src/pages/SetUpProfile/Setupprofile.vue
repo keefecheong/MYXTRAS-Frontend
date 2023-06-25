@@ -13,7 +13,7 @@
                         <h2 id="header">Set up your profile</h2>
                         <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" :maxlength="32" @input="noIntegers">
                         <input type="text" placeholder="Username" id="usernameField" v-model="username" :maxlength="25" :required="!showPopup">
-                        <DynamicTextarea :placeholder="'Bio (Max 100 characters)'" v-model="biography" :maxlength="100"></DynamicTextarea>
+                        <DynamicTextarea :placeholder="'Bio (Max 100 characters)'" v-model="biography" :maxlength="100" id="bio"></DynamicTextarea>
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
                             <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
@@ -87,6 +87,10 @@ input:focus,
 textarea{
     background-size: 0% 2px;
     outline: none;
+}
+
+#bio {
+    margin-left: 50px;
 }
 
 #header{
