@@ -531,6 +531,7 @@ export default {
     column-gap: 10px;
     align-items: center;
     justify-content: center;
+    max-width: 25vw;
 }
 
 .preview-image-container img {
