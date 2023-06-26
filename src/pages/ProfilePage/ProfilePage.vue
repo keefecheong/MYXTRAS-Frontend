@@ -407,6 +407,11 @@ export default {
     margin-top: 30px;
 }
 
+.card {
+    margin-bottom: 20px;
+    max-width: 97%;
+}
+
 .three-dots {
     position: absolute;
     bottom: 0;
