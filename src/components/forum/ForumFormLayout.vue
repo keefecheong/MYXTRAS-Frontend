@@ -1,87 +1,88 @@
 <template>
     <div id="forum-form-overlay">
         <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="submitting || (editMode && !dataInitialized)" />
-    
-        <!-- form -->
-        <form id="forum-form-container" @submit.prevent="submitForm">
-            <!-- button to close forum form -->
-            <button id="close-form" @click="closeForm" type="button">
-                <span class="material-symbols-outlined">Close</span>
-            </button>
-    
-            <h1 id="form-header">{{ editMode ? 'Edit Forum' : 'Create New Forum' }}</h1>
-    
-            <!-- Upload forum pic -->
-            <div id="forum-pic-container">
-                <label for="forum-pic-input" id="forum-pic-label"><u>Click</u> to Select Forum Picture:</label>
-                
-                <span v-if="!groupPicObject && !selectedGroupPic" id="forum-pic-none">No image selected</span>
-                <span v-if="groupPicObject && groupPicErrors.length > 0" class="errMsg">Invalid file</span>
-                <img v-if="selectedGroupPic" :src="selectedGroupPic" alt="Group Picture"  id="forum-pic-picture" />
-                <input id="forum-pic-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
-    
-                <!-- inform user about invalid file -->
-                <div v-if="groupPicErrors.length > 0">
-                    <span>Error:</span>
-                    <br />
-                    <span v-for="error in groupPicErrors" class="errMsg">{{ error }}</span>
+        <div class="scroll-bar">
+            <!-- form -->
+            <form id="forum-form-container" @submit.prevent="submitForm">
+                <!-- button to close forum form -->
+                <button id="close-form" @click="closeForm" type="button">
+                    <span class="material-symbols-outlined">Close</span>
+                </button>
+        
+                <h1 id="form-header">{{ editMode ? 'Edit Forum' : 'Create New Forum' }}</h1>
+        
+                <!-- Upload forum pic -->
+                <div id="forum-pic-container">
+                    <label for="forum-pic-input" id="forum-pic-label"><u>Click</u> to Select Forum Picture:</label>
+                    
+                    <span v-if="!groupPicObject && !selectedGroupPic" id="forum-pic-none">No image selected</span>
+                    <span v-if="groupPicObject && groupPicErrors.length > 0" class="errMsg">Invalid file</span>
+                    <img v-if="selectedGroupPic" :src="selectedGroupPic" alt="Group Picture"  id="forum-pic-picture" />
+                    <input id="forum-pic-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
+        
+                    <!-- inform user about invalid file -->
+                    <div v-if="groupPicErrors.length > 0">
+                        <span>Error:</span>
+                        <br />
+                        <span v-for="error in groupPicErrors" class="errMsg">{{ error }}</span>
+                    </div>
                 </div>
-            </div>
-            
-            
-            <!-- Upload banner -->     
-            <div id="forum-banner-container">
-                <label for="forum-banner-input" id="forum-banner-label"><u>Click</u> to Select Forum Banner:</label>
-    
-                <span v-if="!bannerObject && !selectedBanner" id="forum-banner-none">No image selected</span>
-                <span v-if="bannerObject && bannerErrors.length > 0" class="errMsg">Invalid file</span>
-                <img v-if="selectedBanner" :src="selectedBanner" alt="Banner"  id="forum-banner-picture" />
-                <input id="forum-banner-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
                 
-                <!-- inform user about invalid file -->
-                <div v-if="bannerErrors.length > 0">
-                    <span>Error:</span>
-                    <br />
-                    <span v-for="error in bannerErrors" class="errMsg">{{ error }}</span>
+                
+                <!-- Upload banner -->     
+                <div id="forum-banner-container">
+                    <label for="forum-banner-input" id="forum-banner-label"><u>Click</u> to Select Forum Banner:</label>
+        
+                    <span v-if="!bannerObject && !selectedBanner" id="forum-banner-none">No image selected</span>
+                    <span v-if="bannerObject && bannerErrors.length > 0" class="errMsg">Invalid file</span>
+                    <img v-if="selectedBanner" :src="selectedBanner" alt="Banner"  id="forum-banner-picture" />
+                    <input id="forum-banner-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
+                    
+                    <!-- inform user about invalid file -->
+                    <div v-if="bannerErrors.length > 0">
+                        <span>Error:</span>
+                        <br />
+                        <span v-for="error in bannerErrors" class="errMsg">{{ error }}</span>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- forum id input -->
-            <div id="forum-id-container">
+                
+                <!-- forum id input -->
+                <div id="forum-id-container">
+                    <div class="forum-field-container">
+                        <label for="forum-id-input" class="forum-label">ID: </label>
+                        <input type="text" id="forum-id-input" v-model="forumID" placeholder="NP-ICT" @input="debounceVerifyForumID" :maxlength="25"/>
+                    </div>
+        
+                    <span id="forum-id-available" v-if="!idErr && forumIDVerified && !illegalChar">Forum ID available.</span>
+                    <span class="errMsg" v-if="idErr && forumIDVerified && !illegalChar">Forum ID already taken.</span>
+                    <span class="errMsg" v-if="illegalChar" >Illegal chararcter detected</span>
+                </div>
+        
+                <!-- forum name input -->
                 <div class="forum-field-container">
-                    <label for="forum-id-input" class="forum-label">ID: </label>
-                    <input type="text" id="forum-id-input" v-model="forumID" placeholder="Unique Forum ID:" @input="debounceVerifyForumID" :maxlength="25"/>
+                    <label for="forum-name-input" class="forum-label">Name:</label>
+                    <input type="text" id="forum-name-input" v-model="forumName" placeholder="NP InfoComm Technology" :maxlength="25"/>
                 </div>
-    
-                <span id="forum-id-available" v-if="!idErr && forumIDVerified && !illegalChar">Forum ID available.</span>
-                <span class="errMsg" v-if="idErr && forumIDVerified && !illegalChar">Forum ID already taken.</span>
-                <span class="errMsg" v-if="illegalChar" >Illegal chararcter detected</span>
-            </div>
-    
-            <!-- forum name input -->
-            <div class="forum-field-container">
-                <label for="forum-name-input" class="forum-label">Name:</label>
-                <input type="text" id="forum-name-input" v-model="forumName" placeholder="Forum Name" :maxlength="25"/>
-            </div>
-            
-            <!-- forum description input -->
-            <div class="forum-field-container">
-                <label for="forum-desc-input" class="forum-label">Description:</label>
-                <DynamicTextarea :id="'forum-desc-input'" :maxRows="5" v-model="forumDesc" :maxlength="100" :placeholder="'Forum Description (optional)'" ></DynamicTextarea>
-            </div>
-            
-            <!-- forum tags input -->
-            <div class="forum-field-container">
-                <label for="forum-tags-input" class="forum-label">Tags:</label>
-                <div id="forum-tags-container">
-                    <AddInterestButton :selectedOption="tags" @selectedInterests="handleForumTags">
-                        Select Tags For Your Forum (Optional):
-                    </AddInterestButton>
-                </div>
-            </div>
                 
-            <button class="forum-form-control-button" :disabled="submitting || !requiredFields">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
-        </form>
+                <!-- forum description input -->
+                <div class="forum-field-container">
+                    <label for="forum-desc-input" class="forum-label">Description:</label>
+                    <DynamicTextarea :id="'forum-desc-input'" :maxRows="5" v-model="forumDesc" :maxlength="100" :placeholder="'Forum Description (optional)'" ></DynamicTextarea>
+                </div>
+                
+                <!-- forum tags input -->
+                <div class="forum-field-container">
+                    <label for="forum-tags-input" class="forum-label">Tags:</label>
+                    <div id="forum-tags-container">
+                        <AddInterestButton :selectedOption="tags" @selectedInterests="handleForumTags">
+                            Select Tags For Your Forum (Optional):
+                        </AddInterestButton>
+                    </div>
+                </div>
+                    
+                <button class="forum-form-control-button" :disabled="submitting || !requiredFields">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -425,15 +426,21 @@ export default {
     align-items: center;
 }
 
-#forum-form-container {
+.scroll-bar {
     padding: 40px;
     border-radius: 20px;
-    text-align: center;
     background-color: #133B5B;
     width: 60%;
     max-width: 80%;
     max-height: 90%;
     position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#forum-form-container {
+    width: 109.8%;
     overflow: auto;
     display: flex;
     align-items: center;

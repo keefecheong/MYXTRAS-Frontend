@@ -40,7 +40,7 @@
                 <div class="popular-community">
                     <h1 class="pop-header" v-if="tagsLoaded">Popular Communities</h1>
                     <div class="interestCommunity" v-for="(tag, index) in tags">
-                        <h4 class="cat" @click="openForum(index)">{{ tag._id }}<div class="triangle-down" :id="index"></div></h4>
+                        <h4 class="cat" @click="openForum(index)">{{ tag._id }}<div class="triangle-down" :id="`triangle-${index}`"></div></h4>
                         <div class="dropdown-content" :id="'dc'+index" >
                             <div v-for="forum in tag.forums" @click="viewForum(forum)" id="forumContainer">
                                 <p><img class="forum-pic" :src="forum.forum_pic_link">{{forum.forum_name}}</p>
@@ -108,14 +108,14 @@ export default {
             this.showDetailedThread = show;
         },
         openForum(id) {
-            const status = document.getElementById(id).className;
+            const status = document.getElementById(`triangle-${id}`).className;
             
             if (status == "triangle-down") {
                 document.getElementById("dc"+id).className += " open-forum";
-                document.getElementById(id).className = "triangle-up";
+                document.getElementById(`triangle-${id}`).className = "triangle-up";
             } else {
                 document.getElementById("dc"+id).className = "dropdown-content";
-                document.getElementById(id).className = "triangle-down";
+                document.getElementById(`triangle-${id}`).className = "triangle-down";
             }
         },
         retrieveAllThreads() {

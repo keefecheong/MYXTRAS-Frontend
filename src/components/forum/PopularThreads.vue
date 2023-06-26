@@ -22,6 +22,7 @@
 }
 .card {
 min-height: 50vh;
+border-radius: 15px;
 }
 p {
     margin-top: 10vh;
@@ -42,11 +43,13 @@ p {
         this.getPopularThreads()
     },
     emits: [
-        'show-thread'
+        'show-thread',
+        'show-detailed-view',
     ],
     methods: {
         viewThread(thread) {
             this.$emit('show-thread', thread);
+            this.$emit('show-detailed-view', true);
         },        
         async getPopularThreads() {
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/popular`, {

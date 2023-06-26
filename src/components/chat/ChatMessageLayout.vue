@@ -281,6 +281,7 @@ export default {
 .new-message-date {
     font-weight: 600;
     text-align: center;
+    margin-top: 15px;
     margin-bottom: 15px;
     text-decoration: underline;
 }
@@ -296,7 +297,6 @@ export default {
     max-width: 85%;
     height: fit-content;
     padding: 8px;
-    border: 1px solid black;
     border-radius: 10px;
     margin-top: 5px;
     position: relative;
@@ -307,21 +307,23 @@ export default {
 .message.received {
     justify-self: start;
     margin-left: 20px;
+    background-color: black;
 }
 
 .message.sent {
     justify-self: end;
     margin-right: 20px;
+    background-color: var(--dark);
 }
 
 .message.arrow-left, .message.arrow-right {
     margin-top: 20px;
 }
 
-.message.arrow-left:after {
+.message.arrow-left:before {
     content: '';
     position: absolute;
-    left: -15px;
+    left: -10px;
     top: 5px;
     border-top: 5px solid transparent;
     border-right: 15px solid black;
@@ -329,14 +331,14 @@ export default {
     border-bottom: 5px solid transparent;
 }
 
-.message.arrow-right:after {
+.message.arrow-right:before {
     content: '';
     position: absolute;
-    right: -15px;
+    right: -10px;
     top: 5px;
     border-top: 5px solid transparent;
     border-right: none;
-    border-left: 15px solid black;
+    border-left: 15px solid var(--dark);
     border-bottom: 5px solid transparent;
 }
 
@@ -345,6 +347,7 @@ export default {
 .message-content {
     display: flex;
     flex-direction: column;
+    color: white;
 }
 
 .message-timestamp-container {
@@ -367,7 +370,8 @@ export default {
 .message-actions-container {
     position: absolute;
     top: 5px;
-    right: 0;
+    right: 5px;
+    color: black;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     user-select: none;

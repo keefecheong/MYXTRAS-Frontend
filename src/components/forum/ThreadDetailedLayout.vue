@@ -8,7 +8,7 @@
         <div class="thread-layout-container" id="thread-detailed-layout-content">
             <!-- thread creator's profile pic -->
             <div class="thread-layout-left">
-                <img class="thread-creator-profile-pic" :src="thread.creator_id.profile_pic_link" />
+                <img class="thread-creator-profile-pic" :src="showForumDetails ? thread.parent_id.forum_pic_link : thread.creator_id.profile_pic_link" />
             </div>
 
             <div class="thread-layout-right">
@@ -17,6 +17,7 @@
                     <div class="thread-layout-header-top">
                         <div>
                             <div class="thread-creator">
+                                <span v-if="showForumDetails" @click.stop="showForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
                                 <span>Posted by: @{{ thread.creator_id.username }}</span>
                             </div>
 
@@ -102,7 +103,6 @@ export default {
             comments: [],
             dateCreated: '',
             dataInitialized: false,
-
             alert: useAlertStore().alert,
 
             submittingComment: false,
@@ -119,7 +119,8 @@ export default {
     },
     props: [
         'thread',
-        'showBackArrow'
+        'showBackArrow',
+        'showForumDetails',
     ],
     emits: [
         'close-detailed-view'
@@ -168,6 +169,7 @@ export default {
     methods: {
         // to get comment data
         async initData() {
+            console.log(this.thread)
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.thread._id}`, {
                 mode: 'cors',
                 method: 'GET',
@@ -364,6 +366,10 @@ export default {
                 clearTimeout(this.dislikeTimeout);
                 this.updateDislike();
             }
+        },
+        showForum() {
+            sessionStorage.setItem('forum_id', this.thread.parent_id._id);
+            location.href = '/forumGroup.html';
         }
     }
 }
@@ -395,8 +401,8 @@ export default {
     font-size: 2em;
     width: fit-content;
     position: absolute;
-    right: 2%;
-    top: 2%;
+    right: 1%;
+    top: 0.5%;
 }
 
 #thread-image {

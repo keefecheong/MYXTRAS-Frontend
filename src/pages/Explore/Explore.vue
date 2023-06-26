@@ -1,4 +1,8 @@
 <template>
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
+    
     <div id="main-container">
         <NavSidebar/>
 
@@ -43,17 +47,21 @@
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
+import { useAlertStore } from '../../stores/AlertStore';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
 
 export default {
     data() {
         return {
             viewingBlogs: true,
-            blogs: []
+            blogs: [],
+            alertStore: useAlertStore()
         }
     },
     components: {
         NavSidebar,
-        SearchBar
+        SearchBar,
+        AlertPrompt
     },
     created() {
         this.getPosts();
@@ -76,6 +84,20 @@ export default {
         // toggle viewingBlogs to update navigation display
         toggleViewingBlogs(viewing) {
             this.viewingBlogs = viewing;
+        },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        }
+    },
+    computed: {
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
         }
     }
 }

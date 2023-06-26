@@ -73,7 +73,7 @@
                 <span class="material-symbols-outlined" title="Forum">forum</span>
             </a>
             <a href="/chat.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Chat">stream_apps</span>
+                <span class="material-symbols-outlined" title="Chat">chat</span>
             </a>
             <a href="/events.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Events">campaign</span>
@@ -311,6 +311,10 @@
                 for (var i = 0; i < links.length; i++) {
                     const link = links[i];
                     if (link.getAttribute('href').split('/')[1] == window.location.pathname.split('/')[1]) {
+                        link.classList.add('current');
+                    }
+                    // set current for feed link if path is /
+                    else if (window.location.pathname == '/' && link.getAttribute('href').split('/')[1] == 'feed.html') {
                         link.classList.add('current');
                     }
                     else {
