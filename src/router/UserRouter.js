@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import UserProfileView from '../pages/UserProfile/UserProfileView.vue';
+import UserProfileView from '../pages/UserProfile/UserProfile.vue'
 
 
 

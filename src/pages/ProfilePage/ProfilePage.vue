@@ -46,14 +46,16 @@
                         </div>
 
                         <div id="header-user-actions">
-                            <a href="/profileManagement.html">
+                            <a href="/profileManagement.html" v-if="!anotherUser">
                                 <span id="user-edit-icon" class="bi bi-pencil"></span>
                             </a>
+                            <button v-if="anotherUser" @click="followUser()">{{ followed ? 'Followed' : 'Follow' }}</button>
 
-                            <div id="sign-out-container" @click="signOut()">
+                            <div id="sign-out-container" @click="signOut()" v-if="!anotherUser">
                                 <span id="user-sign-out-icon" class="bi bi-box-arrow-right"></span>
                                 <span id="user-sign-out-text">Sign out</span>
                             </div>
+                            <button v-if="anotherUser">Chat</button>
                         </div>
                     </div>
 
@@ -80,15 +82,6 @@
                                 <p class="follower-username">{{ follower.username }}</p>
                                 <br>
                             </div>
-                            <!-- <h5 class="card-title">Followers: 2</h5>
-                            <br>
-                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                            <p class="follower-username">John</p>
-                            <br>
-                            <img class="profilepic" src="https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png">
-                            <p class="follower-username">Temp</p>
-                            <br> -->
-                            <h4><i class="bi bi-three-dots three-dots"></i></h4>
                         </div>
                     </div>
                     <CreatedForums />
@@ -129,6 +122,9 @@ export default {
     },
     data() {
         return {
+            anotherUser: false,
+            followed: false,
+            otherUser: '',
             banner: banner,
             profilePicture: profilePicture,
             realname: '',
@@ -138,16 +134,16 @@ export default {
             course: '',
             selectedOption: [],
             blogs: [],
-            followers: [
-                { username: 'John', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png' },
-                { username: 'Temp', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png' }
-            ],
+            followers: [],
+            following: [],
+            otherUserFollowers:[],
             forums: [
                 { name: 'ILUVCats', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'We talk about cats' },
                 { name: 'muggingclub', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' },
                 { name: 'muggingclub', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' }
             ],
             showCreateBlog: false,
+            follow: 'Follow',
             alertStore: useAlertStore(),
             confirmStore: useConfirmStore()
         }
@@ -162,6 +158,12 @@ export default {
 
     mounted() {
         this.checkAuth();
+        // this.populateFollowers();
+        window.addEventListener('beforeunload', this.resetSessionStorage);
+    },
+
+    beforeUnmount() {
+        window.removeEventListener('beforeunload', this.resetSessionStorage);
     },
 
     methods: {
@@ -187,8 +189,11 @@ export default {
                             this.school = data.school;
                             this.course = data.course;
                             this.selectedOption = data.interests;
-                            this.profilePicture = data.profile_pic_link
+                            this.profilePicture = data.profile_pic_link;
+                            this.following = data.following;
+                            this.followers = data.followers;
                             this.userId = data._id;
+                            this.checkStorage();
                         }
                     })
                 } else {
@@ -202,6 +207,31 @@ export default {
                     console.error('Error:', error);
                 });
         },
+
+        populateFollowers(){
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/followers`, {
+                method: "GET",
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        console.log(data);
+                        this.followers = data;
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        },
+
+        
+
         signOut() {
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/remove`, {
                 method: 'GET',
@@ -215,6 +245,48 @@ export default {
                     console.log(response)
                 }
             });
+        },
+
+        checkStorage(){
+            this.otherUser = sessionStorage.getItem('user');
+            if (this.otherUser != this.userId && this.otherUser != null){
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/${this.otherUser}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        this.realname = data.real_name;
+                        this.username = data.username;
+                        this.biography = data.biography;
+                        this.school = data.school;
+                        this.course = data.course;
+                        this.selectedOption = data.interests;
+                        this.profilePicture = data.profile_pic_link;
+                        this.followers = data.followers;
+                        this.anotherUser = true;
+                        this.otherUser = data._id;
+                        this.checkFollowing();
+                        // this.getOtherPosts(this.otherUser);
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        },
+
+        checkFollowing(){
+            this.followed = this.following.includes(this.otherUser);
         },
 
         // get user's posts
@@ -231,6 +303,69 @@ export default {
                 console.log(error);
             });
         },
+
+        async getOtherPosts() {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.otherUser}`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    console.log(data);
+                    this.blogs = data;
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+
+        async followUser(){
+            if (this.following == 0){
+                this.following.push(this.otherUser);
+            }
+            else{
+                for (let i=0; i <= this.following.length; i++){
+                    if (this.otherUser === this.following[i]){
+                        const index = this.following.indexOf(this.otherUser);
+                        if (index > -1) { // only splice array when item is found
+                            this.following.splice(index, 1); // 2nd parameter means remove one item only
+                        }
+                        break;
+                    }
+                    else{
+                        if (i+1 == this.following.length){
+                            this.following.push(this.otherUser);
+                        }
+                    }
+                }
+            }
+            this.userObject = {
+                'following': this.following      
+            };
+            console.log(this.otherUser);
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/follow/${this.otherUser}`, {
+                method: 'PATCH', 
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify(this.userObject),
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    this.checkFollowing();
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+            
+        },
+
         // to toggle create blog form
         toggleCreateBlog(show) {
             this.showCreateBlog = show;
@@ -242,7 +377,11 @@ export default {
         // to close confirm prompt
         closeConfirm(decision) {
             this.confirmStore.closeConfirm(decision);
-        }
+        },
+
+        resetSessionStorage() {
+            sessionStorage.clear();
+        },
     },
     computed: {
         // to get showAlert value
