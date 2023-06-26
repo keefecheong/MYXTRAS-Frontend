@@ -1,103 +1,104 @@
 <template>
     <div id="blog-form-overlay">
         <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="isSubmitting || (editMode && !isDataInitialized)" />
+        <div class="scroll-bar">
+            <!-- form to upload images -->
+            <form id="blog-form" @submit.prevent="submitForm">
+                <button id="close-form" @click="closeForm" type="button">
+                    <span class="material-symbols-outlined">Close</span>
+                </button>
+                
+                <h1 class="form-header">{{ editMode ? 'Edit Post' : 'Create New Post' }}</h1>
+                
+                <div id="upload-image-container">
+                    <!-- input to select images -->
+                    <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
+                    <label for="upload-image" id="upload-image-label">
+                        <p>Drag and drop 
+                            <br>
+                            or
+                            <br> 
+                            click <u>here</u> to upload.
+                        </p>
+                    </label>
 
-        <!-- form to upload images -->
-        <form id="blog-form" @submit.prevent="submitForm">
-            <button id="close-form" @click="closeForm" type="button">
-                <span class="material-symbols-outlined">Close</span>
-            </button>
-            
-            <h1 class="form-header">{{ editMode ? 'Edit Post' : 'Create New Post' }}</h1>
-            
-            <div id="upload-image-container">
-                <!-- input to select images -->
-                <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
-                <label for="upload-image" id="upload-image-label">
-                    <p>Drag and drop 
-                        <br>
-                        or
-                        <br> 
-                        click <u>here</u> to upload.
-                    </p>
-                </label>
+                    <!-- display errors -->
+                    <div id="upload-image-errors" v-if="files.length > 0 && errors.length > 0">
+                        <span>Error{{ errors.length > 1 ? 's' : '' }}:</span>
+                        <ul>
+                            <li v-for="error in errors">{{ error }}</li>
+                        </ul>
+                    </div>
 
-                <!-- display errors -->
-                <div id="upload-image-errors" v-if="files.length > 0 && errors.length > 0">
-                    <span>Error{{ errors.length > 1 ? 's' : '' }}:</span>
-                    <ul>
-                        <li v-for="error in errors">{{ error }}</li>
-                    </ul>
-                </div>
+                    <!-- display selected file names if there are errors -->
+                    <div id="selected-image-names" v-if="files.length > 0 && invalidFiles.length > 0">
+                        <span>Selected ({{ selectedFileCount }}):</span>
+                        <ul>
+                            <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
+                        </ul>
+                    </div>
 
-                <!-- display selected file names if there are errors -->
-                <div id="selected-image-names" v-if="files.length > 0 && invalidFiles.length > 0">
-                    <span>Selected ({{ selectedFileCount }}):</span>
-                    <ul>
-                        <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
-                    </ul>
-                </div>
-
-                <!-- preview images if there are files selected with no errors -->
-                <div v-if="selectedLinks.length > 0 && errors.length == 0">
-                    <span>Selected ({{ selectedFileCount }}):</span>
-                    <div v-for="(link, index) in selectedLinks" class="preview-image-container">
-                        <img :src="link" />
-                        <span class="hide-overflow-text">{{ this.editMode && !this.fileUpdated ? blog.original_names[index] : files[index].name }}</span>
-                        <!-- show size only if new files are uploaded -->
-                        <span v-if="files[index]">({{ calculateSize(files[index].size) }})</span>
+                    <!-- preview images if there are files selected with no errors -->
+                    <div v-if="selectedLinks.length > 0 && errors.length == 0">
+                        <span>Selected ({{ selectedFileCount }}):</span>
+                        <div v-for="(link, index) in selectedLinks" class="preview-image-container">
+                            <img :src="link" />
+                            <span class="hide-overflow-text">{{ this.editMode && !this.fileUpdated ? blog.original_names[index] : files[index].name }}</span>
+                            <!-- show size only if new files are uploaded -->
+                            <span v-if="files[index]">({{ calculateSize(files[index].size) }})</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- input for blog caption -->
-            <div class="image-options-container">
-                <label for="image-caption" id="caption-title" class="image-options-label">Caption:</label>
-                <DynamicTextarea :id="'image-caption'" :placeholder="'Provide a caption (Optional)'" v-model="caption"></DynamicTextarea>
-            </div>
-            
-            <!-- input for blog location -->
-            <div class="image-options-container">
-                <label for="image-location" id="location-title" class="image-options-label">Location:</label>
-                <input type="text" id="image-location" name="image-location" placeholder="Location (Optional)" v-model="location"/>
-            </div>
-            
-            <!-- input for blog interest tags -->
-            <div class="image-options-container">
-                <label for="image-tags" id="tags-title" class="image-options-label">Tags:</label>
-                <div id="image-tags-selection">
-                    <AddInterestButton :selectedOption="tags" @selectedInterests="handlePostTags">
-                        Select Tags For Your Post (Optional):
-                    </AddInterestButton>
+                <!-- input for blog caption -->
+                <div class="image-options-container">
+                    <label for="image-caption" id="caption-title" class="image-options-label">Caption:</label>
+                    <DynamicTextarea :id="'image-caption'" :placeholder="'Provide a caption (Optional)'" v-model="caption"></DynamicTextarea>
                 </div>
-            </div>
-
-            <!-- input for blog comments enabled option -->
-            <div class="image-options-container">
-                <span id="comments-title" class="image-options-label">Turn on comments:</span>
-                <div id="image-comments-options">
-                    <div id="image-comments-checkbox-container">
-                        <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
-                        <label class="switch" for="image-comments-checkbox">
-                            <span class="slider"></span>
-                        </label>
+                
+                <!-- input for blog location -->
+                <div class="image-options-container">
+                    <label for="image-location" id="location-title" class="image-options-label">Location:</label>
+                    <input type="text" id="image-location" name="image-location" placeholder="Location (Optional)" v-model="location"/>
+                </div>
+                
+                <!-- input for blog interest tags -->
+                <div class="image-options-container">
+                    <label for="image-tags" id="tags-title" class="image-options-label">Tags:</label>
+                    <div id="image-tags-selection">
+                        <AddInterestButton :selectedOption="tags" @selectedInterests="handlePostTags">
+                            Select Tags For Your Post (Optional):
+                        </AddInterestButton>
                     </div>
                 </div>
-            </div>
 
-            <div id="image-form-controls">
-                <input class="image-form-control-button" type="reset" value="Clear All" @click="resetAll" />
-                <!-- 
-                    disable submit button if 
-                    1. not in edit mode and no files are selected
-                    2. files are selected but there are errors
-                    3. in edit mode and no fields are changed
-                    4. submit in progress
-                -->
-                <input class="image-form-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" 
-                    :disabled="(!editMode && files.length <= 0) || (files.length > 0 && errors.length > 0) || (editMode && !fieldsChanged) || submitting" />
-            </div>
-        </form>
+                <!-- input for blog comments enabled option -->
+                <div class="image-options-container">
+                    <span id="comments-title" class="image-options-label">Turn on comments:</span>
+                    <div id="image-comments-options">
+                        <div id="image-comments-checkbox-container">
+                            <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
+                            <label class="switch" for="image-comments-checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="image-form-controls">
+                    <input class="image-form-control-button" type="reset" value="Clear All" @click="resetAll" />
+                    <!-- 
+                        disable submit button if 
+                        1. not in edit mode and no files are selected
+                        2. files are selected but there are errors
+                        3. in edit mode and no fields are changed
+                        4. submit in progress
+                    -->
+                    <input class="image-form-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" 
+                        :disabled="(!editMode && files.length <= 0) || (files.length > 0 && errors.length > 0) || (editMode && !fieldsChanged) || submitting" />
+                </div>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -380,20 +381,27 @@ export default {
 }
 
 #blog-form {
-    padding: 40px;
-    border-radius: 20px;
     text-align: center;
-    background-color: #133B5B;
     color: white;
-    width: 60%;
-    max-width: 80%;
-    max-height: 90%;
-    position: relative;
+    width: 109.8%;
     overflow: auto;
     display: flex;
     align-items: center;
     flex-direction: column;
     row-gap: 20px;
+}
+
+.scroll-bar {
+    padding: 40px;
+    border-radius: 20px;
+    background-color: #133B5B;
+    width: 60%;
+    max-width: 80%;
+    max-height: 90%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 #upload-image-container {
