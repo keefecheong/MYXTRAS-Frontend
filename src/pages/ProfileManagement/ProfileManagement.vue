@@ -186,13 +186,6 @@ export default {
 
     upload(event, imageType){
       const file = event.target.files[0];
-      // if (imageType === "profilePicture"){
-      //   this.profilePicture = URL.createObjectURL(file);
-      // }
-      // else{
-      //   this.banner = URL.createObjectURL(file);
-      // }
-
       if (imageType === 'profilePicture') {
         this.profilePicture = URL.createObjectURL(file);
         this.showBtn = true;
@@ -217,37 +210,7 @@ export default {
       this.cropper = null; // Set the cropper variable to null
       this.showBtn = false;
     },
- 
-    // async updateProfile() {
-      
-    //   this.userObject = {
-    //     'userName': this.username,
-    //     'biography': this.biography,
-    //     'selectedInterests': this.selectedOption,
-    //     'gender': this.gender
-    //   }
 
-      
-    //   fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-    //       method: 'PATCH', 
-    //       headers: {
-    //           'Content-Type': 'application/json; charset=UTF-8',
-    //       },
-    //       body: JSON.stringify(this.userObject),
-    //       credentials: "include",
-    //   }) .then(response => {
-    //           if (!response.ok) {
-    //               throw new Error('Error: ' + response.status);
-    //           } else {
-    //               window.location.href = '/profilePage.html';
-    //           }
-    //       })
-    //       .catch(error => {
-    //           console.error('Error:', error);
-    //       });
-          
-    //   // console.log(this.userObject);
-    // },
     async updateProfile(){
       let formData = new FormData();
 
@@ -263,15 +226,6 @@ export default {
 
       formData.append('selectedImages', this.$refs.fileInput.files[0]);
 
-
-      // console.log(this.username);
-      // formData.append('userName', this.username);
-      // console.log(formData);
-
-      // formData.append('biography', this.biography);
-      // formData.append('selectedInterests', JSON.stringify(this.selectedOption));
-      // formData.append('gender', this.gender);
-      // formData.append('profilePicture', this.$refs.fileInput.files[0]);
       try{
         const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`,{
           method: 'PATCH',

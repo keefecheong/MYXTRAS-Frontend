@@ -120,6 +120,10 @@ background: #c9c9c98d;
     cursor: pointer;
 }
 
+.badge-music{
+    background-color: #1f92e0;
+}
+
 .badge-goth {
     background-color: #8f8f8f;
 }
