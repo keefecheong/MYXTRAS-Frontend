@@ -28,7 +28,7 @@
                                 :key="index"
                                 :thread="thread" 
                                 :index="index"
-                                :showForumDetails="true"
+                                :showForumDetails="false"
                                 @show-detailed-view="() => toggleDetailedView(true, index)" />
                         </keep-alive>
                     </div>

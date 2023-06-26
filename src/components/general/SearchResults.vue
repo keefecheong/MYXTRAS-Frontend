@@ -1,8 +1,11 @@
 <template>
     <div class="resultsContainer">
         <ul>
-            <li v-for="result in results" @click="handleClick(result)">
+            <li v-if="results.length > 0" v-for="result in results" @click="handleClick(result)">
                 {{ displayText(result) }}
+            </li>
+            <li v-else>
+                No results found
             </li>
         </ul>
     </div>
@@ -62,23 +65,21 @@ export default {
             }
         },
         // Taken from ForumGroup.vue
-        async viewForum(forum){
+        viewForum(forum){
             sessionStorage.setItem('forum_id', forum._id);
             location.href = "/forumGroup.html"
         },
 
-        async viewProfile(user){
+        viewProfile(user){
             // TO DO VIEW PROFILE
             location.href = "/ProfilePage.html"
         },
-        displayText(result) {
-
+        displayText(result) {  
             if (result.hasOwnProperty('forum_id')) {
                 return `x/${result.forum_id} ~ ${result.forum_name}`;
             } else if (result.hasOwnProperty('real_name')) {
                 return `${result.real_name} ~ ${result.username}`;
             } 
-            return '';
         },
     }
 };

@@ -206,12 +206,14 @@ export default {
                 searchObject = 'users-forums'
             }
             try {
-                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search/${searchObject}?term=${this.searchTerm}`);
-                const data = await response.json();
-                this.searchResults = data.topSixResults;
-                if (this.searchResults.length === 0) {
-                    document.querySelector('.resultsContainer').style.display = 'none';
-                }
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search/${searchObject}?term=${this.searchTerm}`, {
+                method: 'GET',
+                credentials: "include",
+                }).then(async response => {
+                    await response.json().then(data => {
+                        this.searchResults = data.topSixResults;
+                    })
+                })
             } catch (error) {
                 console.error('Error performing search:', error);
             }
@@ -224,6 +226,7 @@ export default {
             }).then(async response => {
                 if (response.ok) {
                     await response.json().then(data => {
+                        // Checks if user has setup their profile, if not:
                         if (data.is_profile_setup === false){
                             location.href = '/setupprofile.html';
                             return;
