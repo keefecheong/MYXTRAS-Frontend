@@ -210,6 +210,7 @@ export default {
     width: var(--group-icon-size);
     height: var(--group-icon-size);
     border-radius: 50%;
+    border: 5px solid var(--primary);
     object-fit: cover;
     object-position: center;
     position: absolute;
