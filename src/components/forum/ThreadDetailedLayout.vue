@@ -401,8 +401,8 @@ export default {
     font-size: 2em;
     width: fit-content;
     position: absolute;
-    right: 2%;
-    top: 2%;
+    right: 1%;
+    top: 0.5%;
 }
 
 #thread-image {
