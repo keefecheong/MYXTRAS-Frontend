@@ -296,7 +296,7 @@ export default {
     max-width: 85%;
     height: fit-content;
     padding: 8px;
-    border: 1px solid black;
+    color: white;
     border-radius: 10px;
     margin-top: 5px;
     position: relative;
@@ -307,11 +307,13 @@ export default {
 .message.received {
     justify-self: start;
     margin-left: 20px;
+    background-color: black;
 }
 
 .message.sent {
     justify-self: end;
     margin-right: 20px;
+    background-color: var(--dark);
 }
 
 .message.arrow-left, .message.arrow-right {
@@ -321,7 +323,7 @@ export default {
 .message.arrow-left:after {
     content: '';
     position: absolute;
-    left: -15px;
+    left: -10px;
     top: 5px;
     border-top: 5px solid transparent;
     border-right: 15px solid black;
@@ -332,11 +334,11 @@ export default {
 .message.arrow-right:after {
     content: '';
     position: absolute;
-    right: -15px;
+    right: -10px;
     top: 5px;
     border-top: 5px solid transparent;
     border-right: none;
-    border-left: 15px solid black;
+    border-left: 15px solid var(--dark);
     border-bottom: 5px solid transparent;
 }
 
@@ -368,6 +370,7 @@ export default {
     position: absolute;
     top: 5px;
     right: 0;
+    color: black;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     user-select: none;
