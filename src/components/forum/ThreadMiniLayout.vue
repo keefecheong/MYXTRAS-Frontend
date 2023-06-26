@@ -1,5 +1,5 @@
 <template>
-    <div class="card shadow thread-layout-container" @click="showDetailedView" title="Click to view this thread" :id="index">
+    <div class="card shadow thread-layout-container pinkHover" @click="showDetailedView" title="Click to view this thread" :id="index">
         <div class="thread-layout-left">
             <img class="thread-creator-profile-pic" :src="showForumDetails ? thread.parent_id.forum_pic_link : thread.creator_id.profile_pic_link" />
         </div>
@@ -91,14 +91,11 @@ export default {
 
 .thread-layout-forum-name {
     color: rgb(0, 102, 204);
-    cursor: pointer;
+    
 }
-
-.thread-layout-forum-name:hover {
-    color: var(--primary);
-    font-weight: bold;
+.pinkHover:hover {
+    border: 3px solid var(--primary) !important;
 }
-
 .thread-content {
     --line-height: 1.5em;
     display: -webkit-box;
