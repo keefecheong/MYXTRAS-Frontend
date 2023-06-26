@@ -22,6 +22,7 @@
 }
 .card {
 min-height: 50vh;
+border-radius: 15px;
 }
 p {
     margin-top: 10vh;

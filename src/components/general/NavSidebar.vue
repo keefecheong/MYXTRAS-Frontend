@@ -73,7 +73,7 @@
                 <span class="material-symbols-outlined" title="Forum">forum</span>
             </a>
             <a href="/chat.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Chat">stream_apps</span>
+                <span class="material-symbols-outlined" title="Chat">chat</span>
             </a>
             <a href="/events.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Events">campaign</span>

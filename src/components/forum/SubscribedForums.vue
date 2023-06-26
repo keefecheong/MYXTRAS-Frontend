@@ -42,10 +42,12 @@ background: #c9c9c98d;
 }
 .card {
     padding: 1em 0 1em 0;
-    border: none !important;
-    border-radius: 10px;
+    border-radius: 15px;
     min-height: 50vh;
     max-height: 60vh;
+}
+
+.card-body {
     overflow-y: scroll;
 }
 .groupPic {

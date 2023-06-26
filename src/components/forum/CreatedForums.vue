@@ -18,11 +18,16 @@
 
 <style scoped>
 .card {
-    border-radius: 10px;
+    padding: 1em 0 1em 0;
+    border-radius: 15px;
     min-height: 50vh;
     max-height: 60vh;
+}
+
+.card-body {
     overflow-y: scroll;
 }
+
 /* Track */
 ::-webkit-scrollbar-track {
 background: #ffffff; 
