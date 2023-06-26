@@ -79,7 +79,6 @@ export default {
         },
         // to go to forumgroup for selected forum
         showForum() {
-            console.log(this.thread)
             sessionStorage.setItem('forum_id', this.thread.parent_id._id);
             location.href = '/forumGroup.html';
         }

@@ -42,12 +42,13 @@
                         <ThreadDetailedLayout 
                             :thread="threadToDisplay"
                             :showBackArrow="false"
+                            :showForumDetails="true"
                             @close-detailed-view="() => toggleDetailedThread(false, selectedIndex)" />
                     </div>
                 </div>
 
                 <div class="col-md-3">
-                    <PopularThreads @show-thread="(thread) => toggleDetailedThread(true, null, thread)" />
+                    <PopularThreads @show-thread="(thread) => toggleDetailedThread(true, null, thread)" @show-detailed-view="showForumDetails" />
                 </div>
             </div>
             
@@ -103,6 +104,7 @@ export default {
             alertStore: useAlertStore(),
             alert: useAlertStore().alert,
             tags: [],
+            showForumDetails: false,
             // Data to display
             subbedForums: [],
             createdForums: [],
@@ -165,7 +167,6 @@ export default {
         toggleDetailedThread(show, index, thread) {
             this.selectedPopularThread = thread;
             this.selectedIndex = index;
-
             if (!show && index != null) {
                 this.scrollBack = true;
             }

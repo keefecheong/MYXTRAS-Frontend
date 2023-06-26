@@ -10,7 +10,10 @@
     width: 100%;
     cursor: pointer;
 }
-
+#thread-layout-container:hover {
+    border: 2px solid var(--primary) !important
+    
+}
 .thread-creator-profile-pic {
     width: 80px;
     height: 80px;
