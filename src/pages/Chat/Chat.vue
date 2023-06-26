@@ -96,8 +96,33 @@ export default {
 
         // get users
         this.getUsers();
+        
+        // check for new store/selected store
+        this.initChat();
+    },
+    unmounted() {
+        this.store.currentChat = {};
     },
     methods: {
+        // check for new chat/selected chat set from profile page
+        initChat() {
+            var selectedChat = sessionStorage.getItem('selectedChat');
+
+            // check if selectedChat is set
+            if (selectedChat) {
+                selectedChat = JSON.parse(selectedChat);
+
+                // add chat to store if does not already exist
+                if (!this.store.chats.some(chat => chat.targetUserId == selectedChat.targetUserId)) {
+                    this.store.chats.push(selectedChat);
+                }
+
+                // set currentChat to selectedChat
+                this.store.currentChat = selectedChat;
+            }
+
+            sessionStorage.removeItem('selectedChat');
+        },
         // get users to set up create chat
         async getUsers() {
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/all`, {
@@ -115,13 +140,24 @@ export default {
         // create new chat (chat created locally, does not push to database)
         // chat only synced when user sends first message
         // TODO: shift to user profile page
-        createChat(e) {
+        async createChat(e) {
+            // TODO: get target user
             const targetUser = this.users[e.target.id];
 
             // check if chat exists
             // if exists: target = existing chat
             // otherwise: target = null
-            let target = this.store.chats.find(chat => chat.targetUserId == targetUser._id) || null;
+            let target = null;
+
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats/check/${targetUser._id}`, {
+                mode: 'cors',
+                methods: 'GET',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then(data => {
+                    target = data.existingChat;
+                });
+            });
 
             // if chat does not exist then create new chat
             if (!target) {
@@ -133,13 +169,11 @@ export default {
                     pic: targetUser.profile_pic_link,
                     last_message_timestamp: Date.now()
                 }
-
-                // store new chat in chats
-                this.store.chats.push(target);
             }
 
-            // select the created/existing chat
-            this.store.currentChat = target;
+            // set selectedChat and go to chat page
+            sessionStorage.setItem('selectedChat', JSON.stringify(target));
+            location.href = '/chat.html';
         },
         // subscribe to changes in ChatStore
         subscribeChatStore() {
@@ -247,7 +281,7 @@ export default {
         },
         // extract a list of messages for the selected chat only
         selectedChatMessages() {
-            return this.store.messages[this.selectedChat._id];
+            return this.store.messages[this.selectedChat._id] || [];
         },
         // order chats in descending last_message_timestamps
         orderedChats() {
