@@ -370,6 +370,7 @@ export default {
     position: absolute;
     top: 5px;
     right: 0;
+    color: black;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     user-select: none;
