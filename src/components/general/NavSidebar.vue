@@ -313,6 +313,10 @@
                     if (link.getAttribute('href').split('/')[1] == window.location.pathname.split('/')[1]) {
                         link.classList.add('current');
                     }
+                    // set current for feed link if path is /
+                    else if (window.location.pathname == '/' && link.getAttribute('href').split('/')[1] == 'feed.html') {
+                        link.classList.add('current');
+                    }
                     else {
                         link.classList.remove('current');
                     }
