@@ -55,7 +55,7 @@
                                 <span id="user-sign-out-icon" class="bi bi-box-arrow-right"></span>
                                 <span id="user-sign-out-text">Sign out</span>
                             </div>
-                            <button v-if="anotherUser">Chat</button>
+                            <button v-if="anotherUser && followed">Chat</button>
                         </div>
                     </div>
 
@@ -158,12 +158,12 @@ export default {
 
     mounted() {
         this.checkAuth();
-        // this.populateFollowers();
-        window.addEventListener('beforeunload', this.resetSessionStorage);
+        this.populateFollowers();
+        // window.addEventListener('beforeunload', this.resetSessionStorage);
     },
 
     beforeUnmount() {
-        window.removeEventListener('beforeunload', this.resetSessionStorage);
+        // window.removeEventListener('beforeunload', this.resetSessionStorage);
     },
 
     methods: {
@@ -207,7 +207,7 @@ export default {
                     console.error('Error:', error);
                 });
         },
-
+        // get user's followers
         populateFollowers(){
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/followers`, {
                 method: "GET",

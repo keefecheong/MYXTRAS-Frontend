@@ -5,12 +5,12 @@
             <div>
                 <!-- creator profile pic -->
                 <div class="profile-pic-container">
-                    <img class="profile-pic" :src="blog.creator_id.profile_pic_link" @click="navigateProfile()"/>
+                    <img class="profile-pic" :src="blog.creator_id.profile_pic_link" @click="navigateProfile()" title="View user"/>
                 </div>
 
                 <!-- creator username -->
                 <div class="blog-username-container hide-overflow-text">
-                    <span>{{ blog.creator_id.username }}</span>
+                    <span  title="View user" @click="navigateProfile()">{{ blog.creator_id.username }}</span>
                 </div>
 
                 <!-- creation time (time difference) -->
@@ -196,6 +196,10 @@
     align-items: center;
 }
 
+.profile-pic-container, .blog-username-container span {
+    cursor: pointer;
+}
+
 .profile-pic {
     border-radius: 100%;
     object-fit: cover;
@@ -205,6 +209,10 @@
 
 .blog-username-container {
     flex: 1 0 auto;
+}
+
+.blog-username-container span:hover {
+    color: var(--primary);
 }
 
 .blog-creation-time {
@@ -395,7 +403,6 @@ import DynamicTextarea from '../general/DynamicTextarea.vue';
 export default {
     data() {
         return {
-            userId: '',
             dateCreated: '',
             uniqueId: 'a' + this.blog._id,
             currentId: 1,
@@ -442,8 +449,6 @@ export default {
 
         // set event listener to complete pending requests when the page is closed
         window.addEventListener('beforeunload', this.completeLikeRequest);
-
-        this.checkAuth();
     },
     updated() {
         this.toggleControls();
@@ -665,36 +670,13 @@ export default {
             this.blog.comment_count -= 1;
             this.commentData.splice(this.commentData.indexOf(commentId), 1);
         },
-
-        checkAuth() {
-            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        this.userId = data._id;
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        },
-
+        // go to profile page to view the creator's profile
         navigateProfile(){
+            // only redirect if not already at profile page
+            if (window.location.href != '/profilePage.html') {
                 sessionStorage.setItem('user', this.blog.creator_id._id);
-                console.log(sessionStorage);
                 window.location.href = '/profilePage.html';
+            }
         }
     },
     computed: {
