@@ -1,59 +1,60 @@
 <template>
     <div id="thread-form-overlay">
         <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="submitting || (editMode && !dataInitialized)" />
-    
-        <!-- form -->
-        <form id="thread-form-container" @submit.prevent="submitForm">
-            <!-- button to close thread form -->
-            <button id="close-form" @click="closeForm" type="button">
-                <span class="material-symbols-outlined">Close</span>
-            </button>
-    
-            <h1 id="form-header">{{ editMode ? 'Edit Thread' : 'Create New Thread' }}</h1>
-            
-            <!-- thread title input -->
-            <div id="thread-title-container">
+        <div class="scroll-bar">
+            <!-- form -->
+            <form id="thread-form-container" @submit.prevent="submitForm">
+                <!-- button to close thread form -->
+                <button id="close-form" @click="closeForm" type="button">
+                    <span class="material-symbols-outlined">Close</span>
+                </button>
+        
+                <h1 id="form-header">{{ editMode ? 'Edit Thread' : 'Create New Thread' }}</h1>
+                
+                <!-- thread title input -->
+                <div id="thread-title-container">
+                    <div class="thread-field-container">
+                        <label for="thread-title-input" class="thread-label">Title:</label>
+                        <input type="text" id="thread-title-input" v-model="threadTitle" placeholder="Thread title" />
+                    </div>
+                </div>
+        
+                <!-- thread description (content) input -->
                 <div class="thread-field-container">
-                    <label for="thread-title-input" class="thread-label">Title:</label>
-                    <input type="text" id="thread-title-input" v-model="threadTitle" placeholder="Thread title" />
+                    <label for="thread-content-input" class="thread-label">Content:</label>
+                    <DynamicTextarea :id="'thread-content-input'" v-model="threadContent" :maxlength="500" :placeholder="'Thread content'"></DynamicTextarea>
                 </div>
-            </div>
-    
-            <!-- thread description (content) input -->
-            <div class="thread-field-container">
-                <label for="thread-content-input" class="thread-label">Content:</label>
-                <DynamicTextarea :id="'thread-content-input'" v-model="threadContent" :maxlength="500" :placeholder="'Thread content'"></DynamicTextarea>
-            </div>
-            
-            <!-- thread tags input -->
-            <div class="thread-field-container">
-                <label for="thread-tags-input" class="thread-label">Tags:</label>
-                <div id="thread-tags-container">
-                    <AddInterestButton :selectedOption="tags" @selectedInterests="handleThreadTags">
-                        Select Tags For Your Thread (Optional):
-                    </AddInterestButton>
-                </div>
-            </div>
-
-            <!-- Upload picture -->
-            <div id="thread-picture-container">
-                <label for="thread-picture-input" id="thread-picture-label"><u>Click</u> to Select Picture (Optional)</label>
-    
-                <span v-if="selectedImageObject && pictureErrors.length > 0" class="errMsg">Invalid file</span>
-
-                <img v-if="selectedImageLink" :src="selectedImageLink" alt="Banner"  id="thread-picture" />
-                <input id="thread-picture-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
                 
-                <!-- inform user about invalid file -->
-                <div v-if="pictureErrors.length > 0">
-                    <span>Error:</span>
-                    <br />
-                    <span v-for="error in pictureErrors" class="errMsg">{{ error }}</span>
+                <!-- thread tags input -->
+                <div class="thread-field-container">
+                    <label for="thread-tags-input" class="thread-label">Tags:</label>
+                    <div id="thread-tags-container">
+                        <AddInterestButton :selectedOption="tags" @selectedInterests="handleThreadTags">
+                            Select Tags For Your Thread (Optional):
+                        </AddInterestButton>
+                    </div>
                 </div>
-            </div>
-                
-            <button class="thread-form-control-button" :disabled="submitting || !requiredFields">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
-        </form>
+
+                <!-- Upload picture -->
+                <div id="thread-picture-container">
+                    <label for="thread-picture-input" id="thread-picture-label"><u>Click</u> to Select Picture (Optional)</label>
+        
+                    <span v-if="selectedImageObject && pictureErrors.length > 0" class="errMsg">Invalid file</span>
+
+                    <img v-if="selectedImageLink" :src="selectedImageLink" alt="Banner"  id="thread-picture" />
+                    <input id="thread-picture-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
+                    
+                    <!-- inform user about invalid file -->
+                    <div v-if="pictureErrors.length > 0">
+                        <span>Error:</span>
+                        <br />
+                        <span v-for="error in pictureErrors" class="errMsg">{{ error }}</span>
+                    </div>
+                </div>
+                    
+                <button class="thread-form-control-button" :disabled="submitting || !requiredFields">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -278,20 +279,25 @@ export default {
 }
 
 #thread-form-container {
-    padding: 40px;
-    border-radius: 20px;
-    text-align: center;
-    background-color: #133B5B;
-    width: 60%;
-    max-width: 80%;
-    max-height: 90%;
-    position: relative;
+    width: 109.8%;
     overflow: auto;
     display: flex;
     align-items: center;
     flex-direction: column;
     row-gap: 30px;
-    margin: 0 auto;
+}
+
+.scroll-bar {
+    padding: 40px;
+    border-radius: 20px;
+    background-color: #133B5B;
+    width: 60%;
+    max-width: 80%;
+    max-height: 90%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 #form-header {
