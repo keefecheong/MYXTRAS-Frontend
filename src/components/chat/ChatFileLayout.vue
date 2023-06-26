@@ -79,13 +79,11 @@ export default {
     align-items: center;
     padding: 10px;
     padding-right: 20px;
-    background-color: rgba(211, 211, 211, 0.5);
-    border-radius: 15px;
-    margin-bottom: 5px;
+    border-bottom: 1px solid white;
+    margin-bottom: 15px;
 }
 
 .chat-file-layout-container .material-symbols-outlined {
-    color: black;
     font-size: 2em;
 }
 

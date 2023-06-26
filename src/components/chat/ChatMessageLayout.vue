@@ -281,6 +281,7 @@ export default {
 .new-message-date {
     font-weight: 600;
     text-align: center;
+    margin-top: 15px;
     margin-bottom: 15px;
     text-decoration: underline;
 }
@@ -296,7 +297,6 @@ export default {
     max-width: 85%;
     height: fit-content;
     padding: 8px;
-    color: white;
     border-radius: 10px;
     margin-top: 5px;
     position: relative;
@@ -320,7 +320,7 @@ export default {
     margin-top: 20px;
 }
 
-.message.arrow-left:after {
+.message.arrow-left:before {
     content: '';
     position: absolute;
     left: -10px;
@@ -331,7 +331,7 @@ export default {
     border-bottom: 5px solid transparent;
 }
 
-.message.arrow-right:after {
+.message.arrow-right:before {
     content: '';
     position: absolute;
     right: -10px;
@@ -347,6 +347,7 @@ export default {
 .message-content {
     display: flex;
     flex-direction: column;
+    color: white;
 }
 
 .message-timestamp-container {
@@ -369,7 +370,7 @@ export default {
 .message-actions-container {
     position: absolute;
     top: 5px;
-    right: 0;
+    right: 5px;
     color: black;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 20px;
