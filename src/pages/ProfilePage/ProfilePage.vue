@@ -78,7 +78,7 @@
                             <h5 class="card-title">Followers: {{ followers.length }}</h5>
                             <div v-for="follower in followers" :key="follower.username">
                                 <br>
-                                <img class="profilepic" :src="follower.profilePic">
+                                <img class="profilepic" :src="follower.profile_pic_link">
                                 <p class="follower-username">{{ follower.username }}</p>
                                 <br>
                             </div>
@@ -159,11 +159,11 @@ export default {
     mounted() {
         this.checkAuth();
         this.populateFollowers();
-        // window.addEventListener('beforeunload', this.resetSessionStorage);
+        window.addEventListener('beforeunload', this.resetSessionStorage);
     },
 
     beforeUnmount() {
-        // window.removeEventListener('beforeunload', this.resetSessionStorage);
+        window.removeEventListener('beforeunload', this.resetSessionStorage);
     },
 
     methods: {
@@ -270,6 +270,7 @@ export default {
                         this.anotherUser = true;
                         this.otherUser = data._id;
                         this.checkFollowing();
+                        this.populateOtherFollowers();
                         // this.getOtherPosts(this.otherUser);
                     })
                 } else {
@@ -287,6 +288,27 @@ export default {
 
         checkFollowing(){
             this.followed = this.following.includes(this.otherUser);
+        },
+
+        populateOtherFollowers(){
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/followers/${this.otherUser}`, {
+                method: "GET",
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        this.followers = data;
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         },
 
         // get user's posts
