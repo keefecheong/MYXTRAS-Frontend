@@ -50,7 +50,7 @@
                 <div id="forum-id-container">
                     <div class="forum-field-container">
                         <label for="forum-id-input" class="forum-label">ID: </label>
-                        <input type="text" id="forum-id-input" v-model="forumID" placeholder="Unique Forum ID:" @input="debounceVerifyForumID" :maxlength="25"/>
+                        <input type="text" id="forum-id-input" v-model="forumID" placeholder="NP-ICT" @input="debounceVerifyForumID" :maxlength="25"/>
                     </div>
         
                     <span id="forum-id-available" v-if="!idErr && forumIDVerified && !illegalChar">Forum ID available.</span>
@@ -61,7 +61,7 @@
                 <!-- forum name input -->
                 <div class="forum-field-container">
                     <label for="forum-name-input" class="forum-label">Name:</label>
-                    <input type="text" id="forum-name-input" v-model="forumName" placeholder="Forum Name" :maxlength="25"/>
+                    <input type="text" id="forum-name-input" v-model="forumName" placeholder="NP InfoComm Technology" :maxlength="25"/>
                 </div>
                 
                 <!-- forum description input -->
