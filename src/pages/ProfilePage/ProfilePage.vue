@@ -410,6 +410,7 @@ export default {
 .card {
     margin-bottom: 20px;
     max-width: 97%;
+    border-radius: 15px !important;
 }
 
 .three-dots {
