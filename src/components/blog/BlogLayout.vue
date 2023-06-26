@@ -172,7 +172,6 @@
     margin: auto;
     width: 100%;
     box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);
-    ;
     border-radius: 30px;
     padding: 50px;
     margin-bottom: 50px;

@@ -18,7 +18,7 @@
                     <div class="feed-content justify-content-center">
                         <h1 class="feed-header">Your Feed</h1>
 
-                        <hr/>
+                        <hr id="top-line"/>
                         
                         <div v-if="blogs.length <= 0" class="no-more-blogs">
                             <p>No new activity.</p>
@@ -60,6 +60,9 @@
     text-align: center;
     font-weight: bolder !important;
     color: #E53A73 !important;
+}
+#top-line {
+    margin-bottom: 50px !important;
 }
 </style>
 
