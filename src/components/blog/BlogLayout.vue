@@ -446,6 +446,8 @@ export default {
         this.savedLike = this.blog.liked;
         this.liked = this.blog.liked;
         this.likeCount = this.blog.likes.length;
+        console.log(this.blog);
+        console.log(this.likeCount);
 
         // set event listener to complete pending requests when the page is closed
         window.addEventListener('beforeunload', this.completeLikeRequest);
