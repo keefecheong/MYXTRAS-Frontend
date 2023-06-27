@@ -64,6 +64,7 @@ p {
             })
             .then(data => {
                 this.popularThreads = data;
+                console.log("hi")
             })
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);
