@@ -19,43 +19,47 @@
                     
                     <div id="header-content">
                         <div id="header-user-details-container">
-                            <img :src="profilePicture" alt="Profile Picture" id="profile-picture" />
+                            <img :src="user.profile_pic_link" alt="Profile Picture" id="profile-picture" />
 
                             <div id="header-user-details">
                                 <div id="header-user-name">
-                                    <span id="user-realname">{{ realname }}</span>
-                                    <span id="user-username">@{{ username }}</span>
+                                    <span id="user-realname">{{ user.real_name }}</span>
+                                    <span id="user-username">@{{ user.username }}</span>
                                 </div>
 
                                 <div id="header-user-school">
                                     <span>From the</span>
-                                    <span id="user-school">School of {{ school }} - Diploma in {{ course }}</span>
+                                    <span id="user-school">School of {{ user.school }} - Diploma in {{ user.course }}</span>
                                 </div>
                                 
-                                <div id="header-user-biography" v-if="biography != ''">
+                                <div id="header-user-biography" v-if="user.biography != ''">
                                     <span>About me:</span>
-                                    <span id="user-biography">{{ biography }}</span>
+                                    <span id="user-biography">{{ user.biography }}</span>
                                 </div>
 
-                                <div id="header-user-interests" v-if="selectedOption.length > 0">
+                                <div id="header-user-interests" v-if="user.interests.length > 0">
                                     <span>Interested in: </span>
-                                    <InterestBadgeList :selectedOption="selectedOption" :selection="false" />
+                                    <InterestBadgeList :selectedOption="user.interests" :selection="false" />
                                 </div>
                             </div>
                             
                         </div>
 
                         <div id="header-user-actions">
-                            <a href="/profileManagement.html" v-if="!anotherUser">
-                                <span id="user-edit-icon" class="bi bi-pencil"></span>
-                            </a>
-                            <button v-if="anotherUser" @click="followUser()" :class="followed ? 'follow-btn followed' : 'follow-btn'">{{ followed ? 'Followed' : 'Follow' }}</button>
+                            <div id="header-user-privileged-actions" v-if="isSelf">
+                                <a href="/profileManagement.html" title="Edit profile">
+                                    <span id="user-edit-icon" class="bi bi-pencil"></span>
+                                </a>
+                            </div>
 
-                            <div id="sign-out-container" @click="signOut()" v-if="!anotherUser">
+                            <div id="sign-out-container" @click="signOut" v-if="isSelf">
                                 <span id="user-sign-out-icon" class="bi bi-box-arrow-right"></span>
                                 <span id="user-sign-out-text">Sign out</span>
                             </div>
-                            <button v-if="anotherUser && followed" class="msg-btn">Message <span class="material-symbols-outlined">Chat</span></button>
+
+                            <button v-if="!isSelf" @click="toggleFollow" :class="following ? 'follow-btn followed' : 'follow-btn'">{{ following ? 'Followed' : 'Follow' }}</button>
+
+                            <button v-if="!isSelf" class="msg-btn" @click="createChat">Message <span class="material-symbols-outlined">Chat</span></button>
                         </div>
                     </div>
 
@@ -65,7 +69,7 @@
                         <BlogLayout v-for="blog in blogs" :blog="blog" />
                     </div>
 
-                    <div class="content-wrapper">
+                    <div class="content-wrapper" v-if="isSelf">
                         <div class="floating-button" @click="() => { toggleCreateBlog(true) }">
                             <i style="color: white" class="bi bi-plus plus-icon"></i>
                         </div>
@@ -75,12 +79,11 @@
                 <div id="right-content" class="col-md-3">
                     <div class="card follower-card">
                         <div class="card-body card-position">
-                            <h5 class="card-title">Followers: {{ followers.length }}</h5>
-                            <div v-for="follower in followers" :key="follower.username">
-                                <br>
+                            <h5 class="card-title">Followers: {{ user.followers.length }}</h5>
+
+                            <div v-for="follower in user.followers" :key="follower.username" @click="viewUser(follower._id)" class="view-user-follower" title="View user">
                                 <img class="profilepic" :src="follower.profile_pic_link">
-                                <p class="follower-username">{{ follower.username }}</p>
-                                <br>
+                                <span class="follower-username">{{ follower.username }}</span>
                             </div>
                         </div>
                     </div>
@@ -99,7 +102,6 @@
 import NavSidebar from '../../components/general/NavSidebar.vue';
 import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 import CreatedForums from '../../components/forum/CreatedForums.vue';
-import profilePicture from '../../assets/NgeeAnnLogo.png';
 import banner from '../../assets/CustomBanner.png';
 import BlogLayout from '../../components/blog/BlogLayout.vue';
 import BlogFormLayout from '../../components/blog/BlogFormLayout.vue';
@@ -108,7 +110,7 @@ import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
-import { toHandlers } from 'vue';
+import ObjectID from 'bson-objectid';
 
 export default {
     components: {
@@ -123,22 +125,19 @@ export default {
     },
     data() {
         return {
-            anotherUser: false,
-            followed: false,
-            otherUser: '',
+            user: null,
+            self: null,
+            isSelf: false,
+
             banner: banner,
-            profilePicture: profilePicture,
-            realname: '',
-            username: '',
-            biography: '',
-            school: '',
-            course: '',
-            selectedOption: [],
             blogs: [],
-            followers: [],
-            following: [],
-            otherUserFollowers:[],
             forums: [],
+
+            following: false,
+            savedFollowing: false,
+            followerCount: 0,
+            followTimeout: null,
+
             showCreateBlog: false,
             refreshFlag: false,
             alertStore: useAlertStore(),
@@ -146,90 +145,68 @@ export default {
         }
     },
     created() {
-        // this.getPosts();
+        this.initData();
         
-        if (window.location.search == '?create') {
+        // automatically open create blog form if href is /profilePage.html?create and requested user is self
+        if (window.location.search == '?create' && this.isSelf) {
             this.showCreateBlog = true;
         }
+
+        // set event listener to complete pending request when page is closed
+        window.addEventListener('beforeunload', this.completeFollowRequest);
     },
 
-    mounted() {
-        this.checkAuth();
-        this.populateFollowers();
-       
+    beforeUnmount() {
+        this.completeFollowRequest();
     },
-
 
     methods: {
-        
-        checkAuth() {
-            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        if (data.is_profile_setup === false) {
-                            this.redirectsetup();
-                            return;
-                        }
-                        else {
-                            this.realname = data.real_name;
-                            this.username = data.username;
-                            this.biography = data.biography;
-                            this.school = data.school;
-                            this.course = data.course;
-                            this.selectedOption = data.interests;
-                            this.profilePicture = data.profile_pic_link;
-                            this.following = data.following;
-                            this.followers = data.followers;
-                            this.userId = data._id;
-                            this.checkStorage();
-                            if (this.otherUser == null){
-                                this.getPosts();
-                            }
-                            
-                        }
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        },
-        // get user's followers
-        populateFollowers(){
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/followers`, {
-                method: "GET",
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        this.followers = data;
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        },
+        // to get user profile and associated posts
+        async initData() {
+            const targetUserId = sessionStorage.getItem('user') || 'self';
 
-        
+            // get user profile and follow status
+            const userPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/${targetUserId}`, {
+                methods: 'GET',
+                credentials: 'include',
+                mode: 'cors'
+            }).then(async (res) => {
+                await res.json().then(data => {
+                    console.log(data);
+                    // save user data
+                    this.user = data.user;
 
+                    // save information about self for future use (pushing to follower list)
+                    this.self = data.self;
+                    this.isSelf = this.user._id == this.self._id;
+
+                    // initialize follower information/status
+                    this.following = data.isFollowing;
+                    this.savedFollowing = data.isFollowing;
+                    this.followerCount = data.user.followers.length;
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+
+            // get user's posts
+            const postPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/by/${targetUserId}`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    this.blogs = data;
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+
+            await Promise.all([userPromise, postPromise]).catch(error => {
+                console.log(error);
+            });
+        },
+        // to sign out and clear cookies
         signOut() {
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/remove`, {
                 method: 'GET',
@@ -239,158 +216,85 @@ export default {
                 if (response.ok) {
                     window.location.href = '/login.html';
                 } else {
-                    console.log("Error: Failed to log out (Remove cookie)")
+                    console.log("Error: Failed to log out.")
                     console.log(response)
                 }
             });
         },
+        // toggle following user
+        toggleFollow() {
+            // toggle following value for frontend
+            this.following = !this.following;
 
-        async checkStorage(){
-            this.otherUser = sessionStorage.getItem('user');
-            // console.log(this.otherUser != this.userId || this.otherUser != null);
-            if (this.otherUser != this.userId && this.otherUser != null){
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/${this.otherUser}`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        this.realname = data.real_name;
-                        this.username = data.username;
-                        this.biography = data.biography;
-                        this.school = data.school;
-                        this.course = data.course;
-                        this.selectedOption = data.interests;
-                        this.profilePicture = data.profile_pic_link;
-                        this.followers = data.followers;
-                        this.anotherUser = true;
-                        this.otherUser = data._id;
-                        this.checkFollowing();
-                        this.populateOtherFollowers();
-                        this.getOtherPosts();
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            // update follower count
+            // update followers list to display list of followers
+            if (this.following) {
+                this.followerCount += 1;
+                this.user.followers.push(this.self);
             }
-        },
+            else {
+                this.followerCount -= 1;
 
-        checkFollowing(){
-            this.followed = this.following.includes(this.otherUser);
-        },
+                const index = this.user.followers.findIndex(follower => follower._id == this.self._id);
+                this.user.followers.splice(index, 1);
+            }
 
-        async populateOtherFollowers(){
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/followers/${this.otherUser}`, {
-                method: "GET",
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        this.followers = data;
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        },
+            // set timeout and only send request to update backend if user has not clicked the follow button for 3 seconds
+            clearTimeout(this.followTimeout);
 
-        // get user's posts
-        async getPosts() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/self`, {
+            this.followTimeout = setTimeout(this.updateFollowing, 3000);
+        },
+        // handle updating of following status to backend
+        async updateFollowing() {
+            if (this.isSelf) {
+                return;
+            }
+
+            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/users/follow/${this.user._id}`;
+            const options = {
                 mode: 'cors',
-                method: 'GET',
                 credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then((data) => {
-                    this.blogs = data;
-                    
-                });
-            }).catch((error) => {
-                console.log(error);
-            });
-        },
-
-        async getOtherPosts() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/otherUser/${this.otherUser}`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then((data) => {
-                    this.blogs = data;
-                });
-            }).catch((error) => {
-                console.log(error);
-            });
-        },
-
-        async followUser(){
-            if (this.following == 0){
-                this.following.push(this.otherUser);
             }
-            else{
-                for (let i=0; i <= this.following.length; i++){
-                    console.log(this.otherUser);
-                    console.log(this.following[i]);
-                    if (this.otherUser == this.following[i]){
-                        const index = this.following.indexOf(this.otherUser);
-                        if (index > -1) { // only splice array when item is found
-                            this.following.splice(index, 1); // 2nd parameter means remove one item only
-                        }
-                        break;
+
+            // send request to update follow status
+            // only send request to follow user if new following value is true and currently saved following value is false
+            if (this.following && !this.savedFollowing) {
+                options.method = 'POST';
+
+                await fetch(targetURL, options).then(async (res) => {
+                    if (res.status == 201) {
+                        this.savedFollowing = true;
                     }
-                    else{
-                        if (i == this.following.length){
-                            this.following.push(this.otherUser);
-                            break;
-                        }
+                    else {
+                        await res.json().then(data => console.log(data));
                     }
-                }
+                }).catch(error => {
+                    console.log(error);
+                });
             }
-            this.userObject = {
-                'following': this.following      
-            };
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/follow/${this.otherUser}`, {
-                method: 'PATCH', 
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: JSON.stringify(this.userObject),
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    this.checkFollowing();
-                    this.populateOtherFollowers();
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-            
+            // only send request to unfollow user if new following value is false and currently saved following value is true
+            else if (!this.following && this.savedFollowing) {
+                options.method = 'DELETE';
+
+                await fetch(targetURL, options).then(async (res) => {
+                    if (res.status == 204) {
+                        this.savedFollowing = false;
+                    }
+                    else {
+                        await res.json().then(data => console.log(data));
+                    }
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
         },
-
-
+        // complete updateFollowing request if pending
+        completeFollowRequest() {
+            if (this.followTimeout) {
+                clearTimeout(this.followTimeout);
+                this.updateFollowing();
+            }
+        },
         // to toggle create blog form
         toggleCreateBlog(show) {
             this.showCreateBlog = show;
@@ -403,7 +307,44 @@ export default {
         closeConfirm(decision) {
             this.confirmStore.closeConfirm(decision);
         },
+        // to view follower user profile
+        viewUser(userId) {
+            sessionStorage.setItem('user', userId);
+            location.href = 'profilePage.html';
+        },
+        // to create chat with the user and go to chat.html
+        async createChat() {
+            // check if chat exists
+            // if exists: target = existing chat
+            // otherwise: target = null
+            let target = null;
 
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats/check/${this.user._id}`, {
+                mode: 'cors',
+                methods: 'GET',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then(data => {
+                    target = data.existingChat;
+                });
+            });
+
+            // if chat does not exist then create new chat
+            if (!target) {
+                target = {
+                    // create new ObjectID for immediate access
+                    _id: new ObjectID().toString(),
+                    targetUserId: this.user._id,
+                    name: this.user.username,
+                    pic: this.user.profile_pic_link,
+                    last_message_timestamp: Date.now()
+                }
+            }
+
+            // set selectedChat and go to chat page
+            sessionStorage.setItem('selectedChat', JSON.stringify(target));
+            location.href = '/chat.html';
+        },
     },
     computed: {
         // to get showAlert value
@@ -554,18 +495,26 @@ export default {
     margin-top: 55px;
 }
 
+.view-user-follower {
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
+    align-items: center;
+}
+
+.view-user-follower * {
+    cursor: pointer;
+}
+
 .profilepic {
     overflow: hidden;
-    float: left;
     width: 65px;
     height: 65px;
-    margin-right: 20px;
-    margin-top: 15px;
     border-radius: 50%;
 }
 
-.follower-username {
-    margin-top: 30px;
+.follower-username:hover {
+    color: var(--primary);
 }
 
 .card {
@@ -653,6 +602,11 @@ export default {
     color: white;
 }
 
+.followed:hover {
+    background-color: transparent;
+    color: var(--primary);
+}
+
 .msg-btn {
     display: flex;
     border-radius: 10px;
@@ -663,6 +617,7 @@ export default {
     background-color: transparent;
     border: var(--dark) solid 3.5px;
     color: var(--dark);
+    transition: all 0.3s;
 }
 
 .msg-btn:hover {
@@ -673,9 +628,11 @@ export default {
 .msg-btn .material-symbols-outlined {
     color: var(--dark);
     font-size: 1.3rem;
+    transition: all 0.3s;
 }
 
-.msg-btn .material-symbols-outlined:hover {
+.msg-btn:hover .material-symbols-outlined {
     color: white;
+    opacity: 1;
 }
 </style>

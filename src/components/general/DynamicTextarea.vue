@@ -47,6 +47,7 @@ export default {
     mounted() {
         const textarea = document.getElementById(this.workingID);
 
+        // set border and padding if given as props
         if (this.border) {
             textarea.style.border = this.border;
         }

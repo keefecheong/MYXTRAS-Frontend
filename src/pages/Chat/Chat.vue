@@ -5,20 +5,7 @@
 
     <div id="main-container">
         <NavSidebar/>
-        <div id="main-content" class="container-fluid">
-
-            <!-- temp: to create chats (to be moved to user profile) -->
-        
-            <div class="row" id="create-chat">
-                <div v-for="(user, index) in users">
-                    <div class="add-chat">
-                        <span>{{ user.username }}</span>
-                        <button :id="index" @click="createChat">Create</button>
-                    </div>
-                </div>
-            </div>
-        
-
+        <div id="main-content" class="container-fluid">       
             <div class="row">
                 <!-- chat list (shows list of chats) -->
                 <div class="col-3" id="chatlist-container">
@@ -63,7 +50,6 @@ import NavSidebar from '../../components/general/NavSidebar.vue';
 import ChatListLayout from '../../components/chat/ChatListLayout.vue';
 import ChatInterfaceLayout from '../../components/chat/ChatInterfaceLayout.vue';
 import { useChatStore } from '../../stores/ChatStore.js';
-import ObjectID from 'bson-objectid';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 
@@ -93,9 +79,6 @@ export default {
 
         // subscribe to ChatStore
         this.subscribeChatStore();
-
-        // get users
-        this.getUsers();
         
         // check for new store/selected store
         this.initChat();
@@ -122,58 +105,6 @@ export default {
             }
 
             sessionStorage.removeItem('selectedChat');
-        },
-        // get users to set up create chat
-        async getUsers() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/all`, {
-                method: 'GET',
-                mode: 'cors',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(data => {
-                    this.users = data;
-                });
-            }).catch((error) => {
-                console.log(error);
-            })
-        },
-        // create new chat (chat created locally, does not push to database)
-        // chat only synced when user sends first message
-        // TODO: shift to user profile page
-        async createChat(e) {
-            // TODO: get target user
-            const targetUser = this.users[e.target.id];
-
-            // check if chat exists
-            // if exists: target = existing chat
-            // otherwise: target = null
-            let target = null;
-
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats/check/${targetUser._id}`, {
-                mode: 'cors',
-                methods: 'GET',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(data => {
-                    target = data.existingChat;
-                });
-            });
-
-            // if chat does not exist then create new chat
-            if (!target) {
-                target = {
-                    // create new ObjectID for immediate access
-                    _id: new ObjectID().toString(),
-                    targetUserId: targetUser._id,
-                    name: targetUser.username,
-                    pic: targetUser.profile_pic_link,
-                    last_message_timestamp: Date.now()
-                }
-            }
-
-            // set selectedChat and go to chat page
-            sessionStorage.setItem('selectedChat', JSON.stringify(target));
-            location.href = '/chat.html';
         },
         // subscribe to changes in ChatStore
         subscribeChatStore() {
