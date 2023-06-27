@@ -296,7 +296,7 @@ export default {
     width: fit-content;
     max-width: 85%;
     height: fit-content;
-    padding: 8px;
+    padding: 5px 15px;
     border-radius: 10px;
     margin-top: 5px;
     position: relative;

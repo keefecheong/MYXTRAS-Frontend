@@ -16,7 +16,7 @@
         <div v-if="currentPage === 'feed' || currentPage === 'xplore'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
             <!-- check for identity after authentication -->
             <div v-if="login" class="col-md-4 margin-top">
-                <p class="realname">{{ realname }}</p>
+                <p class="realname hide-overflow-text" :title="realname">{{ realname }}</p>
                 <p class="school">{{ school + '/' + course }}</p>
             </div>
             <a v-if="login" href="/profilePage.html"><img class="headerprofilepic" :src="pfplink"></a>
