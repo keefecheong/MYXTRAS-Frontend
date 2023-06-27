@@ -29,16 +29,22 @@
             <div id="chat-interface-messages" :class="{loading: loadingPrevious}">
                 <button id="load-previous-messages" @click="loadPreviousMessages" :disabled="loadingPrevious">Load Previous</button>
 
-                <ChatMessageLayout 
-                    v-for="(message, index) in messages" 
-                    :message="message" 
-                    :previous_creation_time="previous_creation_time(index)" 
-                    :previous_is_sender="previous_is_sender(index)"
-                    :index="index"
-                    :key="index"
-                    @edit-message="editMessage"
-                    @delete-message="deleteMessage"
-                />
+                <div class="no-messages-found" v-if="messages.length <= 0">
+                    <p>No messages found.</p>
+                </div>
+
+                <div v-else>
+                    <ChatMessageLayout 
+                        v-for="(message, index) in messages" 
+                        :message="message" 
+                        :previous_creation_time="previous_creation_time(index)" 
+                        :previous_is_sender="previous_is_sender(index)"
+                        :index="index"
+                        :key="index"
+                        @edit-message="editMessage"
+                        @delete-message="deleteMessage"
+                    />
+                </div>
             </div>
         </div>
 
@@ -669,6 +675,13 @@ export default {
 
 #load-previous-messages:hover {
     opacity: 0.7;
+}
+
+.no-messages-found {
+    font-size: 1.2em;
+    margin: 10px;
+    text-align: center;
+    font-style: italic;
 }
 
 /* input styles */

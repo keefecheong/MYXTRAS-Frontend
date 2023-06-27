@@ -11,16 +11,21 @@
                 <div class="col-3" id="chatlist-container">
                     <h1 id="chatlist-header">Chats</h1>
 
-                    <div v-if="!dataInitialized">
+                    <div class="chatlist-placeholder" v-if="!dataInitialized">
                         <p>Loading...</p>
                     </div>
 
-                    <ChatListLayout 
-                        v-else
-                        v-for="chat in orderedChats" 
-                        :chat="chat" 
-                        :selected="chatSelected && (chat._id == selectedChat._id)" 
-                    />
+                    <div class="chatlist-placeholder" v-if="dataInitialized && orderedChats.length <= 0">
+                        <p>No chats found</p>
+                    </div>
+
+                    <div v-if="dataInitialized && orderedChats.length > 0">
+                        <ChatListLayout 
+                            v-for="chat in orderedChats" 
+                            :chat="chat" 
+                            :selected="chatSelected && (chat._id == selectedChat._id)" 
+                        />
+                    </div>
                 </div>
 
                 <!-- chat interface (shows messages)-->
@@ -265,6 +270,13 @@ export default {
     padding: 10px;
     border-bottom: 2px solid black;
     margin-bottom: 0;
+}
+
+.chatlist-placeholder {
+    font-size: 1.3em;
+    margin: 10px;
+    text-align: center;
+    font-style: italic;
 }
 
 /* chat interface styles */
