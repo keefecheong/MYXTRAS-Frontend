@@ -250,7 +250,9 @@ export default {
 }
 
 #main-content .row {
-    width: 100%;
+    width: 102.6%;
+    margin-left: -24px;
+    margin-right: -24px;
 }
 
 #main-content .row > div {
