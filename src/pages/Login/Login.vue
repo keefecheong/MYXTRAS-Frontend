@@ -198,7 +198,6 @@ export default {
             password: '',
             showPassword: false,
             recaptchaVerifier: null,
-            recaptchaClicked: false,
             alertStore: useAlertStore(),
             alert: useAlertStore().alert
         }
@@ -212,7 +211,6 @@ export default {
         size: 'normal',
         callback: function (response) {
             // reCAPTCHA verified, handle the callback
-            console.log('reCAPTCHA clicked!', response);
             self.recaptchaClicked = true
         },
         'expired-callback': () => {
