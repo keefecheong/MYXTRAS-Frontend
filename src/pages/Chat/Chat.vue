@@ -250,7 +250,9 @@ export default {
 }
 
 #main-content .row {
-    width: 100%;
+    width: 102.6%;
+    margin-left: -24px;
+    margin-right: -24px;
 }
 
 #main-content .row > div {
@@ -267,7 +269,7 @@ export default {
 #chatlist-header {
     background-color: var(--primary);
     color: white;
-    padding: 10px;
+    padding: 11px;
     border-bottom: 2px solid black;
     margin-bottom: 0;
 }
