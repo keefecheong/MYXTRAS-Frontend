@@ -72,6 +72,8 @@ background: #c9c9c98d;
 </style>
 
 <script>
+import viewForum from '../../utils/general/viewForum.js';
+
 export default {
     data() {
         return {
@@ -103,8 +105,7 @@ export default {
         },
 
         viewForum(forum){
-            sessionStorage.setItem('forum_id', forum._id);
-            location.href = "/forumGroup.html"
+            viewForum(forum._id);
         },
     }
 }

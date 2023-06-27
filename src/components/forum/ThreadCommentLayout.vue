@@ -2,19 +2,17 @@
     <div class="thread-comment-container">
         <div class="thread-comment-header">
             <!-- creator profile pic -->
-            <img class="thread-comment-profile-pic" :src="comment.creator_id.profile_pic_link" />
+            <img class="thread-comment-profile-pic" :src="comment.creator_id.profile_pic_link" @click="viewUser" title="View user" />
             <div class="right-content">
-                <div class="top-content">
-                    <!-- creator real name/username -->
-                    <div class="thread-comment-name-container">
-                        <span class="thread-comment-realname">{{ comment.creator_id.real_name }}</span>
-                        <span class="thread-comment-username">@{{ comment.creator_id.username }}</span>
-                    </div>
+                <!-- creator real name/username -->
+                <div class="thread-comment-name-container" @click="viewUser" title="View user">
+                    <span class="thread-comment-realname">{{ comment.creator_id.real_name }}</span>
+                    <span class="thread-comment-username">@{{ comment.creator_id.username }}</span>
+                </div>
 
-                    <!-- creation time -->
-                    <div class="thread-comment-creation-time-container">
-                        <span :title="new Date(comment.creation_time)">{{ dateCreated }}</span>
-                    </div>
+                <!-- creation time -->
+                <div class="thread-comment-creation-time-container">
+                    <span :title="new Date(comment.creation_time)">{{ dateCreated }}</span>
                 </div>
             </div>
         </div>
@@ -28,6 +26,7 @@
 
 <script>
 import calcDateDifference from '../../utils/general/calcDateDifference';
+import viewUser from '../../utils/general/viewUser.js';
 
 export default {
     data() {
@@ -40,6 +39,12 @@ export default {
     ],
     created() {
         this.dateCreated = calcDateDifference(this.comment.creation_time);
+    },
+    methods: {
+        // to view profile of comment creator
+        viewUser() {
+            viewUser(this.comment.creator_id._id);
+        }
     }
 }
 </script>
@@ -48,10 +53,13 @@ export default {
 .right-content {
     margin-left: 30px;
     width: 100%;
+    display: flex;
 }
+
 .thread-comment-content {
     margin-left: 30px;
 }
+
 .thread-comment-container {
     display: flex;
     flex-direction: column;
@@ -81,19 +89,26 @@ export default {
     position:absolute;
     top: 0px;
     left: -40px;
+    user-select: none;
+    cursor: pointer;
 }
-.top-content {
-    display: flex;
-}
+
 .thread-comment-name-container {
     flex: 1;
     display: flex;
     flex-direction: column;
+    cursor: pointer;
 }
+
+.thread-comment-profile-pic:hover~div .thread-comment-name-container, .thread-comment-name-container:hover {
+    color: var(--primary);
+}
+
 .thread-comment-creation-time-container{
-    flex: 1;
+    flex: 0 0 25%;
     text-align: right;
 }
+
 .thread-comment-realname {
     font-weight: bold;
 }
@@ -101,6 +116,7 @@ export default {
 .thread-comment-username {
     font-size: 0.8em;
 }
+
 hr {
     margin-top: 5px !important;
     margin-bottom: 5px !important

@@ -46,6 +46,8 @@ li:hover {
 </style>
 
 <script>
+import viewForum from '../../utils/general/viewForum.js';
+
 export default {
     data() {
         return {
@@ -66,8 +68,7 @@ export default {
         },
         // Taken from ForumGroup.vue
         viewForum(forum){
-            sessionStorage.setItem('forum_id', forum._id);
-            location.href = "/forumGroup.html"
+            viewForum(forum._id);
         },
 
         viewProfile(user){

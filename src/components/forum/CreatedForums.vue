@@ -62,6 +62,8 @@ p:hover {
 </style>
 
 <script>
+import viewForum from '../../utils/general/viewForum.js';
+
 export default {
     data() {
         return {
@@ -74,8 +76,7 @@ export default {
     methods: {
        
         viewForum(forum){
-            sessionStorage.setItem('forum_id', forum._id);
-            location.href = "/forumGroup.html"
+            viewForum(forum._id);
         },
     
         async retrieveCreatedForums() {

@@ -92,6 +92,7 @@ import LoadingOverlay from '../general/LoadingOverlay.vue';
 import AddInterestButton from '../general/AddInterestButton.vue';
 import { debounce } from 'lodash';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
+import viewForum from '../../utils/general/viewForum.js';
 
 export default {
     data() {
@@ -341,13 +342,12 @@ export default {
 
                             // if have forum object (from edit mode) immediately set forumID with current id
                             if (this.forum) {
-                                sessionStorage.setItem('forum_id', this.forum._id);
+                                viewForum(this.forum._id);
                             }
                             // otherwise parse server response and set forum id
                             else {
                                 await response.json().then(data => {
-                                    sessionStorage.setItem('forum_id', data.forum_id);
-                                    location.href = "/forumGroup.html";
+                                    viewForum(data.forum_id);
                                 });
                             }
                         } else if (response.status === 400) {

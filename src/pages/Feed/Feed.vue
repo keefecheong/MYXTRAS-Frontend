@@ -97,7 +97,7 @@ export default {
     methods: {
         // method to get blog data
         async getPosts() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/following`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'

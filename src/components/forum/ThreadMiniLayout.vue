@@ -1,7 +1,9 @@
 <template>
     <div class="card shadow thread-layout-container pinkHover" @click="showDetailedView" title="Click to view this thread" :id="index">
         <div class="thread-layout-left">
-            <img class="thread-creator-profile-pic" :src="showForumDetails ? thread.parent_id.forum_pic_link : thread.creator_id.profile_pic_link" />
+            <img class="thread-creator-profile-pic"
+                :src="showForumDetails ? thread.parent_id.forum_pic_link : thread.creator_id.profile_pic_link"
+            />
         </div>
 
         <div class="thread-layout-right">
@@ -9,8 +11,8 @@
                 <div class="thread-layout-header-top">
                     <div>
                         <div class="thread-creator">
-                            <span v-if="showForumDetails" @click.stop="showForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
-                            <span>Posted by: @{{ thread.creator_id.username }}</span>
+                            <span v-if="showForumDetails" @click.stop="viewForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
+                            <span class="thread-layout-creator-name" @click.stop="viewUser" title="View user">Posted by: @{{ thread.creator_id.username }}</span>
                         </div>
                         <span class="thread-title">{{ thread.title }}</span>
                     </div>
@@ -33,7 +35,6 @@
 
             <div class="thread-layout-right-content">
                 <p class="thread-content hide-overflow-text">{{ thread.content }}</p>
-                <img id="thread-image" v-if="thread.content_link" :src="thread.content_link" alt="Thread Image" />
             </div>
         </div>
     </div>
@@ -45,6 +46,8 @@
 import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
 import ThreadFormLayout from './ThreadFormLayout.vue';
 import calcDateDifference from '../../utils/general/calcDateDifference';
+import viewUser from '../../utils/general/viewUser.js';
+import viewForum from '../../utils/general/viewForum.js';
 
 export default {
     data() {
@@ -78,9 +81,12 @@ export default {
             this.showThreadForm = show;
         },
         // to go to forumgroup for selected forum
-        showForum() {
-            sessionStorage.setItem('forum_id', this.thread.parent_id._id);
-            location.href = '/forumGroup.html';
+        viewForum() {
+            viewForum(this.thread.parent_id._id);
+        },
+        // to view profile of the user
+        viewUser() {
+            viewUser(this.thread.creator_id._id);
         }
     }
 }
@@ -91,11 +97,12 @@ export default {
 
 .thread-layout-forum-name {
     color: rgb(0, 102, 204);
-    
 }
+
 .pinkHover:hover {
     border: 3px solid var(--primary) !important;
 }
+
 .thread-content {
     --line-height: 1.5em;
     display: -webkit-box;
@@ -105,10 +112,6 @@ export default {
     line-height: var(--line-height);
     max-height: calc(var(--line-height) * 2);
     white-space: normal !important;
-}
-
-#thread-image {
-    max-width: 100%;
 }
 
 </style>

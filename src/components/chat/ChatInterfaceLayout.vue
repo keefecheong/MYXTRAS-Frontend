@@ -1,7 +1,7 @@
 <template>
     <div id="chat-interface-layout-container">
         <!-- chat interface header, contains the other user's profile picture, username, and status -->
-        <div id="chat-interface-header">
+        <div id="chat-interface-header" @click="viewUser" title="View user">
             <!-- other user's profile pic -->
             <div class="profile-pic-container">
                 <img class="profile-pic" :src="chat.pic"/>
@@ -137,6 +137,7 @@ import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
+import viewUser from '../../utils/general/viewUser.js';
 
 export default {
     data() {
@@ -548,6 +549,10 @@ export default {
         // to format size of file for display
         calculateSize(bytes) {
             return calculateSize(bytes);
+        },
+        // to view user profile of the other chat member
+        viewUser() {
+            viewUser(this.chat.targetUserId);
         }
     },
     computed: {
@@ -592,6 +597,11 @@ export default {
     column-gap: 15px;
     width: 100%;
     user-select: none;
+    cursor: pointer;
+}
+
+#chat-interface-header:hover #chat-name {
+    color: var(--primary);
 }
 
 .profile-pic {

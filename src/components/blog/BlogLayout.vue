@@ -4,19 +4,24 @@
         <div class="blog-header">
             <div>
                 <!-- creator profile pic -->
-                <div class="profile-pic-container">
-                    <img class="profile-pic" :src="blog.creator_id.profile_pic_link" @click="navigateProfile()" title="View user"/>
-                </div>
+                <img class="blog-profile-pic" :src="blog.creator_id.profile_pic_link" @click="viewUser()" title="View user"/>
 
                 <!-- creator username -->
-                <div class="blog-username-container hide-overflow-text">
-                    <span  title="View user" @click="navigateProfile()">{{ blog.creator_id.username }}</span>
-                </div>
+                <span 
+                    class="blog-username hide-overflow-text"
+                    title="View user" @click="viewUser()"
+                >
+                    {{ blog.creator_id.username }}
+                </span>
 
                 <!-- creation time (time difference) -->
-                <div class="blog-creation-time">
-                    <span :datetime="blog.creation_time" :title="new Date(blog.creation_time)">{{ dateCreated }}</span>
-                </div>
+                <span 
+                    class="blog-creation-time"
+                    :datetime="blog.creation_time"
+                    :title="new Date(blog.creation_time)"
+                >
+                    {{ dateCreated }}
+                </span>
             </div>
 
             <!-- tags and location -->
@@ -196,22 +201,22 @@
     align-items: center;
 }
 
-.profile-pic-container, .blog-username-container span {
+.blog-profile-pic, .blog-username {
     cursor: pointer;
 }
 
-.profile-pic {
+.blog-profile-pic {
     border-radius: 100%;
     object-fit: cover;
     height: 50px;
     width: 50px;
 }
 
-.blog-username-container {
+.blog-username {
     flex: 1 0 auto;
 }
 
-.blog-username-container span:hover {
+.blog-profile-pic:hover~.blog-username, .blog-username:hover {
     color: var(--primary);
 }
 
@@ -399,6 +404,7 @@ import InterestBadgeList from '../general/InterestBadgeList.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
+import viewUser from '../../utils/general/viewUser.js';
 
 export default {
     data() {
@@ -671,11 +677,10 @@ export default {
             this.commentData.splice(this.commentData.indexOf(commentId), 1);
         },
         // go to profile page to view the creator's profile
-        navigateProfile(){
+        viewUser(){
             // only redirect if not already at profile page
-            if (window.location.href != '/profilePage.html') {
-                sessionStorage.setItem('user', this.blog.creator_id._id);
-                window.location.href = '/profilePage.html';
+            if (location.pathname != '/profilePage.html') {
+                viewUser(this.blog.creator_id._id);
             }
         }
     },

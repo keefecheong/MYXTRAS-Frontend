@@ -2,12 +2,12 @@
     <div class="comment-container" v-if="!deleted">
         <div class="comment-header">
             <!-- creator profile pic -->
-            <img class="comment-profile-pic" :src="comment.creator_id.profile_pic_link"/>
+            <img class="comment-profile-pic" :src="comment.creator_id.profile_pic_link" @click="viewUser" title="View user"/>
             <div class="right-content">
                 <div class="top-content">
                     <!-- creator username -->
-                    <div class="comment-username-container hide-overflow-text">
-                        <span id="username-text">{{ comment.creator_id.username }}</span>
+                    <div class="comment-username-container hide-overflow-text" @click="viewUser" title="View user">
+                        <span class="username-text">{{ comment.creator_id.username }}</span>
                     </div>
 
                     <!-- creation time (time difference) -->
@@ -39,6 +39,7 @@
 import calcDateDifference from '../../utils/general/calcDateDifference.js';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import viewUser from '../../utils/general/viewUser.js';
 
 export default {
     data() {
@@ -80,6 +81,10 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
+        },
+        // view user profile of comment creator
+        viewUser() {
+            viewUser(this.comment.creator_id._id);
         }
     }
 }
@@ -90,19 +95,23 @@ export default {
 #username-text {
     font-weight: bold;
 }
+
 .right-content {
     margin-left: 30px;
     width: 100%;
 }
+
 .top-content {
     display: flex;
     flex-direction: row;
     margin-top: 15px;
     margin-bottom: 10px;
 }
+
 .comment-header {
     position:relative;
 }
+
 .comment-profile-pic {
     position:absolute;
     top: 20px;
@@ -111,7 +120,10 @@ export default {
     object-fit: cover;
     height: 40px;
     width: 40px;
+    cursor: pointer;
+    user-select: none;
 }
+
 /* comment header styles */
 .comment-container {
     border-width: 1px;
@@ -127,6 +139,11 @@ export default {
 
 .comment-username-container {
     flex: 1 0 auto;
+    cursor: pointer;
+}
+
+.comment-profile-pic:hover~div .username-text, .comment-username-container:hover .username-text {
+    color: var(--primary);
 }
 
 .comment-creation-time {
@@ -145,6 +162,7 @@ export default {
     margin-left: 15px;
     margin-right: 5px;
 }
+
 hr {
     margin-top: 5px !important;
     margin-bottom: 5px !important

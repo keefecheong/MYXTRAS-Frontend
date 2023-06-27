@@ -34,7 +34,6 @@
                                 :showForumDetails="true"
                                 @show-detailed-view="() => toggleDetailedThread(true, index)"
                             />
-                            <!-- <ForumLayout :recentThreads="recentThreads"/> -->
                         </div>
                     </div>
 

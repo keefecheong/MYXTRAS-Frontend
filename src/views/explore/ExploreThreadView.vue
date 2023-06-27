@@ -58,6 +58,7 @@ import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
 import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
 import handleInterestSelected from '../../utils/general/defaultInterestSelectedCallback.js';
 import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
+import viewForum from '../../utils/general/viewForum.js';
 
 export default {
     data() {
@@ -162,8 +163,7 @@ export default {
             
         },
         viewForum(forum) {
-            sessionStorage.setItem('forum_id', forum._id)
-            location.href = '../forumGroup.html'
+            viewForum(forum._id);
         }
     },
     computed: {

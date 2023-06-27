@@ -10,19 +10,24 @@
     width: 100%;
     cursor: pointer;
 }
-#thread-layout-container:hover {
-    border: 2px solid var(--primary) !important
-    
-}
+
 .thread-layout-forum-name:hover {
     color: var(--primary);
     cursor: pointer;
 }
+
 .thread-creator-profile-pic {
     width: 80px;
     height: 80px;
     border-radius: 50%;
     border: 1px solid gray;
+    user-select: none;
+    cursor: pointer;
+}
+
+.thread-layout-creator-name:hover {
+    color: var(--primary);
+    cursor: pointer;
 }
 
 .thread-layout-right {

@@ -63,6 +63,7 @@ import { useAlertStore } from '../../stores/AlertStore.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import AddInterestButton from '../general/AddInterestButton.vue';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
+import viewForum from '../../utils/general/viewForum.js';
 
 export default {
     data() {
@@ -216,8 +217,7 @@ export default {
                         if (response.ok){
                             await this.alert(successMessage);
 
-                            sessionStorage.setItem('forum_id', this.forumID || this.thread.parent_id);
-                            location.href = "/forumGroup.html";
+                            viewForum(this.forumID || this.thread.parent_id);
                         } else {
                             console.log('An error occurred.');
                         };

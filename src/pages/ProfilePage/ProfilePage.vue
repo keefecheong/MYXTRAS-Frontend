@@ -111,6 +111,7 @@ import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 import ObjectID from 'bson-objectid';
+import viewUser from '../../utils/general/viewUser.js';
 
 export default {
     components: {
@@ -308,8 +309,7 @@ export default {
         },
         // to view follower user profile
         viewUser(userId) {
-            sessionStorage.setItem('user', userId);
-            location.href = 'profilePage.html';
+            viewUser(userId);
         },
         // to create chat with the user and go to chat.html
         async createChat() {

@@ -8,7 +8,10 @@
         <div class="thread-layout-container" id="thread-detailed-layout-content">
             <!-- thread creator's profile pic -->
             <div class="thread-layout-left">
-                <img class="thread-creator-profile-pic" :src="showForumDetails ? thread.parent_id.forum_pic_link : thread.creator_id.profile_pic_link" />
+                <img class="thread-creator-profile-pic"
+                    :src="showForumDetails ? thread.parent_id.forum_pic_link : thread.creator_id.profile_pic_link"
+                     @click.stop="viewUser" title="View user"
+                />
             </div>
 
             <div class="thread-layout-right">
@@ -17,8 +20,8 @@
                     <div class="thread-layout-header-top">
                         <div>
                             <div class="thread-creator">
-                                <span v-if="showForumDetails" @click.stop="showForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
-                                <span>Posted by: @{{ thread.creator_id.username }}</span>
+                                <span v-if="showForumDetails" @click.stop="viewForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
+                                <span class="thread-layout-creator-name" @click.stop="viewUser" title="View user">Posted by: @{{ thread.creator_id.username }}</span>
                             </div>
 
                             <span class="thread-title">{{ thread.title }}</span>
@@ -96,6 +99,8 @@ import { useAlertStore } from '../../stores/AlertStore';
 import calcDateDifference from '../../utils/general/calcDateDifference';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
+import viewUser from '../../utils/general/viewUser.js';
+import viewForum from '../../utils/general/viewForum.js';
 
 export default {
     data() {
@@ -367,9 +372,13 @@ export default {
                 this.updateDislike();
             }
         },
-        showForum() {
-            sessionStorage.setItem('forum_id', this.thread.parent_id._id);
-            location.href = '/forumGroup.html';
+        // to go to forumgroup for parent forum
+        viewForum() {
+            viewForum(this.thread.parent_id._id);
+        },
+        // to view profile of the user
+        viewUser() {
+            viewUser(this.thread.creator_id._id);
         }
     }
 }
@@ -401,8 +410,8 @@ export default {
     font-size: 2em;
     width: fit-content;
     position: absolute;
-    right: 1%;
-    top: 0.5%;
+    right: 10px;
+    top: 10px;
 }
 
 #thread-image {
@@ -473,6 +482,7 @@ export default {
     background-color: var(--primary);
     color: white;
 }
+
 #thread-comment-submit:hover {
     border: none;
     background-color: var(--secondary);
