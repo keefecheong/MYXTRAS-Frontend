@@ -250,7 +250,7 @@ export default {
 
         async checkStorage(){
             this.otherUser = sessionStorage.getItem('user');
-            console.log(this.otherUser != this.userId || this.otherUser != null);
+            // console.log(this.otherUser != this.userId || this.otherUser != null);
             if (this.otherUser != this.userId && this.otherUser != null){
                 fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/${this.otherUser}`, {
                 method: "GET",
@@ -300,8 +300,6 @@ export default {
                 if (response.ok) {
                     response.json().then(data => {
                         this.followers = data;
-                        console.log(this.otherUser);
-                        console.log(this.userId);
                     })
                 } else {
                     console.log('Error:', response);
@@ -339,7 +337,6 @@ export default {
             }).then(async (res) => {
                 await res.json().then((data) => {
                     this.blogs = data;
-                    console.log(data[0].likes.length);
                 });
             }).catch((error) => {
                 console.log(error);
@@ -363,7 +360,6 @@ export default {
                     }
                     else{
                         if (i == this.following.length){
-                            console.log('push');
                             this.following.push(this.otherUser);
                             break;
                         }
