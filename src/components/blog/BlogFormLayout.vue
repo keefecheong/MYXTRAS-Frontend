@@ -53,7 +53,7 @@
                 <!-- input for blog caption -->
                 <div class="image-options-container">
                     <label for="image-caption" id="caption-title" class="image-options-label">Caption:</label>
-                    <DynamicTextarea :id="'image-caption'" :placeholder="'Provide a caption (Optional)'" v-model="caption"></DynamicTextarea>
+                    <DynamicTextarea :id="'image-caption'" :placeholder="'Provide a caption (Optional)'" v-model="caption" />
                 </div>
                 
                 <!-- input for blog location -->

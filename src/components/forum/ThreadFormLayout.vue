@@ -22,7 +22,7 @@
                 <!-- thread description (content) input -->
                 <div class="thread-field-container">
                     <label for="thread-content-input" class="thread-label">Content:</label>
-                    <DynamicTextarea :id="'thread-content-input'" v-model="threadContent" :maxlength="500" :placeholder="'Thread content'"></DynamicTextarea>
+                    <DynamicTextarea :id="'thread-content-input'" v-model="threadContent" :maxlength="500" :placeholder="'Thread content'" />
                 </div>
                 
                 <!-- thread tags input -->

@@ -76,7 +76,7 @@
                         :placeholder="'New message...'"
                         v-model="editedMessage"
                         :id="'edit-' + index"
-                    ></DynamicTextarea>
+                    />
 
                     <div>
                         <button class="cancel" @click="exitEdit" title="Discard changes">
@@ -296,7 +296,6 @@ export default {
     width: fit-content;
     max-width: 85%;
     height: fit-content;
-    padding: 5px 15px;
     border-radius: 10px;
     margin-top: 5px;
     position: relative;
@@ -308,12 +307,14 @@ export default {
     justify-self: start;
     margin-left: 20px;
     background-color: black;
+    padding: 5px 10px 5px 15px;
 }
 
 .message.sent {
     justify-self: end;
     margin-right: 20px;
     background-color: var(--dark);
+    padding: 5px 15px 5px 10px;
 }
 
 .message.arrow-left, .message.arrow-right {

@@ -67,7 +67,7 @@
 
                     <div id="thread-comment-creation-container">
                         <form @submit.prevent="createComment">
-                            <DynamicTextarea :id="'thread-comment-input'" :maxRows="4" :placeholder="'Add a comment...'" v-model="commentText"></DynamicTextarea>
+                            <DynamicTextarea :id="'thread-comment-input'" :maxRows="4" :placeholder="'Add a comment...'" v-model="commentText" />
 
                             <button type="submit" id="thread-comment-submit">Comment</button>
                         </form>

@@ -67,7 +67,7 @@
                 <!-- forum description input -->
                 <div class="forum-field-container">
                     <label for="forum-desc-input" class="forum-label">Description:</label>
-                    <DynamicTextarea :id="'forum-desc-input'" :maxRows="5" v-model="forumDesc" :maxlength="100" :placeholder="'Forum Description (optional)'" ></DynamicTextarea>
+                    <DynamicTextarea :id="'forum-desc-input'" :maxRows="5" v-model="forumDesc" :maxlength="100" :placeholder="'Forum Description (optional)'" />
                 </div>
                 
                 <!-- forum tags input -->

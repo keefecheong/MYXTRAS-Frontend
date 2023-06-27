@@ -39,7 +39,7 @@
                         :message="message" 
                         :previous_creation_time="previous_creation_time(index)" 
                         :previous_is_sender="previous_is_sender(index)"
-                        :index="index"
+                        :index="message._id"
                         :key="index"
                         @edit-message="editMessage"
                         @delete-message="deleteMessage"
@@ -51,7 +51,7 @@
         <!-- container for message input -->
         <div id="chat-interface-input">
             <form @submit.prevent="sendMessage">
-                    <DynamicTextarea 
+                <DynamicTextarea 
                     title="Enter your message"
                     :id="'chat-message-input'"
                     :maxRows="5"
@@ -59,7 +59,7 @@
                     v-model="messageText"
                     @input="updateTypingStatus"
                     @keydown.enter.exact.prevent="sendMessage"
-                ></DynamicTextarea>
+                />
 
                 <button title="Add a file" type="button" @click="() => toggleFileInput(true)">
                     <span class="material-symbols-outlined">Attach_file</span>
@@ -119,7 +119,7 @@
                             v-model="messageText"
                             @input="updateTypingStatus"
                             @keydown.enter.exact.prevent="sendMessage"
-                        ></DynamicTextarea>
+                        />
                         
                         <button title="Send file" type="submit">
                             <span class="material-symbols-outlined" id="chat-message-send">Send</span>
