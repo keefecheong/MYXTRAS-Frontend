@@ -140,6 +140,7 @@ export default {
             followTimeout: null,
 
             showCreateBlog: false,
+            refreshFlag: false,
             alertStore: useAlertStore(),
             confirmStore: useConfirmStore()
         }
