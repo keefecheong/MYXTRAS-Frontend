@@ -269,7 +269,7 @@ export default {
 #chatlist-header {
     background-color: var(--primary);
     color: white;
-    padding: 10px;
+    padding: 11px;
     border-bottom: 2px solid black;
     margin-bottom: 0;
 }
