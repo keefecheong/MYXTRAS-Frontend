@@ -554,8 +554,6 @@ export default {
                 'password': this.password
                 }
             }
-            // const dataObject = this.userObject;
-            // localStorage.setItem('dataObject', JSON.stringify(dataObject));
 
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
                 method: 'POST',

@@ -140,6 +140,7 @@ export default {
             otherUserFollowers:[],
             forums: [],
             showCreateBlog: false,
+            refreshFlag: false,
             alertStore: useAlertStore(),
             confirmStore: useConfirmStore()
         }
@@ -155,13 +156,9 @@ export default {
     mounted() {
         this.checkAuth();
         this.populateFollowers();
-
-        window.addEventListener('beforeunload', this.resetSessionStorage);
+       
     },
 
-    beforeUnmount() {
-        window.removeEventListener('beforeunload', this.resetSessionStorage);
-    },
 
     methods: {
         
@@ -407,9 +404,6 @@ export default {
             this.confirmStore.closeConfirm(decision);
         },
 
-        resetSessionStorage() {
-            sessionStorage.clear();
-        },
     },
     computed: {
         // to get showAlert value

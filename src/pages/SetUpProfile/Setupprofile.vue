@@ -305,8 +305,6 @@ export default {
             return true;
         },
         async setupprofile() {
-            // const dataObject = JSON.parse(localStorage.getItem('dataObject'));
-            // console.log(dataObject); // Access the received data object
             if (!this.validationCheck()){
                 return;
             }
