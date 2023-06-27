@@ -49,13 +49,13 @@
                             <a href="/profileManagement.html" v-if="!anotherUser">
                                 <span id="user-edit-icon" class="bi bi-pencil"></span>
                             </a>
-                            <button v-if="anotherUser" @click="followUser()">{{ followed ? 'Followed' : 'Follow' }}</button>
+                            <button v-if="anotherUser" @click="followUser()" :class="followed ? 'follow-btn followed' : 'follow-btn'">{{ followed ? 'Followed' : 'Follow' }}</button>
 
                             <div id="sign-out-container" @click="signOut()" v-if="!anotherUser">
                                 <span id="user-sign-out-icon" class="bi bi-box-arrow-right"></span>
                                 <span id="user-sign-out-text">Sign out</span>
                             </div>
-                            <button v-if="anotherUser && followed">Chat</button>
+                            <button v-if="anotherUser && followed" class="msg-btn">Message <span class="material-symbols-outlined">Chat</span></button>
                         </div>
                     </div>
 
@@ -637,5 +637,51 @@ export default {
 
 .plus-icon {
     font-size: 24px;
+}
+
+.follow-btn {
+    background-color: transparent;
+    border: var(--primary) solid 3.5px;
+    color: var(--primary);
+    border-radius: 10px;
+    height: 3rem;
+    width: 9rem;
+    transition: all 0.3s;
+}
+
+.follow-btn:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+.followed {
+    background-color: var(--primary);
+    color: white;
+}
+
+.msg-btn {
+    display: flex;
+    border-radius: 10px;
+    height: 3rem;
+    width: 9rem;
+    align-items: center;
+    padding-left: 25px;
+    background-color: transparent;
+    border: var(--dark) solid 3.5px;
+    color: var(--dark);
+}
+
+.msg-btn:hover {
+    background-color: var(--dark);
+    color: white;
+}
+
+.msg-btn .material-symbols-outlined {
+    color: var(--dark);
+    font-size: 1.3rem;
+}
+
+.msg-btn .material-symbols-outlined:hover {
+    color: white;
 }
 </style>

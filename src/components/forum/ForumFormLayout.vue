@@ -15,7 +15,7 @@
                 <div id="forum-pic-container">
                     <label for="forum-pic-input" id="forum-pic-label"><u>Click</u> to Select Forum Picture:</label>
                     
-                    <span v-if="!groupPicObject && !selectedGroupPic" id="forum-pic-none">No image selected</span>
+                    <label for="forum-pic-input" v-if="!groupPicObject && !selectedGroupPic" id="forum-pic-none">No image selected</label>
                     <span v-if="groupPicObject && groupPicErrors.length > 0" class="errMsg">Invalid file</span>
                     <img v-if="selectedGroupPic" :src="selectedGroupPic" alt="Group Picture"  id="forum-pic-picture" />
                     <input id="forum-pic-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
@@ -33,7 +33,7 @@
                 <div id="forum-banner-container">
                     <label for="forum-banner-input" id="forum-banner-label"><u>Click</u> to Select Forum Banner:</label>
         
-                    <span v-if="!bannerObject && !selectedBanner" id="forum-banner-none">No image selected</span>
+                    <label for="forum-banner-input" v-if="!bannerObject && !selectedBanner" id="forum-banner-none">No image selected</label>
                     <span v-if="bannerObject && bannerErrors.length > 0" class="errMsg">Invalid file</span>
                     <img v-if="selectedBanner" :src="selectedBanner" alt="Banner"  id="forum-banner-picture" />
                     <input id="forum-banner-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
@@ -498,7 +498,10 @@ export default {
     align-items: center;
     justify-content: center;
 }
-
+#forum-pic-none:hover,#forum-banner-none:hover {
+    cursor: pointer;
+    color: var(--primary);
+}
 #forum-pic-picture, #forum-banner-picture {
     object-fit: cover;
     object-position: center;
