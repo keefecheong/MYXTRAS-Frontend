@@ -670,12 +670,22 @@ export default {
     width: 9rem;
     align-items: center;
     padding-left: 25px;
+    background-color: transparent;
+    border: var(--dark) solid 3.5px;
+    color: var(--dark);
+}
+
+.msg-btn:hover {
     background-color: var(--dark);
     color: white;
 }
 
 .msg-btn .material-symbols-outlined {
-    color: white;
+    color: var(--dark);
     font-size: 1.3rem;
+}
+
+.msg-btn .material-symbols-outlined:hover {
+    color: white;
 }
 </style>
