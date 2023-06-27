@@ -108,6 +108,7 @@ import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
+import { toHandlers } from 'vue';
 
 export default {
     components: {
@@ -154,14 +155,16 @@ export default {
     mounted() {
         this.checkAuth();
         this.populateFollowers();
-        // window.addEventListener('beforeunload', this.resetSessionStorage);
+
+        window.addEventListener('beforeunload', this.resetSessionStorage);
     },
 
     beforeUnmount() {
-        // window.removeEventListener('beforeunload', this.resetSessionStorage);
+        window.removeEventListener('beforeunload', this.resetSessionStorage);
     },
 
     methods: {
+        
         checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
@@ -189,7 +192,10 @@ export default {
                             this.followers = data.followers;
                             this.userId = data._id;
                             this.checkStorage();
-                            this.getPosts();
+                            if (this.otherUser == null){
+                                this.getPosts();
+                            }
+                            
                         }
                     })
                 } else {
@@ -212,7 +218,6 @@ export default {
                 if (response.ok) {
                     response.json().then(data => {
                         this.followers = data;
-                        // console.log(data);
                     })
                 } else {
                     console.log('Error:', response);
@@ -243,8 +248,9 @@ export default {
             });
         },
 
-        checkStorage(){
+        async checkStorage(){
             this.otherUser = sessionStorage.getItem('user');
+            console.log(this.otherUser != this.userId || this.otherUser != null);
             if (this.otherUser != this.userId && this.otherUser != null){
                 fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/${this.otherUser}`, {
                 method: "GET",
@@ -332,8 +338,8 @@ export default {
                 credentials: 'include'
             }).then(async (res) => {
                 await res.json().then((data) => {
-                    console.log(data);
                     this.blogs = data;
+                    console.log(data[0].likes.length);
                 });
             }).catch((error) => {
                 console.log(error);
@@ -390,6 +396,7 @@ export default {
                 })
             
         },
+
 
         // to toggle create blog form
         toggleCreateBlog(show) {
