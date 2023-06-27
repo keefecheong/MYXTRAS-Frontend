@@ -458,7 +458,7 @@ export default {
         async verifyEmail() {
             const debouncedVerifyEmail = debounce(async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify-email`, {
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify/email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -492,7 +492,7 @@ export default {
             }
             const debouncedVerifyPhone = debounce(async () => {
             try {
-            const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify-phone`, {
+            const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify/phone`, {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -557,7 +557,7 @@ export default {
             // const dataObject = this.userObject;
             // localStorage.setItem('dataObject', JSON.stringify(dataObject));
 
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
