@@ -39,7 +39,7 @@ export default {
 
 .chatlist-item {
     display: flex;
-    padding: 10px;
+    padding: 12px;
     border-bottom: 1px solid gray;
     column-gap: 15px;
     align-items: center;

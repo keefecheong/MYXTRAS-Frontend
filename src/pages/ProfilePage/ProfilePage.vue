@@ -146,6 +146,12 @@ export default {
         }
     },
     created() {
+        // if page is reloaded then use the stored tempUser field as the target user
+        if (window.performance.getEntriesByType('navigation').map((nav) => nav.type).includes('reload')) {
+            const userId = sessionStorage.getItem('tempUser');
+            sessionStorage.setItem('user', userId);
+        }
+
         this.initData();
         
         // automatically open create blog form if href is /profilePage.html?create and requested user is self
@@ -155,13 +161,21 @@ export default {
 
         // set event listener to complete pending request when page is closed
         window.addEventListener('beforeunload', this.completeFollowRequest);
+
+        window.addEventListener('beforeunload', this.handleUnload);
     },
 
     beforeUnmount() {
         this.completeFollowRequest();
     },
-
     methods: {
+        // save user id as a temp field in sessionStorage and remove current user field
+        // tempUser will be used to continue viewing the current user if page refreshes
+        // if user goes to another page 'user' field will be unset - prevent profile page stuck on a user
+        handleUnload() {
+            sessionStorage.setItem('tempUser', this.user._id);
+            sessionStorage.removeItem('user');
+        },
         // to get user profile and associated posts
         async initData() {
             const targetUserId = sessionStorage.getItem('user') || 'self';

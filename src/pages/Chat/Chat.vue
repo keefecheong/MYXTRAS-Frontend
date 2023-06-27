@@ -249,12 +249,6 @@ export default {
     flex-direction: row;
 }
 
-#main-content .row {
-    width: 102.6%;
-    margin-left: -24px;
-    margin-right: -24px;
-}
-
 #main-content .row > div {
     padding: 0;
 }
@@ -318,5 +312,12 @@ export default {
 
 #main-content .row:last-child {
     height: 100%;
+}
+</style>
+
+<style scoped>
+/* to get rid of column between sidebar and chat */
+#main-container {
+    column-gap: 0;
 }
 </style>
