@@ -137,19 +137,14 @@ export default {
             followers: [],
             following: [],
             otherUserFollowers:[],
-            forums: [
-                { name: 'ILUVCats', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'We talk about cats' },
-                { name: 'muggingclub', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' },
-                { name: 'muggingclub', profilePic: 'https://www.vhv.rs/dpng/d/439-4393951_random-picture-of-a-person-hd-png-download.png', description: 'Gind never stops!' }
-            ],
+            forums: [],
             showCreateBlog: false,
-            follow: 'Follow',
             alertStore: useAlertStore(),
             confirmStore: useConfirmStore()
         }
     },
     created() {
-        this.getPosts();
+        // this.getPosts();
         
         if (window.location.search == '?create') {
             this.showCreateBlog = true;
@@ -159,11 +154,11 @@ export default {
     mounted() {
         this.checkAuth();
         this.populateFollowers();
-        window.addEventListener('beforeunload', this.resetSessionStorage);
+        // window.addEventListener('beforeunload', this.resetSessionStorage);
     },
 
     beforeUnmount() {
-        window.removeEventListener('beforeunload', this.resetSessionStorage);
+        // window.removeEventListener('beforeunload', this.resetSessionStorage);
     },
 
     methods: {
@@ -194,6 +189,7 @@ export default {
                             this.followers = data.followers;
                             this.userId = data._id;
                             this.checkStorage();
+                            this.getPosts();
                         }
                     })
                 } else {
@@ -215,8 +211,8 @@ export default {
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        console.log(data);
                         this.followers = data;
+                        // console.log(data);
                     })
                 } else {
                     console.log('Error:', response);
@@ -271,7 +267,7 @@ export default {
                         this.otherUser = data._id;
                         this.checkFollowing();
                         this.populateOtherFollowers();
-                        // this.getOtherPosts(this.otherUser);
+                        this.getOtherPosts();
                     })
                 } else {
                     console.log('Error:', response);
@@ -290,14 +286,16 @@ export default {
             this.followed = this.following.includes(this.otherUser);
         },
 
-        populateOtherFollowers(){
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/followers/${this.otherUser}`, {
+        async populateOtherFollowers(){
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/followers/${this.otherUser}`, {
                 method: "GET",
                 credentials: "include",
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
                         this.followers = data;
+                        console.log(this.otherUser);
+                        console.log(this.userId);
                     })
                 } else {
                     console.log('Error:', response);
@@ -320,6 +318,7 @@ export default {
             }).then(async (res) => {
                 await res.json().then((data) => {
                     this.blogs = data;
+                    
                 });
             }).catch((error) => {
                 console.log(error);
@@ -327,7 +326,7 @@ export default {
         },
 
         async getOtherPosts() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.otherUser}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/otherUser/${this.otherUser}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -347,7 +346,9 @@ export default {
             }
             else{
                 for (let i=0; i <= this.following.length; i++){
-                    if (this.otherUser === this.following[i]){
+                    console.log(this.otherUser);
+                    console.log(this.following[i]);
+                    if (this.otherUser == this.following[i]){
                         const index = this.following.indexOf(this.otherUser);
                         if (index > -1) { // only splice array when item is found
                             this.following.splice(index, 1); // 2nd parameter means remove one item only
@@ -355,8 +356,10 @@ export default {
                         break;
                     }
                     else{
-                        if (i+1 == this.following.length){
+                        if (i == this.following.length){
+                            console.log('push');
                             this.following.push(this.otherUser);
+                            break;
                         }
                     }
                 }
@@ -364,7 +367,6 @@ export default {
             this.userObject = {
                 'following': this.following      
             };
-            console.log(this.otherUser);
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/follow/${this.otherUser}`, {
                 method: 'PATCH', 
                 headers: {
@@ -375,6 +377,7 @@ export default {
             }).then(response => {
                 if (response.ok) {
                     this.checkFollowing();
+                    this.populateOtherFollowers();
                 } else {
                     console.log('Error:', response);
                 }
