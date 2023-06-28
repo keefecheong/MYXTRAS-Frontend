@@ -79,7 +79,7 @@
                     <div v-if="comments.length > 0">
                         <h4>Comments ({{ comments.length }})</h4>
                         
-                        <ThreadCommentLayout v-for="(comment, index) in comments" :comment="comment" :key="index" />
+                        <ThreadCommentLayout v-for="(comment, index) in comments" :comment="comment" :thread="thread" :key="index" />
                     </div>
                     
                     <div v-else>
@@ -187,6 +187,7 @@ export default {
             })
             .then(data => {
                 this.comments = data;
+                console.log(data);
                 this.dataInitialized = true;
             })
             .catch((error) => {

@@ -18,7 +18,11 @@
         </div>
 
         <div class="thread-comment-content">
-            <p>{{ comment.content }}</p>
+            <div class="blog-delete" title="Delete this post" v-if="userId == comment.creator_id._id">
+                <span class="material-symbols-outlined deleteButton" @click="deletePost()">delete</span>
+            </div>
+            <p class="comment">{{ comment.content }}</p>
+            
         </div>
     </div>
     <hr />
@@ -31,20 +35,72 @@ import viewUser from '../../utils/general/viewUser.js';
 export default {
     data() {
         return {
-            dateCreated: ''
+            dateCreated: '',
+            userId: '',
+            // confirm: useConfirmStore().confirm,
         }
     },
     props: [
-        'comment'
+        'comment',
+        'thread'
     ],
     created() {
         this.dateCreated = calcDateDifference(this.comment.creation_time);
+        this.checkAuth();
+        console.log(this.comment)
     },
     methods: {
         // to view profile of comment creator
         viewUser() {
             viewUser(this.comment.creator_id._id);
+        },
+
+        async checkAuth() {
+            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        this.userId = data._id;
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        },
+
+        async deletePost(){
+            // const confirmDelete = await this.confirm('Are you sure you want to delete this comment? This action is irreversible!');
+
+            // if (!confirmDelete) {
+            //     return;
+            // }
+            console.log(this.thread._id);
+            console.log(this.comment._id);
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.thread._id}/${this.comment._id}`, {
+                mode: 'cors',
+                method: 'DELETE',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then(async (data) => {
+                    
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
         }
+
     }
 }
 </script>
@@ -115,6 +171,12 @@ export default {
 
 .thread-comment-username {
     font-size: 0.8em;
+}
+
+
+.deleteButton{
+    color: black;   
+    float: right; 
 }
 
 hr {
