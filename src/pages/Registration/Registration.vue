@@ -313,7 +313,7 @@ export default {
             const consecutiveLimit = 3;
 
             // Minimum password length of 4 chars
-            if (password.length < 4 || this.isPasswordSingleType(password)) {
+            if (password.length < 8 || this.isPasswordSingleType(password)) {
                 this.passwordStrengthMessage = "Password is very weak"
             return 'very-weak';
             }

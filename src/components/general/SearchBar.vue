@@ -89,6 +89,7 @@
     border: none;
     border-radius: 30px;
     width: 100%;
+    box-shadow: 2px 2px 4px #5e5e5e;
 }
 
 .headerprofilepic {
