@@ -1,7 +1,7 @@
 <template>
     <LoadingOverlay v-if="submittingComment || !dataInitialized" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
 
-    <div class="card shadow" id="thread-detailed-layout-container">
+    <div class="card shadow" id="thread-detailed-layout-container" v-if="!deleted">
         <span v-if="showBackArrow" class="material-symbols-outlined" id="close-detailed-thread-container-arrow" title="Go back" @click="closeDetailedView">arrow_back</span>
         <span v-else class="material-symbols-outlined" id="close-detailed-thread-container-cross" title="Go back" @click="closeDetailedView">close</span>
 
@@ -23,12 +23,14 @@
                                 <span v-if="showForumDetails" @click.stop="viewForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
                                 <span class="thread-layout-creator-name" @click.stop="viewUser" title="View user">Posted by: @{{ thread.creator_id.username }}</span>
                             </div>
-
                             <span class="thread-title">{{ thread.title }}</span>
                         </div>
 
                         <div>
                             <span class="thread-datetime" :title="new Date(thread.creation_time)">{{ dateCreated }}</span>
+                            <div class="thread-delete" title="Delete this post" v-if="userId == thread.creator_id._id">
+                                <span class="material-symbols-outlined deleteButton" @click="deleteThread()">delete</span>
+                            </div>
                         </div>
                     </div>
 
@@ -79,7 +81,7 @@
                     <div v-if="comments.length > 0">
                         <h4>Comments ({{ comments.length }})</h4>
                         
-                        <ThreadCommentLayout v-for="(comment, index) in comments" :comment="comment" :thread="thread" :key="index" @deletedComment="handleDeletedComment"/>
+                        <ThreadCommentLayout v-for="(comment, index) in comments" :comment="comment" :thread="thread" :userId="userId" :key="index" @deletedComment="handleDeletedComment"/>
                     </div>
                     
                     <div v-else>
@@ -119,7 +121,11 @@ export default {
             savedDislike: false,
             dislikeCount: 0,
             likeTimeout: null,
-            dislikeTimeout: null
+            dislikeTimeout: null,
+            userId:'',
+            deleted: false,
+            emits: ['deletedThread']
+
         }
     },
     props: [
@@ -147,6 +153,8 @@ export default {
 
         // get comment data
         this.initData();
+
+        this.checkAuth();
 
         // get time difference from when thread was created and current datetime
         this.dateCreated = calcDateDifference(this.thread.creation_time);
@@ -194,6 +202,33 @@ export default {
                 console.log("This page could not be loaded: ", error);
             });
         },
+
+        async checkAuth() {
+            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        this.userId = data._id;
+                        console.log(this.userId)
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        },
+
         // to close detailed view
         closeDetailedView() {
             this.$emit('close-detailed-view');
@@ -387,7 +422,23 @@ export default {
             if (index > -1) { 
                 this.comments.splice(index, 1); 
             }
-        }
+        },
+
+        async deleteThread(){
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}`, {
+                mode: 'cors',
+                method: 'DELETE',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then(async (data) => {
+                    // this.$emit('deletedThread', this.thread)
+                    // this.deleted = true;
+                    window.location.reload();
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
     }
 }
 </script>
@@ -495,4 +546,9 @@ export default {
     border: none;
     background-color: var(--secondary);
 }
+
+.deleteButton{
+    margin-top: 5px;
+}
+
 </style>

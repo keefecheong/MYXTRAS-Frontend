@@ -18,7 +18,7 @@
         </div>
 
         <div class="thread-comment-content">
-            <div class="blog-delete" title="Delete this post" v-if="userId == comment.creator_id._id">
+            <div class="comment-delete" title="Delete this post" v-if="userId == comment.creator_id._id">
                 <span class="material-symbols-outlined deleteButton" @click="deleteComment()">delete</span>
             </div>
             <p class="comment">{{ comment.content }}</p>
@@ -39,49 +39,23 @@ export default {
     data() {
         return {
             dateCreated: '',
-            userId: '',
-            confirm: useConfirmStore().confirm
+            confirm: useConfirmStore().confirm,
+            emits: ['deletedComment']
 
         }
     },
     props: [
         'comment',
-        'thread'
+        'thread',
+        'userId'
     ],
     created() {
         this.dateCreated = calcDateDifference(this.comment.creation_time);
-        this.checkAuth();
-        console.log(this.comment);
     },
     methods: {
         // to view profile of comment creator
         viewUser() {
             viewUser(this.comment.creator_id._id);
-        },
-
-        async checkAuth() {
-            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        this.userId = data._id;
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                    })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
         },
 
         async deleteComment(){

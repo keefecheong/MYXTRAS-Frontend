@@ -183,7 +183,14 @@ export default {
             }
 
             this.showDetailedThread = show;
-        }
+        },
+
+        // handleDeletedThread(thread){
+        //     const index = this.threads.indexOf(thread);
+        //     if (index > -1) { 
+        //         this.threads.splice(index, 1); 
+        //     }
+        // }
 
     },
     computed: {

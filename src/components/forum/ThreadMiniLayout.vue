@@ -19,6 +19,9 @@
 
                     <div>
                         <span class="thread-datetime" :title="new Date(thread.creation_time)">{{ dateCreated }}</span>
+                        <!-- <div class="thread-delete" title="Delete this post" >
+                            <span class="material-symbols-outlined deleteButton" @click="deleteThread()">delete</span>
+                        </div> -->
                     </div>
                 </div>
 
@@ -53,7 +56,8 @@ export default {
     data() {
         return {
             showThreadForm: false,
-            dateCreated: ''
+            dateCreated: '',
+            emits: ['deletedThread']
         }
     },
     components: {
@@ -87,7 +91,23 @@ export default {
         // to view profile of the user
         viewUser() {
             viewUser(this.thread.creator_id._id);
-        }
+        },
+
+        // async deleteThread(){
+        //     await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}`, {
+        //         mode: 'cors',
+        //         method: 'DELETE',
+        //         credentials: 'include'
+        //     }).then(async (res) => {
+        //         await res.json().then(async (data) => {
+        //             this.$emit('deletedThread', this.thread)
+        //             // this.deleted = true;
+        //             // window.location.reload();
+        //         });
+        //     }).catch((error) => {
+        //         console.log(error);
+        //     });
+        // },
     }
 }
 </script>
@@ -113,5 +133,10 @@ export default {
     max-height: calc(var(--line-height) * 2);
     white-space: normal !important;
 }
+
+/* .deleteButton{
+    color: black;   
+    float: right; 
+} */
 
 </style>
