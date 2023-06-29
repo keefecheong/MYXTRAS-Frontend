@@ -79,7 +79,7 @@
                     <div v-if="comments.length > 0">
                         <h4>Comments ({{ comments.length }})</h4>
                         
-                        <ThreadCommentLayout v-for="(comment, index) in comments" :comment="comment" :thread="thread" :key="index" />
+                        <ThreadCommentLayout v-for="(comment, index) in comments" :comment="comment" :thread="thread" :key="index" @deletedComment="handleDeletedComment"/>
                     </div>
                     
                     <div v-else>
@@ -380,6 +380,13 @@ export default {
         // to view profile of the user
         viewUser() {
             viewUser(this.thread.creator_id._id);
+        },
+
+        handleDeletedComment(comment){
+            const index = this.comments.indexOf(comment);
+            if (index > -1) { 
+                this.comments.splice(index, 1); 
+            }
         }
     }
 }

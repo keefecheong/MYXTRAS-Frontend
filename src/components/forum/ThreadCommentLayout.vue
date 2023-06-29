@@ -19,7 +19,7 @@
 
         <div class="thread-comment-content">
             <div class="blog-delete" title="Delete this post" v-if="userId == comment.creator_id._id">
-                <span class="material-symbols-outlined deleteButton" @click="deletePost()">delete</span>
+                <span class="material-symbols-outlined deleteButton" @click="deleteComment()">delete</span>
             </div>
             <p class="comment">{{ comment.content }}</p>
             
@@ -31,13 +31,17 @@
 <script>
 import calcDateDifference from '../../utils/general/calcDateDifference';
 import viewUser from '../../utils/general/viewUser.js';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
+
+
 
 export default {
     data() {
         return {
             dateCreated: '',
             userId: '',
-            // confirm: useConfirmStore().confirm,
+            confirm: useConfirmStore().confirm
+
         }
     },
     props: [
@@ -47,7 +51,7 @@ export default {
     created() {
         this.dateCreated = calcDateDifference(this.comment.creation_time);
         this.checkAuth();
-        console.log(this.comment)
+        console.log(this.comment);
     },
     methods: {
         // to view profile of comment creator
@@ -80,21 +84,19 @@ export default {
                 });
         },
 
-        async deletePost(){
-            // const confirmDelete = await this.confirm('Are you sure you want to delete this comment? This action is irreversible!');
+        async deleteComment(){
+            const confirmDelete = await this.confirm('Are you sure you want to delete this comment? This action is irreversible!');
 
-            // if (!confirmDelete) {
-            //     return;
-            // }
-            console.log(this.thread._id);
-            console.log(this.comment._id);
+            if (!confirmDelete) {
+                return;
+            }
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.thread._id}/${this.comment._id}`, {
                 mode: 'cors',
                 method: 'DELETE',
                 credentials: 'include'
             }).then(async (res) => {
                 await res.json().then(async (data) => {
-                    
+                    this.$emit('deletedComment', this.comment)
                 });
             }).catch((error) => {
                 console.log(error);

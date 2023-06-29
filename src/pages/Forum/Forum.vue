@@ -4,6 +4,10 @@
         {{ alertMsg }}
     </AlertPrompt>
 
+    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+        {{ confirmMsg }}
+    </ConfirmPrompt>
+
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
@@ -77,10 +81,12 @@ import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 import CreatedForums from '../../components/forum/CreatedForums.vue';
 import PopularThreads from '../../components/forum/PopularThreads.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
 import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
 import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
+import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 
 export default {
     components: {
@@ -93,7 +99,8 @@ export default {
     AlertPrompt,
     ForumFormLayout,
     ThreadDetailedLayout,
-    ThreadMiniLayout
+    ThreadMiniLayout,
+    ConfirmPrompt
 },
     data() {
         return {
@@ -101,6 +108,7 @@ export default {
             isDraggable: false,
             showForumForm: false,
             alertStore: useAlertStore(),
+            confirmStore: useConfirmStore(),
             alert: useAlertStore().alert,
             tags: [],
             showForumDetails: false,
@@ -162,6 +170,10 @@ export default {
         closeAlert() {
             this.alertStore.closeAlert();
         },
+
+        closeConfirm(decision){
+            this.confirmStore.closeConfirm(decision);
+        },
         // show detailed view of popular thread
         toggleDetailedThread(show, index, thread) {
             this.selectedPopularThread = thread;
@@ -182,6 +194,14 @@ export default {
         // to get alertMsg value
         alertMsg() {
             return this.alertStore.alertMsg;
+        },
+        // to get showConfirm value
+        showConfirm() {
+            return this.confirmStore.showConfirm;
+        },
+        // to get confirmMsg value
+        confirmMsg() {
+            return this.confirmStore.confirmMsg;
         },
         // get thread to display in detailed layout
         threadToDisplay() {
