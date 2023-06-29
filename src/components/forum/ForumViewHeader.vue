@@ -35,7 +35,16 @@
                     <button @click="showForumForm">
                         <span class="material-symbols-outlined">Edit</span>
                     </button>
+                    <button @click="deleteForum()">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+
+                    <!-- <div class="forum-delete" title="Delete this post">
+                        <span class="material-symbols-outlined deleteButton" @click="deleteForum()">delete</span>
+                    </div> -->
                 </div>
+
+                
 
                 <div id="normal-options">
                     <button v-if="!forum.isCreator" :class="{ 'subscribed': workingSubscribe, 'white-btn': !workingSubscribe  }" @click="toggleSubscribe">
@@ -52,6 +61,8 @@
 
 <script>
 import InterestBadgeList from '../general/InterestBadgeList.vue';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
+
 
 export default {
     data() {
@@ -59,7 +70,8 @@ export default {
             workingSubscribe: false,
             savedSubscribe: false,
             subscribeTimeout: null,
-            numOfSubs: 0
+            numOfSubs: 0,
+            confirm: useConfirmStore().confirm,
         }
     },
     props: [
@@ -156,6 +168,25 @@ export default {
                 clearTimeout(this.subscribeTimeout);
                 this.updateSubscribe();
             }
+        },
+
+        async deleteForum(){
+            const confirmDelete = await this.confirm('Are you sure you want to delete this forum? This action is irreversible!');
+
+            if (!confirmDelete) {
+                return;
+            }
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forum._id}`, {
+                mode: 'cors',
+                method: 'DELETE',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then(async (data) => {
+                    window.location.href = '/forum.html';
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
         }
     }
 }

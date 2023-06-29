@@ -103,6 +103,8 @@ import LoadingOverlay from '../general/LoadingOverlay.vue';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
 import viewUser from '../../utils/general/viewUser.js';
 import viewForum from '../../utils/general/viewForum.js';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
+
 
 export default {
     data() {
@@ -111,6 +113,7 @@ export default {
             dateCreated: '',
             dataInitialized: false,
             alert: useAlertStore().alert,
+            confirm: useConfirmStore().confirm,
 
             submittingComment: false,
             commentText: '',
@@ -425,6 +428,11 @@ export default {
         },
 
         async deleteThread(){
+            const confirmDelete = await this.confirm('Are you sure you want to delete this thread? This action is irreversible!');
+
+            if (!confirmDelete) {
+                return;
+            }
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}`, {
                 mode: 'cors',
                 method: 'DELETE',

@@ -4,6 +4,10 @@
         {{ alertMsg }}
     </AlertPrompt>
 
+    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+        {{ confirmMsg }}
+    </ConfirmPrompt>
+
     <div id="main-container">
     <NavSidebar />
     <div id="main-content" v-if="contentLoaded" >
@@ -64,6 +68,9 @@ import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import ThreadFormLayout from '../../components/forum/ThreadFormLayout.vue';
 import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
+
 
 export default {
     components: {
@@ -74,7 +81,8 @@ export default {
         ForumViewHeader,
         AlertPrompt,
         ThreadFormLayout,
-        ThreadDetailedLayout
+        ThreadDetailedLayout,
+        ConfirmPrompt
     },
 
     data() {
@@ -83,6 +91,7 @@ export default {
             showThreadForm: false,
             showDetailedView: false,
             alertStore: useAlertStore(),
+            confirmStore: useConfirmStore(),
 
             forum: {},
             contentLoaded: false,
@@ -183,7 +192,10 @@ export default {
         // to close alert prompt
         closeAlert() {
             this.alertStore.closeAlert();
-        }
+        },
+        closeConfirm(decision){
+            this.confirmStore.closeConfirm(decision);
+        },
     },
     computed: {
         // get number of subscribers
@@ -197,7 +209,15 @@ export default {
         // to get alertMsg value
         alertMsg() {
             return this.alertStore.alertMsg;
-        }
+        },
+        // to get showConfirm value
+        showConfirm() {
+            return this.confirmStore.showConfirm;
+        },
+        // to get confirmMsg value
+        confirmMsg() {
+            return this.confirmStore.confirmMsg;
+        },
     }
 }
 </script>
