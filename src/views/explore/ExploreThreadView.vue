@@ -223,7 +223,7 @@ export default {
     }
     .sticky-filter {
         position: sticky;
-        top: 12vh;
+        top: 15vh;
         right: 5vw;
         display: flex;
         justify-content: flex-end;
