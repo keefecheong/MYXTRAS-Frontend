@@ -62,7 +62,7 @@
         <div id="minimized" v-if="!maximized">  <!-- minimized sidebar shown when "maximized" is false -->
             <!-- <button class="material-symbols-outlined" @click="toggleSidebar()">keyboard_double_arrow_right</button> -->
             <button class="material-symbols-outlined" @click="toggleSidebar()">keyboard_double_arrow_right</button>
-            
+            <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo-mini"/>
             <a href="/feed.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Feed">group</span>
             </a>
@@ -92,11 +92,11 @@
         <!-- expanded navbar implementation -->
         <div id="expanded" v-if="expanded">  <!-- expand navbar shown when "expanded" is true -->
             <div>
-                <h1 id="expanded-header">MyXtras</h1>
+                <h1 id="expanded-header" style="color: white;">MyXtras</h1>
                 <button class="material-symbols-outlined" id="close-navbar" @click="toggleNavbar()">close</button>
             </div>
             
-            <img src="../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
+            <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
         
             <a href="/feed.html" class="navbar-link">
                 <span class="material-symbols-outlined">group</span>
@@ -516,13 +516,19 @@ export default {
 
     /* logo style */
     .ngee-ann-logo {
-        margin: 30px auto;
+        width: 50%;
+        margin: 20px auto;
         text-align: center;
         display: block;
-        margin-top: 30px;
         border-radius: 50%;
     }
-
+    .ngee-ann-logo-mini {
+        width: 100%;
+        margin: 50px auto;
+        text-align: center;
+        display: block;
+        border-radius: 50%;
+    }
     /* sidebar link styles */
     a.sidebar-link, a.navbar-link {
         text-decoration: none !important;
