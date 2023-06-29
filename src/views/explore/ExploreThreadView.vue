@@ -9,13 +9,15 @@
                 @interest-selected="handleInterestSelected"
             />
         </div>
-        <div id="no-filtered-threads" v-if="filteredThreads.length == 0">
-            <p>No threads found.</p>
-            <p>Select another filter?</p>
-        </div>
     </div>
     <div class="row" v-if="this.threads">
         <div class="col-md-9" style="position: relative;">
+            <div class="card shadow" v-if="filteredThreads.length == 0">
+                <div id="no-filtered-threads">
+                    <p>No threads found.</p>
+                    <p>Select another filter?</p>
+                </div>
+            </div>
             <div v-if="!showDetailedThread">
                 <ThreadMiniLayout
                     v-for="(thread, index) in filteredThreads"
@@ -35,7 +37,7 @@
                 />
             </div>
         </div>
-        <div class="col-md-3 ">
+        <div class="col-md-3">
             <div class="sticky-div">
                 <div class="popular-community">
                     <h1 class="pop-header" v-if="tagsLoaded">Popular Communities</h1>
@@ -189,7 +191,7 @@ export default {
     }
     #no-filtered-threads {
         text-align: center;
-        margin-top: 5vh;
+        margin: 5vh;
     }
     #forumContainer {
         padding-top: 10px;
