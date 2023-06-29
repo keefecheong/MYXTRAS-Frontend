@@ -40,10 +40,12 @@ export default {
         return {
             dateCreated: '',
             confirm: useConfirmStore().confirm,
-            emits: ['deletedComment']
-
         }
     },
+    emits: [
+        'deletedComment'
+    ],
+
     props: [
         'comment',
         'thread',

@@ -127,10 +127,14 @@ export default {
             dislikeTimeout: null,
             userId:'',
             deleted: false,
-            emits: ['deletedThread']
 
         }
     },
+
+    emits: [
+        'deletedThread'
+    ],
+
     props: [
         'thread',
         'showBackArrow',
