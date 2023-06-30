@@ -1,0 +1,13 @@
+{
+  "interestColors": [
+    { "interest": "Music", "color": "#1f92e0" },
+    { "interest": "Goth", "color": "#8f8f8f" },
+    { "interest": "Games", "color": "#6FE5FF" },
+    { "interest": "Technology", "color": "#6FFFA8" },
+    { "interest": "Sports", "color": "#FFE27B" },
+    { "interest": "Dancing", "color": "#7B88FF" },
+    { "interest": "Instruments", "color": "#FFAB6F" },
+    { "interest": "Coding", "color": "#6F74FF" },
+    { "interest": "Lifestyle", "color": "#FC5454" }
+  ]
+}

@@ -27,18 +27,21 @@
             v-for="option in displayOptions"
             class="badge"
             :class="[
-                `badge-${option.toLowerCase()}`,
+                `badge-${option.interest}`,
                 { 'selection': selection },
-                { 'selected': selection && selectedOption.includes(option) }
+                { 'selected': selection && selectedOption.includes(option.interest) }
             ]"
-            @click="() => handleChoice(option)"
+            :style="{ backgroundColor: option.color }"
+            @click="() => handleChoice(option.interest)"
         >
-            {{ option }}
+            {{ option.interest }}
         </span>
     </div>
 </template>
 
 <script>
+import interests from '../../assets/config.json';
+
 export default {
     props: [
         'selectedOption',
@@ -47,16 +50,17 @@ export default {
     ],
     data() {
         return {
-            options:[
-                'Music',
-                'Games',
-                'Technology',
-                'Sports',
-                'Dancing',
-                'Instruments',
-                'Goth',
-                'Lifestyle'
-            ]
+            options: interests.interestColors.map(item => item.interest)
+            // options:[
+            //     'Music',
+            //     'Games',
+            //     'Technology',
+            //     'Sports',
+            //     'Dancing',
+            //     'Instruments',
+            //     'Goth',
+            //     'Lifestyle'
+            // ]
         }
     },
     emits: [
@@ -73,11 +77,16 @@ export default {
     computed: {
         // get correct list to display interests
         displayOptions() {
+            // if (this.selection) {
+            //     return this.options;
+            // }
+            // else {
+            //     return this.selectedOption;
+            // }
             if (this.selection) {
-                return this.options;
-            }
-            else {
-                return this.selectedOption;
+                return interests.interestColors;
+            } else {
+                return interests.interestColors.filter(item => this.selectedOption.includes(item.interest));
             }
         }
     }
@@ -120,7 +129,7 @@ background: #c9c9c98d;
     cursor: pointer;
 }
 
-.badge-music{
+/* .badge-music{
     background-color: #1f92e0;
 }
 
@@ -154,7 +163,7 @@ background: #c9c9c98d;
 
 .badge-lifestyle{
     background-color: #FC5454;
-}
+} */
 
 .selected {
     border: 3px solid black;
