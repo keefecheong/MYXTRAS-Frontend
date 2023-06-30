@@ -137,7 +137,6 @@ export default {
                             this.gender = data.gender;
                             this.userId = data._id;
                             this.profilePicture = data.profile_pic_link;
-                            console.log(this.selectedOption)
                             this.dataRetrieved = true
                         }
                     })
@@ -226,7 +225,6 @@ export default {
         
       };
       formData.append('userObject', JSON.stringify(this.userObject));
-
       formData.append('selectedImages', this.$refs.fileInput.files[0]);
 
       try{
