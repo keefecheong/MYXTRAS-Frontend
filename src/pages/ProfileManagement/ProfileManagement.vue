@@ -39,7 +39,7 @@
 
         <div class="mb-3 row" id="position" >
           <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
-          <div class="col-sm-4">
+          <div class="col-sm-4" v-if="dataRetrieved">
             <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
           </div>
         </div>
@@ -104,6 +104,7 @@ export default {
       gender:'',
       // secondaryEmail: '',
       showBtn: false,
+      dataRetrieved: false
       // selectedBanner: "banner",
       // selectedProfilePic: "profilePicture",
     }
@@ -136,6 +137,8 @@ export default {
                             this.gender = data.gender;
                             this.userId = data._id;
                             this.profilePicture = data.profile_pic_link;
+                            console.log(this.selectedOption)
+                            this.dataRetrieved = true
                         }
                     })
                 } else {
