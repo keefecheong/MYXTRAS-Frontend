@@ -152,13 +152,9 @@ import AddInterestButton from '../../components/general/AddInterestButton.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import DynamicTextarea from '../../components/general/DynamicTextarea.vue';
-<<<<<<< HEAD
 import redirectUser from '../../utils/authentication/redirectAuthenticatedUser.js';
 import signOut from '../../utils/authentication/signOut.js';
-=======
-import redirectUser from '../../utils/general/redirectAuthenticatedUser.js';
 import { debounce } from 'lodash';
->>>>>>> d8c94196163dac4c3fc9170227a778a707934c8d
 
 export default {
     components: {
@@ -180,11 +176,8 @@ export default {
             schoolData: null,
             alert: useAlertStore().alert,
             alertStore: useAlertStore(),
-<<<<<<< HEAD
-            setupComplete: false
-=======
+            setupComplete: false,
             usernameErr: null,
->>>>>>> d8c94196163dac4c3fc9170227a778a707934c8d
         };
     },
     computed: {
@@ -198,7 +191,6 @@ export default {
         }
     },
     created() {
-<<<<<<< HEAD
         // check if user has to set up profile
         const stayOnPage = sessionStorage.getItem('to_setup_profile');
 
@@ -208,11 +200,6 @@ export default {
             return;
         }
 
-=======
-        //redirectUser();
-        this.checkForCookie();
-        this.checkAuth();
->>>>>>> d8c94196163dac4c3fc9170227a778a707934c8d
         this.getSchools();
 
         window.addEventListener('beforeunload', async () => {
@@ -262,64 +249,6 @@ export default {
             // You can store the selected interests in a data property or send them to an API, etc.
             this.selectedOption = selectedInterests;
         },
-<<<<<<< HEAD
-=======
-        
-        checkForCookie(){
-            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
-                    method: "GET",
-                    headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    },
-                    credentials: "include",
-                })
-                .then(response => {
-                if (!response.ok) {
-                    window.location.href = '/feed.html';
-                    console.log("fail");
-                }
-                else if (response.ok){
-                    console.log('Success:');
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-        },
-
-        checkAuth() {
-            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        if (data.is_profile_setup === true){
-                            window.location.href = '/feed.html';
-                            return;
-                        }
-                        else {
-                            this.userId = data._id;
-                        }
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                    })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        },
-
->>>>>>> d8c94196163dac4c3fc9170227a778a707934c8d
         async validationCheck(){
             let detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
             
