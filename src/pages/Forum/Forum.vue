@@ -24,7 +24,7 @@
                 <div class="col-md-6 forum-middle-content">
                     <div class="row" v-if="!showDetailedThread">
                         <div class="card shadow" v-if="recentThreads.length === 0">
-                            <div class="center-align">
+                            <div class="center-align whiteBox">
                                 <p>No new threads, <a href="/explore.html">Xplore</a> now!</p>
                             </div>
                         </div>
@@ -73,6 +73,11 @@
 
 #forum-view-container {
     padding: 20px;
+}
+.whiteBox p {
+    margin: 5vh;
+    text-align: center;
+
 }
 </style>
 

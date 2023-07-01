@@ -29,7 +29,10 @@
     width: fit-content;
     margin: 0 auto;
 }
-
+p {
+    margin-top: 5vh;
+    text-align: center;
+}
 /* Track */
 ::-webkit-scrollbar-track {
 background: #ffffff; 

@@ -26,7 +26,8 @@
         <div class="mb-3 row" id="position">
           <label for="inputUsername" class="col-md-1 offset-md-4 col-form-label">Username: @</label>
           <div class="col-sm-4">
-            <input type="username" v-model="username" class="form-control" id="inputUsername" placeholder="Username">
+            <input type="username" v-model="username" class="form-control" id="inputUsername" placeholder="Username" @input="verifyUsername">
+            <p style="color: red; margin-top: 20px; margin-left: 125px;">{{ this.usernameErr }}</p>
           </div>
         </div>
 
@@ -81,7 +82,7 @@ import AddInterestButton from '../../components/general/AddInterestButton.vue'
 import ngeeann from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
 import Cropper from 'cropperjs';
-
+import { debounce } from 'lodash';
 
 export default {
   components: {
@@ -104,7 +105,8 @@ export default {
       gender:'',
       // secondaryEmail: '',
       showBtn: false,
-      dataRetrieved: false
+      dataRetrieved: false,
+      usernameErr: null,
       // selectedBanner: "banner",
       // selectedProfilePic: "profilePicture",
     }
@@ -213,6 +215,38 @@ export default {
       this.showBtn = false;
     },
 
+    async verifyUsername() {
+      const debouncedVerifyUsername = debounce(async () => {
+      try {
+          const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/username`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json; charset=UTF-8',
+              },
+              credentials: "include",
+              body: JSON.stringify({ username: this.username })
+          });
+
+          if (response.ok) {
+              this.usernameErr = null;
+              return;
+          } else if (response.status === 400) {
+              const data = await response.json();
+
+              if (data.error === 'Username already exists') {
+                  this.usernameErr = "Username already taken";
+                  return;
+              } else {
+                  throw new Error('Error: ' + response.status);
+              }
+          }
+      } catch (error) {
+          console.error('Error:', error);
+      }
+      }, 2000);
+
+      debouncedVerifyUsername()
+  },
     async updateProfile(){
       let formData = new FormData();
 
