@@ -67,7 +67,7 @@
         </div> -->
 
         <div class="submitbutton" style="margin: 30px;" id="profile">
-          <button class="submit-button" @click="updateProfile()">Update</button>
+          <button class="submit-button" @click="updateProfile()" :disabled="!verifiedUsername" :class="{ 'disabled': !verifiedUsername}" >Update</button>
         </div>
       </div>
         
@@ -216,6 +216,7 @@ export default {
     },
 
     async verifyUsername() {
+      this.verifiedUsername = false;
       const debouncedVerifyUsername = debounce(async () => {
       try {
           const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/username`, {
@@ -228,6 +229,7 @@ export default {
           });
 
           if (response.ok) {
+              this.verifiedUsername = true;
               this.usernameErr = null;
               return;
           } else if (response.status === 400) {
@@ -243,11 +245,14 @@ export default {
       } catch (error) {
           console.error('Error:', error);
       }
-      }, 2000);
+      }, 1000);
 
       debouncedVerifyUsername()
   },
     async updateProfile(){
+      if (!this.verifiedUsername) {
+        return;
+      }
       let formData = new FormData();
 
       this.userObject = {
@@ -288,6 +293,10 @@ export default {
 </script>
 
 <style>
+  .disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+  }
     body{
       margin: 0;
       padding: 0;

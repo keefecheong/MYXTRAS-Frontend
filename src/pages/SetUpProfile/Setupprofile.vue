@@ -35,7 +35,7 @@
                         <p class="warning">Warning: School and course cannot be modified in a later date. Ensure that <br> 
                             you have chosen the most accurate description of your course of study</p>
                         <br>
-                        <button @click="setupprofile()" id="getStartedBtn">
+                        <button @click="setupprofile()" id="getStartedBtn" :disabled="!verifiedUsername" :class="{'disabled': !verifiedUsername}">
                             Get Started
                         </button>
                     </form>
@@ -47,6 +47,10 @@
 </template>
 
 <style>
+.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+}
 body {
     background: linear-gradient(45deg,#FF6363, #E53A73);
     height: 100%;
@@ -356,6 +360,7 @@ export default {
             // console.log(this.userObject);
         },
         async verifyUsername() {
+        this.verifiedUsername = false;
         const debouncedVerifyUsername = debounce(async () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/username`, {
@@ -369,12 +374,13 @@ export default {
 
             if (response.ok) {
                 this.usernameErr = null;
+                this.verifiedUsername = true;
                 return;
             } else if (response.status === 400) {
                 const data = await response.json();
 
                 if (data.error === 'Username already exists') {
-                    this.usernameErr = "Username already taken";
+                        this.usernameErr = "Username already taken";
                     return;
                 } else {
                     throw new Error('Error: ' + response.status);
