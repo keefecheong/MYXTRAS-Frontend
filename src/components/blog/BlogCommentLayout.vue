@@ -39,7 +39,7 @@
 import calcDateDifference from '../../utils/general/calcDateDifference.js';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
-import viewUser from '../../utils/general/viewUser.js';
+import { viewUser } from '../../utils/general/viewUser.js';
 
 export default {
     data() {

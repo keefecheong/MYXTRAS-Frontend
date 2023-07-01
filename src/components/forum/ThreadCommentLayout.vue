@@ -32,7 +32,7 @@
 
 <script>
 import calcDateDifference from '../../utils/general/calcDateDifference';
-import viewUser from '../../utils/general/viewUser.js';
+import { viewUser } from '../../utils/general/viewUser.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import { useAlertStore } from '../../stores/AlertStore';
 

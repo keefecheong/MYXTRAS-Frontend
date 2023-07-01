@@ -405,7 +405,7 @@ import InterestBadgeList from '../general/InterestBadgeList.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
-import viewUser from '../../utils/general/viewUser.js';
+import { viewUser } from '../../utils/general/viewUser.js';
 
 export default {
     data() {
