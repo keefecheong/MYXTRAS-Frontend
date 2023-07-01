@@ -106,7 +106,7 @@ import { useAlertStore } from '../../stores/AlertStore';
 import calcDateDifference from '../../utils/general/calcDateDifference';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
-import viewUser from '../../utils/general/viewUser.js';
+import { viewUser } from '../../utils/general/viewUser.js';
 import viewForum from '../../utils/general/viewForum.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ThreadFormLayout from './ThreadFormLayout.vue';

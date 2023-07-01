@@ -87,7 +87,13 @@
                         <div class="card-body card-position">
                             <h5 class="card-title">Followers: {{ user.followers.length }}</h5>
 
-                            <div v-for="follower in user.followers" :key="follower.username" @click="viewUser(follower._id)" class="view-user-follower" title="View user">
+                            <div
+                                class="view-user-follower"
+                                title="View user"
+                                v-for="follower in user.followers"
+                                :key="follower.username"
+                                @click="viewFollower(follower._id)"
+                            >
                                 <img class="profilepic" :src="follower.profile_pic_link">
                                 <span class="follower-username">{{ follower.username }}</span>
                             </div>
@@ -117,7 +123,7 @@ import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 import ObjectID from 'bson-objectid';
-import viewUser from '../../utils/general/viewUser.js';
+import { viewFollower } from '../../utils/general/viewUser.js';
 
 export default {
     components: {
@@ -132,6 +138,8 @@ export default {
     },
     data() {
         return {
+            targetUserId: null,
+
             user: null,
             self: null,
             isSelf: false,
@@ -154,8 +162,25 @@ export default {
     created() {
         // if page is reloaded then use the stored tempUser field as the target user
         if (window.performance.getEntriesByType('navigation').map((nav) => nav.type).includes('reload')) {
-            const userId = sessionStorage.getItem('tempUser');
-            sessionStorage.setItem('user', userId);
+            this.targetUserId = sessionStorage.getItem('tempUser');
+        }
+        else {
+            // if 'followerId' is present in sessionStorage then view that profile
+            const followerId = sessionStorage.getItem('followerId');
+            const userId = sessionStorage.getItem('user');
+
+            if (followerId) {
+                this.targetUserId = followerId;
+                sessionStorage.removeItem('followerId');
+            }
+            // otherwise if 'user' is present in sessionStorage then view that profile
+            else if (userId) {
+                this.targetUserId = userId;
+            }
+            // default to self
+            else {
+                this.targetUserId = 'self';
+            }
         }
 
         this.initData();
@@ -184,10 +209,8 @@ export default {
         },
         // to get user profile and associated posts
         async initData() {
-            const targetUserId = sessionStorage.getItem('user') || 'self';
-
             // get user profile and follow status
-            const userPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/${targetUserId}`, {
+            const userPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/${this.targetUserId}`, {
                 methods: 'GET',
                 credentials: 'include',
                 mode: 'cors'
@@ -211,7 +234,7 @@ export default {
             });
 
             // get user's posts
-            const postPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/by/${targetUserId}`, {
+            const postPromise = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/by/${this.targetUserId}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -329,8 +352,8 @@ export default {
             this.confirmStore.closeConfirm(decision);
         },
         // to view follower user profile
-        viewUser(userId) {
-            viewUser(userId);
+        viewFollower(userId) {
+            viewFollower(userId);
         },
         // to create chat with the user and go to chat.html
         async createChat() {
@@ -384,7 +407,6 @@ export default {
             return this.confirmStore.confirmMsg;
         }
     }
-
 }
 
 </script>

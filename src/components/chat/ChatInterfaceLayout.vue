@@ -143,7 +143,7 @@ import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
-import viewUser from '../../utils/general/viewUser.js';
+import { viewUser } from '../../utils/general/viewUser.js';
 
 export default {
     data() {
