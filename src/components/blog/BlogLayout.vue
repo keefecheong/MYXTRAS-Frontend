@@ -337,6 +337,7 @@
     user-select: none;
     display: inline;
     margin-right: 5px;
+    font-size: 1.5em;
 }
 
 /* set liked favorite icon to filled red */

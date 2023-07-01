@@ -19,9 +19,6 @@
 
                     <div>
                         <span class="thread-datetime" :title="new Date(thread.creation_time)">{{ dateCreated }}</span>
-                        <!-- <div class="thread-delete" title="Delete this post" >
-                            <span class="material-symbols-outlined deleteButton" @click="deleteThread()">delete</span>
-                        </div> -->
                     </div>
                 </div>
 
@@ -30,8 +27,9 @@
                         <InterestBadgeList v-if="thread.tags.length > 0" :selectedOption="thread.tags" :selection="false" title="Tags" />
                     </div>
 
-                    <div class="thread-privileged-options">
-                        <span class="material-symbols-outlined" v-if="thread.isOwner" @click.stop="() => toggleThreadForm(true)" title="Edit this thread">edit</span>
+                    <div class="thread-privileged-options" v-if="thread.isOwner">
+                        <span class="material-symbols-outlined" @click.stop="() => toggleThreadForm(true)" title="Edit this thread">edit</span>
+                        <span class="material-symbols-outlined" @click.stop="deleteThread" title="Delete this thread">delete</span>
                     </div>
                 </div>
             </div>
@@ -51,13 +49,16 @@ import ThreadFormLayout from './ThreadFormLayout.vue';
 import calcDateDifference from '../../utils/general/calcDateDifference';
 import viewUser from '../../utils/general/viewUser.js';
 import viewForum from '../../utils/general/viewForum.js';
+import { useAlertStore } from '../../stores/AlertStore';
+import { useConfirmStore } from '../../stores/ConfirmStore';
 
 export default {
     data() {
         return {
             showThreadForm: false,
             dateCreated: '',
-            emits: ['deletedThread']
+            alert: useAlertStore().alert,
+            confirm: useConfirmStore().confirm
         }
     },
     components: {
@@ -71,6 +72,7 @@ export default {
     ],
     emits: [
         'show-detailed-view',
+        'deleted-thread'
     ],
     created() {
         this.dateCreated = calcDateDifference(this.thread.creation_time);
@@ -92,22 +94,28 @@ export default {
         viewUser() {
             viewUser(this.thread.creator_id._id);
         },
+        // to delete thread
+        async deleteThread(){
+            const confirmDelete = await this.confirm('Are you sure you want to delete this thread? This action is irreversible!');
 
-        // async deleteThread(){
-        //     await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}`, {
-        //         mode: 'cors',
-        //         method: 'DELETE',
-        //         credentials: 'include'
-        //     }).then(async (res) => {
-        //         await res.json().then(async (data) => {
-        //             this.$emit('deletedThread', this.thread)
-        //             // this.deleted = true;
-        //             // window.location.reload();
-        //         });
-        //     }).catch((error) => {
-        //         console.log(error);
-        //     });
-        // },
+            if (!confirmDelete) {
+                return;
+            }
+
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}`, {
+                mode: 'cors',
+                method: 'DELETE',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then(async (data) => {
+                    this.alert(data.message);
+
+                    this.$emit('deleted-thread');
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
     }
 }
 </script>
@@ -124,19 +132,7 @@ export default {
 }
 
 .thread-content {
-    --line-height: 1.5em;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    word-break: break-all;
-    line-height: var(--line-height);
-    max-height: calc(var(--line-height) * 2);
-    white-space: normal !important;
+    -webkit-line-clamp: 2 !important;
 }
-
-/* .deleteButton{
-    color: black;   
-    float: right; 
-} */
 
 </style>

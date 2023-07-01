@@ -33,7 +33,9 @@
                                 :thread="thread" 
                                 :index="index"
                                 :showForumDetails="false"
-                                @show-detailed-view="() => toggleDetailedView(true, index)" />
+                                @show-detailed-view="() => toggleDetailedView(true, index)"
+                                @deleted-thread="() => handleDeletedThread(index)"
+                            />
                         </keep-alive>
                     </div>
 
@@ -196,6 +198,10 @@ export default {
         closeConfirm(decision){
             this.confirmStore.closeConfirm(decision);
         },
+        // to handle thread deletion
+        handleDeletedThread(index) {
+            this.recentThreads.splice(index, 1);
+        }
     },
     computed: {
         // get number of subscribers
@@ -224,6 +230,7 @@ export default {
 
 <style>
 @import url('../../styles/main.css');
+@import url('../../styles/forums/common-forum-styles.css');
 
 #noThreadCreateBtn {
     color: blue;

@@ -1,0 +1,22 @@
+.mini-forum-layout {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.groupPic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.forum-name {
+    cursor: pointer;
+}
+
+.forum-name:hover {
+    color: var(--primary);
+}

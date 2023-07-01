@@ -87,9 +87,11 @@ export default {
         
         // check for new store/selected store
         this.initChat();
+
+        window.addEventListener('beforeunload', this.clearCurrentChat);
     },
     unmounted() {
-        this.store.currentChat = {};
+        this.clearCurrentChat();
     },
     methods: {
         // check for new chat/selected chat set from profile page
@@ -208,6 +210,10 @@ export default {
         // to close alert prompt
         closeAlert() {
             this.alertStore.closeAlert();
+        },
+        // to clear current chat
+        clearCurrentChat() {
+            this.store.currentChat = {};
         }
     },
     computed: {

@@ -201,7 +201,7 @@ export default {
                 uploadData.append('threadObject', JSON.stringify(threadObject));
                 
                 // send request to server with data
-                const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.forumID}`;
+                const targetURL = this.editMode ? `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}` : `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.forumID}`;
                 
                 const options = {
                     mode: 'cors',
@@ -217,7 +217,7 @@ export default {
                         if (response.ok){
                             await this.alert(successMessage);
 
-                            viewForum(this.forumID || this.thread.parent_id);
+                            viewForum(this.forumID || this.thread.parent_id._id);
                         } else {
                             console.log('An error occurred.');
                         };

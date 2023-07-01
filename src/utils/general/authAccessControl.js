@@ -26,6 +26,7 @@ export default async function dynamicMount(originalApp) {
     }
     else {
         app = createApp(UnauthorizedView);
+        location.href = '/login.html';
     }
 
     // return app to use other methods if required

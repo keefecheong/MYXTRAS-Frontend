@@ -4,41 +4,33 @@
             <h4 class="card-title">Recommendations</h4>
 
             <!-- max 6 groups -->
-            <div class="group-container" @click="viewForum(forum)" v-for="forum in recommendations">
-                <img class="groupPic" :src="forum.forum_pic_link" />
-                <p class="text-below-pic">{{ forum.forum_name }}</p>
+            <div id="recommended-forum-container">
+                <div class="group-container" @click="viewForum(forum)" v-for="forum in recommendations">
+                    <img class="groupPic" :src="forum.forum_pic_link" />
+                    <p class="recommended-forum-name hide-overflow-text">{{ forum.forum_name }}</p>
+                </div>
             </div>
         </div>
     </div>
 </template>
+
 <style scoped>
+#recommended-forum-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 15px;
+}
+
 .group-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    width: 50%;
-    float: left;
 }
 
-.text-below-pic:hover {
+.recommended-forum-name:hover {
     color: var(--primary);
-    cursor:pointer
-}
-.groupPic{
-    float:left;
-    width: 80px;
-    height: 80px;
-    margin-right: 20px;
-    margin-top: 10px;
-    margin-left: 25px;
-    border-radius: 50%;
-}
-.groupPic:hover{
     cursor: pointer;
-}
-.text-below-pic {
-    margin-top: 5px;
 }
 </style>
 

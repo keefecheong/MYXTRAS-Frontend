@@ -477,6 +477,7 @@ export default {
         cursor: pointer;
         text-align: center;
         vertical-align: middle;
+        user-select: none;
     }
 
     /* header styles */

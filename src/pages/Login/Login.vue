@@ -6,12 +6,7 @@
     
     <div id="main-container">
         <div id="main-content">
-            <div class="row">
-                <div class="col-md-1">
-                    <a href="/feed.html">
-                        <span class="material-symbols-outlined" style="color: white; margin: 15px 0 0 15px">home</span>
-                    </a>
-                </div>
+            <div class="row justify-content-center">
                 <div class="col-md-10 loginContainer">
                     <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
                     <div class="whitebox">
@@ -32,7 +27,6 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-md-1"></div>
             </div>
         </div>
     </div>
@@ -188,6 +182,7 @@ input:focus{
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import firebase from 'firebase';
+import redirectUser from '../../utils/general/redirectAuthenticatedUser.js';
 
 export default {
     data() {
@@ -205,18 +200,21 @@ export default {
     components: {
         AlertPrompt
     },
+    created() {
+        redirectUser();
+    },
     mounted() {
         const self = this;
         this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        size: 'normal',
-        callback: function (response) {
-            // reCAPTCHA verified, handle the callback
-            self.recaptchaClicked = true
-        },
-        'expired-callback': () => {
-            // reCAPTCHA expired, handle the expired callback
-            console.log('reCAPTCHA expired!');
-        }
+            size: 'normal',
+            callback: function (response) {
+                // reCAPTCHA verified, handle the callback
+                self.recaptchaClicked = true
+            },
+            'expired-callback': () => {
+                // reCAPTCHA expired, handle the expired callback
+                console.log('reCAPTCHA expired!');
+            }
         });
         this.recaptchaVerifier.render().then((widgetId)=>{
             this.recaptchaWidgetId = widgetId    

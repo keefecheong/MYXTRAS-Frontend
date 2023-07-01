@@ -14,13 +14,15 @@
                 <div class="thread-comment-creation-time-container">
                     <span :title="new Date(comment.creation_time)">{{ dateCreated }}</span>
                 </div>
+
+                <!-- privileged operations -->
+                <div v-if="comment.isOwner">
+                    <span class="material-symbols-outlined" @click="deleteComment()" title="Delete this comment">delete</span>
+                </div>
             </div>
         </div>
 
         <div class="thread-comment-content">
-            <div class="comment-delete" title="Delete this post" v-if="userId == comment.creator_id._id">
-                <span class="material-symbols-outlined deleteButton" @click="deleteComment()">delete</span>
-            </div>
             <p class="comment">{{ comment.content }}</p>
             
         </div>
@@ -32,20 +34,19 @@
 import calcDateDifference from '../../utils/general/calcDateDifference';
 import viewUser from '../../utils/general/viewUser.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
-
-
+import { useAlertStore } from '../../stores/AlertStore';
 
 export default {
     data() {
         return {
             dateCreated: '',
+            alert: useAlertStore().alert,
             confirm: useConfirmStore().confirm,
         }
     },
     emits: [
-        'deletedComment'
+        'deleted-comment'
     ],
-
     props: [
         'comment',
         'thread',
@@ -72,7 +73,9 @@ export default {
                 credentials: 'include'
             }).then(async (res) => {
                 await res.json().then(async (data) => {
-                    this.$emit('deletedComment', this.comment)
+                    this.alert(data.message);
+
+                    this.$emit('deleted-comment')
                 });
             }).catch((error) => {
                 console.log(error);
@@ -88,6 +91,13 @@ export default {
     margin-left: 30px;
     width: 100%;
     display: flex;
+    flex-direction: row;
+    column-gap: 15px;
+    align-items: center;
+}
+
+.right-content .material-symbols-outlined {
+    color: black;
 }
 
 .thread-comment-content {
@@ -149,12 +159,6 @@ export default {
 
 .thread-comment-username {
     font-size: 0.8em;
-}
-
-
-.deleteButton{
-    color: black;   
-    float: right; 
 }
 
 hr {

@@ -3,35 +3,38 @@
         <div class="card-body card-position">
             <h5 class="card-title">Popular Threads</h5>
             <p v-if="popularThreads.length === 0">No popular threads found!</p>
-            <div v-for="thread in popularThreads" class="row align-center">
-                <div class="col-md-12 d-flex popularThreadContainer" @click="viewThread(thread)">
-                    <h5 id="thread_title">{{ thread.title }}</h5>
-                    <div class="imageContainer">
+
+            <div v-else id="popular-thread-container">
+                <div v-for="thread in popularThreads" class="popular-thread-layout" @click="viewThread(thread)">
+                    <h5 class="thread_title">{{ thread.title }}</h5>
+
+                    <div class="imageContainer" v-if="thread.content_link">
                         <img id="popThreadPic" :src="thread.content_link" :draggable="false">
                     </div>
-                    <br/>
-                    <hr>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <style scoped> 
-#thread_title {
-    margin: 2vh 0;
-}
 .card {
 min-height: 50vh;
 border-radius: 15px;
 }
-p {
-    margin-top: 10vh;
-    text-align: center;
+
+#popular-thread-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+    padding: 15px;
 }
-.popularThreadContainer:hover{
+
+.popular-thread-layout {
     cursor: pointer;
+    border-bottom: 1px solid lightgray;
 }
 </style>
+
 <script>
  export default {
     data() {

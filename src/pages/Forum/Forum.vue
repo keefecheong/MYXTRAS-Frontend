@@ -37,6 +37,7 @@
                                 :index="index"
                                 :showForumDetails="true"
                                 @show-detailed-view="() => toggleDetailedThread(true, index)"
+                                @deleted-thread="() => handleDeletedThread(index)"
                             />
                         </div>
                     </div>
@@ -46,7 +47,8 @@
                             :thread="threadToDisplay"
                             :showBackArrow="false"
                             :showForumDetails="true"
-                            @close-detailed-view="() => toggleDetailedThread(false, selectedIndex)" />
+                            @close-detailed-view="() => toggleDetailedThread(false, selectedIndex)"
+                        />
                     </div>
                 </div>
 
@@ -61,8 +63,9 @@
 
 </template>
 
-<style scoped>
+<style>
 @import url('../../styles/main.css');
+@import url('../../styles/forums/common-forum-styles.css');
 
 #forum-header {
     margin-top: 20px;
@@ -76,7 +79,6 @@
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
-import ForumLayout from '../../components/forum/ForumLayout.vue';
 import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 import CreatedForums from '../../components/forum/CreatedForums.vue';
 import PopularThreads from '../../components/forum/PopularThreads.vue';
@@ -91,7 +93,6 @@ import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 export default {
     components: {
     NavSidebar,
-    ForumLayout,
     SearchBar,
     CreatedForums,
     SubscribedForums,
@@ -184,13 +185,10 @@ export default {
 
             this.showDetailedThread = show;
         },
-
-        // handleDeletedThread(thread){
-        //     const index = this.threads.indexOf(thread);
-        //     if (index > -1) { 
-        //         this.threads.splice(index, 1); 
-        //     }
-        // }
+        // to handle thread deletion
+        handleDeletedThread(index) {
+            this.recentThreads.splice(index, 1);
+        }
 
     },
     computed: {

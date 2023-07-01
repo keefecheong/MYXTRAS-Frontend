@@ -59,6 +59,13 @@
     font-size: 1.5em;
 }
 
+.thread-privileged-options {
+    display: flex;
+    flex-direction: row;
+    column-gap: 15px;
+    align-items: center;
+}
+
 .thread-creator {
     font-size: small;
 }

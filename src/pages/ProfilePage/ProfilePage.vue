@@ -66,10 +66,16 @@
                     <div id="header-content-border-bottom"></div>
 
                     <div id="user-blog-container">
-                        <BlogLayout v-for="blog in blogs" :blog="blog" />
+                        <div v-if="blogs.length > 0">
+                            <BlogLayout v-for="blog in blogs" :blog="blog" />
+                        </div>
+
+                        <div v-else>
+                            <p style="text-align: center;">No posts created.</p>
+                        </div>
                     </div>
 
-                    <div class="content-wrapper" v-if="isSelf">
+                    <div class="floating-button-wrapper" v-if="isSelf">
                         <div class="floating-button" @click="() => { toggleCreateBlog(true) }">
                             <i style="color: white" class="bi bi-plus plus-icon"></i>
                         </div>
@@ -383,8 +389,15 @@ export default {
 
 </script>
 
+<style scoped>
+#main-content .row {
+    height: 100%;
+}
+</style>
+
 <style>
 @import url('../../styles/main.css');
+@import url('../../styles/forums/common-forum-styles.css');
 
 .banner {
     display: flex;
@@ -571,8 +584,8 @@ export default {
     padding: 0px;
 }
 
-.content-wrapper {
-    position: sticky;
+.floating-button-wrapper {
+    position: absolute;
     bottom: 20px;
     right: 20px;
     display: flex;

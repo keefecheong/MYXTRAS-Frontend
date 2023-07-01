@@ -66,7 +66,7 @@
         </div> -->
 
         <div class="submitbutton" style="margin: 30px;" id="profile">
-          <button class="submit-button" @click="updateProfile()">Get Started!</button>
+          <button class="submit-button" @click="updateProfile()">Update</button>
         </div>
       </div>
         

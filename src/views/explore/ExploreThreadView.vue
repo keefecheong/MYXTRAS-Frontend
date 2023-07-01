@@ -26,6 +26,7 @@
                     :index="index"
                     :showForumDetails="true"
                     @show-detailed-view="() => toggleDetailedThread(true, index)"
+                    @deleted-thread="() => handleDeletedThread(index)"
                 />
             </div>
 
@@ -166,6 +167,10 @@ export default {
         },
         viewForum(forum) {
             viewForum(forum._id);
+        },
+        // to handle thread deletion
+        handleDeletedThread(index) {
+            this.recentThreads.splice(index, 1);
         }
     },
     computed: {

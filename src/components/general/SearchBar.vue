@@ -3,7 +3,7 @@
         <div class="col-md-3">
         </div>
         <div class="col-md-6 centerElements" > 
-            <span class="material-symbols-outlined" style="color: black" id="searchIcon" @click="performSearch">search</span>
+            <span class="material-symbols-outlined" style="color: black" id="searchIcon" @click="performSearch" title="Click to search">search</span>
             <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!" @keyup.enter="performSearch">
             <SearchResults :results="searchResults" :currentPage="currentPage"/>
         </div>
@@ -191,7 +191,7 @@ export default {
         },
         async performSearch() {
             let searchObject;
-            if (this.searchTerm !== '') {
+            if (this.searchTerm.trim() !== '') {
                 document.querySelector('.resultsContainer').style.display = 'block';
             }
             else {
@@ -207,7 +207,7 @@ export default {
                 searchObject = 'users-forums'
             }
             try {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search/${searchObject}?term=${this.searchTerm}`, {
+                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search/${searchObject}?term=${this.searchTerm.trim()}`, {
                 method: 'GET',
                 credentials: "include",
                 }).then(async response => {

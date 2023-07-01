@@ -7,23 +7,29 @@
                     <p>No subscribed forums ☹</p>
                     <p>Head to the <a href="/explore.html">Xplore</a> page!</p>
                 </div>
-                <div v-for="forum in subbedForums" class="row">
-                    <div class="col-md-4 d-flex justify-content-end">
-                        <a @click="viewForum(forum)"><img class="groupPic" :src="forum.forum_pic_link" :draggable="isDraggable"></a> 
-                    </div>
-                    <div class="col-md-8">
-                        <p class="forum-name" @click="viewForum(forum)">{{ forum.forum_name }}</p>  
+
+                <div v-else id="subscribed-forum-container">
+                    <div v-for="forum in subbedForums" class="mini-forum-layout">
+                        <img class="groupPic" :src="forum.forum_pic_link" @click="viewForum(forum)">
+    
+                        <p class="forum-name" @click="viewForum(forum)">{{ forum.forum_name }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
 <style scoped>
-p:hover {
-    color: var(--primary);
-    cursor: pointer;
+#subscribed-forum-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    align-items: start;
+    width: fit-content;
+    margin: 0 auto;
 }
+
 /* Track */
 ::-webkit-scrollbar-track {
 background: #ffffff; 
@@ -49,25 +55,6 @@ background: #c9c9c98d;
 
 .card-body {
     overflow-y: scroll;
-}
-.groupPic {
-    overflow: hidden;
-    float:left;
-    width: 5vh;
-    height: 5vh;
-    margin-top: 15px;
-    border-radius: 50%;
-}
-.groupPic:hover{
-    cursor: pointer;
-}
-.center-align {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-top: 10vh;
 }
 </style>
 

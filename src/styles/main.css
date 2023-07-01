@@ -86,9 +86,13 @@ a:hover{
 }
 /* hide overflow text with ... */
 .hide-overflow-text {
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    white-space: normal;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 h1 {

@@ -47,6 +47,7 @@ li:hover {
 
 <script>
 import viewForum from '../../utils/general/viewForum.js';
+import viewUser from '../../utils/general/viewUser';
 
 export default {
     data() {
@@ -63,17 +64,16 @@ export default {
             if (result.hasOwnProperty('forum_id')) {
                 this.viewForum(result);
             } else if (result.hasOwnProperty('real_name')) {
-                this.viewProfile(result);
+                this.viewUser(result._id);
             }
         },
         // Taken from ForumGroup.vue
         viewForum(forum){
             viewForum(forum._id);
         },
-
-        viewProfile(user){
-            // TO DO VIEW PROFILE
-            location.href = "/ProfilePage.html"
+        // to view user
+        viewUser(userId){
+            viewUser(userId);
         },
         displayText(result) {  
             if (result.hasOwnProperty('forum_id')) {

@@ -6,12 +6,7 @@
 
     <div id="main-container">
         <div id="main-content">
-            <div class="row">
-                <div class="col-md-1">
-                    <a href="/feed.html">
-                        <span class="material-symbols-outlined" style="color: white; margin: 15px 0 0 15px">home</span>
-                    </a>
-                </div>
+            <div class="row justify-content-center">
                 <div class="col-md-10 loginContainer">
                     <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
                     <div class="whitebox">
@@ -53,7 +48,6 @@
                         </form>
                     </div>
                 </div>
-                <div class="col-md-1"></div>
             </div>
         </div>
     </div>
@@ -253,7 +247,7 @@ import firebase from 'firebase';
 import { debounce } from 'lodash';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
-import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import redirectUser from '../../utils/general/redirectAuthenticatedUser.js';
 
 export default {
     data() {
@@ -373,6 +367,9 @@ export default {
             return this.alertStore.alertMsg;
         }
     },
+    created() {
+        redirectUser();
+    },
     mounted() {
         this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('registerBtn',{
             'size':'invisible',
@@ -458,26 +455,27 @@ export default {
         async verifyEmail() {
             const debouncedVerifyEmail = debounce(async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify/email`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-                body: JSON.stringify({ email: this.emailAddress })
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/email`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({ email: this.emailAddress })
                 });
 
                 if (response.ok) {
-                this.emailErr = null;
-                return;
-                } else if (response.status === 400) {
-                const data = await response.json();
-                if (data.error === 'Email already exists') {
-                    this.emailErr = "Email already taken";
+                    this.emailErr = null;
                     return;
-                } else {
-                    throw new Error('Error: ' + response.status);
-                }
+                } else if (response.status === 400) {
+                    const data = await response.json();
+
+                    if (data.error === 'Email already exists') {
+                        this.emailErr = "Email already taken";
+                        return;
+                    } else {
+                        throw new Error('Error: ' + response.status);
+                    }
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -491,36 +489,36 @@ export default {
                 return;
             }
             const debouncedVerifyPhone = debounce(async () => {
-            try {
-            const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/verify/phone`, {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-                body: JSON.stringify({ phoneNumber: this.phoneNumber })
-            });
+                try {
+                    const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/phone`, {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({ phoneNumber: this.phoneNumber })
+                    });
 
-            if (response.ok) {
-                this.phoneErr = null;
-                this.disableOTP = false;
-                return;
-            } else if (response.status === 400) {
-                const data = await response.json();
-                if (data.error === 'Phone Number already exists') {
-                    this.phoneErr = "Phone Number already taken";
-                    this.disableOTP = true;
-                return;
-                } else {
-                    throw new Error('Error: ' + response.status);
+                    if (response.ok) {
+                        this.phoneErr = null;
+                        this.disableOTP = false;
+                        return;
+                    } else if (response.status === 400) {
+                        const data = await response.json();
+                        if (data.error === 'Phone Number already exists') {
+                            this.phoneErr = "Phone Number already taken";
+                            this.disableOTP = true;
+                            return;
+                        } else {
+                            throw new Error('Error: ' + response.status);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
                 }
-            }
-            } catch (error) {
-            console.error('Error:', error);
-            }
-        }, 1000);
+            }, 1000);
 
-        debouncedVerifyPhone();
+            debouncedVerifyPhone();
         },
         async registerUser() {
             if (!this.verifiedotp){
@@ -555,7 +553,7 @@ export default {
                 }
             }
 
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/register`, {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',

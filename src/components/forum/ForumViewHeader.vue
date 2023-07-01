@@ -33,15 +33,12 @@
             <div id="forum-options">
                 <div id="privileged-options" v-if="forum.isCreator">
                     <button @click="showForumForm">
-                        <span class="material-symbols-outlined">Edit</span>
-                    </button>
-                    <button @click="deleteForum()">
-                        <span class="material-symbols-outlined">delete</span>
+                        <span class="material-symbols-outlined" title="Edit this forum">Edit</span>
                     </button>
 
-                    <!-- <div class="forum-delete" title="Delete this post">
-                        <span class="material-symbols-outlined deleteButton" @click="deleteForum()">delete</span>
-                    </div> -->
+                    <button @click="deleteForum()">
+                        <span class="material-symbols-outlined" title="Delete this forum">delete</span>
+                    </button>
                 </div>
 
                 

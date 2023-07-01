@@ -32,7 +32,7 @@ export default {
     data() {
         return {
             uuid: 'a' + uuid(),
-            initialHeight: null
+            singleLineHeight: null
         }
     },
     props: [
@@ -64,16 +64,17 @@ export default {
         const lineHeight = this.getIntDimension(textarea, 'line-height');
 
         // set initial height, minHeight and maxHeight
-        this.initialHeight = `${paddingTop + paddingBottom + borderWidthTop + borderWidthBottom + lineHeight}px`;
-        textarea.style.height = this.initialHeight;
-        textarea.style.minHeight = this.initialHeight;
+        this.singleLineHeight = `${paddingTop + paddingBottom + borderWidthTop + borderWidthBottom + lineHeight}px`;
+        textarea.style.minHeight = this.singleLineHeight;
         textarea.style.maxHeight = `${paddingTop + paddingBottom + borderWidthTop + borderWidthBottom + lineHeight * ((this.maxRows ? this.maxRows : 5) - 1)}px`;
+        textarea.style.height = this.singleLineHeight;
+        textarea.style.height = `${textarea.scrollHeight}px`;
     },
     methods: {
         // dynamically resize textarea
         resizeTextarea() {
             const textarea = document.getElementById(this.workingID);
-            textarea.style.height = this.initialHeight;
+            textarea.style.height = this.singleLineHeight;
             textarea.style.height = `${textarea.scrollHeight}px`;
         },
         // get integer dimension of passed property

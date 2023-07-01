@@ -146,6 +146,7 @@ import AddInterestButton from '../../components/general/AddInterestButton.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import DynamicTextarea from '../../components/general/DynamicTextarea.vue';
+import redirectUser from '../../utils/general/redirectAuthenticatedUser.js';
 
 export default {
     components: {
@@ -181,6 +182,7 @@ export default {
         }
     },
     created() {
+        redirectUser();
         this.checkForCookie();
         this.checkAuth();
         this.getSchools();

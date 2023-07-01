@@ -1,7 +1,7 @@
 <template>
     <LoadingOverlay v-if="submittingComment || !dataInitialized" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
 
-    <div class="card shadow" id="thread-detailed-layout-container" v-if="!deleted">
+    <div class="card shadow" id="thread-detailed-layout-container">
         <span v-if="showBackArrow" class="material-symbols-outlined" id="close-detailed-thread-container-arrow" title="Go back" @click="closeDetailedView">arrow_back</span>
         <span v-else class="material-symbols-outlined" id="close-detailed-thread-container-cross" title="Go back" @click="closeDetailedView">close</span>
 
@@ -10,7 +10,7 @@
             <div class="thread-layout-left">
                 <img class="thread-creator-profile-pic"
                     :src="showForumDetails ? thread.parent_id.forum_pic_link : thread.creator_id.profile_pic_link"
-                     @click.stop="viewUser" title="View user"
+                     @click="viewUser" title="View user"
                 />
             </div>
 
@@ -20,17 +20,14 @@
                     <div class="thread-layout-header-top">
                         <div>
                             <div class="thread-creator">
-                                <span v-if="showForumDetails" @click.stop="viewForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
-                                <span class="thread-layout-creator-name" @click.stop="viewUser" title="View user">Posted by: @{{ thread.creator_id.username }}</span>
+                                <span v-if="showForumDetails" @click="viewForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
+                                <span class="thread-layout-creator-name" @click="viewUser" title="View user">Posted by: @{{ thread.creator_id.username }}</span>
                             </div>
                             <span class="thread-title">{{ thread.title }}</span>
                         </div>
 
                         <div>
                             <span class="thread-datetime" :title="new Date(thread.creation_time)">{{ dateCreated }}</span>
-                            <div class="thread-delete" title="Delete this post" v-if="userId == thread.creator_id._id">
-                                <span class="material-symbols-outlined deleteButton" @click="deleteThread()">delete</span>
-                            </div>
                         </div>
                     </div>
 
@@ -40,8 +37,9 @@
                             <InterestBadgeList v-if="thread.tags.length > 0" :selectedOption="thread.tags" :selection="false" title="Tags" />
                         </div>
 
-                        <div class="thread-privileged-options">
-                            <span class="material-symbols-outlined" v-if="thread.isOwner" @click.stop="() => toggleThreadForm(true)" title="Edit this thread">edit</span>
+                        <div class="thread-privileged-options" v-if="thread.isOwner">
+                            <span class="material-symbols-outlined" @click="() => toggleThreadForm(true)" title="Edit this thread">edit</span>
+                            <span class="material-symbols-outlined" @click="deleteThread" title="Delete this thread">delete</span>
                         </div>
                     </div>
                 </div>
@@ -81,7 +79,13 @@
                     <div v-if="comments.length > 0">
                         <h4>Comments ({{ comments.length }})</h4>
                         
-                        <ThreadCommentLayout v-for="(comment, index) in comments" :comment="comment" :thread="thread" :userId="userId" :key="index" @deletedComment="handleDeletedComment"/>
+                        <ThreadCommentLayout
+                            v-for="(comment, index) in comments"
+                            :key="index"
+                            :comment="comment"
+                            :thread="thread"
+                            @deleted-comment="() => handleDeletedComment(index)"
+                        />
                     </div>
                     
                     <div v-else>
@@ -90,8 +94,9 @@
                 </div>
             </div>
         </div>
-
     </div>
+    
+    <ThreadFormLayout v-if="showThreadForm" :thread="thread" :editMode="true" @close-thread-form="() => toggleThreadForm(false)" />
 </template>
 
 <script>
@@ -104,7 +109,7 @@ import DynamicTextarea from '../general/DynamicTextarea.vue';
 import viewUser from '../../utils/general/viewUser.js';
 import viewForum from '../../utils/general/viewForum.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
-
+import ThreadFormLayout from './ThreadFormLayout.vue';
 
 export default {
     data() {
@@ -125,16 +130,10 @@ export default {
             dislikeCount: 0,
             likeTimeout: null,
             dislikeTimeout: null,
-            userId:'',
-            deleted: false,
 
+            showThreadForm: false
         }
     },
-
-    emits: [
-        'deletedThread'
-    ],
-
     props: [
         'thread',
         'showBackArrow',
@@ -147,7 +146,8 @@ export default {
         InterestBadgeList,
         ThreadCommentLayout,
         LoadingOverlay,
-        DynamicTextarea
+        DynamicTextarea,
+        ThreadFormLayout
     },
     created() {
         // set like/dislike fields
@@ -160,8 +160,6 @@ export default {
 
         // get comment data
         this.initData();
-
-        this.checkAuth();
 
         // get time difference from when thread was created and current datetime
         this.dateCreated = calcDateDifference(this.thread.creation_time);
@@ -209,33 +207,6 @@ export default {
                 console.log("This page could not be loaded: ", error);
             });
         },
-
-        async checkAuth() {
-            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        this.userId = data._id;
-                        console.log(this.userId)
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                    })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        },
-
         // to close detailed view
         closeDetailedView() {
             this.$emit('close-detailed-view');
@@ -423,34 +394,36 @@ export default {
         viewUser() {
             viewUser(this.thread.creator_id._id);
         },
-
-        handleDeletedComment(comment){
-            const index = this.comments.indexOf(comment);
-            if (index > -1) { 
-                this.comments.splice(index, 1); 
-            }
+        // to update comments on deletion
+        handleDeletedComment(index){
+            this.comments.splice(index, 1);
         },
-
+        // to delete thread
         async deleteThread(){
             const confirmDelete = await this.confirm('Are you sure you want to delete this thread? This action is irreversible!');
 
             if (!confirmDelete) {
                 return;
             }
+
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}`, {
                 mode: 'cors',
                 method: 'DELETE',
                 credentials: 'include'
             }).then(async (res) => {
                 await res.json().then(async (data) => {
-                    // this.$emit('deletedThread', this.thread)
-                    // this.deleted = true;
-                    window.location.reload();
+                    this.alert(data.message);
+                    
+                    location.reload();
                 });
             }).catch((error) => {
                 console.log(error);
             });
         },
+        // to toggle thread form
+        toggleThreadForm(show) {
+            this.showThreadForm = show;
+        }
     }
 }
 </script>
@@ -483,6 +456,10 @@ export default {
     position: absolute;
     right: 10px;
     top: 10px;
+}
+
+#thread-content {
+    word-break: break-all;
 }
 
 #thread-image {
@@ -552,15 +529,12 @@ export default {
     border: none;
     background-color: var(--primary);
     color: white;
+    word-break: normal;
 }
 
 #thread-comment-submit:hover {
     border: none;
     background-color: var(--secondary);
-}
-
-.deleteButton{
-    margin-top: 5px;
 }
 
 </style>
