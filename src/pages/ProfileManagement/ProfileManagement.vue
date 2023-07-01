@@ -67,7 +67,7 @@
         </div> -->
 
         <div class="submitbutton" style="margin: 30px;" id="profile">
-          <button class="submit-button" @click="updateProfile()">Update</button>
+          <button class="submit-button" @click="updateProfile()" :disabled="!verifiedUsername" :class="{ 'disabled': !verifiedUsername}" >Update</button>
         </div>
       </div>
         
@@ -95,21 +95,22 @@ export default {
 
     data() {
         return {
-        showPopup: false,
-        selectedOption: [],
-        cropper: null,
-        profilePicture: ngeeann,
-        banner: banner,
-        username: '',
-        biography: '',
-        gender:'',
-        // secondaryEmail: '',
-        showBtn: false,
-        dataRetrieved: false,
-        usernameErr: null,
-        // selectedBanner: "banner",
-        // selectedProfilePic: "profilePicture",
-        debouncedVerifyUsername: null
+            showPopup: false,
+            selectedOption: [],
+            cropper: null,
+            profilePicture: ngeeann,
+            banner: banner,
+            username: '',
+            biography: '',
+            gender:'',
+            // secondaryEmail: '',
+            showBtn: false,
+            dataRetrieved: false,
+            usernameErr: null,
+            // selectedBanner: "banner",
+            // selectedProfilePic: "profilePicture",
+            debouncedVerifyUsername: null,
+            verifiedUsername: false
         }
     },
     created() {
@@ -122,40 +123,40 @@ export default {
 
     methods:{
         checkAuth() {
-                // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json; charset=UTF-8',
-                    },
-                    credentials: "include",
-                }).then(response => {
-                    if (response.ok) {
-                        response.json().then(data => {
-                            if (data.is_profile_setup === false){
-                                window.location.href = '/setupProfile.html';
-                                return;
-                            }
-                            else {
-                                this.username = data.username;
-                                this.biography = data.biography;
-                                this.selectedOption = data.interests;
-                                this.gender = data.gender;
-                                this.userId = data._id;
-                                this.profilePicture = data.profile_pic_link;
-                                this.dataRetrieved = true
-                            }
-                        })
-                    } else {
-                        console.log('Error:', response);
-                    }
+            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        if (data.is_profile_setup === false){
+                            window.location.href = '/setupProfile.html';
+                            return;
+                        }
+                        else {
+                            this.username = data.username;
+                            this.biography = data.biography;
+                            this.selectedOption = data.interests;
+                            this.gender = data.gender;
+                            this.userId = data._id;
+                            this.profilePicture = data.profile_pic_link;
+                            this.dataRetrieved = true
+                        }
                     })
-                    .then(data => {
-                        console.log('Success:', data);
-                        })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             },
 
         initializeCropper() {
@@ -182,41 +183,41 @@ export default {
         },
 
         chooseFile(imageType){
-        if (imageType === "profilePicture") {
-            this.$refs.fileInput.value = ''; // Reset the file input value
-            this.$nextTick(() => {
-            this.$refs.fileInput.click(); // Open the file input dialog
+            if (imageType === "profilePicture") {
+                this.$refs.fileInput.value = ''; // Reset the file input value
+                this.$nextTick(() => {
+                this.$refs.fileInput.click(); // Open the file input dialog
             });
-        } else {
-            this.$refs.bannerInput.click();
-        }
+            } else {
+                this.$refs.bannerInput.click();
+            }
         },
 
         upload(event, imageType){
-        const file = event.target.files[0];
-        if (imageType === 'profilePicture') {
-            this.profilePicture = URL.createObjectURL(file);
-            this.showBtn = true;
-            this.$nextTick(() => {
-            this.initializeCropper();
-            });
-        } else {
-            this.banner = URL.createObjectURL(file);
-        }
-        
+            const file = event.target.files[0];
+            if (imageType === 'profilePicture') {
+                this.profilePicture = URL.createObjectURL(file);
+                this.showBtn = true;
+                this.$nextTick(() => {
+                    this.initializeCropper();
+                });
+            } else {
+                this.banner = URL.createObjectURL(file);
+            }
+            
         },
 
         confirmCropping() {
-        const croppedCanvas = this.cropper.getCroppedCanvas({
-            width: 142,
-            height: 142,
-            fillColor: '#fff',
-        });
-        const croppedImage = croppedCanvas.toDataURL(); // Get the cropped image as a data URL
-        this.profilePicture = croppedImage;
-        this.cropper.destroy(); // Destroy the cropper instance
-        this.cropper = null; // Set the cropper variable to null
-        this.showBtn = false;
+            const croppedCanvas = this.cropper.getCroppedCanvas({
+                width: 142,
+                height: 142,
+                fillColor: '#fff',
+            });
+            const croppedImage = croppedCanvas.toDataURL(); // Get the cropped image as a data URL
+            this.profilePicture = croppedImage;
+            this.cropper.destroy(); // Destroy the cropper instance
+            this.cropper = null; // Set the cropper variable to null
+            this.showBtn = false;
         },
         async debounceVerifyUsernameFunction() {
             try {
@@ -230,6 +231,7 @@ export default {
                 });
 
                 if (response.ok) {
+                    this.verifiedUsername = true;
                     this.usernameErr = null;
                     return;
                 } else if (response.status === 400) {
@@ -250,46 +252,51 @@ export default {
             this.debouncedVerifyUsername();
         },
         async updateProfile(){
-        let formData = new FormData();
+            let formData = new FormData();
 
-        this.userObject = {
-            'userName': this.username,
-            'biography': this.biography,
-            'selectedInterests': this.selectedOption,
-            'gender': this.gender,
-            // 'profilePicture': this.$refs.fileInput.files[0],
-            
-        };
-        formData.append('userObject', JSON.stringify(this.userObject));
-        formData.append('selectedImages', this.$refs.fileInput.files[0]);
+            this.userObject = {
+                'userName': this.username,
+                'biography': this.biography,
+                'selectedInterests': this.selectedOption,
+                'gender': this.gender,
+                // 'profilePicture': this.$refs.fileInput.files[0],
+                
+            };
+            formData.append('userObject', JSON.stringify(this.userObject));
+            formData.append('selectedImages', this.$refs.fileInput.files[0]);
 
-        try{
-            const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`,{
-            method: 'PATCH',
-            body: formData,
-            credentials: 'include',
-            });
+            try{
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`,{
+                    method: 'PATCH',
+                    body: formData,
+                    credentials: 'include',
+                });
 
-            if (response.ok){
-            window.location.href = '/profilePage.html';
-            }else{
-            console.log('Error:', response.statusText);
+                if (response.ok){
+                    window.location.href = '/profilePage.html';
+                }
+                else {
+                    console.log('Error:', response.statusText);
+                }
             }
-        }
-        catch (error){
-            console.log('Error:', error);
-        }
+            catch (error){
+                console.log('Error:', error);
+            }
         },
 
         handleSelectedInterests(selectedOption) {
             this.selectedOption = selectedOption;
         }
 
-  },
+    },
 }
 </script>
 
 <style>
+  .disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+  }
     body{
       margin: 0;
       padding: 0;
