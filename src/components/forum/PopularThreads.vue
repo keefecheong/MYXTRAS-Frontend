@@ -18,10 +18,14 @@
 </template>
 <style scoped> 
 .card {
-min-height: 50vh;
-border-radius: 15px;
+    padding: 1em 0 1em 0;
+    min-height: 50vh;
+    border-radius: 15px;
 }
-
+p {
+    margin-top: 10vh;
+    text-align: center;
+}
 #popular-thread-container {
     display: flex;
     flex-direction: column;

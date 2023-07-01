@@ -54,7 +54,7 @@
                     </div>
         
                     <span id="forum-id-available" v-if="!idErr && forumIDVerified && !illegalChar">Forum ID available.</span>
-                    <span class="errMsg" v-if="idErr && forumIDVerified && !illegalChar">Forum ID already taken.</span>
+                    <span class="errMsg" v-if="idErr && !forumIDVerified && !illegalChar">Forum ID already taken.</span>
                     <span class="errMsg" v-if="illegalChar" >Illegal chararcter detected</span>
                 </div>
         
@@ -167,16 +167,17 @@ export default {
             }).then((res) => {
                 if (res.ok) {
                     this.idErr = false;
+                    this.forumIDVerified = true;
                 }
                 else if (res.status == 400) {
                     res.json().then(data => {
                         if (data.error == 'ForumID already exists') {
+                            this.forumIDVerified = false;
                             this.idErr = true;
                         }
                     })
                 }
 
-                this.forumIDVerified = true;
             });
         },
         // debounce verifyForumID

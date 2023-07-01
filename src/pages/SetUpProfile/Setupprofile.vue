@@ -12,7 +12,8 @@
                     <form @submit.prevent="login">
                         <h2 id="header">Set up your profile</h2>
                         <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" :maxlength="32" @input="noIntegers">
-                        <input type="text" placeholder="Username" id="usernameField" v-model="username" :maxlength="25" :required="!showPopup">
+                        <input type="text" placeholder="Username" id="usernameField" v-model="username" :maxlength="25" :required="!showPopup" @input="verifyUsername">
+                        <p id="err"> {{ this.usernameErr }}</p>
                         <DynamicTextarea :placeholder="'Bio (Max 100 characters)'" v-model="biography" :maxlength="100" id="bio" />
                         <div class="interest-container">  
                             <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
@@ -67,7 +68,9 @@ body {
     padding: 10vh 0;
     
 }
-
+#err {
+    color: #FF0000;
+}
 input[type=text],
 select,
 textarea{
@@ -126,6 +129,10 @@ textarea{
   margin-right: 10px;
 }
 
+textarea {
+    padding: 0 !important;
+}
+
 @keyframes gradientAnimation {
   0% {
     background-position: 0 50%;
@@ -136,7 +143,6 @@ textarea{
   100% {
     background-position: 0 50%;
   }
-
   
 }
 </style>
@@ -146,8 +152,13 @@ import AddInterestButton from '../../components/general/AddInterestButton.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import DynamicTextarea from '../../components/general/DynamicTextarea.vue';
+<<<<<<< HEAD
 import redirectUser from '../../utils/authentication/redirectAuthenticatedUser.js';
 import signOut from '../../utils/authentication/signOut.js';
+=======
+import redirectUser from '../../utils/general/redirectAuthenticatedUser.js';
+import { debounce } from 'lodash';
+>>>>>>> d8c94196163dac4c3fc9170227a778a707934c8d
 
 export default {
     components: {
@@ -169,7 +180,11 @@ export default {
             schoolData: null,
             alert: useAlertStore().alert,
             alertStore: useAlertStore(),
+<<<<<<< HEAD
             setupComplete: false
+=======
+            usernameErr: null,
+>>>>>>> d8c94196163dac4c3fc9170227a778a707934c8d
         };
     },
     computed: {
@@ -183,6 +198,7 @@ export default {
         }
     },
     created() {
+<<<<<<< HEAD
         // check if user has to set up profile
         const stayOnPage = sessionStorage.getItem('to_setup_profile');
 
@@ -192,6 +208,11 @@ export default {
             return;
         }
 
+=======
+        //redirectUser();
+        this.checkForCookie();
+        this.checkAuth();
+>>>>>>> d8c94196163dac4c3fc9170227a778a707934c8d
         this.getSchools();
 
         window.addEventListener('beforeunload', async () => {
@@ -241,6 +262,64 @@ export default {
             // You can store the selected interests in a data property or send them to an API, etc.
             this.selectedOption = selectedInterests;
         },
+<<<<<<< HEAD
+=======
+        
+        checkForCookie(){
+            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
+                    method: "GET",
+                    headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    credentials: "include",
+                })
+                .then(response => {
+                if (!response.ok) {
+                    window.location.href = '/feed.html';
+                    console.log("fail");
+                }
+                else if (response.ok){
+                    console.log('Success:');
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        },
+
+        checkAuth() {
+            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+            }).then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        if (data.is_profile_setup === true){
+                            window.location.href = '/feed.html';
+                            return;
+                        }
+                        else {
+                            this.userId = data._id;
+                        }
+                    })
+                } else {
+                    console.log('Error:', response);
+                }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        },
+
+>>>>>>> d8c94196163dac4c3fc9170227a778a707934c8d
         async validationCheck(){
             let detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
             
@@ -317,7 +396,38 @@ export default {
                 
             // console.log(this.userObject);
         },
+        async verifyUsername() {
+        const debouncedVerifyUsername = debounce(async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/username`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                credentials: "include",
+                body: JSON.stringify({ username: this.username })
+            });
 
+            if (response.ok) {
+                this.usernameErr = null;
+                return;
+            } else if (response.status === 400) {
+                const data = await response.json();
+
+                if (data.error === 'Username already exists') {
+                    this.usernameErr = "Username already taken";
+                    return;
+                } else {
+                    throw new Error('Error: ' + response.status);
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+        }, 2000);
+
+        debouncedVerifyUsername()
+    },
         noIntegers() {
             this.realname = this.realname.replace(/[0-9]/g, '');
         },

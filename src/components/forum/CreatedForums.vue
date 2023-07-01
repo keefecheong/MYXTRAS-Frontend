@@ -25,7 +25,9 @@
     width: fit-content;
     margin: 0 auto;
 }
-
+.mini-forum-layout {
+    margin: 5px
+}
 .card {
     padding: 1em 0 1em 0;
     border-radius: 15px;
@@ -52,6 +54,10 @@ border-radius: 15px;
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
 background: #c9c9c98d;
+}
+p {
+    margin-top: 5vh;
+    text-align: center;
 }
 </style>
 
