@@ -19,9 +19,9 @@
 
                     <div>
                         <span class="thread-datetime" :title="new Date(thread.creation_time)">{{ dateCreated }}</span>
-                        <!-- <div class="thread-delete" title="Delete this post" >
-                            <span class="material-symbols-outlined deleteButton" @click="deleteThread()">delete</span>
-                        </div> -->
+                        <div class="thread-delete" title="Delete this post" >
+                            <span class="material-symbols-outlined deleteButton" @click.stop="deleteThread()">delete</span>
+                        </div>
                     </div>
                 </div>
 
@@ -51,13 +51,16 @@ import ThreadFormLayout from './ThreadFormLayout.vue';
 import calcDateDifference from '../../utils/general/calcDateDifference';
 import viewUser from '../../utils/general/viewUser.js';
 import viewForum from '../../utils/general/viewForum.js';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
 
 export default {
     data() {
         return {
             showThreadForm: false,
             dateCreated: '',
-            emits: ['deletedThread']
+            emits: ['deletedThread'],
+            confirm: useConfirmStore().confirm,
+
         }
     },
     components: {
@@ -93,21 +96,24 @@ export default {
             viewUser(this.thread.creator_id._id);
         },
 
-        // async deleteThread(){
-        //     await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}`, {
-        //         mode: 'cors',
-        //         method: 'DELETE',
-        //         credentials: 'include'
-        //     }).then(async (res) => {
-        //         await res.json().then(async (data) => {
-        //             this.$emit('deletedThread', this.thread)
-        //             // this.deleted = true;
-        //             // window.location.reload();
-        //         });
-        //     }).catch((error) => {
-        //         console.log(error);
-        //     });
-        // },
+        async deleteThread(){
+            const confirmDelete = await this.confirm('Are you sure you want to delete this thread? This action is irreversible!');
+
+            if (!confirmDelete) {
+                return;
+            }
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}`, {
+                mode: 'cors',
+                method: 'DELETE',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then(async (data) => {
+                    window.location.reload();
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
     }
 }
 </script>
