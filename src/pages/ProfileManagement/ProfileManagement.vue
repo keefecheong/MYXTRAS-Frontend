@@ -173,12 +173,12 @@ export default {
             background: false, // Disable the background overlay
             ready: () => {
                 this.cropper.setCropBoxData({
-                width: 142,
-                height: 142,
-                left: (imageElement.offsetWidth - 142) / 2,
-                top: (imageElement.offsetHeight - 142) / 2,
-                });
-            },
+                    width: 142,
+                    height: 142,
+                    left: (imageElement.offsetWidth - 142) / 2,
+                    top: (imageElement.offsetHeight - 142) / 2,
+                    });
+                },
             });
         },
 
