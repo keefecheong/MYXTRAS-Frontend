@@ -156,7 +156,8 @@ import AddInterestButton from '../../components/general/AddInterestButton.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import DynamicTextarea from '../../components/general/DynamicTextarea.vue';
-import redirectUser from '../../utils/general/redirectAuthenticatedUser.js';
+import redirectUser from '../../utils/authentication/redirectAuthenticatedUser.js';
+import signOut from '../../utils/authentication/signOut.js';
 import { debounce } from 'lodash';
 
 export default {
@@ -174,12 +175,12 @@ export default {
             selectedCourse: '',
             biography: '',
             selectedOption: [],
-            userId: '',
             schools: [],
             courses: [],
             schoolData: null,
             alert: useAlertStore().alert,
             alertStore: useAlertStore(),
+            setupComplete: false,
             usernameErr: null,
         };
     },
@@ -194,12 +195,35 @@ export default {
         }
     },
     created() {
-        //redirectUser();
-        this.checkForCookie();
-        this.checkAuth();
+        // check if user has to set up profile
+        const stayOnPage = sessionStorage.getItem('to_setup_profile');
+
+        // if user already set up profile then redirect to feed
+        if (!stayOnPage) {
+            redirectUser();
+            return;
+        }
+
         this.getSchools();
+
+        window.addEventListener('beforeunload', async () => {
+            await this.signOut();
+        })
     },
     methods: {
+        // to sign user out if profile is not set up when leaving the page
+        signOut() {
+            return new Promise(async (resolve) => {
+                if (!this.setupComplete) {
+                    await signOut();
+                }
+
+                sessionStorage.removeItem('to_setup_profile');
+
+                resolve();
+            });
+        },
+        // get school and course information
         getSchools() {
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/schools`, {
                 method: 'GET',
@@ -229,61 +253,6 @@ export default {
             // You can store the selected interests in a data property or send them to an API, etc.
             this.selectedOption = selectedInterests;
         },
-        
-        checkForCookie(){
-            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
-                    method: "GET",
-                    headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    },
-                    credentials: "include",
-                })
-                .then(response => {
-                if (!response.ok) {
-                    window.location.href = '/feed.html';
-                    console.log("fail");
-                }
-                else if (response.ok){
-                    console.log('Success:');
-                }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-        },
-
-        checkAuth() {
-            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        if (data.is_profile_setup === true){
-                            window.location.href = '/feed.html';
-                            return;
-                        }
-                        else {
-                            this.userId = data._id;
-                        }
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                    })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        },
-
         async validationCheck(){
             let detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
             
@@ -349,6 +318,7 @@ export default {
                         });
                         return;
                     } else if (response.ok){
+                        this.setupComplete = true;
                         window.location.href = '/feed.html';
                     } else {
                         throw new Error(response.error)

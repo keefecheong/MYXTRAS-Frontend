@@ -117,7 +117,8 @@ export default {
     },
     emits: [
         'edit-message',
-        'delete-message'
+        'delete-message',
+        'reply-to-message'
     ],
     updated() {
         this.onEdit();

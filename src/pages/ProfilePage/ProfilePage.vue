@@ -124,6 +124,7 @@ import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 import ObjectID from 'bson-objectid';
 import { viewFollower } from '../../utils/general/viewUser.js';
+import signOut from '../../utils/authentication/signOut';
 
 export default {
     components: {
@@ -252,18 +253,13 @@ export default {
         },
         // to sign out and clear cookies
         signOut() {
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/remove`, {
-                method: 'GET',
-                mode: "cors",
-                credentials: 'include'
-            }).then(response => {
-                if (response.ok) {
-                    window.location.href = '/login.html';
-                } else {
-                    console.log("Error: Failed to log out.")
-                    console.log(response)
-                }
-            });
+            const success = signOut();
+            if (success) {
+                location.href = '/login.html';
+            }
+            else {
+                console.log('Failed to log out.');
+            }
         },
         // toggle following user
         toggleFollow() {
@@ -368,8 +364,17 @@ export default {
                 credentials: 'include'
             }).then(async (res) => {
                 await res.json().then(data => {
-                    target = data.existingChat;
+                    if (res.ok) {
+                        target = data.existingChat;
+                    }
+                    else {
+                        // if response is not ok either an error occurred on backend/user is requesting to chat with himself
+                        // display error and do nothing
+                        this.alertStore.alert(data.message);
+                        return;
+                    }
                 });
+
             });
 
             // if chat does not exist then create new chat

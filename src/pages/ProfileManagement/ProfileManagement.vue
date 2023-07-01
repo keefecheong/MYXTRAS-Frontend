@@ -129,7 +129,7 @@ export default {
                 if (response.ok) {
                     response.json().then(data => {
                         if (data.is_profile_setup === false){
-                            window.location.href = '/setupprofile.html';
+                            window.location.href = '/setupProfile.html';
                             return;
                         }
                         else {
