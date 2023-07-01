@@ -229,7 +229,7 @@ export default {
                     await response.json().then(data => {
                         // Checks if user has setup their profile, if not:
                         if (data.is_profile_setup === false){
-                            location.href = '/setupprofile.html';
+                            location.href = '/setupProfile.html';
                             return;
                         }
                         else {

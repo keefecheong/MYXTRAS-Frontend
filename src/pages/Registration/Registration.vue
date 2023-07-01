@@ -247,7 +247,7 @@ import firebase from 'firebase';
 import { debounce } from 'lodash';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
-import redirectUser from '../../utils/general/redirectAuthenticatedUser.js';
+import redirectUser from '../../utils/authentication/redirectAuthenticatedUser.js';
 
 export default {
     data() {
@@ -368,6 +368,7 @@ export default {
         }
     },
     created() {
+        
         redirectUser();
     },
     mounted() {
@@ -562,7 +563,8 @@ export default {
                 body: JSON.stringify(this.userObject)
             }).then((response) => {
                 if (response.ok) {
-                    location.href = '/setupprofile.html';
+                    sessionStorage.setItem('to_setup_profile', true);
+                    location.href = '/setupProfile.html';
                 }
                 else if (response.status === 400){
                     response.json().then(async (data) => {

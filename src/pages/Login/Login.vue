@@ -182,7 +182,7 @@ input:focus{
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import firebase from 'firebase';
-import redirectUser from '../../utils/general/redirectAuthenticatedUser.js';
+import redirectUser from '../../utils/authentication/redirectAuthenticatedUser.js';
 
 export default {
     data() {
@@ -255,7 +255,16 @@ export default {
 
                 if (response.ok) {
                     const data = await response.json();
-                    window.location = '/feed.html';
+                    
+                    // if user already set up profile go to feed
+                    if (data.is_profile_setup) {
+                        location.href = '/feed.html';
+                    }
+                    // otherwise go to setup profile
+                    else {
+                        sessionStorage.setItem('to_setup_profile', true);
+                        location.href = '/setupProfile.html';
+                    }
                 } else {
                     const errorData = await response.json();
                     console.error('Error:', errorData.message);
