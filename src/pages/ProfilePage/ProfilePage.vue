@@ -125,6 +125,7 @@ import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 import ObjectID from 'bson-objectid';
 import { viewFollower } from '../../utils/general/viewUser.js';
 import signOut from '../../utils/authentication/signOut';
+import { debounce } from 'lodash';
 
 export default {
     components: {
@@ -152,7 +153,7 @@ export default {
             following: false,
             savedFollowing: false,
             followerCount: 0,
-            followTimeout: null,
+            debouncedFollowUpdate: null,
 
             showCreateBlog: false,
             refreshFlag: false,
@@ -190,6 +191,9 @@ export default {
         if (window.location.search == '?create' && this.isSelf) {
             this.showCreateBlog = true;
         }
+
+        // set debounce function to only send request to update backend if user has not clicked the follow button for 3 seconds
+        this.debouncedFollowUpdate = debounce(this.updateFollowing, 3000);
 
         // set event listener to complete pending request when page is closed
         window.addEventListener('beforeunload', this.completeFollowRequest);
@@ -279,10 +283,7 @@ export default {
                 this.user.followers.splice(index, 1);
             }
 
-            // set timeout and only send request to update backend if user has not clicked the follow button for 3 seconds
-            clearTimeout(this.followTimeout);
-
-            this.followTimeout = setTimeout(this.updateFollowing, 3000);
+            this.debouncedFollowUpdate();
         },
         // handle updating of following status to backend
         async updateFollowing() {
@@ -330,10 +331,7 @@ export default {
         },
         // complete updateFollowing request if pending
         completeFollowRequest() {
-            if (this.followTimeout) {
-                clearTimeout(this.followTimeout);
-                this.updateFollowing();
-            }
+            this.debouncedFollowUpdate.flush();
         },
         // to toggle create blog form
         toggleCreateBlog(show) {

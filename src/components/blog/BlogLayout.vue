@@ -406,6 +406,7 @@ import { useAlertStore } from '../../stores/AlertStore.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
 import { viewUser } from '../../utils/general/viewUser.js';
+import { debounce } from 'lodash';
 
 export default {
     data() {
@@ -424,7 +425,7 @@ export default {
             submittingComment: false,
             savedLike: false,
             liked: false,
-            likeTimeout: null,
+            debouncedLikeUpdate: null,
             likeCount: 0,
             editMode: false,
             alert: useAlertStore().alert,
@@ -453,6 +454,9 @@ export default {
         this.savedLike = this.blog.liked;
         this.liked = this.blog.liked;
         this.likeCount = this.blog.likes.length;
+
+        // debounce function to only send request to update backend if user has not clicked the like button for 3 seconds
+        this.debouncedLikeUpdate = debounce(this.updateLike, 3000);
 
         // set event listener to complete pending requests when the page is closed
         window.addEventListener('beforeunload', this.completeLikeRequest);
@@ -529,10 +533,7 @@ export default {
                 this.likeCount -= 1;
             }
 
-            // set timeout and only send request to update backend if user has not clicked the like button for 3 seconds
-            clearTimeout(this.likeTimeout);
-
-            this.likeTimeout = setTimeout(this.updateLike, 3000);
+            this.debouncedLikeUpdate();
         },
         // handle updating of like status to backend
         async updateLike() {
@@ -573,15 +574,10 @@ export default {
                     console.log(error);
                 });
             }
-
-            this.likeTimeout = null;
         },
         // complete updateLike request if pending
         completeLikeRequest() {
-            if (this.likeTimeout) {
-                clearTimeout(this.likeTimeout);
-                this.updateLike();
-            }
+            this.debouncedLikeUpdate.flush();
         },
         // handle deleting post
         async deletePost() {

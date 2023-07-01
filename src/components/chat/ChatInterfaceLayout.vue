@@ -144,6 +144,7 @@ import LoadingOverlay from '../general/LoadingOverlay.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
 import { viewUser } from '../../utils/general/viewUser.js';
+import { debounce } from 'lodash';
 
 export default {
     data() {
@@ -154,7 +155,7 @@ export default {
                 offline: 'Offline',
                 typing: 'Typing...'
             },
-            typingTimer: null,
+            debouncedTypingStatusUpdate: null,
             messageText: '',
             previousMessageLength: 0,
             currentStatus: null,
@@ -187,6 +188,9 @@ export default {
 
         // scroll to bottom of messages
         this.scrollMessagesBottom();
+
+        // set debounce function to tell other user that current user is not typing after 1s from the last input
+        this.debouncedTypingStatusUpdate = debounce(() => { this.sendTypingStatus(false) }, 1000);
     },
     updated() {
         // sroll to bottom of messages when new messages are added
@@ -384,12 +388,7 @@ export default {
             // tell other user that current user is typing
             this.sendTypingStatus(true);
 
-            clearTimeout(this.typingTimer);
-
-            // tell other user that current user is not typing after 1s from the last input
-            this.typingTimer = setTimeout(() => {
-                this.sendTypingStatus(false)
-            }, 1000);
+            this.debouncedTypingStatusUpdate();
         },
         // update the other user that current user is typing/not typing
         sendTypingStatus(typing) {

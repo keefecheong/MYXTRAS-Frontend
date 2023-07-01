@@ -8,40 +8,121 @@
         <div id="main-content">
             <div class="row justify-content-center">
                 <div class="col-md-10 loginContainer">
-                    <img src="../../assets/ngeeannxtras.jpg" :draggable="isDraggable" id="ngeeAnnBanner">
+                    <img src="../../assets/ngeeannxtras.jpg" :draggable="false" id="ngeeAnnBanner">
                     <div class="whitebox">
                         <form @submit.prevent="login">
                             <h1>Register Now!</h1>
-                            <input v-model="emailAddress" type="email" placeholder="Email Address" id="emailField" required>
+
+                            <input 
+                                v-model="emailAddress" 
+                                type="email" 
+                                placeholder="Email Address" 
+                                id="emailField" 
+                                required 
+                                @input="verifyEmail">
+
                             <p class="genErr">{{ emailErr }}</p>
 
                             <!-- Password Field -->
-                            <input title="Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters" :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" class="custom-input" :maxlength="20" required>
-                            <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword(1)">visibility_off</button>
+                            <input 
+                                title="Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters"
+                                :type="showPassword ? 'text' : 'password'" 
+                                v-model="password" placeholder="Password" 
+                                id="passwordField" 
+                                class="custom-input" 
+                                :maxlength="20"
+                                required>
+
+                            <button 
+                                class="material-symbols-outlined overlay-button" 
+                                :class="{ 'pressed': isPressed }" 
+                                @click="hidePassword(1)"
+                            >
+                                visibility_off
+                            </button>
+                            
                             <div v-if="password != ''" >
                                 <span class="material-symbols-outlined" :class="passwordRequirements" id="infoSym">info</span>
                                 <p :class="passwordRequirements" id="passErr">{{ passwordStrengthMessage }}</p>
                             </div>
-                            <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword" placeholder="Confirm Password" id="repeatPasswordField" :maxlength="20" required>
-                            <button class="material-symbols-outlined overlay-button" :class="{ 'pressedrepeated': isPressedrepeated }" @click="hidePassword(2)">visibility_off</button>
+
+                            <input 
+                                :type="showPasswordrepeated ? 'text' : 'password'" 
+                                v-model="repeatedPassword" 
+                                placeholder="Confirm Password" 
+                                id="repeatPasswordField" 
+                                :maxlength="20" 
+                                required>
+
+                            <button 
+                                class="material-symbols-outlined overlay-button" 
+                                :class="{ 'pressedrepeated': isPressedrepeated }" 
+                                @click="hidePassword(2)"
+                            >
+                                visibility_off
+                            </button>
                             
                             <!-- Phone Number Field -->
-                            <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="filterNumber" required :class="{ 'disabled': verifiedotp }" :disabled="verifiedotp">
-                            <button @click="sendOTP" id="sendOtpBtn" class="overlay-button" :class="{ 'disabled': disableOTP }" :disabled="disableOTP">Send OTP</button>
+                            <input 
+                                v-model="phoneNumber" 
+                                type="text" 
+                                placeholder="Phone Number" 
+                                id="numberField" 
+                                @input="() => {
+                                    filterNumber();
+                                    verifyPhone();
+                                }" 
+                                required 
+                                :class="{ 'disabled': verifiedotp }" 
+                                :disabled="verifiedotp">
+
+                            <button 
+                                @click="sendOTP" 
+                                id="sendOtpBtn" 
+                                class="overlay-button" 
+                                :class="{ 'disabled': disableOTP }" 
+                                :disabled="disableOTP"
+                            >
+                                Send OTP
+                            </button>
 
                             <p v-if="showPhoneErr" id="phoneErr">Enter a valid phone number</p>
                             <p class="genErr">{{ phoneErr }}</p>
 
                             <!-- Reveals after OTP is sent -->
-                            <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="filterNumber" :maxlength="6" required :class="{ 'disabled': verifiedotp }">
-                            <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn" class="overlay-button" :class="{ 'disabled': verifiedotp }">Verify OTP</button>
+                            <input
+                                v-if="otpSent" 
+                                v-model="otp" 
+                                type="text" 
+                                placeholder="OTP" 
+                                id="otpField" 
+                                @input="() => {
+                                    filterNumber();
+                                    verifyPhone();
+                                }" 
+                                :maxlength="6" 
+                                required 
+                                :class="{ 'disabled': verifiedotp }">
+
+                            <button 
+                                v-if="otpSent" 
+                                @click="verifyOTP" 
+                                id="sendOtpBtn" 
+                                class="overlay-button" 
+                                :class="{ 'disabled': verifiedotp }"
+                            >
+                                Verify OTP
+                            </button>
+                            
                             <p v-if="verifiedotp" class="otp-verified">OTP verified</p>
                             <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
                             
                             <p v-if="registerFail" class="genErr"> {{ generalErrMsg }}</p>
+
                             <button @click="registerUser()" id="registerBtn">
                                 Register
                             </button>
+
                             <a href="/login.html" id="loginBtn">
                                 Already have an account? Login Now!
                             </a>
@@ -269,7 +350,6 @@ export default {
             confirmResult: null,
 
             // Booleans
-            isDraggable: false,
             isPressed: false,
             isPressedrepeated: false,
             showPhoneErr: false,
@@ -282,24 +362,14 @@ export default {
             // Error
             emailErr: null,
             phoneErr: null,
+
+            // debounce
+            debouncedVerifyEmail: null,
+            debouncedVerifyPhone: null
         }
     },
     components: {
         AlertPrompt,
-    },
-    watch: {
-        emailAddress: {
-            immediate: false,
-            handler(newVal, oldVal) {
-                this.verifyEmail();
-            }
-        },
-        phoneNumber: {
-            immediate: false,
-            handler(newVal, oldVal) {
-                this.verifyPhone();
-            }
-        }
     },
     computed: {
         passwordRequirements() {
@@ -368,8 +438,11 @@ export default {
         }
     },
     created() {
-        
         redirectUser();
+
+        // set debounce functions
+        this.debouncedVerifyEmail = debounce(this.debounceVerifyEmailFunction, 1000);
+        this.debouncedVerifyPhone = debounce(this.debounceVerifyPhoneFunction, 1000);
     },
     mounted() {
         this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('registerBtn',{
@@ -453,8 +526,7 @@ export default {
             // Remove any non-numeric characters except the minus sign at the beginning
             this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
         },
-        async verifyEmail() {
-            const debouncedVerifyEmail = debounce(async () => {
+        async debounceVerifyEmailFunction() {
             try {
                 const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/email`, {
                     method: 'POST',
@@ -464,13 +536,13 @@ export default {
                     credentials: "include",
                     body: JSON.stringify({ email: this.emailAddress })
                 });
-
+    
                 if (response.ok) {
                     this.emailErr = null;
                     return;
                 } else if (response.status === 400) {
                     const data = await response.json();
-
+    
                     if (data.error === 'Email already exists') {
                         this.emailErr = "Email already taken";
                         return;
@@ -481,45 +553,45 @@ export default {
             } catch (error) {
                 console.error('Error:', error);
             }
-            }, 1000);
-
-            debouncedVerifyEmail()
         },
-        async verifyPhone() {
+        verifyEmail() {
+            this.debouncedVerifyEmail();
+        },
+        async debounceVerifyPhoneFunction() {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/phone`, {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({ phoneNumber: this.phoneNumber })
+                });
+
+                if (response.ok) {
+                    this.phoneErr = null;
+                    this.disableOTP = false;
+                    return;
+                } else if (response.status === 400) {
+                    const data = await response.json();
+                    if (data.error === 'Phone Number already exists') {
+                        this.phoneErr = "Phone Number already taken";
+                        this.disableOTP = true;
+                        return;
+                    } else {
+                        throw new Error('Error: ' + response.status);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        },
+        verifyPhone() {
             if (this.phoneNumber.length !== 8){
                 return;
             }
-            const debouncedVerifyPhone = debounce(async () => {
-                try {
-                    const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/phone`, {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json; charset=UTF-8',
-                        },
-                        credentials: "include",
-                        body: JSON.stringify({ phoneNumber: this.phoneNumber })
-                    });
 
-                    if (response.ok) {
-                        this.phoneErr = null;
-                        this.disableOTP = false;
-                        return;
-                    } else if (response.status === 400) {
-                        const data = await response.json();
-                        if (data.error === 'Phone Number already exists') {
-                            this.phoneErr = "Phone Number already taken";
-                            this.disableOTP = true;
-                            return;
-                        } else {
-                            throw new Error('Error: ' + response.status);
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            }, 1000);
-
-            debouncedVerifyPhone();
+            this.debouncedVerifyPhone();
         },
         async registerUser() {
             if (!this.verifiedotp){

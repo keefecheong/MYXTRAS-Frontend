@@ -178,6 +178,7 @@ export default {
             alertStore: useAlertStore(),
             setupComplete: false,
             usernameErr: null,
+            debouncedVerifyUsername: null
         };
     },
     computed: {
@@ -202,9 +203,11 @@ export default {
 
         this.getSchools();
 
+        this.debouncedVerifyUsername = debounce(this.debounceVerifyUsernameFunction, 1000);
+
         window.addEventListener('beforeunload', async () => {
             await this.signOut();
-        })
+        });
     },
     methods: {
         // to sign user out if profile is not set up when leaving the page
@@ -326,37 +329,36 @@ export default {
             // console.log(this.userObject);
         },
         async verifyUsername() {
-        const debouncedVerifyUsername = debounce(async () => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/username`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-                body: JSON.stringify({ username: this.username })
-            });
+            this.debouncedVerifyUsername();
+        },
+        async debounceVerifyUsernameFunction() {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/username`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({ username: this.username })
+                });
 
-            if (response.ok) {
-                this.usernameErr = null;
-                return;
-            } else if (response.status === 400) {
-                const data = await response.json();
-
-                if (data.error === 'Username already exists') {
-                    this.usernameErr = "Username already taken";
+                if (response.ok) {
+                    this.usernameErr = null;
                     return;
-                } else {
-                    throw new Error('Error: ' + response.status);
-                }
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-        }, 2000);
+                } else if (response.status === 400) {
+                    const data = await response.json();
 
-        debouncedVerifyUsername()
-    },
+                    if (data.error === 'Username already exists') {
+                        this.usernameErr = "Username already taken";
+                        return;
+                    } else {
+                        throw new Error('Error: ' + response.status);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        },
         noIntegers() {
             this.realname = this.realname.replace(/[0-9]/g, '');
         },

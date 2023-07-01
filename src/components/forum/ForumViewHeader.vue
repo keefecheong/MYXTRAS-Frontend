@@ -59,14 +59,14 @@
 <script>
 import InterestBadgeList from '../general/InterestBadgeList.vue';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
-
+import { debounce } from 'lodash';
 
 export default {
     data() {
         return {
             workingSubscribe: false,
             savedSubscribe: false,
-            subscribeTimeout: null,
+            debouncedSubscribeUpdate: null,
             numOfSubs: 0,
             confirm: useConfirmStore().confirm,
         }
@@ -87,6 +87,9 @@ export default {
         this.workingSubscribe = this.forum.isSubscribed;
         this.savedSubscribe = this.forum.isSubscribed;
         this.numOfSubs = this.forum.subscribers.length;
+
+        // set debounce function to only send request to update backend if user has not toggled subscribe button for 3 seconds
+        this.debouncedSubscribeUpdate = debounce(this.updateSubscribe, 3000);
 
         window.addEventListener('beforeunload', this.completeSubscribeRequest);
     },
@@ -115,10 +118,7 @@ export default {
                 this.numOfSubs -= 1;
             }
 
-            // set timeout and only send request to update backend if user has not toggled subscribe button for 3 seconds
-            clearTimeout(this.subscribeTimeout);
-
-            this.subscribeTimeout = setTimeout(this.updateSubscribe, 3000);
+            this.debouncedSubscribeUpdate();
         },
         // to send request to subscribe/unsubscribe
         async updateSubscribe(){
@@ -161,10 +161,7 @@ export default {
         },
         // handle updating of subscribe status if pending
         completeSubscribeRequest() {
-            if (this.subscribeTimeout) {
-                clearTimeout(this.subscribeTimeout);
-                this.updateSubscribe();
-            }
+            this.debouncedSubscribeUpdate.flush();
         },
 
         async deleteForum(){

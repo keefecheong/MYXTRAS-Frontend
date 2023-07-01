@@ -110,6 +110,7 @@ import { viewUser } from '../../utils/general/viewUser.js';
 import viewForum from '../../utils/general/viewForum.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ThreadFormLayout from './ThreadFormLayout.vue';
+import { debounce } from 'lodash';
 
 export default {
     data() {
@@ -128,8 +129,8 @@ export default {
             disliked: false,
             savedDislike: false,
             dislikeCount: 0,
-            likeTimeout: null,
-            dislikeTimeout: null,
+            debouncedLikeUpdate: null,
+            debouncedDislikeUpdate: null,
 
             showThreadForm: false
         }
@@ -163,6 +164,10 @@ export default {
 
         // get time difference from when thread was created and current datetime
         this.dateCreated = calcDateDifference(this.thread.creation_time);
+
+        // set debounce functions to only send requests to update backend if user has not clicked the like/dislike button for 3 seconds
+        this.debouncedLikeUpdate = debounce(this.updateLike, 3000);
+        this.debouncedDislikeUpdate = debounce(this.updateDislike, 3000);
 
         // set event listener to complete pending like/dislike requests when the page is closed
         window.addEventListener('beforeunload', this.completeRequests);
@@ -267,11 +272,8 @@ export default {
             else {
                 this.likeCount -= 1;
             }
-
-            // set timeout and only send request to update backend if user has not clicked the like button for 3 seconds
-            clearTimeout(this.likeTimeout);
-
-            this.likeTimeout = setTimeout(this.updateLike, 3000);
+            
+            this.debouncedLikeUpdate();
         },
         // toggle dislike status of thread
         toggleDisike() {
@@ -293,10 +295,7 @@ export default {
                 this.dislikeCount -= 1;
             }
 
-            // set timeout and only send request to update backend if user has not clicked the dislike button for 3 seconds
-            clearTimeout(this.dislikeTimeout);
-
-            this.dislikeTimeout = setTimeout(this.updateDislike, 3000);
+            this.debouncedDislikeUpdate();
         },
         // handle updating of like status to backend
         async updateLike() {
@@ -333,8 +332,6 @@ export default {
                     console.log(error);
                 });
             }
-            
-            this.likeTimeout = null;
         },
         // handle updating of dislike status to backend
         async updateDislike() {
@@ -371,20 +368,11 @@ export default {
                     console.log(error);
                 });
             }
-            
-            this.dislikeTimeout = null;
         },
         // complete updateLike/updateDislike request if pending
         completeRequests() {
-            if (this.likeTimeout) {
-                clearTimeout(this.likeTimeout);
-                this.updateLike();
-            }
-            
-            if (this.dislikeTimeout) {
-                clearTimeout(this.dislikeTimeout);
-                this.updateDislike();
-            }
+            this.debouncedLikeUpdate.flush();
+            this.debouncedDislikeUpdate.flush();
         },
         // to go to forumgroup for parent forum
         viewForum() {

@@ -85,203 +85,205 @@ import Cropper from 'cropperjs';
 import { debounce } from 'lodash';
 
 export default {
-  components: {
-    NavSidebar,
-    AddInterestButton,
-    Cropper,
-    ngeeann,
-    banner,
-  },
+    components: {
+        NavSidebar,
+        AddInterestButton,
+        Cropper,
+        ngeeann,
+        banner,
+    },
 
-  data() {
-    return {
-      showPopup: false,
-      selectedOption: [],
-      cropper: null,
-      profilePicture: ngeeann,
-      banner: banner,
-      username: '',
-      biography: '',
-      gender:'',
-      // secondaryEmail: '',
-      showBtn: false,
-      dataRetrieved: false,
-      usernameErr: null,
-      // selectedBanner: "banner",
-      // selectedProfilePic: "profilePicture",
-    }
-  },
-
-  mounted() {
+    data() {
+        return {
+        showPopup: false,
+        selectedOption: [],
+        cropper: null,
+        profilePicture: ngeeann,
+        banner: banner,
+        username: '',
+        biography: '',
+        gender:'',
+        // secondaryEmail: '',
+        showBtn: false,
+        dataRetrieved: false,
+        usernameErr: null,
+        // selectedBanner: "banner",
+        // selectedProfilePic: "profilePicture",
+        debouncedVerifyUsername: null
+        }
+    },
+    created() {
+        // set debounce functions
+        this.debouncedVerifyUsername = debounce(this.debounceVerifyUsernameFunction, 1000);
+    },
+    mounted() {
         this.checkAuth();
-  },
+    },
 
-  methods:{
-    checkAuth() {
-            // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        if (data.is_profile_setup === false){
-                            window.location.href = '/setupProfile.html';
-                            return;
-                        }
-                        else {
-                            this.username = data.username;
-                            this.biography = data.biography;
-                            this.selectedOption = data.interests;
-                            this.gender = data.gender;
-                            this.userId = data._id;
-                            this.profilePicture = data.profile_pic_link;
-                            this.dataRetrieved = true
-                        }
+    methods:{
+        checkAuth() {
+                // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
+                fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    credentials: "include",
+                }).then(response => {
+                    if (response.ok) {
+                        response.json().then(data => {
+                            if (data.is_profile_setup === false){
+                                window.location.href = '/setupProfile.html';
+                                return;
+                            }
+                            else {
+                                this.username = data.username;
+                                this.biography = data.biography;
+                                this.selectedOption = data.interests;
+                                this.gender = data.gender;
+                                this.userId = data._id;
+                                this.profilePicture = data.profile_pic_link;
+                                this.dataRetrieved = true
+                            }
+                        })
+                    } else {
+                        console.log('Error:', response);
+                    }
                     })
-                } else {
-                    console.log('Error:', response);
-                }
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                    })
-                .catch(error => {
-                    console.error('Error:', error);
+                    .then(data => {
+                        console.log('Success:', data);
+                        })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            },
+
+        initializeCropper() {
+            const imageElement = this.$refs.cropperImage;
+            this.cropper = new Cropper(imageElement, {
+            aspectRatio: 1, // Set the aspect ratio for the cropped image
+            viewMode: 1, // Restrict the cropping area to the container size
+            dragMode: 'move', // Allow dragging the image within the container
+            cropBoxResizable: true, // Disable resizing of the cropping area
+            cropBoxMovable: true, // Disable moving of the cropping area
+            toggleDragModeOnDblclick: true, // Disable toggling drag mode on double-click
+            autoCropArea: 0.5, // Set the initial cropping area to a circle
+            guides: false, // Hide the grid lines
+            background: false, // Disable the background overlay
+            ready: () => {
+                this.cropper.setCropBoxData({
+                width: 142,
+                height: 142,
+                left: (imageElement.offsetWidth - 142) / 2,
+                top: (imageElement.offsetHeight - 142) / 2,
                 });
+            },
+            });
         },
 
-    initializeCropper() {
-        const imageElement = this.$refs.cropperImage;
-        this.cropper = new Cropper(imageElement, {
-          aspectRatio: 1, // Set the aspect ratio for the cropped image
-          viewMode: 1, // Restrict the cropping area to the container size
-          dragMode: 'move', // Allow dragging the image within the container
-          cropBoxResizable: true, // Disable resizing of the cropping area
-          cropBoxMovable: true, // Disable moving of the cropping area
-          toggleDragModeOnDblclick: true, // Disable toggling drag mode on double-click
-          autoCropArea: 0.5, // Set the initial cropping area to a circle
-          guides: false, // Hide the grid lines
-          background: false, // Disable the background overlay
-          ready: () => {
-            this.cropper.setCropBoxData({
-              width: 142,
-              height: 142,
-              left: (imageElement.offsetWidth - 142) / 2,
-              top: (imageElement.offsetHeight - 142) / 2,
+        chooseFile(imageType){
+        if (imageType === "profilePicture") {
+            this.$refs.fileInput.value = ''; // Reset the file input value
+            this.$nextTick(() => {
+            this.$refs.fileInput.click(); // Open the file input dialog
             });
-          },
-        });
-    },
-
-    chooseFile(imageType){
-      if (imageType === "profilePicture") {
-        this.$refs.fileInput.value = ''; // Reset the file input value
-        this.$nextTick(() => {
-          this.$refs.fileInput.click(); // Open the file input dialog
-        });
-      } else {
-        this.$refs.bannerInput.click();
-      }
-    },
-
-    upload(event, imageType){
-      const file = event.target.files[0];
-      if (imageType === 'profilePicture') {
-        this.profilePicture = URL.createObjectURL(file);
-        this.showBtn = true;
-        this.$nextTick(() => {
-          this.initializeCropper();
-        });
-      } else {
-        this.banner = URL.createObjectURL(file);
-      }
-      
-    },
-
-    confirmCropping() {
-      const croppedCanvas = this.cropper.getCroppedCanvas({
-        width: 142,
-        height: 142,
-        fillColor: '#fff',
-      });
-      const croppedImage = croppedCanvas.toDataURL(); // Get the cropped image as a data URL
-      this.profilePicture = croppedImage;
-      this.cropper.destroy(); // Destroy the cropper instance
-      this.cropper = null; // Set the cropper variable to null
-      this.showBtn = false;
-    },
-
-    async verifyUsername() {
-      const debouncedVerifyUsername = debounce(async () => {
-      try {
-          const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/username`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json; charset=UTF-8',
-              },
-              credentials: "include",
-              body: JSON.stringify({ username: this.username })
-          });
-
-          if (response.ok) {
-              this.usernameErr = null;
-              return;
-          } else if (response.status === 400) {
-              const data = await response.json();
-
-              if (data.error === 'Username already exists') {
-                  this.usernameErr = "Username already taken";
-                  return;
-              } else {
-                  throw new Error('Error: ' + response.status);
-              }
-          }
-      } catch (error) {
-          console.error('Error:', error);
-      }
-      }, 2000);
-
-      debouncedVerifyUsername()
-  },
-    async updateProfile(){
-      let formData = new FormData();
-
-      this.userObject = {
-        'userName': this.username,
-        'biography': this.biography,
-        'selectedInterests': this.selectedOption,
-        'gender': this.gender,
-        // 'profilePicture': this.$refs.fileInput.files[0],
-        
-      };
-      formData.append('userObject', JSON.stringify(this.userObject));
-      formData.append('selectedImages', this.$refs.fileInput.files[0]);
-
-      try{
-        const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`,{
-          method: 'PATCH',
-          body: formData,
-          credentials: 'include',
-        });
-
-        if (response.ok){
-          window.location.href = '/profilePage.html';
-        }else{
-          console.log('Error:', response.statusText);
+        } else {
+            this.$refs.bannerInput.click();
         }
-      }
-      catch (error){
-        console.log('Error:', error);
-      }
-    },
+        },
 
-    handleSelectedInterests(selectedOption) {
-        this.selectedOption = selectedOption;
-    }
+        upload(event, imageType){
+        const file = event.target.files[0];
+        if (imageType === 'profilePicture') {
+            this.profilePicture = URL.createObjectURL(file);
+            this.showBtn = true;
+            this.$nextTick(() => {
+            this.initializeCropper();
+            });
+        } else {
+            this.banner = URL.createObjectURL(file);
+        }
+        
+        },
+
+        confirmCropping() {
+        const croppedCanvas = this.cropper.getCroppedCanvas({
+            width: 142,
+            height: 142,
+            fillColor: '#fff',
+        });
+        const croppedImage = croppedCanvas.toDataURL(); // Get the cropped image as a data URL
+        this.profilePicture = croppedImage;
+        this.cropper.destroy(); // Destroy the cropper instance
+        this.cropper = null; // Set the cropper variable to null
+        this.showBtn = false;
+        },
+        async debounceVerifyUsernameFunction() {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/username`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({ username: this.username })
+                });
+
+                if (response.ok) {
+                    this.usernameErr = null;
+                    return;
+                } else if (response.status === 400) {
+                    const data = await response.json();
+
+                    if (data.error === 'Username already exists') {
+                        this.usernameErr = "Username already taken";
+                        return;
+                    } else {
+                        throw new Error('Error: ' + response.status);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        },
+        async verifyUsername() {
+            this.debouncedVerifyUsername();
+        },
+        async updateProfile(){
+        let formData = new FormData();
+
+        this.userObject = {
+            'userName': this.username,
+            'biography': this.biography,
+            'selectedInterests': this.selectedOption,
+            'gender': this.gender,
+            // 'profilePicture': this.$refs.fileInput.files[0],
+            
+        };
+        formData.append('userObject', JSON.stringify(this.userObject));
+        formData.append('selectedImages', this.$refs.fileInput.files[0]);
+
+        try{
+            const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`,{
+            method: 'PATCH',
+            body: formData,
+            credentials: 'include',
+            });
+
+            if (response.ok){
+            window.location.href = '/profilePage.html';
+            }else{
+            console.log('Error:', response.statusText);
+            }
+        }
+        catch (error){
+            console.log('Error:', error);
+        }
+        },
+
+        handleSelectedInterests(selectedOption) {
+            this.selectedOption = selectedOption;
+        }
 
   },
 }
