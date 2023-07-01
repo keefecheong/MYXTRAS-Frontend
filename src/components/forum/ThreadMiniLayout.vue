@@ -49,8 +49,6 @@ import ThreadFormLayout from './ThreadFormLayout.vue';
 import calcDateDifference from '../../utils/general/calcDateDifference';
 import viewUser from '../../utils/general/viewUser.js';
 import viewForum from '../../utils/general/viewForum.js';
-import { useAlertStore } from '../../stores/AlertStore';
-import { useConfirmStore } from '../../stores/ConfirmStore';
 
 export default {
     data() {
