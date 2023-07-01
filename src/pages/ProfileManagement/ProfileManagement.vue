@@ -26,7 +26,7 @@
         <div class="mb-3 row" id="position">
           <label for="inputUsername" class="col-md-1 offset-md-4 col-form-label">Username: @</label>
           <div class="col-sm-4">
-            <input type="username" v-model="username" class="form-control" id="inputUsername" placeholder="Username" @input="verifyUsername">
+            <input type="username" v-model="username" class="form-control" id="inputUsername" placeholder="Username" @input="verifyUsername" :maxlength="25">
             <p style="color: red; margin-top: 20px; margin-left: 125px;">{{ this.usernameErr }}</p>
           </div>
         </div>

@@ -24,7 +24,7 @@
                             <div id="header-user-details">
                                 <div id="header-user-name">
                                     <span id="user-realname">{{ user.real_name }}</span>
-                                    <span id="user-username">@{{ user.username }}</span>
+                                    <span id="user-username" class="hide-overflow-text">@{{ user.username }}</span>
                                 </div>
 
                                 <div id="header-user-school">
@@ -468,6 +468,7 @@ export default {
 
 #user-username {
     font-size: 20px;
+    max-width: 20vw;
 }
 
 #header-content {
