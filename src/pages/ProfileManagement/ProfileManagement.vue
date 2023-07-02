@@ -216,11 +216,27 @@ export default {
                 fillColor: '#fff',
             });
             const croppedImage = croppedCanvas.toDataURL(); // Get the cropped image as a data URL
-            this.profilePicture = croppedImage;
-            this.cropper.destroy(); // Destroy the cropper instance
-            this.cropper = null; // Set the cropper variable to null
-            this.showBtn = false;
+            // this.profilePicture = croppedImage;
+            // this.cropper.destroy(); // Destroy the cropper instance
+            // this.cropper = null; // Set the cropper variable to null
+            // this.showBtn = false;
+            fetch(croppedImage)
+              .then((response) => response.blob())
+              .then((blob) => {
+                // Create a new File object with the cropped image data
+                const croppedFile = new File([blob], 'cropped_image.png',  {type: 'image/png' });
+
+                // Assign the cropped File object to a separate variable
+                this.croppedImageFile = croppedFile;
+
+                this.profilePicture = croppedImage;
+                this.cropper.destroy(); // Destroy the cropper instance
+                this.cropper = null; // Set the cropper variable to null
+                this.showBtn = false;
+            });
         },
+
+        
         async debounceVerifyUsernameFunction() {
             try {
                 const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/username`, {
@@ -273,8 +289,8 @@ export default {
                 
             };
             formData.append('userObject', JSON.stringify(this.userObject));
-            formData.append('selectedImages', this.$refs.fileInput.files[0]);
-
+            // formData.append('selectedImages', this.$refs.fileInput.files[0]);
+            formData.append('selectedImages', this.croppedImageFile);
             try{
                 const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`,{
                     method: 'PATCH',
