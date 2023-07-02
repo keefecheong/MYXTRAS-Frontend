@@ -119,24 +119,4 @@ export default {
 .close-reply-message-container .material-symbols-outlined {
     font-size: 1.5em;
 }
-
-@keyframes highlight-self {
-    from {
-        background-color: rgba(226, 34, 98, 0.1);
-    }
-
-    to {
-        background-color: none;
-    }
-}
-
-@keyframes highlight-other {
-    from {
-        background-color: rgba(255, 99, 99, 0.15);
-    }
-
-    to {
-        background-color: none;
-    }
-}
 </style>

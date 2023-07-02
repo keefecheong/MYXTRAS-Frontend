@@ -330,6 +330,7 @@ export default {
     display: grid;
     width: 100%;
     transition: background-color 1s ease-in-out;
+    border-radius: 10px;
 }
 
 .message-container.highlight-self {
