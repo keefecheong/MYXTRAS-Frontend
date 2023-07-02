@@ -1,5 +1,5 @@
 <template>
-    <div class="chat-file-layout-container">
+    <div class="chat-file-layout-container" :class="{ 'in-message': inMessage }">
         <!-- layout for image type files -->
         <div class="chat-image-file-layout-container" v-if="isImageFile">
             <img class="chat-image-file" :src="fileLink" />
@@ -11,7 +11,7 @@
             <span>{{ originalName }}</span>
         </div>
 
-        <div style="position: relative;">
+        <div style="position: relative;" v-if="inMessage">
             <span class="material-symbols-outlined" :class="{'hide-download': isDownloadingFile}" title="Download file" @click="downloadFile">Download</span>
             <LoadingOverlay v-if="isDownloadingFile" />
         </div>
@@ -34,7 +34,8 @@ export default {
     props: [
         'fileLink',
         'originalName',
-        'fileType'
+        'fileType',
+        'inMessage'
     ],
     methods: {
         async downloadFile() {
@@ -79,8 +80,11 @@ export default {
     align-items: center;
     padding: 10px;
     padding-right: 20px;
+}
+
+.chat-file-layout-container.in-message {
     border-bottom: 1px solid white;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .chat-file-layout-container .material-symbols-outlined {
@@ -91,8 +95,12 @@ export default {
     color: rgba(211, 211, 211, 0.5);
 }
 
-.chat-image-file {
+.in-message .chat-image-file {
     max-width: 30vw;
+}
+
+.chat-image-file {
+    max-width: 10vw;
 }
 
 .chat-non-image-file-layout-container {

@@ -165,6 +165,7 @@ export default {
         // if page is reloaded then use the stored tempUser field as the target user
         if (window.performance.getEntriesByType('navigation').map((nav) => nav.type).includes('reload')) {
             this.targetUserId = sessionStorage.getItem('tempUser');
+            sessionStorage.removeItem('tempUser');
         }
         else {
             // if 'followerId' is present in sessionStorage then view that profile
@@ -256,8 +257,9 @@ export default {
             });
         },
         // to sign out and clear cookies
-        signOut() {
-            const success = signOut();
+        async signOut() {
+            const success = await signOut();
+            
             if (success) {
                 location.href = '/login.html';
             }

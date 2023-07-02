@@ -4,7 +4,7 @@
         <span>{{ newDate }}</span>
     </div>
 
-    <div class="message-container">
+    <div class="message-container" :id="index">
         <!-- display message -->
         <!--
             classes:
@@ -23,17 +23,26 @@
             }"
             @mouseenter="showMore"
             @mouseleave="hideMore"
-            :id="index"
         >
             <!-- layout for normal message -->
             <div v-if="!editMode">
                 <div class="message-content">
+                    <!-- displayed if message is replying to another message -->
+                    <div v-if="message.reply_message">
+                        <ChatReplyMessageLayout
+                            :message="message.reply_message"
+                            :showClose="false"
+                            :name="name"
+                        />
+                    </div>
+
                     <!-- displayed if message has file -->
                     <div v-if="hasFile">
                         <ChatFileLayout 
                             :fileLink="message.file_link" 
                             :originalName="message.original_name"
                             :fileType="message.file_type"
+                            :inMessage="true"
                         />
                     </div>
 
@@ -49,19 +58,32 @@
                     </div>
                 </div>
     
-                <!-- action buttons/icons for editing/deleting message (only for senders) -->
-                <div class="message-actions-container" v-if="displayMore && message.is_sender">
+                <div class="message-actions-container" v-if="displayMore">
                     <span class="material-symbols-outlined" @click="toggleMessageActions" title="More actions">more_vert</span>
-    
-                    <div class="message-actions" v-if="displayMore && displayActions && message.is_sender">
-                        <div @click.stop="enterEdit" title="Edit">
-                            <span class="material-symbols-outlined">edit</span>
-                            <span>Edit</span>
+                    
+                    <div class="message-actions" v-if="displayMore && displayActions">
+                        <!-- actions for all users -->
+                        <div>
+                            <!-- reply to message -->
+                            <div @click.stop="replyToMessage" title="Reply to this message" class="message-action-button">
+                                <span class="material-symbols-outlined">reply</span>
+                                <span>Reply</span>
+                            </div>
                         </div>
-    
-                        <div @click="deleteMessage" title="Delete">
-                            <span class="material-symbols-outlined">delete</span>
-                            <span>Delete</span>
+                        
+                        <!-- privileged actions only for sender -->
+                        <div v-if="message.is_sender">
+                            <!-- edit message -->
+                            <div @click.stop="enterEdit" title="Edit" class="message-action-button">
+                                <span class="material-symbols-outlined">edit</span>
+                                <span>Edit</span>
+                            </div>
+        
+                            <!-- delete message -->
+                            <div @click="deleteMessage" title="Delete" class="message-action-button">
+                                <span class="material-symbols-outlined">delete</span>
+                                <span>Delete</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -95,6 +117,7 @@
 <script>
 import ChatFileLayout from './ChatFileLayout.vue';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
+import ChatReplyMessageLayout from './ChatReplyMessageLayout.vue';
 
 export default {
     data() {
@@ -102,32 +125,37 @@ export default {
             displayMore: false,
             displayActions: false,
             editMode: false,
-            editedMessage: ''
+            editedMessage: '',
+            index: ''
         }
     },
     props: [
         'message',
         'previous_is_sender',
         'previous_creation_time',
-        'index'
+        'name'
     ],
     components: {
         ChatFileLayout,
-        DynamicTextarea
+        DynamicTextarea,
+        ChatReplyMessageLayout
     },
     emits: [
         'edit-message',
         'delete-message',
         'reply-to-message'
     ],
+    created() {
+        this.index = this.message._id;
+    },
     updated() {
         this.onEdit();
     },
     methods: {
         // to show more actions menu
         showMore() {
-            // only change displayMore to true if not in edit mode and message is sent by the user
-            if (!this.editMode && this.message.is_sender) {
+            // only change displayMore to true if not in edit mode
+            if (!this.editMode) {
                 this.displayMore = true;                
             }
         },
@@ -208,6 +236,16 @@ export default {
             }
             
             this.$emit('delete-message', data);
+        },
+        // to reply to message
+        replyToMessage() {
+            const emitMessage = {...this.message};
+
+            delete emitMessage.creation_time;
+            delete emitMessage.last_modified_time;
+            delete emitMessage.reply_message;
+
+            this.$emit('reply-to-message', emitMessage);
         }
     },
     computed: {
@@ -291,6 +329,17 @@ export default {
 .message-container {
     display: grid;
     width: 100%;
+    transition: background-color 1s ease-in-out;
+}
+
+.message-container.highlight-self {
+    background-color: rgba(226, 34, 98, 0.1);
+    transition: background-color 0s;
+}
+
+.message-container.highlight-other {
+    background-color: rgba(255, 99, 99, 0.15);
+    transition: background-color 0s;
 }
 
 .message {
@@ -298,24 +347,23 @@ export default {
     max-width: 85%;
     height: fit-content;
     border-radius: 10px;
-    margin-top: 5px;
+    margin-top: 2px;
     position: relative;
     display: grid;
     position: relative;
+    padding: 5px 15px 5px 10px;
 }
 
 .message.received {
     justify-self: start;
     margin-left: 20px;
     background-color: black;
-    padding: 5px 10px 5px 15px;
 }
 
 .message.sent {
     justify-self: end;
     margin-right: 20px;
     background-color: var(--dark);
-    padding: 5px 15px 5px 10px;
 }
 
 .message.arrow-left, .message.arrow-right {
@@ -350,6 +398,8 @@ export default {
     display: flex;
     flex-direction: column;
     color: white;
+    min-width: 80px;
+    word-break: break-all;
 }
 
 .message-timestamp-container {
@@ -396,7 +446,12 @@ export default {
     right: -1px;
 }
 
-.message-actions div {
+.message-actions > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.message-action-button {
     display: flex;
     column-gap: 5px;
     padding: 10px;
@@ -405,11 +460,11 @@ export default {
     align-items: center;
 }
 
-.message-actions div:last-child {
+.message-actions > div:last-child > .message-action-button:last-child {
     border: none;
 }
 
-.message-actions div span {
+.message-action-button span {
     display: inline;
     margin: 0;
 }
