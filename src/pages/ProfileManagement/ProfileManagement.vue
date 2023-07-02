@@ -238,6 +238,7 @@ export default {
                     const data = await response.json();
 
                     if (data.error === 'Username already exists') {
+                        this.verifiedUsername = false;
                         this.usernameErr = "Username already taken";
                         return;
                     } else {
@@ -249,7 +250,8 @@ export default {
             }
         },
         async verifyUsername() {
-            this.debouncedVerifyUsername();
+          this.verifiedUsername = false;
+          this.debouncedVerifyUsername();
         },
         async updateProfile(){
             let formData = new FormData();
