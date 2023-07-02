@@ -10,6 +10,10 @@ export default async function signOut() {
     }).then(response => {
         if (response.ok) {
             success = true;
+
+            // clear data in local and session storage when signed out
+            localStorage.clear();
+            sessionStorage.clear();
         }
     });
 

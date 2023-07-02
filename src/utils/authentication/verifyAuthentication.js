@@ -9,6 +9,11 @@ export default async function validateUser() {
         if (res.status == 200) {
             authenticated = true;
         }
+        else {
+            // if not authenticated clear local and session storage
+            localStorage.clear();
+            sessionStorage.clear();
+        }
     }).catch((error) => {
         console.log(error);
     });

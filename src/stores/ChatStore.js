@@ -6,7 +6,6 @@ export const useChatStore = defineStore('chatStore', {
         // use sessionStorage to persist currentChat for each tab over refresh (can be different on each open tab)
         // currentChat stores the chat that user is currently interacting with
         currentChat: useSessionStorage('currentChat', {}),
-        tempChat: useSessionStorage('tempChat', {}),
         
         // chats store the chats enrolled by the user
         chats: [],
