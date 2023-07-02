@@ -110,7 +110,8 @@ export default {
             // selectedBanner: "banner",
             // selectedProfilePic: "profilePicture",
             debouncedVerifyUsername: null,
-            verifiedUsername: false
+            verifiedUsername: true,
+            previousUsername: null,
         }
     },
     created() {
@@ -139,6 +140,7 @@ export default {
                         }
                         else {
                             this.username = data.username;
+                            this.previousUsername = this.username;
                             this.biography = data.biography;
                             this.selectedOption = data.interests;
                             this.gender = data.gender;
@@ -250,8 +252,14 @@ export default {
             }
         },
         async verifyUsername() {
-          this.verifiedUsername = false;
-          this.debouncedVerifyUsername();
+          // If user changes from a taken username back to their username, enable button and clear err
+          if (this.username != this.previousUsername) {
+            this.verifiedUsername = false;
+            this.debouncedVerifyUsername();
+          } else {
+            this.verifiedUsername = true;
+            this.usernameErr = "";
+          }
         },
         async updateProfile(){
             let formData = new FormData();
