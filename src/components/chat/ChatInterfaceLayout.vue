@@ -39,13 +39,25 @@
                         :message="message" 
                         :previous_creation_time="previous_creation_time(index)" 
                         :previous_is_sender="previous_is_sender(index)"
-                        :index="message._id"
+                        :name="chat.name"
                         :key="index"
                         @edit-message="editMessage"
                         @delete-message="deleteMessage"
+                        @reply-to-message="handleReplyMessage"
                     />
                 </div>
             </div>
+        </div>
+
+        <!-- show replying to message -->
+        <div v-if="replyToMessage">
+            <ChatReplyMessageLayout
+                :message="replyToMessage"
+                :name="chat.name"
+                :showClose="true"
+                :replying="true"
+                @close-reply-to="handleCloseReply"
+            />
         </div>
 
         <!-- container for message input -->
@@ -145,6 +157,7 @@ import { useAlertStore } from '../../stores/AlertStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
 import { viewUser } from '../../utils/general/viewUser.js';
 import { debounce } from 'lodash';
+import ChatReplyMessageLayout from './ChatReplyMessageLayout.vue';
 
 export default {
     data() {
@@ -166,7 +179,8 @@ export default {
             error: '',
             selectedLink: '',
             uploadingFile: false,
-            alert: useAlertStore().alert
+            alert: useAlertStore().alert,
+            replyToMessage: null
         }
     },
     props: [
@@ -176,12 +190,13 @@ export default {
     components: {
         ChatMessageLayout,
         LoadingOverlay,
-        DynamicTextarea
+        DynamicTextarea,
+        ChatReplyMessageLayout
     },
     // when mounted/restored from cache
     activated() {
         // focus on message input
-        document.querySelector('#chat-message-input').focus();
+        this.inputFocus();
 
         // initialize user status and user status listeners
         this.getUserStatus();
@@ -203,6 +218,10 @@ export default {
         socket.off('receive-user-typing', this.updateUserTyping);
     },
     methods: {
+        // to focus on message input field
+        inputFocus() {
+            document.getElementById('chat-message-input').focus();
+        },
         // to send message to backend
         async sendMessage() {
             // if file input mode is inactive,
@@ -235,6 +254,11 @@ export default {
                 content: this.messageText,
                 is_sender: true,
                 creation_time: new Date().toISOString()
+            }
+
+            // set reply_message property if replyToMessage is not null
+            if (this.replyToMessage) {
+                newMessage.reply_message = this.replyToMessage;
             }
 
             // if there are files selected send the files to server in chunks
@@ -273,14 +297,15 @@ export default {
             // update last_message_timestamp
             this.store.updateChatTimestamp(this.chat._id, newMessage.creation_time);
 
-            // reset message to default
+            // reset fields to default
             this.messageText = '';
+            this.replyToMessage = null;
 
             // toggle file input mode off
             this.toggleFileInput(false);
 
             // give focus to input field
-            document.querySelector('#chat-message-input').focus();
+            this.inputFocus();
         },
         // to process and send file to server
         sendFile(message) {
@@ -558,6 +583,15 @@ export default {
         // to view user profile of the other chat member
         viewUser() {
             viewUser(this.chat.targetUserId);
+        },
+        // handle reply-to-message event
+        handleReplyMessage(message) {
+            this.replyToMessage = message;
+            this.inputFocus();
+        },
+        // handle close-reply-to event
+        handleCloseReply() {
+            this.replyToMessage = null;
         }
     },
     computed: {
@@ -693,12 +727,16 @@ export default {
     display: flex;
     column-gap: 5px;
     border: 1px solid black;
-    border-radius: 100px;
-    padding: 10px;
+    border-radius: 70px;
+    padding: 5px;
     padding-left: 25px;
     align-items: center;
     background-color: white;
     flex-direction: row;
+}
+
+#chat-interface-input form textarea, #chat-file-interface-input textarea {
+    padding: 0px 5px;
 }
 
 #chat-message-input, #chat-file-message-input {

@@ -76,6 +76,11 @@ export default {
         }
     },
     async created() {
+        // if page is reloaded use the previous viewing chat
+        if (window.performance.getEntriesByType('navigation').map((nav) => nav.type).includes('reload')) {
+            this.store.currentChat = this.store.tempChat;
+        }
+
         // get history data from database
         await this.initData();
         
@@ -88,7 +93,7 @@ export default {
         // check for new store/selected store
         this.initChat();
 
-        window.addEventListener('beforeunload', this.clearCurrentChat);
+        window.addEventListener('beforeunload', this.handleBeforeUnload);
     },
     unmounted() {
         this.clearCurrentChat();
@@ -214,6 +219,12 @@ export default {
         // to clear current chat
         clearCurrentChat() {
             this.store.currentChat = {};
+        },
+        // to handle beforeunload event
+        // save current chat as a temp field in sessionStorage and clear current chat
+        handleBeforeUnload() {
+            this.store.tempChat = this.store.currentChat;
+            this.clearCurrentChat();
         }
     },
     computed: {
