@@ -172,7 +172,7 @@ export default {
             }
 
             // check if the user has uploaded any files
-            if (this.files.length <= 0) {
+            if (this.files.length <= 0 && !this.editMode) {
                 this.submitting = false;
 
                 await this.alert('No files selected.');

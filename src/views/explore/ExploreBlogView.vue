@@ -135,6 +135,7 @@ export default {
     justify-content: flex-end;
     z-index: 1;
 }
+
 figure {
     margin: 0;
 }
