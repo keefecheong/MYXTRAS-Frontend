@@ -294,19 +294,15 @@
     border-radius: 0 10px 10px 0 !important;
     user-select: none;
     text-decoration: none;
+    background-color: #f1f1f1;
+    color: black;
+    opacity: 50%;
 }
 
 /* Position the "next button" to the right */
 .blog-next {
     right: calc(var(--bs-gutter-x) * 0.5);
     border-radius: 10px 0 0 10px !important;
-}
-
-/* On hover, add a black background color with a little bit see-through */
-.blog-prev:hover,
-.blog-next:hover {
-    background-color: #f1f1f1;
-    color: black;
 }
 
 /* blog indicator styles */

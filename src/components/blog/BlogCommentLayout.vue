@@ -27,12 +27,12 @@
                 </div>
             </div>
         </div>
-        <hr />
     </div>
 
     <div class="comment-container" v-else>
         <p>Comment deleted.</p>
     </div>
+    <hr />
 </template>
 
 <script>
@@ -165,6 +165,6 @@ export default {
 
 hr {
     margin-top: 5px !important;
-    margin-bottom: 5px !important
+    margin-bottom: 5px !important;
 }
 </style>
