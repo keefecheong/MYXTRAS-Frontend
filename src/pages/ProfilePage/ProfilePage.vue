@@ -555,6 +555,7 @@ export default {
     flex-direction: row;
     column-gap: 20px;
     align-items: center;
+    margin-top: 20px;
 }
 
 .view-user-follower * {
