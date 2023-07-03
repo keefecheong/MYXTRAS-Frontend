@@ -532,7 +532,7 @@ export default {
     }
     .ngee-ann-logo-mini {
         width: 100%;
-        margin: 50px auto;
+        margin: 4vw auto;
         text-align: center;
         display: block;
         border-radius: 50%;
