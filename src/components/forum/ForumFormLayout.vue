@@ -184,7 +184,10 @@ export default {
         debounceVerifyForumID() {
             this.forumIDVerified = false;
             if (this.checkForIllegalChar()){
-                return this.illegalChar = true
+                return this.illegalChar = true;
+            }
+            if (this.prevID == this.forumID){
+                return;
             }
             this.illegalChar = false
             this.debouncedVerifyForumID()
@@ -373,6 +376,7 @@ export default {
         async initData() {
             this.selectedGroupPic = this.forum.forum_pic_link;
             this.selectedBanner = this.forum.banner_link;
+            this.prevID = this.forum.forum_id;
             this.forumID = this.forum.forum_id;
             this.forumIDVerified = true;
             this.forumName = this.forum.forum_name;

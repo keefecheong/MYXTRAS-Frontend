@@ -65,13 +65,19 @@
 
                     <div id="header-content-border-bottom"></div>
 
-                    <div id="user-blog-container">
-                        <div v-if="blogs.length > 0">
-                            <BlogLayout v-for="blog in blogs" :blog="blog" />
+                    <div id="profile-page-content">
+                        <div v-if="isSelf" id="profile-post-toggle-container">
+                            <span>Posts:</span>
+                            <span class="sub-navigation" :class="{ 'active': !viewingSaved }" @click="() => viewSaved(false)">Created</span>
+                            <span class="sub-navigation" :class="{ 'active': viewingSaved }" @click="() => viewSaved(true)">Saved</span>
+                        </div>
+                        
+                        <div v-if="blogsToDisplay.length > 0">
+                            <BlogLayout v-for="blog in blogsToDisplay" :blog="blog" />
                         </div>
 
-                        <div v-else>
-                            <p style="text-align: center;">No posts created.</p>
+                        <div v-else id="profile-no-posts">
+                            <p>No posts {{ viewingSaved ? 'saved' : 'created' }}.</p>
                         </div>
                     </div>
 
@@ -148,7 +154,9 @@ export default {
 
             banner: banner,
             blogs: [],
+            savedBlogs: [],
             forums: [],
+            viewingSaved: false,
 
             following: false,
             savedFollowing: false,
@@ -186,6 +194,7 @@ export default {
             }
         }
 
+        // initialize data
         this.initData();
         
         // automatically open create blog form if href is /profilePage.html?create and requested user is self
@@ -222,13 +231,17 @@ export default {
                 mode: 'cors'
             }).then(async (res) => {
                 await res.json().then(data => {
-                    console.log(data);
                     // save user data
                     this.user = data.user;
 
                     // save information about self for future use (pushing to follower list)
                     this.self = data.self;
                     this.isSelf = this.user._id == this.self._id;
+
+                    // get user's saved posts if viewing his own profile
+                    if (this.isSelf) {
+                        this.getSavedPosts();
+                    }
 
                     // initialize follower information/status
                     this.following = data.isFollowing;
@@ -253,6 +266,20 @@ export default {
             });
 
             await Promise.all([userPromise, postPromise]).catch(error => {
+                console.log(error);
+            });
+        },
+        // to get user's saved posts if user is viewing his own profile
+        async getSavedPosts() {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/saved`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(async res => {
+                await res.json().then(data => {
+                    this.savedBlogs = data;
+                });
+            }).catch(error => {
                 console.log(error);
             });
         },
@@ -393,6 +420,10 @@ export default {
             sessionStorage.setItem('selectedChat', JSON.stringify(target));
             location.href = '/chat.html';
         },
+        // to toggle between created and saved blogs
+        viewSaved(viewSaved) {
+            this.viewingSaved = viewSaved;
+        }
     },
     computed: {
         // to get showAlert value
@@ -410,6 +441,10 @@ export default {
         // to get confirmMsg value
         confirmMsg() {
             return this.confirmStore.confirmMsg;
+        },
+        // to get the correct set of blogs to display
+        blogsToDisplay() {
+            return this.viewingSaved ? this.savedBlogs : this.blogs;
         }
     }
 }
@@ -441,7 +476,17 @@ export default {
 
 <style>
 @import url('../../styles/main.css');
+@import url('../../styles/sub-navigation.css');
 @import url('../../styles/forums/common-forum-styles.css');
+
+#left-content {
+    display: flex;
+    flex-direction: column;
+}
+
+#right-content {
+    background-color: var(--primary);
+}
 
 .banner {
     display: flex;
@@ -458,10 +503,6 @@ export default {
     width: 100%;
     margin-left: -23px;
     margin-right: -23px;
-}
-
-#right-content {
-    background-color: var(--primary);
 }
 
 #profile-picture {
@@ -554,9 +595,26 @@ export default {
     margin-bottom: 30px;
 }
 
-#user-blog-container {
+#profile-page-content {
     width: 60%;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+    flex-grow: 1;
+}
+
+#profile-post-toggle-container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 50px;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+}
+
+#profile-no-posts {
+    text-align: center;
 }
 
 .follower-card {

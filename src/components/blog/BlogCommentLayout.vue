@@ -1,5 +1,5 @@
 <template>
-    <div class="comment-container" v-if="!deleted">
+    <div class="comment-container">
         <div class="comment-header">
             <!-- creator profile pic -->
             <img class="comment-profile-pic" :src="comment.creator_id.profile_pic_link" @click="viewUser" title="View user"/>
@@ -27,12 +27,9 @@
                 </div>
             </div>
         </div>
-        <hr />
     </div>
 
-    <div class="comment-container" v-else>
-        <p>Comment deleted.</p>
-    </div>
+    <hr />
 </template>
 
 <script>
@@ -44,13 +41,15 @@ import { viewUser } from '../../utils/general/viewUser.js';
 export default {
     data() {
         return {
-            dateCreated: '',
-            deleted: false
+            dateCreated: ''
         }
     },
     props: [
         'postId',
         'comment'
+    ],
+    emits: [
+        'commentDeleted'
     ],
     mounted() {
         // get time difference from when the comment was created and current datetime
@@ -71,12 +70,11 @@ export default {
                 credentials: 'include'
             }).then(async (res) => {
                 await res.json().then(async(data) => {
-                    if (res.status == 200) {
-                        this.deleted = true;
-                    }
-
                     await useAlertStore().alert(data.message);
-                    this.$emit('commentDeleted', this.comment._id);
+
+                    if (res.ok) {
+                        this.$emit('commentDeleted', this.comment._id);
+                    }
                 });
             }).catch((error) => {
                 console.log(error);
@@ -165,6 +163,6 @@ export default {
 
 hr {
     margin-top: 5px !important;
-    margin-bottom: 5px !important
+    margin-bottom: 5px !important;
 }
 </style>

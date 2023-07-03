@@ -1,5 +1,7 @@
 <template>
-    <img :src="blogLink" class="explore-blog-image" @click="showSingleBlog" title="Click to view" />
+    <div class="explore-blog-image-container">
+        <img :src="blogLink" class="explore-blog-image" @click="showSingleBlog" title="Click to view" />
+    </div>
 </template>
 
 <script>
@@ -22,8 +24,13 @@ export default {
 </script>
 
 <style>
-.explore-blog-image {
+.explore-blog-image-container {
     width: 100%;
+    overflow: hidden;
+}
+
+.explore-blog-image {
+    max-width: 100%;
     object-fit: cover;
     transition: transform 0.3s ease-out;
     cursor: pointer;

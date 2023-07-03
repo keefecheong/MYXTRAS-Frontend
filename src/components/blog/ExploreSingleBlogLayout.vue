@@ -34,6 +34,7 @@ export default {
 #explore-single-blog-container {
     max-width: 80%;
     margin: 0 auto;
+    margin-top: 20px;
     position: relative;
 }
 
