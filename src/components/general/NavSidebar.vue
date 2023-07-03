@@ -14,7 +14,6 @@
 -->
 
 <template>
-
     <!-- sidebar wrapper for medium to large screens -->
     <nav id="sidebar-wrapper" v-if="!narrow" class="stickToTop">
         <!-- maximized sidebar implementation -->
@@ -28,36 +27,46 @@
             <div class="img-container">
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
             </div>
+
+            <a href="/profilePage.html" class="sidebar-link">
+                <span class="material-symbols-outlined">account_circle</span>
+                <p>Profile</p>
+            </a>
         
             <a href="/feed.html" class="sidebar-link">
                 <span class="material-symbols-outlined">group</span>
                 <p>Feed</p>
             </a>
+
             <a href="/explore.html" class="sidebar-link">
                 <span class="material-symbols-outlined">emoji_objects</span>
                 <p>Xplore</p>
             </a>
+
             <a href="/forum.html" class="sidebar-link">
                 <span class="material-symbols-outlined">forum</span>
                 <p>Forum</p>
             </a>
+
             <a href="/chat.html" class="sidebar-link">
                 <span class="material-symbols-outlined">stream_apps</span>
                 <p>Chat</p>
             </a>
+
             <a href="/events.html" class="sidebar-link">
                 <span class="material-symbols-outlined">campaign</span>
                 <p>Events</p>
             </a>
+
             <a href="/checkin.html" class="sidebar-link">
                 <span class="material-symbols-outlined">event_available</span>
                 <p>Check in</p>
             </a> 
+
             <a href="/about.html" class="sidebar-link">
                 <span class="material-symbols-outlined">question_mark</span>
                 <p>About us</p>
             </a>
-        
         </div>
 
         <!-- minimized sidebar implementation -->
@@ -69,24 +78,34 @@
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo-mini"/>
             </div>
 
+            <a href="/profilePage.html" class="sidebar-link">
+                <span class="material-symbols-outlined" title="Feed">account_circle</span>
+            </a>
+
             <a href="/feed.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Feed">group</span>
             </a>
+
             <a href="/explore.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Xplore">emoji_objects</span>
             </a>
+
             <a href="/forum.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Forum">forum</span>
             </a>
+
             <a href="/chat.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Chat">stream_apps</span>
             </a>
+
             <a href="/events.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Events">campaign</span>
             </a>
+
             <a href="/checkin.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Check In">event_available</span>
             </a> 
+
             <a href="/about.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="About">question_mark</span>
             </a>
@@ -104,35 +123,45 @@
             
             <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
         
+            <a href="/profilePage.html" class="navbar-link">
+                <span class="material-symbols-outlined">account_circle</span>
+                <p>Profile</p>
+            </a>
+
             <a href="/feed.html" class="navbar-link">
                 <span class="material-symbols-outlined">group</span>
                 <p>Feed</p>
             </a>
+
             <a href="/explore.html" class="navbar-link">
                 <span class="material-symbols-outlined">emoji_objects</span>
                 <p>Xplore</p>
             </a>
+
             <a href="/forum.html" class="navbar-link">
                 <span class="material-symbols-outlined">forum</span>
                 <p>Forum</p>
             </a>
+
             <a href="/chat.html" class="navbar-link">
                 <span class="material-symbols-outlined">stream_apps</span>
                 <p>Chat</p>
             </a>
+
             <a href="/events.html" class="navbar-link">
                 <span class="material-symbols-outlined">campaign</span>
                 <p>Events</p>
             </a>
+
             <a href="/checkin.html" class="navbar-link">
                 <span class="material-symbols-outlined">event_available</span>
                 <p>Check in</p>
             </a> 
+
             <a href="/about.html" class="navbar-link">
                 <span class="material-symbols-outlined">question_mark</span>
                 <p>About us</p>
             </a>
-        
         </div>
 
         <!-- collapsed navbar implementation -->
@@ -141,7 +170,6 @@
             <button class="material-symbols-outlined" id="open-navbar" @click="toggleNavbar()">menu</button>
         </div>
     </nav>
-
 </template>
 
 <script>
@@ -381,211 +409,211 @@ export default {
 </script>
 
 <style>
-    /* container styles */
-    /* normal sidebar */
-    #sidebar-wrapper {
-        width: min-content;
-        height: fit-content;
-        min-height: 100vh;
-        background-color: #133B5B;
-        z-index: 3;
-    }
+/* container styles */
+/* normal sidebar */
+#sidebar-wrapper {
+    width: min-content;
+    height: fit-content;
+    min-height: 100vh;
+    background-color: #133B5B;
+    z-index: 3;
+}
 
-    #sidebar-wrapper > div {
-        display: inline-block;
-        margin: 15px;
-    }
+#sidebar-wrapper > div {
+    display: inline-block;
+    margin: 15px;
+}
 
-    #minimized {
-        width: 40px;
-    }
+#minimized {
+    width: 40px;
+}
 
-    #maximized {
-        width: 15vw;
-        min-width: 160px;
-    }
+#maximized {
+    width: 15vw;
+    min-width: 160px;
+}
 
-    /* navbar */
-    #navbar-wrapper {
-        width: 100vw;
-        max-width: 100%;
-        height: fit-content;
-        background-color: #133B5B;
-        color: white;
-        padding: 15px;
-        box-sizing: border-box;
-        z-index: 1000;
-    }
+/* navbar */
+#navbar-wrapper {
+    width: 100vw;
+    max-width: 100%;
+    height: fit-content;
+    background-color: #133B5B;
+    color: white;
+    padding: 15px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
 
-    #expanded {
-        min-height: 100vh;
-    }
+#expanded {
+    min-height: 100vh;
+}
 
-    #collapsed {
-        padding: 5px 15px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+#collapsed {
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    /* styles to be inherited by pages that use NavSidebar */
-    body {
-        margin: 0;
-    }
+/* styles to be inherited by pages that use NavSidebar */
+body {
+    margin: 0;
+}
+
+#main-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    column-gap: 12px;
+}
+
+.hidden {
+    display: none;
+}
+
+#main-container.narrow {
+    display: initial;
+}
+
+#main-content {
+    flex-grow: 1;
+}
+
+.fixToBottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.stickToTop {
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
+.compensateMaximizedSidebar {
+    margin-left: max(202px, 15vw + 42px) !important;
+}
+
+.compensateMinimizedSidebar {
+    margin-left: 82px !important;
+}
+
+/* material symbol styles */
+.material-symbols-outlined {
+    color: white;
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0 auto;
+    display: flex;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+}
+
+/* header styles */
+#maximized-header-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+#expanded-header {
+    text-align: center;
+    padding-top: 15px;
+}
+
+#collapsed-header {
+    margin: 0;
+}
+
+#open-navbar {
+    margin: 0;
+}
+
+#close-sidebar {
+    margin: 0;
+}
+
+#close-navbar {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+#maximized-header {
+    color: white;
+    font-size: 38px;
+}
+
+/* logo style */
+.ngee-ann-logo {
+    width: 45%;
+    margin: 20px auto;
+    text-align: center;
+    display: block;
+    border-radius: 50%;
+}
+.ngee-ann-logo-mini {
+    width: 100%;
+    margin: 50px auto;
+    text-align: center;
+    display: block;
+    border-radius: 50%;
+}
+/* sidebar link styles */
+a.sidebar-link, a.navbar-link {
+    text-decoration: none !important;
+    height: fit-content;
+    width: match-parent;
+    text-align: center;
+    display: block;
+    padding: 10px;
+    margin-top: 10px;
+    color: white;
+}
+
+a > .material-symbols-outlined {
+    margin: 0;
+
+}
+
+a.sidebar-link {
+    text-align: left;
+}
+
+a.sidebar-link > .material-symbols-outlined, a.navbar-link > .material-symbols-outlined {
+    display: inline;
     
-    #main-container {
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        column-gap: 12px;
-    }
+}
 
-    .hidden {
-        display: none;
-    }
+a.sidebar-link > p, a.navbar-link > p {
+    display: inline;
+    margin-left: 20px;
+    /* font-size: 1.25em; */
+    font-size: 16px;
+    vertical-align: middle;
+}
 
-    #main-container.narrow {
-        display: initial;
-    }
+/* link/symbol effects */ 
+.material-symbols-outlined:hover, a.sidebar-link:hover, a.navbar-link:hover, .current {
+    opacity: 0.7;
+}
 
-    #main-content {
-        flex-grow: 1;
-    }
+.current, a.sidebar-link:hover, a.navbar-link:hover {
+    background-color: rgba(255, 255, 255);
+    border-radius: 10px;
+}
 
-    .fixToBottom {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-    }
+.current > *, a.sidebar-link:hover > *, a.navbar-link:hover > * {
+    color: black !important;
+}
 
-    .stickToTop {
-        position: sticky;
-        top: 0;
-        left: 0;
-    }
-
-    .compensateMaximizedSidebar {
-        margin-left: max(202px, 15vw + 42px) !important;
-    }
-
-    .compensateMinimizedSidebar {
-        margin-left: 82px !important;
-    }
-
-    /* material symbol styles */
-    .material-symbols-outlined {
-        color: white;
-        background-color: transparent;
-        border: 0;
-        padding: 0;
-        margin: 0 auto;
-        display: flex;
-        cursor: pointer;
-        text-align: center;
-        vertical-align: middle;
-        user-select: none;
-    }
-
-    /* header styles */
-    #maximized-header-wrapper {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-    }
-
-    #expanded-header {
-        text-align: center;
-        padding-top: 15px;
-    }
-
-    #collapsed-header {
-        margin: 0;
-    }
-
-    #open-navbar {
-        margin: 0;
-    }
-
-    #close-sidebar {
-        margin: 0;
-    }
-
-    #close-navbar {
-        position: absolute;
-        right: 15px;
-        top: 15px;
-    }
-
-    #maximized-header {
-        color: white;
-        font-size: 38px;
-    }
-
-    /* logo style */
-    .ngee-ann-logo {
-        width: 45%;
-        margin: 20px auto;
-        text-align: center;
-        display: block;
-        border-radius: 50%;
-    }
-    .ngee-ann-logo-mini {
-        width: 100%;
-        margin: 50px auto;
-        text-align: center;
-        display: block;
-        border-radius: 50%;
-    }
-    /* sidebar link styles */
-    a.sidebar-link, a.navbar-link {
-        text-decoration: none !important;
-        height: fit-content;
-        width: match-parent;
-        text-align: center;
-        display: block;
-        padding: 10px;
-        margin-top: 10px;
-        color: white;
-    }
-
-    a > .material-symbols-outlined {
-        margin: 0;
-
-    }
-
-    a.sidebar-link {
-        text-align: left;
-    }
-
-    a.sidebar-link > .material-symbols-outlined, a.navbar-link > .material-symbols-outlined {
-        display: inline;
-        
-    }
-
-    a.sidebar-link > p, a.navbar-link > p {
-        display: inline;
-        margin-left: 20px;
-        /* font-size: 1.25em; */
-        font-size: 16px;
-        vertical-align: middle;
-    }
-
-    /* link/symbol effects */ 
-    .material-symbols-outlined:hover, a.sidebar-link:hover, a.navbar-link:hover, .current {
-        opacity: 0.7;
-    }
-
-    .current, a.sidebar-link:hover, a.navbar-link:hover {
-        background-color: rgba(255, 255, 255);
-        border-radius: 10px;
-    }
-
-    .current > *, a.sidebar-link:hover > *, a.navbar-link:hover > * {
-        color: black !important;
-    }
-
-    .img-container{
-        height: 110px;
-    }
+.img-container{
+    height: 110px;
+}
 </style>
