@@ -15,17 +15,12 @@
                 </span>
 
                 <!-- creation time (time difference) -->
-                <span :title="new Date(blog.creation_time)">
-                    {{ dateCreated }}
-                </span>
-
-                <!-- show if post is modified -->
                 <span 
-                    v-if="modified"
-                    class="blog-modified-label"
-                    :title="new Date(blog.last_modified_time)"
+                    class="blog-creation-time"
+                    :datetime="blog.creation_time"
+                    :title="new Date(blog.creation_time)"
                 >
-                    Edited
+                    {{ dateCreated }}
                 </span>
             </div>
 
@@ -91,10 +86,9 @@
             <!-- actions for all users -->
             <div class="blog-normal-actions row">
                 <!-- like button -->
-                <div class="col align-items-center justify-content-center">
+                <div class="like-blog col align-items-center justify-content-center" :class="{ liked: liked }">
                     <span 
                         class="material-symbols-outlined"
-                        :class="{ 'liked': liked }"
                         @click="toggleLike"
                         :title="liked ? 'Remove like' : 'Like this post'"
                     >
@@ -114,18 +108,6 @@
                         comment
                     </span>
                     <span title="Number of comments" v-if="blog.comments_enabled">({{ blog.comment_count }})</span>
-                </div>
-
-                <!-- save button -->
-                <div class="col align-items-center justify-content-center">
-                    <span
-                        class="material-symbols-outlined"
-                        :class="{ 'saved': saved }"
-                        @click="toggleSave"
-                        :title="saved ? 'Remove from saved posts' : 'Save this post'"
-                    >
-                        bookmark
-                    </span>
                 </div>
             </div>
 
@@ -238,8 +220,8 @@
     color: var(--primary);
 }
 
-.blog-modified-label {
-    font-style: italic;
+.blog-creation-time {
+    max-width: 30%;
 }
 
 .blog-tags-and-location.location-only {
@@ -305,6 +287,14 @@
     border-radius: 10px 0 0 10px !important;
 }
 
+/* On hover, add a black background color with a little bit see-through */
+.blog-prev:hover,
+.blog-next:hover {
+    background-color: #f1f1f1;
+    color: black;
+    opacity: 100%;
+}
+
 /* blog indicator styles */
 .blog-indicator-container {
     text-align: center;
@@ -355,14 +345,8 @@
 }
 
 /* set liked favorite icon to filled red */
-.liked.material-symbols-outlined {
+.like-blog.liked .material-symbols-outlined {
     color: red;
-    font-variation-settings: 'FILL' 1;
-}
-
-/* set saved bookmark icon to filled black */
-.saved.material-symbols-outlined {
-    color: black;
     font-variation-settings: 'FILL' 1;
 }
 
@@ -432,7 +416,6 @@ export default {
     data() {
         return {
             dateCreated: '',
-            modified: false,
             uniqueId: 'a' + this.blog._id,
             currentId: 1,
             showPrev: false,
@@ -449,9 +432,6 @@ export default {
             debouncedLikeUpdate: null,
             likeCount: 0,
             editMode: false,
-            savedSaved: false,
-            saved: false,
-            debouncedSaveUpdate: null,
             alert: useAlertStore().alert,
             confirm: useConfirmStore().confirm
         };
@@ -471,11 +451,6 @@ export default {
         // get time difference from when post was created and current datetime
         this.dateCreated = calcDateDifference(this.blog.creation_time);
 
-        // check if the post is modified
-        if (this.blog.creation_time != this.blog.last_modified_time) {
-            this.modified = true;
-        }
-
         // setup controls if there is more than one picture
         this.toggleControls();
 
@@ -484,19 +459,11 @@ export default {
         this.liked = this.blog.liked;
         this.likeCount = this.blog.likes.length;
 
-        // initialize saved value
-        this.savedSaved = this.blog.saved;
-        this.saved = this.blog.saved;
-
-        // debounce function to only send request to update backend if user has not clicked the like/save button for 3 seconds
+        // debounce function to only send request to update backend if user has not clicked the like button for 3 seconds
         this.debouncedLikeUpdate = debounce(this.updateLike, 3000);
-        this.debouncedSaveUpdate = debounce(this.updateSave, 3000);
 
         // set event listener to complete pending requests when the page is closed
-        window.addEventListener('beforeunload', () => {
-            this.completeSaveRequest();
-            this.completeSaveRequest();
-        });
+        window.addEventListener('beforeunload', this.completeLikeRequest);
     },
     updated() {
         this.toggleControls();
@@ -509,7 +476,6 @@ export default {
     },
     beforeUnmount() {
         this.completeLikeRequest();
-        this.completeSaveRequest();
     },
     methods: {
         // show the next slide
@@ -616,57 +582,6 @@ export default {
         // complete updateLike request if pending
         completeLikeRequest() {
             this.debouncedLikeUpdate.flush();
-        },
-        // toggle saving of blog
-        toggleSave() {
-            // toggle save on frontend only
-            this.saved = !this.saved;
-
-            this.debouncedSaveUpdate();
-        },
-        // handle updating of save status to backend
-        async updateSave() {
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/users/save/post/${this.blog._id}`;
-            const options = {
-                mode: 'cors',
-                credentials: 'include'
-            }
-
-            // send request to update save status
-            // only send to save post if new saved value is true and currently saved saved value is false
-            if (this.saved && !this.savedSaved) {
-                options.method = 'POST';
-
-                await fetch(targetURL, options).then(async (res) => {
-                    if (res.status == 201) {
-                        this.savedSaved = true;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
-            }
-            // only send to remove post from saved if new saved value is false and currently saved saved value is true
-            else if (!this.saved && this.savedSaved) {
-                options.method = 'DELETE';
-
-                await fetch(targetURL, options).then(async (res) => {
-                    if (res.status == 204) {
-                        this.savedSaved = false;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
-            }
-        },
-        // complete updateSave request if pending
-        completeSaveRequest() {
-            this.debouncedSaveUpdate.flush();
         },
         // handle deleting post
         async deletePost() {
