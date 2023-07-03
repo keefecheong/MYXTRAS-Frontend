@@ -170,7 +170,6 @@ export default {
             cropBoxResizable: true, // Disable resizing of the cropping area
             cropBoxMovable: true, // Disable moving of the cropping area
             toggleDragModeOnDblclick: true, // Disable toggling drag mode on double-click
-            autoCropArea: 0.5, // Set the initial cropping area to a circle
             guides: false, // Hide the grid lines
             background: false, // Disable the background overlay
             ready: () => {
@@ -216,15 +215,15 @@ export default {
                 fillColor: '#fff',
             });
             const croppedImage = croppedCanvas.toDataURL(); // Get the cropped image as a data URL
-            // this.profilePicture = croppedImage;
-            // this.cropper.destroy(); // Destroy the cropper instance
-            // this.cropper = null; // Set the cropper variable to null
-            // this.showBtn = false;
+
+            // Extract original image name and type from the file input
+            const originalName = this.$refs.fileInput.files[0].name;
+            const originalType = this.$refs.fileInput.files[0].type;
             fetch(croppedImage)
               .then((response) => response.blob())
               .then((blob) => {
                 // Create a new File object with the cropped image data
-                const croppedFile = new File([blob], 'cropped_image.png',  {type: 'image/png' });
+                const croppedFile = new File([blob], originalName,  {type: originalType });
 
                 // Assign the cropped File object to a separate variable
                 this.croppedImageFile = croppedFile;
