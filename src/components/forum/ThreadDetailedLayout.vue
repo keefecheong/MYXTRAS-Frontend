@@ -192,7 +192,6 @@ export default {
     methods: {
         // to get comment data
         async initData() {
-            console.log(this.thread)
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.thread._id}`, {
                 mode: 'cors',
                 method: 'GET',
@@ -205,7 +204,6 @@ export default {
             })
             .then(data => {
                 this.comments = data;
-                console.log(data);
                 this.dataInitialized = true;
             })
             .catch((error) => {
