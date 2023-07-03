@@ -200,7 +200,7 @@ export default {
         },
         // to handle thread deletion
         handleDeletedThread(index) {
-            this.recentThreads.splice(index, 1);
+            this.threads.splice(index, 1);
         }
     },
     computed: {

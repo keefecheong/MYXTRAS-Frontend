@@ -452,8 +452,25 @@ export default {
 </script>
 
 <style scoped>
+.view-user-follower {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
 #main-content .row {
     height: 100%;
+}
+.card {
+    padding: 1em 0 1em 0;
+    border-radius: 15px;
+    margin-bottom: 60px;
+    min-height: 50vh;
+    max-height: 60vh;
+}
+.card-body {
+    overflow-y: scroll;
 }
 </style>
 
@@ -613,6 +630,7 @@ export default {
     flex-direction: row;
     column-gap: 20px;
     align-items: center;
+    margin-top: 20px;
 }
 
 .view-user-follower * {

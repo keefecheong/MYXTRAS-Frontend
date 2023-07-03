@@ -25,7 +25,9 @@
                 <button class="material-symbols-outlined" id="close-sidebar" @click="toggleSidebar()">keyboard_double_arrow_left</button>
             </div>
             
-            <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
+            <div class="img-container">
+                <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
+            </div>
         
             <a href="/feed.html" class="sidebar-link">
                 <span class="material-symbols-outlined">group</span>
@@ -62,7 +64,11 @@
         <div id="minimized" v-if="!maximized">  <!-- minimized sidebar shown when "maximized" is false -->
             <!-- <button class="material-symbols-outlined" @click="toggleSidebar()">keyboard_double_arrow_right</button> -->
             <button class="material-symbols-outlined" @click="toggleSidebar()">keyboard_double_arrow_right</button>
-            <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo-mini"/>
+
+            <div class="img-container">
+                <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo-mini"/>
+            </div>
+
             <a href="/feed.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Feed">group</span>
             </a>
@@ -513,11 +519,12 @@ export default {
 
     #maximized-header {
         color: white;
+        font-size: 38px;
     }
 
     /* logo style */
     .ngee-ann-logo {
-        width: 50%;
+        width: 45%;
         margin: 20px auto;
         text-align: center;
         display: block;
@@ -559,7 +566,8 @@ export default {
     a.sidebar-link > p, a.navbar-link > p {
         display: inline;
         margin-left: 20px;
-        font-size: 1.25em;
+        /* font-size: 1.25em; */
+        font-size: 16px;
         vertical-align: middle;
     }
 
@@ -575,5 +583,9 @@ export default {
 
     .current > *, a.sidebar-link:hover > *, a.navbar-link:hover > * {
         color: black !important;
+    }
+
+    .img-container{
+        height: 110px;
     }
 </style>
