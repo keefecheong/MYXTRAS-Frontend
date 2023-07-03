@@ -8,7 +8,7 @@
                     <div v-for="forum in createdForums" class="mini-forum-layout">
                         <img class="groupPic" :src="forum.forum_pic_link" @click="viewForum(forum)">
     
-                        <p class="forum-name" @click="viewForum(forum)">{{ forum.forum_name }}</p>
+                        <span class="forum-name" @click="viewForum(forum)">{{ forum.forum_name }}</span>
                     </div>
                 </div>
             </div>
@@ -54,10 +54,6 @@ border-radius: 15px;
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
 background: #c9c9c98d;
-}
-p {
-    margin-top: 5vh;
-    text-align: center;
 }
 </style>
 
