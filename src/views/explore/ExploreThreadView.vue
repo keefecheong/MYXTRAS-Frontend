@@ -143,6 +143,10 @@ export default {
             
         },
         handleInterestSelected(option) {
+            if (this.showDetailedThread) {
+                this.toggleDetailedThread(false, this.selectedIndex);
+            }
+
             handleInterestSelected(option, this.selectedOption);
         },
         retrieveForums() {
