@@ -1,5 +1,5 @@
 <template>
-    <div class="comment-container" v-if="!deleted">
+    <div class="comment-container">
         <div class="comment-header">
             <!-- creator profile pic -->
             <img class="comment-profile-pic" :src="comment.creator_id.profile_pic_link" @click="viewUser" title="View user"/>
@@ -29,9 +29,6 @@
         </div>
     </div>
 
-    <div class="comment-container" v-else>
-        <p>Comment deleted.</p>
-    </div>
     <hr />
 </template>
 
@@ -44,8 +41,7 @@ import { viewUser } from '../../utils/general/viewUser.js';
 export default {
     data() {
         return {
-            dateCreated: '',
-            deleted: false
+            dateCreated: ''
         }
     },
     props: [
@@ -74,12 +70,11 @@ export default {
                 credentials: 'include'
             }).then(async (res) => {
                 await res.json().then(async(data) => {
-                    if (res.status == 200) {
-                        this.deleted = true;
-                    }
-
                     await useAlertStore().alert(data.message);
-                    this.$emit('commentDeleted', this.comment._id);
+
+                    if (res.ok) {
+                        this.$emit('commentDeleted', this.comment._id);
+                    }
                 });
             }).catch((error) => {
                 console.log(error);

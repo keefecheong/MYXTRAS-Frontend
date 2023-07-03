@@ -174,8 +174,13 @@
                 <LoadingOverlay v-if="!commentsLoaded" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
 
                 <div v-else class="blog-comments-container">
-                    <BlogCommentLayout v-for="comment in commentData" :comment="comment" :postId="blog._id"
-                        @commentDeleted="deleteComment" />
+                    <BlogCommentLayout
+                        v-for="(comment, index) in commentData"
+                        :comment="comment"
+                        :postId="blog._id"
+                        :key="index"
+                        @commentDeleted="deleteComment"
+                    />
                 </div>
             </div>
         </div>
@@ -453,7 +458,7 @@ export default {
             showComments: false,
             commentsLoaded: false,
             commentText: '',
-            commentData: {},
+            commentData: [],
             submittingComment: false,
             savedLike: false,
             liked: false,
@@ -767,7 +772,8 @@ export default {
         // remove deleted comment's id from the comments list to update the dom immediately
         deleteComment(commentId) {
             this.blog.comment_count -= 1;
-            this.commentData.splice(this.commentData.indexOf(commentId), 1);
+            const commentIndex = this.commentData.findIndex(comment => comment._id == commentId);
+            this.commentData.splice(commentIndex, 1);
         },
         // go to profile page to view the creator's profile
         viewUser(){
