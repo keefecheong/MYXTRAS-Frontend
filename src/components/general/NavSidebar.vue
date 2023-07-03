@@ -513,6 +513,7 @@ export default {
 
     #maximized-header {
         color: white;
+        font-size: 30px;
     }
 
     /* logo style */

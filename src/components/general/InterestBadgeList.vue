@@ -27,7 +27,6 @@
             v-for="option in displayOptions"
             class="badge"
             :class="[
-                `badge-${option.interest}`,
                 { 'selection': selection },
                 { 'selected': selection && selectedOption.includes(option.interest) }
             ]"
