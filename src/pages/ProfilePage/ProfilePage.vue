@@ -418,11 +418,11 @@ export default {
 
 <style scoped>
 .view-user-follower {
-    display: flex;
+    /* display: flex;
     flex-direction: row;
     column-gap: 10px;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
 }
 #main-content .row {
     height: 100%;
@@ -571,8 +571,9 @@ export default {
     display: flex;
     flex-direction: row;
     column-gap: 20px;
-    align-items: center;
     margin-top: 20px;
+    align-items: center;
+    margin-left: 15%;
 }
 
 .view-user-follower * {
@@ -631,12 +632,11 @@ export default {
 }
 
 .floating-button-wrapper {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     right: 20px;
-    display: flex;
-    justify-content: flex-end;
-    z-index: 1;
+    margin-right: 22%;
+    z-index: 9999;
 }
 
 .floating-button {
