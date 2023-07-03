@@ -52,6 +52,9 @@ export default {
         'postId',
         'comment'
     ],
+    emits: [
+        'commentDeleted'
+    ],
     mounted() {
         // get time difference from when the comment was created and current datetime
         this.dateCreated = calcDateDifference(this.comment.creation_time);

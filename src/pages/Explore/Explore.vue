@@ -2,6 +2,10 @@
     <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
         {{ alertMsg }}
     </AlertPrompt>
+
+    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+        {{ confirmMsg }}
+    </ConfirmPrompt>
     
     <div id="main-container">
         <NavSidebar/>
@@ -49,19 +53,23 @@ import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
 import { useAlertStore } from '../../stores/AlertStore';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 
 export default {
     data() {
         return {
             viewingBlogs: true,
             blogs: [],
-            alertStore: useAlertStore()
+            alertStore: useAlertStore(),
+            confirmStore: useConfirmStore()
         }
     },
     components: {
         NavSidebar,
         SearchBar,
-        AlertPrompt
+        AlertPrompt,
+        ConfirmPrompt
     },
     created() {
         this.getPosts();
@@ -88,6 +96,10 @@ export default {
         // to close alert prompt
         closeAlert() {
             this.alertStore.closeAlert();
+        },
+        // to close confirm prompt
+        closeConfirm(decision) {
+            this.confirmStore.closeConfirm(decision);
         }
     },
     computed: {
@@ -98,6 +110,14 @@ export default {
         // to get alertMsg value
         alertMsg() {
             return this.alertStore.alertMsg;
+        },
+        // to get showConfirm value
+        showConfirm() {
+            return this.confirmStore.showConfirm;
+        },
+        // to get confirmMsg value
+        confirmMsg() {
+            return this.confirmStore.confirmMsg;
         }
     }
 }
