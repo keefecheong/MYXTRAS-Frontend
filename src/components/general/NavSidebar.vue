@@ -519,14 +519,14 @@ export default {
     /* logo style */
     .ngee-ann-logo {
         width: 50%;
-        margin: 20px auto;
+        margin: 1vw auto;
         text-align: center;
         display: block;
         border-radius: 50%;
     }
     .ngee-ann-logo-mini {
         width: 100%;
-        margin: 50px auto;
+        margin: 4vw auto;
         text-align: center;
         display: block;
         border-radius: 50%;
