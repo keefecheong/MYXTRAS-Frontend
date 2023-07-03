@@ -452,13 +452,6 @@ export default {
 </script>
 
 <style scoped>
-.view-user-follower {
-    /* display: flex;
-    flex-direction: row;
-    column-gap: 10px;
-    align-items: center;
-    justify-content: center; */
-}
 #main-content .row {
     height: 100%;
 }
