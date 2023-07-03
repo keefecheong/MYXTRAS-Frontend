@@ -1,27 +1,14 @@
 <template>
     <div class="row announce">
         <div class="row a-all">
-            <div class="a-container red">
-                <h1 class="a-header">{{ announcements[0].title }}</h1>
+            <div :class="announcement.color + ' a-container'" v-for="announcement in announcements">
+                <h1 class="a-header">{{  announcement.title }}</h1>
                 <p class="a-caption">
-                    {{ announcements[0].caption }}
+                    {{ announcement.caption }}
                 </p>
-                <img class="a-image" :src="announcements[0].image" alt="forum-image">
+                <img class="a-image" :src="announcement.image" alt="forum-image">
             </div>
-            <div class="a-container yellow">
-                <h1 class="a-header">{{ announcements[1].title }}</h1>
-                <p class="a-caption">
-                    {{ announcements[1].caption }}
-                </p>
-                <img class="a-image" :src="announcements[1].image" alt="forum-image">
-            </div>
-            <div class="a-container pink">
-                <h1 class="a-header">{{ announcements[2].title }}</h1>
-                <p class="a-caption">
-                    {{ announcements[2].caption }}
-                </p>
-                <img class="a-image" :src="announcements[2].image" alt="forum-image">
-            </div>
+            
         </div>
     </div>
 </template>
