@@ -26,7 +26,7 @@
                         </div>
 
                         <div v-else>
-                            <BlogLayout v-for="blog in blogs" :blog="blog" />
+                            <BlogLayout v-for="blog in blogs" :key="blog._id" :blog="blog" />
 
                             <hr />
                         
