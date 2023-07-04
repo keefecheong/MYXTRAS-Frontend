@@ -18,11 +18,11 @@
                     <div class="col-md-2 sub-navigation-container">
                         <div class="sub-navigation-links">
                             <router-link to="/blogs">
-                                <span class="sub-navigation" :class="{'active': viewingBlogs}" @click="() => toggleViewingBlogs(true)">Blogs</span>
+                                <span class="sub-navigation">Blogs</span>
                             </router-link>
                             
                             <router-link to="/threads">
-                                <span class="sub-navigation" :class="{'active': !viewingBlogs}" @click="() => toggleViewingBlogs(false)">Threads</span>
+                                <span class="sub-navigation">Threads</span>
                             </router-link>
                         </div>                    
                     </div>
@@ -59,7 +59,6 @@ import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 export default {
     data() {
         return {
-            viewingBlogs: true,
             blogs: [],
             alertStore: useAlertStore(),
             confirmStore: useConfirmStore()
@@ -88,10 +87,6 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
-        },
-        // toggle viewingBlogs to update navigation display
-        toggleViewingBlogs(viewing) {
-            this.viewingBlogs = viewing;
         },
         // to close alert prompt
         closeAlert() {

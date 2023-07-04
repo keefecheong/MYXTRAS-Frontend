@@ -48,7 +48,7 @@ usage:
     font-weight: bold;
 }
 
-.sub-navigation.active {
+.sub-navigation.active, .router-link-active .sub-navigation {
     background-color: #e53a73;
     color: white;
     font-size: 1.4rem;
