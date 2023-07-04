@@ -30,7 +30,7 @@ export default {
 }
 
 .explore-blog-image {
-    max-width: 100%;
+    width: 100%;
     object-fit: cover;
     transition: transform 0.3s ease-out;
     cursor: pointer;

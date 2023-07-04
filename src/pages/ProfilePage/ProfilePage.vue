@@ -73,7 +73,7 @@
                         </div>
                         
                         <div v-if="blogsToDisplay.length > 0">
-                            <BlogLayout v-for="blog in blogsToDisplay" :blog="blog" />
+                            <BlogLayout v-for="blog in blogsToDisplay" :key="blog._id" :blog="blog" />
                         </div>
 
                         <div v-else id="profile-no-posts">
