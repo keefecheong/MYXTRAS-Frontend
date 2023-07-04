@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useSessionStorage } from '@vueuse/core';
+import { useLocalStorage, useSessionStorage } from '@vueuse/core';
 
 export const useChatStore = defineStore('chatStore', {
     state: () => ({
@@ -8,7 +8,7 @@ export const useChatStore = defineStore('chatStore', {
         currentChat: useSessionStorage('currentChat', {}),
         
         // chats store the chats enrolled by the user
-        chats: [],
+        chats: useLocalStorage('chats', []),
 
         // messages store the messages associated with the chats in 'chats'
         messages: {}
