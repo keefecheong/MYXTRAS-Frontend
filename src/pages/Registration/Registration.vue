@@ -543,7 +543,7 @@ export default {
                 } else if (response.status === 400) {
                     const data = await response.json();
     
-                    if (data.error === 'Email already exists') {
+                    if (data.message === 'Email already exists') {
                         this.emailErr = "Email already taken";
                         return;
                     } else {
@@ -574,7 +574,7 @@ export default {
                     return;
                 } else if (response.status === 400) {
                     const data = await response.json();
-                    if (data.error === 'Phone Number already exists') {
+                    if (data.message === 'Phone Number already exists') {
                         this.phoneErr = "Phone Number already taken";
                         this.disableOTP = true;
                         return;
@@ -640,8 +640,8 @@ export default {
                 }
                 else if (response.status === 400){
                     response.json().then(async (data) => {
-                        await this.alert(data.error);
-                        throw new Error(data.error)
+                        await this.alert(data.message);
+                        throw new Error(data.message)
                     });
                     return;
                 }

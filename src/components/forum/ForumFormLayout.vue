@@ -171,7 +171,7 @@ export default {
                 }
                 else if (res.status == 400) {
                     res.json().then(data => {
-                        if (data.error == 'ForumID already exists') {
+                        if (data.message == 'ForumID already exists') {
                             this.forumIDVerified = false;
                             this.idErr = true;
                         }
@@ -354,13 +354,11 @@ export default {
                                     viewForum(data.forum_id);
                                 });
                             }
-                        } else if (response.status === 400) {
-                            const data = await response.json();
-                            await this.alert(data.error);
                         }
                         else {
-                            console.log('An error occurred.');
-                        };
+                            const data = await response.json();
+                            await this.alert(data.message);
+                        }
                         
                         this.submitting = false
                         return;

@@ -254,7 +254,7 @@ export default {
                 } else if (response.status === 400) {
                     const data = await response.json();
 
-                    if (data.error === 'Username already exists') {
+                    if (data.message === 'Username already exists') {
                         this.verifiedUsername = false;
                         this.usernameErr = "Username already taken";
                         return;

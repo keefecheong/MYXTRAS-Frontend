@@ -317,8 +317,8 @@ export default {
             }) .then(response => {
                     if (response.status === 400) {
                         response.json().then(async (data) => {
-                            await this.alert(data.error);
-                            throw new Error(data.error)
+                            await this.alert(data.message);
+                            throw new Error(data.message)
                         });
                         return;
                     } else if (response.ok){
@@ -355,7 +355,7 @@ export default {
                 } else if (response.status === 400) {
                     const data = await response.json();
 
-                    if (data.error === 'Username already exists') {
+                    if (data.message === 'Username already exists') {
                         this.usernameErr = "Username already taken";
                         return;
                     } else {
