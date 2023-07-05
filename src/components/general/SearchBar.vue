@@ -23,6 +23,12 @@
              
             <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
+        <div v-if="currentPage === 'admin'" class="col-md-2 d-flex justify-content-end adminContainter centerElements">
+            <a class="admin">
+                <img class="" src="../../assets/shield_person.svg">
+                <p class="admin-text">Admin Panel</p>
+            </a>
+        </div>
     </div>
 
     <div id="compensate-searchbar-height"></div>
@@ -152,6 +158,25 @@
     background: #ffffff;
     border-radius: 10px;
     height: 100%;
+}
+
+.adminContainter {
+    margin-left: 4%;
+    margin-top: 1% !important;
+    margin-bottom: 1% !important;
+    cursor: pointer;
+}
+
+.admin {
+    display: flex;
+    align-items: center;
+}
+
+.admin-text {
+    color: white;
+    font-weight: bold;
+    margin: 0;
+    margin-left: 1em;
 }
 </style>
 

@@ -12,45 +12,30 @@
             <div class="img-container">
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
             </div>
-
-            <a href="/profilePage.html" class="sidebar-link">
-                <span class="material-symbols-outlined">account_circle</span>
-                <p>Profile</p>
-            </a>
         
-            <a href="/feed.html" class="sidebar-link">
-                <span class="material-symbols-outlined">group</span>
-                <p>Feed</p>
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined">home</span>
+                <p>Home</p>
             </a>
 
-            <a href="/explore.html" class="sidebar-link">
-                <span class="material-symbols-outlined">emoji_objects</span>
-                <p>Xplore</p>
-            </a>
-
-            <a href="/forum.html" class="sidebar-link">
-                <span class="material-symbols-outlined">forum</span>
-                <p>Forum</p>
-            </a>
-
-            <a href="/chat.html" class="sidebar-link">
-                <span class="material-symbols-outlined">stream_apps</span>
-                <p>Chat</p>
-            </a>
-
-            <a href="/events.html" class="sidebar-link">
+            <a href="" class="sidebar-link">
                 <span class="material-symbols-outlined">campaign</span>
                 <p>Events</p>
             </a>
 
-            <a href="/checkin.html" class="sidebar-link">
-                <span class="material-symbols-outlined">event_available</span>
-                <p>Check in</p>
-            </a> 
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined">warning</span>
+                <p>Reports</p>
+            </a>
 
-            <a href="/about.html" class="sidebar-link">
-                <span class="material-symbols-outlined">question_mark</span>
-                <p>About us</p>
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined">no_accounts</span>
+                <p>Banned Users</p>
+            </a>
+
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined">lists</span>
+                <p>Logs</p>
             </a>
         </div>
 
@@ -63,36 +48,24 @@
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo-mini"/>
             </div>
 
-            <a href="/profilePage.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Feed">account_circle</span>
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined" title="Home">home</span>
             </a>
 
-            <a href="/feed.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Feed">group</span>
-            </a>
-
-            <a href="/explore.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Xplore">emoji_objects</span>
-            </a>
-
-            <a href="/forum.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Forum">forum</span>
-            </a>
-
-            <a href="/chat.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Chat">stream_apps</span>
-            </a>
-
-            <a href="/events.html" class="sidebar-link">
+            <a href="" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Events">campaign</span>
             </a>
 
-            <a href="/checkin.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Check In">event_available</span>
-            </a> 
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined" title="Reports">warning</span>
+            </a>
 
-            <a href="/about.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="About">question_mark</span>
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined" title="Banned Users">no_accounts</span>
+            </a>
+
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined" title="Logs">lists</span>
             </a>
         </div>
     </nav>
@@ -108,44 +81,24 @@
             
             <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
         
-            <a href="/profilePage.html" class="navbar-link">
-                <span class="material-symbols-outlined">account_circle</span>
-                <p>Profile</p>
-            </a>
-
-            <a href="/feed.html" class="navbar-link">
-                <span class="material-symbols-outlined">group</span>
-                <p>Feed</p>
-            </a>
-
-            <a href="/explore.html" class="navbar-link">
-                <span class="material-symbols-outlined">emoji_objects</span>
-                <p>Xplore</p>
-            </a>
-
-            <a href="/forum.html" class="navbar-link">
-                <span class="material-symbols-outlined">forum</span>
-                <p>Forum</p>
-            </a>
-
-            <a href="/chat.html" class="navbar-link">
-                <span class="material-symbols-outlined">stream_apps</span>
-                <p>Chat</p>
-            </a>
-
-            <a href="/events.html" class="navbar-link">
+            <a href="" class="sidebar-link">
                 <span class="material-symbols-outlined">campaign</span>
                 <p>Events</p>
             </a>
 
-            <a href="/checkin.html" class="navbar-link">
-                <span class="material-symbols-outlined">event_available</span>
-                <p>Check in</p>
-            </a> 
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined">warning</span>
+                <p>Reports</p>
+            </a>
 
-            <a href="/about.html" class="navbar-link">
-                <span class="material-symbols-outlined">question_mark</span>
-                <p>About us</p>
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined">no_accounts</span>
+                <p>Banned Users</p>
+            </a>
+
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined">lists</span>
+                <p>Logs</p>
             </a>
         </div>
 
@@ -158,7 +111,6 @@
 </template>
 
 <script>
-import { socket } from '../../utils/chat/chatSocket.js';
 
 export default {
     mounted() {
