@@ -1,2 +1,2 @@
 /public folder:
-Stores .html files and favicon (kebab-case for .html files)
+Stores .html files and favicon (camelCase for .html files)
