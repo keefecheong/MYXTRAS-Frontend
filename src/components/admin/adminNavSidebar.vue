@@ -13,9 +13,14 @@
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
             </div>
         
-            <a href="" class="sidebar-link">
+            <a href="/admin/adminPanelHome.html" class="sidebar-link">
                 <span class="material-symbols-outlined">home</span>
                 <p>Home</p>
+            </a>
+
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined">manage_accounts</span>
+                <p>Manage Admins</p>
             </a>
 
             <a href="" class="sidebar-link">
@@ -48,8 +53,12 @@
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo-mini"/>
             </div>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/adminPanelHome.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Home">home</span>
+            </a>
+
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined" title="Manage Admins">manage_accounts</span>
             </a>
 
             <a href="" class="sidebar-link">
@@ -81,6 +90,16 @@
             
             <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
         
+            <a href="/admin/adminPanelHome.html" class="sidebar-link">
+                <span class="material-symbols-outlined">home</span>
+                <p>Home</p>
+            </a>
+            
+            <a href="" class="sidebar-link">
+                <span class="material-symbols-outlined">manage_accounts</span>
+                <p>Manage Admins</p>
+            </a>
+
             <a href="" class="sidebar-link">
                 <span class="material-symbols-outlined">campaign</span>
                 <p>Events</p>

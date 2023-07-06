@@ -21,7 +21,7 @@
     height: 80px;
     border-radius: 50%;
     border: 1px solid gray;
-    user-select: none;
+    -webkit-user-select: none;
     cursor: pointer;
 }
 
