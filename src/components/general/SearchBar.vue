@@ -2,8 +2,8 @@
     <div class="row pink-header-search" >
         <div class="col-md-3">
         </div>
-        <div class="col-md-6 centerElements" > 
-            <span class="material-symbols-outlined" style="color: black" id="searchIcon" @click="performSearch" title="Click to search">search</span>
+        <div class="col-md-6 centerElements" id="search-input"> 
+            <span class="material-symbols-outlined" style="color: black" id="search-icon" @click="performSearch" title="Click to search">search</span>
             <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!" @keyup.enter="performSearch">
             <SearchResults :results="searchResults" :currentPage="currentPage"/>
         </div>
@@ -82,8 +82,14 @@
     display: block;
     color: white;
 }
-#searchIcon {
-    transform: translate(6.5vh);
+
+#search-input {
+    position: relative;
+}
+
+#search-icon {
+    position: absolute;
+    left: 30px;
     font-size: 1.5rem;
 }
 .search-bar {

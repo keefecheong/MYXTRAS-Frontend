@@ -13,7 +13,7 @@
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
             </div>
         
-            <a href="/admin/adminPanelHome.html" class="sidebar-link">
+            <a href="/admin/home.html" class="sidebar-link">
                 <span class="material-symbols-outlined">home</span>
                 <p>Home</p>
             </a>
@@ -53,7 +53,7 @@
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo-mini"/>
             </div>
 
-            <a href="/admin/adminPanelHome.html" class="sidebar-link">
+            <a href="/admin/home.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Home">home</span>
             </a>
 
@@ -90,7 +90,7 @@
             
             <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
         
-            <a href="/admin/adminPanelHome.html" class="sidebar-link">
+            <a href="/admin/home.html" class="sidebar-link">
                 <span class="material-symbols-outlined">home</span>
                 <p>Home</p>
             </a>
