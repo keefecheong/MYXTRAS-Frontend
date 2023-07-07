@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import App from './AdminPanel.vue'
+import App from './AdminPanelHome.vue'
 import 'bootstrap/dist/js/bootstrap.js';
 import 'bootstrap/dist/css/bootstrap.css';
 
