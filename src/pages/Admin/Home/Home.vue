@@ -1,9 +1,9 @@
 <template>
-    <div class="main-container">
+    <div id="main-container">
         <NavSidebar/>
-        <div class="main-content">
+        <div id="main-content">
             <SearchBar currentPage="admin"/>
-            <div class="admin-container">
+            <div id="admin-container">
                 
             </div>
         </div>

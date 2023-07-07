@@ -1,7 +1,7 @@
 <template>
-    <div class="main-container">
+    <div id="main-container">
         <NavSidebar/>
-        <div class="main-content">
+        <div id="main-content">
 
         </div>
     </div>

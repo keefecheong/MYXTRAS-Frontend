@@ -298,15 +298,11 @@ export default {
             }
         },
         // to check for the current page and set the 'current' class for sidebar links corresponding to the current page
-        setCurrent() {
+            setCurrent() {
             const links = document.querySelectorAll('.sidebar-link, .navbar-link');
             for (var i = 0; i < links.length; i++) {
                 const link = links[i];
-                if (link.getAttribute('href').split('/')[1] == window.location.pathname.split('/')[1]) {
-                    link.classList.add('current');
-                }
-                // set current for feed link if path is /
-                else if (window.location.pathname == '/' && link.getAttribute('href').split('/')[1] == 'feed.html') {
+                if (link.getAttribute('href').split('/')[2] == window.location.pathname.split('/')[2]) {
                     link.classList.add('current');
                 }
                 else {
