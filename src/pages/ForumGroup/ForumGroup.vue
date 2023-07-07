@@ -151,6 +151,11 @@ export default {
         },
         async getForumPage() {
             this.forumID = sessionStorage.getItem('forum_id');
+            
+            // redirect back to forum.html if no forumID
+            if (!this.forumID) {
+                location.href = '/forum.html';
+            }
 
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forumID}`, {
                 mode: 'cors',
