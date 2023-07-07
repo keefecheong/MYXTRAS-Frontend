@@ -18,27 +18,27 @@
                 <p>Home</p>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/manageAdmin.html" class="sidebar-link">
                 <span class="material-symbols-outlined">manage_accounts</span>
                 <p>Manage Admins</p>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/events.html" class="sidebar-link">
                 <span class="material-symbols-outlined">campaign</span>
                 <p>Events</p>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/reports.html" class="sidebar-link">
                 <span class="material-symbols-outlined">warning</span>
                 <p>Reports</p>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/bannedUsers.html" class="sidebar-link">
                 <span class="material-symbols-outlined">no_accounts</span>
                 <p>Banned Users</p>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/logs.html" class="sidebar-link">
                 <span class="material-symbols-outlined">lists</span>
                 <p>Logs</p>
             </a>
@@ -57,23 +57,23 @@
                 <span class="material-symbols-outlined" title="Home">home</span>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/manageAdmin.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Manage Admins">manage_accounts</span>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/events.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Events">campaign</span>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/reports.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Reports">warning</span>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/bannedUsers.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Banned Users">no_accounts</span>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/logs.html" class="sidebar-link">
                 <span class="material-symbols-outlined" title="Logs">lists</span>
             </a>
         </div>
@@ -95,27 +95,27 @@
                 <p>Home</p>
             </a>
             
-            <a href="" class="sidebar-link">
+            <a href="/admin/manageAdmin.html" class="sidebar-link">
                 <span class="material-symbols-outlined">manage_accounts</span>
                 <p>Manage Admins</p>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/events.html" class="sidebar-link">
                 <span class="material-symbols-outlined">campaign</span>
                 <p>Events</p>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/reports.html" class="sidebar-link">
                 <span class="material-symbols-outlined">warning</span>
                 <p>Reports</p>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/bannedUsers.html" class="sidebar-link">
                 <span class="material-symbols-outlined">no_accounts</span>
                 <p>Banned Users</p>
             </a>
 
-            <a href="" class="sidebar-link">
+            <a href="/admin/logs.html" class="sidebar-link">
                 <span class="material-symbols-outlined">lists</span>
                 <p>Logs</p>
             </a>
