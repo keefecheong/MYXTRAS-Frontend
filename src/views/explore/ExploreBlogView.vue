@@ -10,6 +10,8 @@
                     :selection="true"
                     @interest-selected="handleInterestSelected"
                 />
+
+                <button @click="clearSelection()" id="clearAll-btn">Clear All</button>
             </div>
 
             <div id="explore-blog-gallery" v-if="filteredBlogs.length > 0">
@@ -106,6 +108,10 @@ export default {
         // handle interest-selected event to update filtered blogs
         handleInterestSelected(option) {
             handleInterestSelected(option, this.selectedOption);
+        },
+
+        clearSelection(){
+            this.selectedOption = [];
         }
     },
     computed: {
@@ -145,6 +151,16 @@ figure {
     margin: 0 auto;
     margin-bottom: 40px;
     position: relative;
+}
+
+#clearAll-btn{
+    width: 6em;
+    color: white;
+    border: none;
+    background: linear-gradient(45deg,#FF6363, #E53A73);
+    border-radius: 10px;
+    padding: 7px 7px;
+    margin-right: 5px;
 }
 
 #gallery-container {
