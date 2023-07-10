@@ -3,9 +3,17 @@
 import validateUser from "./verifyAuthentication.js";
 
 export default async function redirectUser() {
-    const authenticated = await validateUser();
+    const result = await validateUser();
 
-    if (authenticated) {
-        location.href = '/feed.html';
+    // if authenticated,
+    if (result.authenticated) {
+        // if profile not setup then go to setupProfile.html
+        if (!result.is_profile_setup) {
+            location.href = '/setupProfile.html';
+        }
+        // otherwise go to feed.html
+        else {
+            location.href = '/feed.html';
+        }
     }
 }

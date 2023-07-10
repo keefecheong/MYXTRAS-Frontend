@@ -201,7 +201,8 @@ export default {
                 uploadData.append('threadObject', JSON.stringify(threadObject));
                 
                 // send request to server with data
-                const targetURL = this.editMode ? `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}` : `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.forumID}`;
+                const baseURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/threads`;
+                const targetURL = this.editMode ? `${baseURL}/forum/${this.thread.parent_id._id}/thread/${this.thread._id}` : `${baseURL}/${this.forumID}`;
                 
                 const options = {
                     mode: 'cors',

@@ -67,7 +67,7 @@ export default {
             if (!confirmDelete) {
                 return;
             }
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.thread._id}/${this.comment._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}/comments/${this.comment._id}`, {
                 mode: 'cors',
                 method: 'DELETE',
                 credentials: 'include'

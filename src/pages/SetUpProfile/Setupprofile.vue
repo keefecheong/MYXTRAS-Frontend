@@ -196,15 +196,8 @@ export default {
             return this.alertStore.alertMsg;
         }
     },
-    created() {
-        // check if user has to set up profile
-        const stayOnPage = sessionStorage.getItem('to_setup_profile');
-
-        // if user already set up profile then redirect to feed
-        if (!stayOnPage) {
-            redirectUser();
-            return;
-        }
+    async created() {
+        await redirectUser();
 
         this.getSchools();
 
@@ -301,8 +294,8 @@ export default {
                     'realName': this.realname,
                     'userName': this.username,
                     'biography': this.biography,
-                    'selectedSchool': this.schoolData[this.selectedSchool]["short"],
-                    'selectedCourse': this.schoolData[this.selectedSchool]["courses"][this.selectedCourse],
+                    'selectedSchool': this.selectedSchool,
+                    'selectedCourse': this.selectedCourse,
                     'selectedInterests': this.selectedOption,
                 }
             }

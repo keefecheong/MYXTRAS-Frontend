@@ -328,7 +328,8 @@ export default {
                 uploadData.append('forumObject', JSON.stringify(forumObject));
                 
                 // send request to server with data
-                const targetURL = this.editMode ? `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forum._id}` : `${import.meta.env.VITE_APP_SERVER_URL}/api/forums`;
+                const baseURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/forums`;
+                const targetURL = this.editMode ? `${baseURL}/${this.forum._id}` : baseURL;
                 
                 const options = {
                     mode: 'cors',

@@ -179,7 +179,7 @@ export default {
             
         },
         async getThreads() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/forum/${this.forum._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.forum._id}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'

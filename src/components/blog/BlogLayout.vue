@@ -175,10 +175,11 @@
 
                 <div v-else class="blog-comments-container">
                     <BlogCommentLayout
-                        v-for="(comment, index) in commentData"
+                        v-for="comment in commentData"
                         :comment="comment"
+                        :creatorId="blog.creator_id._id"
                         :postId="blog._id"
-                        :key="index"
+                        :key="comment._id"
                         @commentDeleted="deleteComment"
                     />
                 </div>
@@ -498,7 +499,7 @@ export default {
         // initialize liked and likeCount values
         this.savedLike = this.blog.liked;
         this.liked = this.blog.liked;
-        this.likeCount = this.blog.likes.length;
+        this.likeCount = this.blog.likes;
 
         // initialize saved value
         this.savedSaved = this.blog.saved;
@@ -591,7 +592,7 @@ export default {
         },
         // handle updating of like status to backend
         async updateLike() {
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/likes/${this.blog._id}`;
+            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/likes/user/${this.blog.creator_id._id}/post/${this.blog._id}`;
             const options = {
                 mode: 'cors',
                 credentials: 'include'
@@ -689,7 +690,7 @@ export default {
                 return;
             }
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}`, {
                 mode: 'cors',
                 method: 'DELETE',
                 credentials: 'include'
@@ -711,7 +712,7 @@ export default {
         },
         // retrieve comments for the post
         async getComments() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/${this.blog._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/user/${this.blog.creator_id._id}/post/${this.blog._id}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -742,7 +743,7 @@ export default {
             }
 
             // upload comment
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/${this.blog._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/user/${this.blog.creator_id._id}/post/${this.blog._id}`, {
                 mode: 'cors',
                 method: 'POST',
                 body: JSON.stringify({
@@ -760,7 +761,7 @@ export default {
                     // update comments list to update dom immediately
                     if (res.status == 200) {
                         this.blog.comment_count += 1;
-                        this.commentData.push(data.comment);
+                        this.commentData.unshift(data.comment);
                     }
 
                     this.commentText = '';

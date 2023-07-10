@@ -221,13 +221,14 @@ export default {
                 credentials: 'include'
             };
 
-            const targetURL = this.editMode ? `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/${this.blog._id}` : `${import.meta.env.VITE_APP_SERVER_URL}/api/posts`;
+            const baseURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/posts`;
+            const targetURL = this.editMode ? `${baseURL}/user/${this.blog.creator_id._id}/post/${this.blog._id}` : baseURL;
 
             await fetch(targetURL, options)
-                .then((res) => {
+                .then(async (res) => {
                     this.submitting = false;
 
-                    res.json().then(async (data) => {
+                    await res.json().then(async (data) => {
                         await this.alert(data.message);
                     
                         // reset and close form
@@ -360,7 +361,7 @@ export default {
     width: 100%;
     height: 100%;
     background-color: rgb(0, 0, 0, 0.5);
-    z-index: 99999;
+    z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;

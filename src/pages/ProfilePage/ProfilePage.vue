@@ -7,6 +7,8 @@
     <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
         {{ confirmMsg }}
     </ConfirmPrompt>
+
+    <LoadingOverlay v-if="viewingSaved && !savedLoaded" :center="true" :backgroundColor="'rgba(0, 0, 0, 0.5)'" />
     
     <div id="main-container">
         <NavSidebar />
@@ -132,6 +134,7 @@ import ObjectID from 'bson-objectid';
 import { viewFollower } from '../../utils/general/viewUser.js';
 import signOut from '../../utils/authentication/signOut';
 import { debounce } from 'lodash';
+import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
 
 export default {
     components: {
@@ -142,7 +145,8 @@ export default {
         BlogFormLayout,
         InterestBadgeList,
         AlertPrompt,
-        ConfirmPrompt
+        ConfirmPrompt,
+        LoadingOverlay
     },
     data() {
         return {
@@ -155,6 +159,7 @@ export default {
             banner: banner,
             blogs: [],
             savedBlogs: [],
+            savedLoaded: false,
             forums: [],
             viewingSaved: false,
 
@@ -238,11 +243,6 @@ export default {
                     this.self = data.self;
                     this.isSelf = this.user._id == this.self._id;
 
-                    // get user's saved posts if viewing his own profile
-                    if (this.isSelf) {
-                        this.getSavedPosts();
-                    }
-
                     // initialize follower information/status
                     this.following = data.isFollowing;
                     this.savedFollowing = data.isFollowing;
@@ -278,6 +278,7 @@ export default {
             }).then(async res => {
                 await res.json().then(data => {
                     this.savedBlogs = data;
+                    this.savedLoaded = true;
                 });
             }).catch(error => {
                 console.log(error);
@@ -422,6 +423,11 @@ export default {
         },
         // to toggle between created and saved blogs
         viewSaved(viewSaved) {
+            // if user is viewing his own profile and toggles to saved posts, retrieved saved posts if not already retrieved
+            if (viewSaved && this.isSelf && !this.savedLoaded) {
+                this.getSavedPosts();
+            }
+
             this.viewingSaved = viewSaved;
         }
     },
@@ -475,6 +481,8 @@ export default {
 #left-content {
     display: flex;
     flex-direction: column;
+    position: relative;
+    padding: 0px;
 }
 
 #right-content {
@@ -672,22 +680,12 @@ export default {
     font-weight: medium;
 }
 
-#main-container {
-    position: relative;
-    min-height: 100vh;
-}
-
-#left-content {
-    position: relative;
-    padding: 0px;
-}
-
 .floating-button-wrapper {
-    position: fixed;
+    position: sticky;
     bottom: 20px;
-    right: 20px;
-    margin-right: 22%;
-    z-index: 9999;
+    left: 100%;
+    width: fit-content;
+    z-index: 5;
 }
 
 .floating-button {

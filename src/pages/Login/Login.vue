@@ -262,7 +262,6 @@ export default {
                     }
                     // otherwise go to setup profile
                     else {
-                        sessionStorage.setItem('to_setup_profile', true);
                         location.href = '/setupProfile.html';
                     }
                 } else {

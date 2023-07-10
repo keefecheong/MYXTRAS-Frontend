@@ -80,7 +80,7 @@ export default {
         ThreadDetailedLayout
     },
     mounted() {
-        this.retrieveAllThreads()
+        this.retrieveExploreThreads()
         this.retrieveForums()
     },
     updated() {
@@ -122,8 +122,8 @@ export default {
                 document.getElementById(`triangle-${id}`).className = "triangle-down";
             }
         },
-        retrieveAllThreads() {
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread`, {
+        retrieveExploreThreads() {
+            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/explore`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'

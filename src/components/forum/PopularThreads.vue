@@ -59,7 +59,7 @@ p {
             this.$emit('show-detailed-view', true);
         },        
         async getPopularThreads() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/popular`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/popular`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'

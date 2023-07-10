@@ -192,7 +192,7 @@ export default {
     methods: {
         // to get comment data
         async initData() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.thread._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}/comments`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -225,7 +225,7 @@ export default {
             }
 
             // upload comment
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/comments/${this.thread._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}/comments`, {
                 mode: 'cors',
                 method: 'POST',
                 body: JSON.stringify({
@@ -242,7 +242,7 @@ export default {
 
                     // update comments list to update dom immediately
                     if (res.status == 200) {
-                        this.comments.push(data.comment);
+                        this.comments.unshift(data.comment);
                     }
 
                     this.commentText = '';
@@ -297,13 +297,17 @@ export default {
         },
         // handle updating of like status to backend
         async updateLike() {
+            const url = `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}/like`;
+            const options = {
+                mode: 'cors',
+                credentials: 'include'
+            }
+
             // send request to update liked status
             if (this.liked && !this.savedLike) {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/like/${this.thread._id}`, {
-                    mode: 'cors',
-                    method: 'POST',
-                    credentials: 'include'
-                }).then(async (res) => {
+                options.method = 'POST';
+
+                await fetch(url, options).then(async (res) => {
                     if (res.status == 201) {
                         this.savedLike = true;
                     }
@@ -315,11 +319,9 @@ export default {
                 });
             }
             else if (!this.liked && this.savedLike) {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/like/${this.thread._id}`, {
-                    mode: 'cors',
-                    method: 'DELETE',
-                    credentials: 'include'
-                }).then(async (res) => {
+                options.method = 'DELETE';
+
+                await fetch(url, options).then(async (res) => {
                     if (res.status == 204) {
                         this.savedLike = false;
                     }
@@ -333,13 +335,17 @@ export default {
         },
         // handle updating of dislike status to backend
         async updateDislike() {
+            const url = `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}/dislike`;
+            const options = {
+                mode: 'cors',
+                credentials: 'include'
+            }
+
             // send request to update liked status
             if (this.disliked && !this.savedDislike) {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/dislike/${this.thread._id}`, {
-                    mode: 'cors',
-                    method: 'POST',
-                    credentials: 'include'
-                }).then(async (res) => {
+                options.method = 'POST';
+
+                await fetch(url, options).then(async (res) => {
                     if (res.status == 201) {
                         this.savedDislike = true;
                     }
@@ -351,11 +357,9 @@ export default {
                 });
             }
             else if (!this.disliked && this.savedDislike) {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/dislike/${this.thread._id}`, {
-                    mode: 'cors',
-                    method: 'DELETE',
-                    credentials: 'include'
-                }).then(async (res) => {
+                options.method = 'DELETE';
+
+                await fetch(url, options).then(async (res) => {
                     if (res.status == 204) {
                         this.savedDislike = false;
                     }
@@ -392,7 +396,7 @@ export default {
                 return;
             }
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/thread/${this.thread._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}`, {
                 mode: 'cors',
                 method: 'DELETE',
                 credentials: 'include'

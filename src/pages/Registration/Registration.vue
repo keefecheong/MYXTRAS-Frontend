@@ -635,7 +635,6 @@ export default {
                 body: JSON.stringify(this.userObject)
             }).then((response) => {
                 if (response.ok) {
-                    sessionStorage.setItem('to_setup_profile', true);
                     location.href = '/setupProfile.html';
                 }
                 else if (response.status === 400){
