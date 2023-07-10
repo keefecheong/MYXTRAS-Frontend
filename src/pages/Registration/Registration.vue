@@ -455,20 +455,20 @@ export default {
     },
     methods: {
         isPasswordSingleType(password) {
-        const lowercaseRegex = /^[a-z]+$/;
-        const uppercaseRegex = /^[A-Z]+$/;
-        const symbolRegex = /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/;
-        const numberRegex = /^[0-9]+$/;
-        if (
-            lowercaseRegex.test(password) ||
-            uppercaseRegex.test(password) ||
-            symbolRegex.test(password) ||
-            numberRegex.test(password)
-        ) {
-            return true;
-        }
+            const lowercaseRegex = /^[a-z]+$/;
+            const uppercaseRegex = /^[A-Z]+$/;
+            const symbolRegex = /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/;
+            const numberRegex = /^[0-9]+$/;
+            if (
+                lowercaseRegex.test(password) ||
+                uppercaseRegex.test(password) ||
+                symbolRegex.test(password) ||
+                numberRegex.test(password)
+            ) {
+                return true;
+            }
 
-        return false;
+            return false;
         },
         
         async sendOTP(){
@@ -635,6 +635,7 @@ export default {
                 body: JSON.stringify(this.userObject)
             }).then((response) => {
                 if (response.ok) {
+                    sessionStorage.setItem('to_setup_profile', true);
                     location.href = '/setupProfile.html';
                 }
                 else if (response.status === 400){

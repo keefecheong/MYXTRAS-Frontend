@@ -1,9 +1,7 @@
 // check if user is authenticated
 export default async function validateUser() {
-    let result = {
-        authenticated: false,
-        is_profile_setup: false
-    }
+    let authenticated = false;
+    let is_profile_setup = false;
 
     await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
         method: 'get',
@@ -11,8 +9,8 @@ export default async function validateUser() {
     }).then(async (res) => {
         if (res.status == 200) {
             await res.json().then(user => {
-                result.authenticated = true;
-                result.is_profile_setup = user.is_profile_setup;
+                authenticated = true;
+                is_profile_setup = user.is_profile_setup;
             });
         }
         else {
@@ -24,5 +22,5 @@ export default async function validateUser() {
         console.log(error);
     });
 
-    return result;
+    return { authenticated, is_profile_setup };
 }

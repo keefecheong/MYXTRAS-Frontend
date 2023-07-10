@@ -196,14 +196,22 @@ export default {
             return this.alertStore.alertMsg;
         }
     },
-    async created() {
-        await redirectUser();
+    created() {
+        // check if user has to set up profile
+        const stayOnPage = sessionStorage.getItem('to_setup_profile');
+
+        // if user already set up profile then redirect to feed
+        if (!stayOnPage) {
+            redirectUser();
+            return;
+        }
 
         this.getSchools();
 
         this.debouncedVerifyUsername = debounce(this.debounceVerifyUsernameFunction, 1000);
 
-        window.addEventListener('beforeunload', async () => {
+        window.addEventListener('unload', async (e) => {
+            e.preventDefault();
             await this.signOut();
         });
     },

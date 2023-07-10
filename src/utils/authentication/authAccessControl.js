@@ -16,23 +16,25 @@ import { createApp } from 'vue';
 import validateUser from './verifyAuthentication.js';
 import UnauthorizedView from '../../views/general/UnauthorizedView.vue';
 
-export default async function dynamicMount(originalApp) {
+export default async function dynamicMount(originalApp, fromSetupProfile) {
     const result = await validateUser();
 
     let app;
 
     if (result.authenticated) {
-        // if profile setup complete then go to original page
-        if (result.is_profile_setup) {
-            app = createApp(originalApp);
-        }
-        // otherwise go to setupProfile.html
-        else {
-            location.href = '/setupProfile.html';
+        app = createApp(originalApp);
+
+        if (!result.is_profile_setup) {
+            // if profile is not setup set to_setup_profile to true to prevent redirection at setupProfile
+            sessionStorage.setItem('to_setup_profile', true);
+
+            // if not from setupProfile then redirect to setupProfile
+            if (!fromSetupProfile) {
+                location.href = '/setupProfile.html';
+            }
         }
     }
     else {
-        // if not authenticated then go to login.html
         app = createApp(UnauthorizedView);
         location.href = '/login.html';
     }

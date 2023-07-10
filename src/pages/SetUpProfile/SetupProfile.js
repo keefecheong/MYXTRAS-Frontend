@@ -17,6 +17,6 @@ const vuetify = createVuetify({
     directives,
   })
 
-const app = await dynamicMount(App);
+const app = await dynamicMount(App, true);
 
 app.use(createPinia()).use(vuetify).mount('#app');
