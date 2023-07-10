@@ -60,7 +60,7 @@ h1 {
 #passwordField{
     margin-bottom: 20px;
     width: 80%;
-    transform: translatex(2vh);
+    transform: translatex(2.4vh);
 }
 #emailField,
 #passwordField {

@@ -8,7 +8,6 @@
                 </p>
                 <img class="a-image" :src="announcement.image" alt="forum-image">
             </div>
-            
         </div>
     </div>
 </template>
@@ -68,14 +67,14 @@ export default {
 @import url('../../styles/main.css');
 
 .a-container {
-    display: inline-block;
+    display: inline-block !important;
     border: #133B5B;
     border-style: solid 1rem;
     margin: 50px 30px 30px 30px;
-    margin-top: 50px;
-    box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);;
+    margin-top: 50px !important;
+    box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);
     border-radius: 10px;
-    width: 40%;
+    width: 40% !important;
     padding-bottom: 20px;
 }
 
@@ -104,10 +103,10 @@ export default {
 }
 
 .announce {
-    overflow-x: auto;
-    overflow-y: hidden;
-    height: 85%;
-    white-space: nowrap;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    height: 85% !important;
+    white-space: nowrap !important;
 }
 
 .pink {

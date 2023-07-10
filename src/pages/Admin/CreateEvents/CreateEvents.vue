@@ -6,12 +6,11 @@
             <AnnoucementLayout/>
         </div>
     </div>
-
 </template>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
-import AnnoucementLayout from '../../components/announcement/AnnoucementLayout.vue'; 
+import NavSidebar from '../../../components/admin/adminNavSidebar.vue';
+import AnnoucementLayout from '../../../components/announcement/AnnoucementLayout.vue';
 
 export default {
     components: {
@@ -22,7 +21,7 @@ export default {
 </script>
 
 <style>
-@import url('../../styles/main.css');
+@import url('../../../styles/main.css');
 
 .pink-header {
     margin: 0 -12px 0 -12px;
@@ -30,6 +29,7 @@ export default {
     padding-bottom: 3vh;
     background-color: var(--primary);
     color: white;
+    justify-content: center;
 }
 
 

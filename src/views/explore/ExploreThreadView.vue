@@ -8,6 +8,9 @@
                 :selection="true"
                 @interest-selected="handleInterestSelected"
             />
+
+            <button @click="clearSelection()" id="clearAll-btn">Clear All</button>
+
         </div>
     </div>
     <div class="row" v-if="this.threads">
@@ -175,6 +178,10 @@ export default {
         // to handle thread deletion
         handleDeletedThread(index) {
             this.recentThreads.splice(index, 1);
+        },
+
+        clearSelection(){
+            this.selectedOption = [];
         }
     },
     computed: {
@@ -209,6 +216,16 @@ export default {
         border: 1px solid var(--primary);
         border-radius: 10px;
         cursor: pointer;
+    }
+
+    #clearAll-btn{
+        width: 6em;
+        color: white;
+        border: none;
+        background: linear-gradient(45deg,#FF6363, #E53A73);
+        border-radius: 10px;
+        padding: 7px 7px;
+        margin-right: 5px;
     }
     .interestCommunity{
         font-size: 1.2rem;

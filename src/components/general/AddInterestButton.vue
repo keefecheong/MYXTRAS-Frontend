@@ -51,7 +51,10 @@
                     style="margin-bottom: 15px"
                 />
 
-                <button @click="confirmSelection()" id="confirm-btn">Confirm</button>
+                <div id="button-cotainer">
+                    <button @click="clearSelection()" id="clearAll-btn">Clear All</button>
+                    <button @click="confirmSelection()" id="confirm-btn">Confirm</button>
+                </div>
             </div>
         </div>
     </div>
@@ -82,7 +85,8 @@ export default{
         }
     },
     emits: [
-        'selectedInterests'
+        'selectedInterests',
+        'clearAll'
     ],
     methods:{
         // toggle interest selection popup
@@ -95,6 +99,13 @@ export default{
             
             this.togglePopup(false);
         },
+
+        // confirm selected interests and close popup
+        clearSelection() {
+            this.workingSelectedOption = [];
+            this.$emit('clearAll', this.workingSelectedOption);
+        },
+
         // add/remove selected interest
         handleSelection(option) {
             handleSelectedInterests(option, this.workingSelectedOption);
@@ -142,6 +153,17 @@ export default{
     background: linear-gradient(45deg,#FF6363, #E53A73);
     border-radius: 10px;
     padding: 10px 12px;
+}
+
+
+#clearAll-btn{
+    width: 10em;
+    color: white;
+    border: none;
+    background: linear-gradient(45deg,#FF6363, #E53A73);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-right: 5px;
 }
 
 #custom-btn{
