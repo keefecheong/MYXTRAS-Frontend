@@ -6,7 +6,7 @@
         <div class="banner">
           <img :src="banner" alt="Banner" id="banner-picture"/>
             <div class="content">
-              <input ref="bannerInput" type="file" @change="upload($event, 'banner')" style="display: none">
+              <input ref="bannerInput" type="file" @change="upload($event, 'banner')" style="display: none" accept=".jpg, .jpeg, .png">
               <button class="banner-button"  @click="chooseFile('banner')">Customize banner</button>
             </div>
         </div>
@@ -14,11 +14,28 @@
         <div class="profilepicture">
           <div class="content">
             <div class="image-container">
-              <img :src="profilePicture" alt="Profile Picture"  id="profile-picture" ref="cropperImage"/>
+              <img :src="profilePicture" alt="Profile Picture" id="profile-picture"/>
             </div>
-            <input ref="fileInput" type="file" @change="upload($event, 'profilePicture')" style="display: none">
+            <input ref="fileInput" type="file" @change="upload($event, 'profilePicture')" style="display: none" accept=".jpg, .jpeg, .png"/>
             <button v-if="!showBtn" class="profile-button" @click="chooseFile('profilePicture')">Change Profile Picture</button>
             <button v-if="showBtn" class="confirm-button" @click="confirmCropping">Confirm Crop</button>
+          </div>
+        </div>
+
+        <div v-if="showPopup" id="popup-container">
+          <div>
+            <button type="button" id="close-add-interest" class="material-symbols-outlined" @click="() => togglePopup(false)">Close</button>
+
+            <div id="popup-content">
+              <div id="selection-header">
+                  <slot>Crop Image</slot>
+              </div>
+              <img :src="profilePicture" alt="Profile Picture" id="profile-picture" ref="cropperImage"/>
+              <div id="button-cotainer">
+                <button id="confirm-btn" @click="confirmCropping">Confirm Crop</button>
+              </div>
+
+            </div>
           </div>
         </div>
 
@@ -166,7 +183,7 @@ export default {
             this.cropper = new Cropper(imageElement, {
             aspectRatio: 1, // Set the aspect ratio for the cropped image
             viewMode: 1, // Restrict the cropping area to the container size
-            dragMode: 'move', // Allow dragging the image within the container
+            dragMode: false, // Prevent dragging the image within the container
             cropBoxResizable: true, // Disable resizing of the cropping area
             cropBoxMovable: true, // Disable moving of the cropping area
             toggleDragModeOnDblclick: true, // Disable toggling drag mode on double-click
@@ -177,7 +194,7 @@ export default {
                     width: 142,
                     height: 142,
                     left: (imageElement.offsetWidth - 142) / 2,
-                    top: (imageElement.offsetHeight - 142) / 2,
+                    top: (imageElement.offsetHeight - 142 ) / 2,
                     });
                 },
             });
@@ -195,16 +212,47 @@ export default {
         },
 
         upload(event, imageType){
-            const file = event.target.files[0];
-            if (imageType === 'profilePicture') {
-                this.profilePicture = URL.createObjectURL(file);
-                this.showBtn = true;
-                this.$nextTick(() => {
+
+          // clear errors, invalidFiles and selectedLinks
+          this.errors = [];
+          this.invalidFiles = [];
+          this.selectedLinks = [];
+          
+          // valid conditions
+          const acceptedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+          const maxImageSize = 2 * 1024 * 1024;
+
+          // error messages
+          const illegalFileType = `Illegal file type, allowed file types: ${acceptedFileTypes.join(', ')}`;
+          const largeFile = `File is too large, maximum file size is ${maxImageSize / 1024 / 1024}MB.`;
+
+          const file = event.target.files[0];
+          if (file.size > maxImageSize) {
+            this.errors.push(largeFile);
+            this.invalidFiles.push(i);
+          }
+
+          if (!acceptedFileTypes.includes(file.type)) {
+            this.errors.push(illegalFileType);
+            this.invalidFiles.push(i);
+          }
+          // return if there are errors
+          if (this.errors.length > 0) {
+                return;
+          }
+
+          if (imageType === 'profilePicture') {
+              this.profilePicture = URL.createObjectURL(file);
+              this.showBtn = true;
+              this.$nextTick(() => {
+                  this.showPopup=true;
+                  this.$nextTick(() => {
                     this.initializeCropper();
-                });
-            } else {
-                this.banner = URL.createObjectURL(file);
-            }
+                  })
+              });
+          } else {
+              this.banner = URL.createObjectURL(file);
+          }
             
         },
 
@@ -231,7 +279,9 @@ export default {
                 this.profilePicture = croppedImage;
                 this.cropper.destroy(); // Destroy the cropper instance
                 this.cropper = null; // Set the cropper variable to null
+                this.togglePopup(false);
                 this.showBtn = false;
+
             });
         },
 
@@ -311,7 +361,13 @@ export default {
 
         handleSelectedInterests(selectedOption) {
             this.selectedOption = selectedOption;
-        }
+        },
+
+        togglePopup(show){
+            this.showPopup = show;
+        },
+
+        
 
     },
 }
@@ -449,6 +505,55 @@ export default {
       margin-top: 25px;
     }
 
+    #popup-content {
+    background-color: #fff;
+    color: black;
+    padding: 20px 200px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    align-items: center;
+}
+
+#popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5) !important; /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#popup-container > div {
+    position: relative;
+}
+
+#close-add-interest {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    color: black;
+}
+
+#confirm-btn{
+    width: 10em;
+    color: white;
+    border: none;
+    background: linear-gradient(45deg,#FF6363, #E53A73);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+#selection-header {
+    font-weight: bold;
+    font-size: 1.2em;
+}
     
 
 </style>
