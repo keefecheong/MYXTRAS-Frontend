@@ -202,6 +202,9 @@ export default {
 
 <style>
     @import url('../../styles/main.css');
+    h1 {
+        font-weight: normal !important;
+    }
     #filterRow {
         margin-bottom: 5vh;
     }

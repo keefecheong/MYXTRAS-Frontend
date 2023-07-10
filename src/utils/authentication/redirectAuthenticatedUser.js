@@ -9,10 +9,12 @@ export default async function redirectUser() {
     if (result.authenticated) {
         // if profile not setup then go to setupProfile.html
         if (!result.is_profile_setup) {
+            console.log('1')
             location.href = '/setupProfile.html';
         }
         // otherwise go to feed.html
         else {
+            console.log('2')
             location.href = '/feed.html';
         }
     }
