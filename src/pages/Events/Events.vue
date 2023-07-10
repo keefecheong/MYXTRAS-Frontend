@@ -22,8 +22,10 @@ export default {
 </script>
 
 <style>
-@import url('../../styles/main.css');
-
+h1 {
+    margin: 0;
+    font-weight: normal;
+}
 .pink-header {
     margin: 0 -12px 0 -12px;
     padding-top: 3vh;
