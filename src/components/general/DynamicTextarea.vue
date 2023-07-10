@@ -63,10 +63,15 @@ export default {
         const borderWidthBottom = this.getIntDimension(textarea, 'border-bottom-width');
         const lineHeight = this.getIntDimension(textarea, 'line-height');
 
+        // sum of padding and border height
+        const totalAdditionalHeight = paddingTop + paddingBottom + borderWidthTop + borderWidthBottom;
+        
         // set initial height, minHeight and maxHeight
-        this.singleLineHeight = `${paddingTop + paddingBottom + borderWidthTop + borderWidthBottom + lineHeight}px`;
+        this.singleLineHeight = `${totalAdditionalHeight + lineHeight}px`;
+        
         textarea.style.minHeight = this.singleLineHeight;
-        textarea.style.maxHeight = `${paddingTop + paddingBottom + borderWidthTop + borderWidthBottom + lineHeight * ((this.maxRows ? this.maxRows : 5) - 1)}px`;
+        textarea.style.maxHeight = `${totalAdditionalHeight + lineHeight * ((this.maxRows ? this.maxRows : 5) - 1)}px`;
+
         textarea.style.height = this.singleLineHeight;
         textarea.style.height = `${textarea.scrollHeight}px`;
     },
