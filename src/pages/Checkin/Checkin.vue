@@ -20,6 +20,7 @@
                             <btn class="pink-btn">Claim</btn>
                         </div>
                         <div class="dayBox" id="day2">
+                            
                             <p>Day 2</p>
                             <p>100 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
                             <br>
@@ -66,9 +67,25 @@
                             <p>{{ mission.title }}</p>
                         </div>
                         <div class="right-content d-flex justify-content-end">
-                            <span>{{ mission.gem_count }}</span>
-                            <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                            <btn class="pink-btn">Claim</btn>
+                            <div class="d-flex">
+                                <p>{{ mission.gem_count }}</p>
+                                <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
+                                <btn class="pink-btn">Claim</btn>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="missionsContainer" >
+                    <div id="missionContainer">
+                        <div class="left-content">
+                            <p>Complete all dailies</p>
+                        </div>
+                        <div class="right-content d-flex justify-content-end">
+                            <div class="d-flex">
+                                <p>500</p>
+                                <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
+                                <btn class="pink-btn">Claim</btn>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -85,6 +102,9 @@ h1, p {
 }
 h1 {
     text-align: left !important;
+}
+.material-symbols-outlined {
+    float: right;
 }
 #dailyLogInDiv {
     display: flex;
@@ -116,7 +136,7 @@ h1 {
     margin: 0 25px;
     padding: 25px 50px;
     text-align: center;
-    align-items: center;
+    min-width: 10vw;
 }
 .pink-btn {
     background-color: var(--primary);
