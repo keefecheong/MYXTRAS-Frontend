@@ -163,6 +163,7 @@ export default {
                             this.gender = data.gender;
                             this.userId = data._id;
                             this.profilePicture = data.profile_pic_link;
+                            // this.banner = data.banner_pic_link
                             this.dataRetrieved = true
                         }
                     })
@@ -181,22 +182,22 @@ export default {
         initializeCropper() {
             const imageElement = this.$refs.cropperImage;
             this.cropper = new Cropper(imageElement, {
-            aspectRatio: 1, // Set the aspect ratio for the cropped image
-            viewMode: 1, // Restrict the cropping area to the container size
-            dragMode: false, // Prevent dragging the image within the container
-            cropBoxResizable: true, // Disable resizing of the cropping area
-            cropBoxMovable: true, // Disable moving of the cropping area
-            toggleDragModeOnDblclick: true, // Disable toggling drag mode on double-click
-            guides: false, // Hide the grid lines
-            background: false, // Disable the background overlay
-            ready: () => {
+              aspectRatio: 1, // Set the aspect ratio for the cropped image
+              viewMode: 1, // Restrict the cropping area to the container size
+              dragMode: false, // Prevent dragging the image within the container
+              cropBoxResizable: true, // Disable resizing of the cropping area
+              cropBoxMovable: true, // Disable moving of the cropping area
+              toggleDragModeOnDblclick: true, // Disable toggling drag mode on double-click
+              guides: false, // Hide the grid lines
+              background: false, // Disable the background overlay
+              ready: () => {
                 this.cropper.setCropBoxData({
-                    width: 142,
-                    height: 142,
-                    left: (imageElement.offsetWidth - 142) / 2,
-                    top: (imageElement.offsetHeight - 142 ) / 2,
-                    });
-                },
+                  width: 142,
+                  height: 142,
+                  left: (imageElement.offsetWidth - 142) / 2,
+                  top: (imageElement.offsetHeight - 142 ) / 2,
+                });
+              },
             });
         },
 
@@ -252,6 +253,7 @@ export default {
               });
           } else {
               this.banner = URL.createObjectURL(file);
+              console.log(this.banner)
           }
             
         },
@@ -339,7 +341,9 @@ export default {
             };
             formData.append('userObject', JSON.stringify(this.userObject));
             // formData.append('selectedImages', this.$refs.fileInput.files[0]);
+            const files = [];
             formData.append('selectedImages', this.croppedImageFile);
+            formData.append('selectedImages', this.banner)
             try{
                 const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`,{
                     method: 'PATCH',
@@ -373,7 +377,8 @@ export default {
 }
 </script>
 
-<style>
+
+<style scoped>
   .disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -491,7 +496,61 @@ export default {
       margin: 50px 0px; 
     }
 
-    .cropper-crop-box, .cropper-view-box {
+    #popup-content {
+      background-color: #fff;
+      color: black;
+      padding: 20px 200px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+      display: flex;
+      flex-direction: column;
+      row-gap: 10px;
+      align-items: center;
+    }
+
+    #popup-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5) !important; /* Semi-transparent background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    #popup-container > div {
+        position: relative;
+    }
+
+    #close-add-interest {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: black;
+    }
+
+    #confirm-btn{
+        width: 10em;
+        color: white;
+        border: none;
+        background: linear-gradient(45deg,#FF6363, #E53A73);
+        border-radius: 10px;
+        padding: 10px 12px;
+    }
+
+    #selection-header {
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+    
+
+</style>
+
+<style>
+.cropper-crop-box, .cropper-view-box {
       border-radius: 50%;
     }
 
@@ -504,56 +563,4 @@ export default {
       height: 75%;
       margin-top: 25px;
     }
-
-    #popup-content {
-    background-color: #fff;
-    color: black;
-    padding: 20px 200px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-    align-items: center;
-}
-
-#popup-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5) !important; /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-#popup-container > div {
-    position: relative;
-}
-
-#close-add-interest {
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    color: black;
-}
-
-#confirm-btn{
-    width: 10em;
-    color: white;
-    border: none;
-    background: linear-gradient(45deg,#FF6363, #E53A73);
-    border-radius: 10px;
-    padding: 10px 12px;
-}
-
-#selection-header {
-    font-weight: bold;
-    font-size: 1.2em;
-}
-    
-
 </style>

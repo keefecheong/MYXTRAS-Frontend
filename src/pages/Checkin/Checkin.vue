@@ -13,7 +13,7 @@
                 </div>
                 <div class="right-content">
                     <div id="scroll-view">
-                        <div class="dayBox" id="day1">
+                        <!-- <div class="dayBox" id="day1">
                             <p>Day 1</p>
                             <p>50 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
                             <br>
@@ -55,6 +55,14 @@
                             <p>100 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
                             <br>
                             <btn class="pink-btn material-symbols-outlined locked">lock</btn>
+                        </div> -->
+
+                        <div v-for="day in 7" :key="day" class="dayBox" :id="'day' + day">
+                            <p>Day {{ day }}</p>
+                            <p>{{ day == 1 ? '50' : '100' }} <span class="material-symbols-outlined diamond" style="color: aqua;">diamond</span></p>
+                            <br>
+                            <btn class="pink-btn" :class="{ locked: day != 1 }" v-if="day != 1">Claim</btn>
+                            <btn class="pink-btn" v-else>Claim</btn>
                         </div>
                     </div>
                 </div>
@@ -103,20 +111,27 @@ h1, p {
 h1 {
     text-align: left !important;
 }
-.material-symbols-outlined {
+
+.diamond{
     float: right;
 }
+
+/* .material-symbols-outlined {
+    float: right;
+}  */
 #dailyLogInDiv {
     display: flex;
     flex-direction: row;
     background-color: #0D283D;
     padding: 50px 100px 50px 100px;
     min-height: 40vh;
+    margin-left: -20px;
 }
 #dailyTasksDiv {
     background-color: #1C1B25;
     padding: 50px 100px 50px 100px;
     min-height: 60vh;
+    margin-left: -20px;
 }
 #scroll-view {
     overflow-x: scroll;
