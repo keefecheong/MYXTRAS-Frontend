@@ -97,6 +97,7 @@
                         </div>
                     </div>
                 </div>
+                <button id="bottom-right-button"><span class="material-symbols-outlined">shopping_cart</span></button>
             </div>
         </div>
     </div>
@@ -184,6 +185,28 @@ h1 {
     padding: 2vh;
     border-radius: 10px;
     background-color: #133B5B;
+}
+#bottom-right-button {
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+    background-color: var(--primary);
+    padding: 1em;
+    border-radius: 50%;
+    border: none;
+    animation: neonGlow 2s ease-in-out infinite alternate;
+
+}
+@keyframes neonGlow {
+  0% {
+    box-shadow: 0 0 5px #d81515, 0 0 20px #1809e7, 0 0 40px #a5ff0a, 0 0 60px var(--primary), 0 0 80px var(--primary);
+  }
+  50% {
+    box-shadow: 0 0 5px #d81515, 0 0 20px #1809e7, 0 0 40px var(--primary), 0 0 60px var(--primary), 0 0 80px var(--primary);
+  }
+  100% {
+    box-shadow: 0 0 5px #d81515, 0 0 20px var(--primary), 0 0 40px var(--primary), 0 0 60px var(--primary), 0 0 80px var(--primary);
+  }
 }
 </style>
 <script>
