@@ -59,9 +59,9 @@
 
                         <div v-for="day in 7" :key="day" class="dayBox" :id="'day' + day">
                             <p>Day {{ day }}</p>
-                            <p>{{ day == 1 ? '50' : '100' }} <span class="material-symbols-outlined diamond" style="color: aqua;">diamond</span></p>
+                            <p>{{ day == 1 ? '50' : '100' }} <span class="material-symbols-outlined symbols" style="color: aqua;">diamond</span></p>
                             <br>
-                            <btn class="pink-btn" :class="{ locked: day != 1 }" v-if="day != 1">Claim</btn>
+                            <btn class="pink-btn material-symbols-outlined symbols" :class="{ locked: day != 1 }" v-if="day != 1">lock</btn>
                             <btn class="pink-btn" v-else>Claim</btn>
                         </div>
                     </div>
@@ -112,13 +112,14 @@ h1 {
     text-align: left !important;
 }
 
-.diamond{
+.symbols{
     float: right;
 }
-
-/* .material-symbols-outlined {
+/* 
+.material-symbols-outlined {
     float: right;
 }  */
+
 #dailyLogInDiv {
     display: flex;
     flex-direction: row;
