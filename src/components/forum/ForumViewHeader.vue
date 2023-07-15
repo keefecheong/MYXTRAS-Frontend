@@ -86,7 +86,7 @@ export default {
     created() {
         this.workingSubscribe = this.forum.isSubscribed;
         this.savedSubscribe = this.forum.isSubscribed;
-        this.numOfSubs = this.forum.subscribers.length;
+        this.numOfSubs = this.forum.subscribers;
 
         // set debounce function to only send request to update backend if user has not toggled subscribe button for 3 seconds
         this.debouncedSubscribeUpdate = debounce(this.updateSubscribe, 3000);

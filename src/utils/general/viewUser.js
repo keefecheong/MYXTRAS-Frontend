@@ -2,10 +2,13 @@
 
 export function viewUser(userId) {
     sessionStorage.setItem('user', userId);
-    window.location.href = '/profilePage.html';
-}
 
-export function viewFollower(userId) {
-    sessionStorage.setItem('followerId', userId);
-    window.location.href = '/profilePage.html';
+    const profilePageHref = `${import.meta.env.VITE_BASE_URL}/profilePage.html`;
+
+    if (window.location.href != profilePageHref) {
+        window.location.href = '/profilePage.html';
+    }
+    else {
+        location.reload();
+    }
 }
