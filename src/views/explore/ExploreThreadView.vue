@@ -3,14 +3,10 @@
     <div id="gallery-interest-selection" class="">
             <span>Filter by:</span>
 
-            <InterestBadgeList
+            <AddInterestButton
                 :selectedOption="selectedOption"
-                :selection="true"
-                @interest-selected="handleInterestSelected"
+                @selectedInterests="handleInterestSelected"
             />
-
-            <button @click="clearSelection()" id="clearAll-btn">Clear All</button>
-
         </div>
     </div>
     <div class="row" v-if="this.threads">
@@ -61,8 +57,7 @@
 
 <script>
 import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
-import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
-import handleInterestSelected from '../../utils/general/defaultInterestSelectedCallback.js';
+import AddInterestButton from '../../components/general/AddInterestButton.vue';
 import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
 import viewForum from '../../utils/general/viewForum.js';
 
@@ -79,7 +74,7 @@ export default {
     },
     components: {
         ThreadMiniLayout,
-        InterestBadgeList,
+        AddInterestButton,
         ThreadDetailedLayout
     },
     mounted() {
@@ -145,12 +140,8 @@ export default {
             });
             
         },
-        handleInterestSelected(option) {
-            if (this.showDetailedThread) {
-                this.toggleDetailedThread(false, this.selectedIndex);
-            }
-
-            handleInterestSelected(option, this.selectedOption);
+        handleInterestSelected(newOptions) {
+            this.selectedOption = newOptions;
         },
         retrieveForums() {
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/categorized`, {

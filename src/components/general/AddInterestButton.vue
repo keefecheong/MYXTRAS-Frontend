@@ -29,7 +29,7 @@
         />
 
         <!-- button to open popup -->
-        <button type="button" class="btn" id="custom-btn" @click="() => togglePopup(true)">
+        <button type="button" class="btn" id="add-interest-plus-button" @click="() => togglePopup(true)">
             <span class="material-symbols-outlined">add_circle</span>
         </button>
     </div>
@@ -51,8 +51,8 @@
                     style="margin-bottom: 15px"
                 />
 
-                <div id="button-cotainer">
-                    <button @click="clearSelection()" id="clearAll-btn">Clear All</button>
+                <div id="button-container">
+                    <button @click="clearSelection()" id="clear-all-btn">Clear All</button>
                     <button @click="confirmSelection()" id="confirm-btn">Confirm</button>
                 </div>
             </div>
@@ -85,8 +85,7 @@ export default{
         }
     },
     emits: [
-        'selectedInterests',
-        'clearAll'
+        'selectedInterests'
     ],
     methods:{
         // toggle interest selection popup
@@ -100,10 +99,9 @@ export default{
             this.togglePopup(false);
         },
 
-        // confirm selected interests and close popup
+        // clear the selected options
         clearSelection() {
             this.workingSelectedOption = [];
-            this.$emit('clearAll', this.workingSelectedOption);
         },
 
         // add/remove selected interest
@@ -146,7 +144,13 @@ export default{
     color: black;
 }
 
-#confirm-btn{
+#button-container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
+}
+
+#confirm-btn, #clear-all-btn {
     width: 10em;
     color: white;
     border: none;
@@ -155,24 +159,13 @@ export default{
     padding: 10px 12px;
 }
 
-
-#clearAll-btn{
-    width: 10em;
-    color: white;
-    border: none;
-    background: linear-gradient(45deg,#FF6363, #E53A73);
-    border-radius: 10px;
-    padding: 10px 12px;
-    margin-right: 5px;
-}
-
-#custom-btn{
+#add-interest-plus-button{
     color: #E53A73;
     border: none;
     outline: none;
 }
 
-#custom-btn .material-symbols-outlined {
+#add-interest-plus-button .material-symbols-outlined {
     color: inherit;
     scale: 1.3;
 }
