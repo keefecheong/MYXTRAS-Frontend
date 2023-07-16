@@ -13,56 +13,12 @@
                 </div>
                 <div class="right-content">
                     <div id="scroll-view">
-                        <!-- <div class="dayBox" id="day1">
-                            <p>Day 1</p>
-                            <p>50 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
-                            <br>
-                            <btn class="pink-btn">Claim</btn>
-                        </div>
-                        <div class="dayBox" id="day2">
-                            
-                            <p>Day 2</p>
-                            <p>100 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
-                            <br>
-                            <btn class="pink-btn material-symbols-outlined locked">lock</btn>
-                        </div>
-                        <div class="dayBox" id="day3">
-                            <p>Day 3</p>
-                            <p>100 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
-                            <br>
-                            <btn class="pink-btn material-symbols-outlined locked">lock</btn>
-                        </div>
-                        <div class="dayBox" id="day4">
-                            <p>Day 4</p>
-                            <p>100 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
-                            <br>
-                            <btn class="pink-btn material-symbols-outlined locked">lock</btn>
-                        </div>
-                        <div class="dayBox" id="day5">
-                            <p>Day 5</p>
-                            <p>100 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
-                            <br>
-                            <btn class="pink-btn material-symbols-outlined locked">lock</btn>
-                        </div>
-                        <div class="dayBox" id="day6">
-                            <p>Day 6</p>
-                            <p>100 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
-                            <br>
-                            <btn class="pink-btn material-symbols-outlined locked">lock</btn>
-                        </div>
-                        <div class="dayBox" id="day7">
-                            <p>Day 7</p>
-                            <p>100 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
-                            <br>
-                            <btn class="pink-btn material-symbols-outlined locked">lock</btn>
-                        </div> -->
-
                         <div v-for="day in 7" :key="day" class="dayBox" :id="'day' + day">
                             <p>Day {{ day }}</p>
                             <p>{{ day == 1 ? '50' : '100' }} <span class="material-symbols-outlined symbols" style="color: aqua;">diamond</span></p>
                             <br>
                             <btn class="pink-btn material-symbols-outlined symbols" :class="{ locked: day != 1 }" v-if="day != 1">lock</btn>
-                            <btn class="pink-btn" v-else>Claim</btn>
+                            <btn class="pink-btn" v-else><p>Claim</p></btn>
                         </div>
                     </div>
                 </div>
@@ -78,7 +34,7 @@
                             <div class="d-flex">
                                 <p>{{ mission.gem_count }}</p>
                                 <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                                <btn class="pink-btn">Claim</btn>
+                                <btn class="pink-btn"><p>Claim</p></btn>
                             </div>
                         </div>
                     </div>
@@ -92,7 +48,7 @@
                             <div class="d-flex">
                                 <p>500</p>
                                 <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                                <btn class="pink-btn">Claim</btn>
+                                <btn class="pink-btn"><p>Claim</p></btn>
                             </div>
                         </div>
                     </div>
@@ -116,11 +72,6 @@ h1 {
 .symbols{
     float: right;
 }
-/* 
-.material-symbols-outlined {
-    float: right;
-}  */
-
 #dailyLogInDiv {
     display: flex;
     flex-direction: row;
@@ -129,6 +80,7 @@ h1 {
     min-height: 40vh;
     margin-left: -20px;
 }
+
 #dailyTasksDiv {
     background-color: #1C1B25;
     padding: 50px 100px 50px 100px;
@@ -148,6 +100,8 @@ h1 {
     width: 60vw;
 }
 .dayBox {
+    display: flex;
+    flex-direction: column;
     background-color: #133B5B;
     border-radius: 5px;
     margin: 0 25px;
@@ -159,7 +113,7 @@ h1 {
     background-color: var(--primary);
     color:white;
     border-radius: 10px;
-    padding: 10px;
+    padding: 0.5em;
 }
 .pink-btn:hover {
     background-color: transparent;
@@ -200,13 +154,13 @@ h1 {
 }
 @keyframes neonGlow {
   0% {
-    box-shadow: 0 0 5px #d81515, 0 0 20px #1809e7, 0 0 40px #a5ff0a, 0 0 60px var(--primary), 0 0 80px var(--primary);
+    box-shadow: 0 0 5px #d81515, 0 0 10px #ff0000, 0 0 30px #fefffb, 0 0 60px var(--primary), 0 0 80px var(--primary);
   }
   50% {
-    box-shadow: 0 0 5px #d81515, 0 0 20px #1809e7, 0 0 40px var(--primary), 0 0 60px var(--primary), 0 0 80px var(--primary);
+    box-shadow: 0 0 5px #d81515, 0 0 10px #ff0000, 0 0 30px var(--primary), 0 0 60px var(--primary), 0 0 80px var(--primary);
   }
   100% {
-    box-shadow: 0 0 5px #d81515, 0 0 20px var(--primary), 0 0 40px var(--primary), 0 0 60px var(--primary), 0 0 80px var(--primary);
+    box-shadow: 0 0 5px #d81515, 0 0 10px var(--primary), 0 0 30px var(--primary), 0 0 60px var(--primary), 0 0 80px var(--primary);
   }
 }
 </style>
