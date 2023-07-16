@@ -8,7 +8,7 @@
         {{ confirmMsg }}
     </ConfirmPrompt>
 
-    <LoadingOverlay v-if="viewingSaved && !savedLoaded" :center="true" :backgroundColor="'rgba(0, 0, 0, 0.5)'" />
+    <LoadingOverlay v-if="(viewingSaved && !savedLoaded) || handlingBlock" :center="true" :backgroundColor="'rgba(0, 0, 0, 0.5)'" />
     
     <div id="main-container">
         <NavSidebar />
@@ -54,14 +54,21 @@
                                 </a>
                             </div>
 
-                            <div id="sign-out-container" @click="signOut" v-if="isSelf">
+                            <div id="sign-out-container" @click="signOut" v-if="isSelf" title="Sign out">
                                 <span id="user-sign-out-icon" class="bi bi-box-arrow-right"></span>
                                 <span id="user-sign-out-text">Sign out</span>
                             </div>
 
-                            <button v-if="!isSelf" @click="toggleFollow" :class="following ? 'follow-btn followed' : 'follow-btn'">{{ following ? 'Followed' : 'Follow' }}</button>
+                            <div v-if="!blockedByUser && !blockingUser" id="user-actions-container">
+                                <button v-if="!isSelf" @click="toggleFollow" id="follow-btn" :class="{ 'followed': following }">{{ following ? 'Followed' : 'Follow' }}</button>
+    
+                                <button v-if="!isSelf" id="msg-btn" @click="createChat">Message</button>
+                            </div>
 
-                            <button v-if="!isSelf" class="msg-btn" @click="createChat">Message <span class="material-symbols-outlined">Chat</span></button>
+                            <div id="block-user-container" @click="blockUser" v-if="!isSelf" :title="blockingUser ? 'Unblock this user' : 'Block this user'">
+                                <span class="material-symbols-outlined">block</span>
+                                <span>{{ blockingUser ? 'Unblock' : 'Block' }}</span>
+                            </div>
                         </div>
                     </div>
 
@@ -74,11 +81,11 @@
                             <span class="sub-navigation" :class="{ 'active': viewingSaved }" @click="() => viewSaved(true)">Saved</span>
                         </div>
                         
-                        <div v-if="blogsToDisplay.length > 0">
+                        <div v-if="blogsToDisplay.length > 0 && !blockedByUser && !blockingUser">
                             <BlogLayout v-for="blog in blogsToDisplay" :key="blog._id" :blog="blog" />
                         </div>
 
-                        <div v-else id="profile-no-posts">
+                        <div v-if="blogsToDisplay.length <= 0 || blockedByUser || blockingUser" id="profile-no-posts">
                             <p>No posts {{ viewingSaved ? 'saved' : 'created' }}.</p>
                         </div>
                     </div>
@@ -131,7 +138,7 @@ import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 import ObjectID from 'bson-objectid';
-import { viewFollower } from '../../utils/general/viewUser.js';
+import { viewUser } from '../../utils/general/viewUser.js';
 import signOut from '../../utils/authentication/signOut';
 import { debounce } from 'lodash';
 import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
@@ -156,6 +163,10 @@ export default {
             self: null,
             isSelf: false,
 
+            blockedByUser: false,
+            blockingUser: false,
+            handlingBlock: false,
+
             banner: banner,
             blogs: [],
             savedBlogs: [],
@@ -169,7 +180,7 @@ export default {
             debouncedFollowUpdate: null,
 
             showCreateBlog: false,
-            refreshFlag: false,
+            
             alertStore: useAlertStore(),
             confirmStore: useConfirmStore()
         }
@@ -181,22 +192,11 @@ export default {
             sessionStorage.removeItem('tempUser');
         }
         else {
-            // if 'followerId' is present in sessionStorage then view that profile
-            const followerId = sessionStorage.getItem('followerId');
             const userId = sessionStorage.getItem('user');
 
-            if (followerId) {
-                this.targetUserId = followerId;
-                sessionStorage.removeItem('followerId');
-            }
-            // otherwise if 'user' is present in sessionStorage then view that profile
-            else if (userId) {
-                this.targetUserId = userId;
-            }
-            // default to self
-            else {
-                this.targetUserId = 'self';
-            }
+            // if 'user' is present in sessionStorage then view that profile
+            // otherwise default to 'self'
+            this.targetUserId = userId || 'self';
         }
 
         // initialize data
@@ -224,7 +224,8 @@ export default {
         // tempUser will be used to continue viewing the current user if page refreshes
         // if user goes to another page 'user' field will be unset - prevent profile page stuck on a user
         handleUnload() {
-            sessionStorage.setItem('tempUser', this.user._id);
+            const currentUser = sessionStorage.getItem('user') || this.user._id;
+            sessionStorage.setItem('tempUser', currentUser);
             sessionStorage.removeItem('user');
         },
         // to get user profile and associated posts
@@ -247,6 +248,10 @@ export default {
                     this.following = data.isFollowing;
                     this.savedFollowing = data.isFollowing;
                     this.followerCount = data.user.followers.length;
+
+                    // set block status
+                    this.blockedByUser = data.blockedByUser;
+                    this.blockingUser = data.blockingUser;
                 });
             }).catch(error => {
                 console.log(error);
@@ -377,7 +382,7 @@ export default {
         },
         // to view follower user profile
         viewFollower(userId) {
-            viewFollower(userId);
+            viewUser(userId);
         },
         // to create chat with the user and go to chat.html
         async createChat() {
@@ -429,6 +434,33 @@ export default {
             }
 
             this.viewingSaved = viewSaved;
+        },
+        // to block/unblock a user
+        async blockUser() {
+            const confirmBlock = await this.confirmStore.confirm(`Are you sure you want to ${this.blockingUser ? 'unblock' : 'block'} this user?`);
+
+            if (!confirmBlock) {
+                return;
+            }
+
+            this.handlingBlock = true;
+
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/block/${this.user._id}`, {
+                method: this.blockingUser ? 'DELETE' : 'POST',
+                mode: 'cors',
+                credentials: 'include'
+            }).then(async res => {
+                await res.json().then(async data => {
+                    await this.alertStore.alert(data.message);
+
+                    // only update blockingUser if response is ok (block/unblock succeeded)
+                    if (res.ok) {
+                        this.blockingUser = !this.blockingUser;
+                    }
+
+                    this.handlingBlock = false;
+                });
+            });
         }
     },
     computed: {
@@ -538,6 +570,7 @@ export default {
     display: flex;
     flex-direction: row;
     padding: 30px;
+    column-gap: 30px;
 }
 
 #header-user-details-container {
@@ -568,20 +601,37 @@ export default {
     display: flex;
     flex-direction: column;
     row-gap: 20px;
-    align-items: center;
+    align-items: end;
+    flex-grow: 1;
+    flex-basis: 10%;
+    width: 100%;
+    justify-content: center;
 }
 
-#sign-out-container {
+#user-actions-container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 15px;
+}
+
+#sign-out-container, #block-user-container {
     display: flex;
     flex-direction: row;
     column-gap: 10px;
-}
-#sign-out-container {
     cursor: pointer;
-}
-#user-sign-out-icon, #user-sign-out-text {
     color: #dd1217;
     font-size: 1.2rem;
+    align-items: center;
+}
+
+#sign-out-container:hover, #block-user-container:hover {
+    opacity: 0.7;
+}
+
+#block-user-container, #block-user-container .material-symbols-outlined {
+    font-size: 1em;
+    column-gap: 5px;
+    color: #dd1217;
 }
 
 #user-edit-icon {
@@ -668,18 +718,6 @@ export default {
     position: relative;
 }
 
-.forum-name {
-    margin-top: 25px;
-    font-family: Quicksand;
-    font-weight: lighter;
-}
-
-.forum-description {
-    margin-top: -20px;
-    font-weight: Quicksand;
-    font-weight: medium;
-}
-
 .floating-button-wrapper {
     position: sticky;
     bottom: 20px;
@@ -704,56 +742,49 @@ export default {
     font-size: 24px;
 }
 
-.follow-btn {
+#follow-btn, #block-btn, #msg-btn {
     background-color: transparent;
-    border: var(--primary) solid 3.5px;
+    border: var(--primary) solid 3px;
     color: var(--primary);
     border-radius: 10px;
-    height: 3rem;
-    width: 9rem;
+    width: 50%;
+    padding: 5px 10px;
     transition: all 0.3s;
 }
 
-.follow-btn:hover {
+#follow-btn:hover, #block-btn:hover {
     background-color: var(--primary);
     color: white;
 }
 
-.followed {
+#follow-btn.followed, #block-btn.blocked {
     background-color: var(--primary);
     color: white;
 }
 
-.followed:hover {
+#follow-btn.followed:hover, #block-btn.blocked:hover {
     background-color: transparent;
     color: var(--primary);
 }
 
-.msg-btn {
-    display: flex;
-    border-radius: 10px;
-    height: 3rem;
-    width: 9rem;
-    align-items: center;
-    padding-left: 25px;
-    background-color: transparent;
-    border: var(--dark) solid 3.5px;
+#msg-btn {
     color: var(--dark);
+    border-color: var(--dark);
     transition: all 0.3s;
 }
 
-.msg-btn:hover {
+#msg-btn:hover {
     background-color: var(--dark);
     color: white;
 }
 
-.msg-btn .material-symbols-outlined {
+#msg-btn .material-symbols-outlined {
     color: var(--dark);
     font-size: 1.3rem;
     transition: all 0.3s;
 }
 
-.msg-btn:hover .material-symbols-outlined {
+#msg-btn:hover .material-symbols-outlined {
     color: white;
     opacity: 1;
 }

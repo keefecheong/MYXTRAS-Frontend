@@ -93,18 +93,10 @@ export default {
         initChat() {
             var selectedChat = sessionStorage.getItem('selectedChat');
 
-            // check if selectedChat is set
-            if (selectedChat) {
-                selectedChat = JSON.parse(selectedChat);
-
-                // add chat to store if does not already exist
-                if (!this.store.chats.some(chat => chat.targetUserId == selectedChat.targetUserId)) {
-                    this.store.chats.push(selectedChat);
-                }
-
-                // set currentChat to selectedChat
-                this.store.currentChat = selectedChat;
-            }
+            this.store.newChat(JSON.parse(selectedChat));
+            
+            // set currentChat to selectedChat
+            this.store.currentChat = selectedChat;
 
             sessionStorage.removeItem('selectedChat');
         },

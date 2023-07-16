@@ -90,7 +90,8 @@
         </div>
 
         <!-- actions - contains like and comment -->
-        <div class="row blog-actions">
+        <!-- hide if user is blocked -->
+        <div class="row blog-actions" v-if="!blog.blocked">
             <!-- actions for all users -->
             <div class="blog-normal-actions row">
                 <!-- like button -->
@@ -147,7 +148,7 @@
         </div>
 
         <!-- comments - contains the comments posted -->
-        <div v-if="showComments && blog.comments_enabled" class="row blog-comments-container">
+        <div v-if="!blog.blocked && showComments && blog.comments_enabled" class="row blog-comments-container">
             <!-- form to create new comment -->
             <form class="create-comment-form" @submit.prevent="createComment">
                 <DynamicTextarea v-model="commentText" :placeholder="'Add a comment...'" :maxRows="5" />
@@ -191,7 +192,7 @@
         <p>Post deleted.</p>
     </div>
 
-    <BlogFormLayout v-if="editMode" :editMode="true" :blog="blog" @close-blog-form="() => editPost(false)" />
+    <BlogFormLayout v-if="blog.isOwner && editMode" :editMode="true" :blog="blog" @close-blog-form="() => editPost(false)" />
 </template>
 
 <style>
@@ -448,27 +449,33 @@ import { debounce } from 'lodash';
 export default {
     data() {
         return {
-            dateCreated: '',
-            modified: false,
             uniqueId: 'a' + this.blog._id,
             currentId: 1,
             showPrev: false,
             showNext: false,
+
+            dateCreated: '',
+            modified: false,
             caption: '',
             deleted: false,
+
             showComments: false,
             commentsLoaded: false,
             commentText: '',
             commentData: [],
             submittingComment: false,
+            
+            likeCount: 0,
             savedLike: false,
             liked: false,
             debouncedLikeUpdate: null,
-            likeCount: 0,
+            
             editMode: false,
+            
             savedSaved: false,
             saved: false,
             debouncedSaveUpdate: null,
+            
             alert: useAlertStore().alert,
             confirm: useConfirmStore().confirm
         };
@@ -642,7 +649,7 @@ export default {
         },
         // handle updating of save status to backend
         async updateSave() {
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/users/save/post/${this.blog._id}`;
+            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/users/save/user/${this.blog.creator_id._id}/post/${this.blog._id}`;
             const options = {
                 mode: 'cors',
                 credentials: 'include'

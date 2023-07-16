@@ -40,6 +40,7 @@
                         :previous_creation_time="previous_creation_time(index)" 
                         :previous_is_sender="previous_is_sender(index)"
                         :name="chat.name"
+                        :blocked="chat.blocked"
                         :key="index"
                         @edit-message="editMessage"
                         @delete-message="deleteMessage"
@@ -62,28 +63,34 @@
 
         <!-- container for message input -->
         <div id="chat-interface-input">
-            <form @submit.prevent="sendMessage">
-                <DynamicTextarea 
-                    title="Enter your message"
-                    :id="'chat-message-input'"
-                    :maxRows="5"
-                    :placeholder="'Message...'"
-                    v-model="messageText"
-                    @input="updateTypingStatus"
-                    @keydown.enter.exact.prevent="sendMessage"
-                />
+            <div v-if="!chat.blocked">
+                <form @submit.prevent="sendMessage">
+                    <DynamicTextarea 
+                        title="Enter your message"
+                        :id="'chat-message-input'"
+                        :maxRows="5"
+                        :placeholder="'Message...'"
+                        v-model="messageText"
+                        @input="updateTypingStatus"
+                        @keydown.enter.exact.prevent="sendMessage"
+                    />
+    
+                    <button title="Add a file" type="button" @click="() => toggleFileInput(true)">
+                        <span class="material-symbols-outlined">Attach_file</span>
+                    </button>
+    
+                    <button title="Send message" type="submit">
+                        <span class="material-symbols-outlined" id="chat-message-send">Send</span>
+                    </button>
+                </form>
+            </div>
 
-                <button title="Add a file" type="button" @click="() => toggleFileInput(true)">
-                    <span class="material-symbols-outlined">Attach_file</span>
-                </button>
-
-                <button title="Send message" type="submit">
-                    <span class="material-symbols-outlined" id="chat-message-send">Send</span>
-                </button>
-            </form>
+            <div v-else id="chat-interface-blocked">
+                <span>Unable to send messages to this user.</span>
+            </div>
         </div>
 
-        <div id="chat-file-upload-container" v-if="fileInput">
+        <div id="chat-file-upload-container" v-if="!chat.blocked && fileInput">
             <div id="chat-file-upload">
                 <span id="close-file-input" class="material-symbols-outlined" @click="() => toggleFileInput(false)">Close</span>
 
@@ -220,10 +227,18 @@ export default {
     methods: {
         // to focus on message input field
         inputFocus() {
-            document.getElementById('chat-message-input').focus();
+            const messageInput = document.getElementById('chat-message-input');
+            if (messageInput) {
+                messageInput.focus();
+            }
         },
         // to send message to backend
         async sendMessage() {
+            // do nothing if either user blocked the other user
+            if (this.chat.blocked) {
+                return;
+            }
+            
             // if file input mode is inactive,
             // if no message is entered then do nothing
             if (!this.fileInput) {
@@ -368,6 +383,11 @@ export default {
         },
         // to edit message and update backend
         editMessage(data) {
+            // do nothing if either user blocked the other user
+            if (this.chat.blocked) {
+                return;
+            }
+            
             socket.emit('edit-message', {
                 message: {
                     _id: data.messageId,
@@ -383,6 +403,11 @@ export default {
         },
         // to delete message and update backend
         deleteMessage(data) {
+            // do nothing if either user blocked the other user
+            if (this.chat.blocked) {
+                return;
+            }
+            
             const message = {
                 _id: data.messageId,
                 chat_id: this.chat._id,
@@ -404,6 +429,11 @@ export default {
         // status changes to typing whenever user presses a key
         // status changes back to after 1s from the last keypress
         updateTypingStatus() {
+            // do nothing if either user blocked the other user
+            if (this.chat.blocked) {
+                return;
+            }
+            
             // only update typing status if other user is online
             // if currentStatus is offline or null then do nothing
             if ((this.currentStatus == this.status.offline) || (!this.currentStatus)) {
@@ -453,14 +483,16 @@ export default {
         },
         // callback for 'update-user-presence' event
         updateUserPresence(data) {
+            // only update if both users are not blocking each other
             // if event is for the current target user then update presence status
-            if (data.userId == this.chat.targetUserId) {
+            if (!this.chat.blocked && data.userId == this.chat.targetUserId) {
                 this.updateOnlineStatus(data.online);
             }
         },
         // callback for 'receive-user-typing' event
         updateUserTyping(data) {
-            if (data.userId == this.chat.targetUserId) {
+            // only update if both users are not blocking each other
+            if (!this.chat.blocked && data.userId == this.chat.targetUserId) {
                 // if event is for the current target user
                 // if user is typing then set status to typing
                 if (data.typing) {
@@ -721,6 +753,11 @@ export default {
 #chat-interface-input {
     border-top: 1px solid lightgray;
     padding: 15px;
+}
+
+#chat-interface-blocked {
+    font-style: italic;
+    text-align: center;
 }
 
 #chat-interface-input form, #chat-file-interface-input {

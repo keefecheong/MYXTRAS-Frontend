@@ -3,45 +3,47 @@
         <NavSidebar/>
         <div id="main-content">
             <div id="header">
-                <h1 id="title">Banned Users</h1>
+                <h1 id="title">Logs</h1>
             </div>
 
             <div id="logs_header" class="row">
-                <div class="col-sm-1">
-                    <p id="header_content"></p>
+                <div class="col-sm-2">
+                    <p id="header_content">ID</p>
                 </div> 
                 <div class="col-sm-2">
-                    <p id="header_content">Real Name</p>
+                    <p id="header_content">Moderator</p>
                 </div>      
                 <div class="col-sm-2">
-                    <p id="header_content">Username</p>
-                </div>     
-                <div class="col-sm-3">
-                    <p id="header_content">Reason of Termination</p>
+                    <p id="header_content">Time</p>
                 </div>     
                 <div class="col-sm-2">
-                    <p id="header_content">Date of Termination</p>
+                    <p id="header_content">Action</p>
+                </div>     
+                <div class="col-sm-2">
+                    <p id="header_content">Details</p>
                 </div>                
                 <div class="col-sm-2">
                     <p></p>
                 </div>      
             </div>
 
+
             <div id="logs_content" class="row">
-                <div class="col-sm-1">
-                    <img :src="profilePicture" alt="Profile Picture" id="profile-picture"/>
+                <div class="col-sm-2">
+                    <p>1235</p>
                 </div> 
                 <div class="col-sm-2">
-                    <p>Ching Chong Seng</p>
+                    <p>AI</p>
                 </div>      
                 <div class="col-sm-2">
-                    <p>@wakakaka</p>
-                </div>     
-                <div class="col-sm-3">
-                    <p>Posted graphical content into the blogs...</p>
+                    <p>12-1-23, 5:55PM</p>
                 </div>     
                 <div class="col-sm-2">
-                    <p>12-3-23, 5:10PM</p>
+                    <span class="material-symbols-outlined delete" title="Blog Deletion">delete</span>
+                    <p class="blogDeletion"> Blog Deletion</p>
+                </div>     
+                <div class="col-sm-2">
+                    <p>Detected nudity content</p>
                 </div>                
                 <div class="col-sm-2">
                     <button id="viewMoreButton">View more</button>
@@ -51,20 +53,21 @@
             <hr>
 
             <div id="logs_content" class="row">
-                <div class="col-sm-1">
-                    <img :src="profilePicture" alt="Profile Picture" id="profile-picture"/>
+                <div class="col-sm-2">
+                    <p>1234</p>
                 </div> 
                 <div class="col-sm-2">
-                    <p>Ching Chong Seng</p>
+                    <p>AI</p>
                 </div>      
                 <div class="col-sm-2">
-                    <p>@wakakaka</p>
-                </div>     
-                <div class="col-sm-3">
-                    <p>Posted graphical content into the blogs...</p>
+                    <p>12-1-23, 5:43PM</p>
                 </div>     
                 <div class="col-sm-2">
-                    <p>12-3-23, 5:10PM</p>
+                    <span class="material-symbols-outlined censor" title="Censor">hide_source</span>
+                    <p class="censorText"> Censor</p>
+                </div>     
+                <div class="col-sm-2">
+                    <p>Detected racist comments in caption</p>
                 </div>                
                 <div class="col-sm-2">
                     <button id="viewMoreButton">View more</button>
@@ -74,20 +77,21 @@
             <hr>
 
             <div id="logs_content" class="row">
-                <div class="col-sm-1">
-                    <img :src="profilePicture" alt="Profile Picture" id="profile-picture"/>
+                <div class="col-sm-2">
+                    <p>1233</p>
                 </div> 
                 <div class="col-sm-2">
-                    <p>Ching Chong Seng</p>
+                    <p>Human</p>
                 </div>      
                 <div class="col-sm-2">
-                    <p>@wakakaka</p>
-                </div>     
-                <div class="col-sm-3">
-                    <p>Posted graphical content into the blogs...</p>
+                    <p>12-1-23, 5:13PM</p>
                 </div>     
                 <div class="col-sm-2">
-                    <p>12-3-23, 5:10PM</p>
+                    <span class="material-symbols-outlined delete" title="Blog Deletion">delete</span>
+                    <p class="blogDeletion"> Blog Deletion</p>
+                </div>     
+                <div class="col-sm-2">
+                    <p>Detected graphical content</p>
                 </div>                
                 <div class="col-sm-2">
                     <button id="viewMoreButton">View more</button>
@@ -97,27 +101,26 @@
             <hr>
 
             <div id="logs_content" class="row">
-                <div class="col-sm-1">
-                    <img :src="profilePicture" alt="Profile Picture" id="profile-picture"/>
+                <div class="col-sm-2">
+                    <p>1232</p>
                 </div> 
                 <div class="col-sm-2">
-                    <p>Ching Chong Seng</p>
+                    <p>AI</p>
                 </div>      
                 <div class="col-sm-2">
-                    <p>@wakakaka</p>
-                </div>     
-                <div class="col-sm-3">
-                    <p>Posted graphical content into the blogs...</p>
+                    <p>12-1-23, 5:05PM</p>
                 </div>     
                 <div class="col-sm-2">
-                    <p>12-3-23, 5:10PM</p>
+                    <span class="material-symbols-outlined censor" title="Censor">hide_source</span>
+                    <p class="censorText"> Censor</p>
+                </div>     
+                <div class="col-sm-2">
+                    <p>Detected vulgarities in comment section</p>
                 </div>                
                 <div class="col-sm-2">
                     <button id="viewMoreButton">View more</button>
                 </div>      
             </div>
-
-            <hr>
 
         </div>
     </div>
@@ -129,12 +132,6 @@ import NavSidebar from '../../../components/admin/adminNavSidebar.vue';
 export default {
     components: {
         NavSidebar,
-    },
-
-    data(){
-        return{
-            profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/003/337/584/small/default-avatar-photo-placeholder-profile-icon-vector.jpg'
-        }
     }
 }
 </script>
@@ -183,11 +180,22 @@ export default {
     justify-content: center;
 }
 
-#profile-picture{
-    border-radius: 50%;
-    max-height: 58%;
-    margin-left: -50px;
-    margin-top: -36px;
+.delete{
+    color: #FF0000;
+    float: left;
+}
+
+.blogDeletion{
+    color:#FF0000
+}
+
+.censor{
+    color: #1C1B1F;
+    float: left;
+}
+
+.censorText{
+    color: #1C1B1F;
 }
 
 #viewMoreButton{
@@ -198,5 +206,5 @@ export default {
     border-radius: 5px;
 }
 
-
 </style>
+

@@ -211,7 +211,7 @@ export default {
     computed: {
         // get number of subscribers
         numOfSubs() {
-            return this.forum.subscribers.length;
+            return this.forum.subscribers;
         },
         // to get showAlert value
         showAlert() {

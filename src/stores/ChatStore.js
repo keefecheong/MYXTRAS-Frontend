@@ -8,7 +8,7 @@ export const useChatStore = defineStore('chatStore', {
         currentChat: useSessionStorage('currentChat', {}),
         
         // chats store the chats enrolled by the user
-        chats: useLocalStorage('chats', []),
+        chats: useSessionStorage('chats', []),
 
         // messages store the messages associated with the chats in 'chats'
         messages: {}
@@ -57,14 +57,51 @@ export const useChatStore = defineStore('chatStore', {
                 if (newTimestamp - currentTimestamp > 0) {
                     existingChat.last_message_timestamp = chat.last_message_timestamp;
                 }
+
+                // check if the same blocked field is set and use the new one if different
+                if (chat.blocked != existingChat.blocked) {
+                    existingChat.blocked = chat.blocked;
+                }
+
+                // if currentChat is this chat then update values
+                if (this.currentChat._id == chat._id) {
+                    this.currentChat = chat;
+                }
             }
         },
         // receives an array of chats and only add those that do not already exist to chats
         newChatBulk(chats) {
-            const nonConflictingChats = chats.filter(chat => !this.chats.some(existingChat => existingChat._id == chat._id));
-            this.chats = this.chats.concat(nonConflictingChats);
+            const existingChats = [...this.chats];
+            const chatsToAdd = [];
 
-            nonConflictingChats.forEach(chat => {
+            chats.forEach(chat => {
+                // check if chat exists
+                const existingChatIndex = existingChats.findIndex(existingChat => existingChat._id == chat._id);
+
+                // check if new chat is different from existing chat
+                const chatDiff = existingChats.some(existingChat => JSON.stringify(existingChat) == JSON.stringify(chat));
+
+                // if chat does not exist then just add
+                if (existingChatIndex == -1) {
+                    chatsToAdd.push(chat);
+                }
+                else {
+                    // otherwise use the new chat's values if different
+                    if (chatDiff) {
+                        chatsToAdd.push(chat);
+                        existingChats.splice(existingChatIndex, 1);
+
+                        // if currentChat is this chat then update values
+                        if (this.currentChat._id == chat._id) {
+                            this.currentChat = chat;
+                        }
+                    }
+                }
+            });
+            
+            this.chats = existingChats.concat(chatsToAdd);
+
+            chatsToAdd.forEach(chat => {
                 this.initMessages(chat._id);
             });
         },

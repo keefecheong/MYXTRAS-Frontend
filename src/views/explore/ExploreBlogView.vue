@@ -5,13 +5,10 @@
             <div id="gallery-interest-selection" class="sticky-filter">
                 <span>Filter by:</span>
 
-                <InterestBadgeList
+                <AddInterestButton
                     :selectedOption="selectedOption"
-                    :selection="true"
-                    @interest-selected="handleInterestSelected"
+                    @selectedInterests="handleInterestSelected"
                 />
-
-                <button @click="clearSelection()" id="clearAll-btn">Clear All</button>
             </div>
 
             <div id="explore-blog-gallery" v-if="filteredBlogs.length > 0">
@@ -54,8 +51,7 @@
 <script>
 import BlogExploreLayout from '../../components/blog/BlogExploreLayout.vue';
 import ExploreSingleBlogLayout from '../../components/blog/ExploreSingleBlogLayout.vue';
-import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
-import handleInterestSelected from '../../utils/general/defaultInterestSelectedCallback.js';
+import AddInterestButton from '../../components/general/AddInterestButton.vue';
 
 export default {
     data() {
@@ -72,7 +68,7 @@ export default {
     components: {
         BlogExploreLayout,
         ExploreSingleBlogLayout,
-        InterestBadgeList
+        AddInterestButton
     },
     updated() {
         // scroll to blog if coming back from single blog view
@@ -106,12 +102,8 @@ export default {
             }
         },
         // handle interest-selected event to update filtered blogs
-        handleInterestSelected(option) {
-            handleInterestSelected(option, this.selectedOption);
-        },
-
-        clearSelection(){
-            this.selectedOption = [];
+        handleInterestSelected(newOptions) {
+            this.selectedOption = newOptions;
         }
     },
     computed: {
@@ -151,16 +143,6 @@ figure {
     margin: 0 auto;
     margin-bottom: 40px;
     position: relative;
-}
-
-#clearAll-btn{
-    width: 6em;
-    color: white;
-    border: none;
-    background: linear-gradient(45deg,#FF6363, #E53A73);
-    border-radius: 10px;
-    padding: 7px 7px;
-    margin-right: 5px;
 }
 
 #gallery-container {

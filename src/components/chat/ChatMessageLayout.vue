@@ -58,7 +58,7 @@
                     </div>
                 </div>
     
-                <div class="message-actions-container" v-if="displayMore">
+                <div class="message-actions-container" v-if="!this.blocked && displayMore">
                     <span class="material-symbols-outlined" @click="toggleMessageActions" title="More actions">more_vert</span>
                     
                     <div class="message-actions" v-if="displayMore && displayActions">
@@ -90,7 +90,7 @@
             </div>
 
             <!-- layout for editing message (only for senders) -->
-            <div class="edit-message" v-if="editMode && message.is_sender">
+            <div class="edit-message" v-if="!this.blocked && editMode && message.is_sender">
                 <form :id="'form-' + index">
                     <DynamicTextarea 
                         title="Enter your message"
@@ -133,7 +133,8 @@ export default {
         'message',
         'previous_is_sender',
         'previous_creation_time',
-        'name'
+        'name',
+        'blocked'
     ],
     components: {
         ChatFileLayout,
@@ -155,24 +156,22 @@ export default {
         // to show more actions menu
         showMore() {
             // only change displayMore to true if not in edit mode
-            if (!this.editMode) {
+            if (!this.blocked && !this.editMode) {
                 this.displayMore = true;                
             }
         },
         // to hide more actions menu
         hideMore(e) {
-            // check if the cursor is within the message div
-            // only hide more actions menu if the cursor is outside the message div
-            if (!document.getElementById(this.index).contains(e.relatedTarget)) {
-                this.displayMore = false;
+            this.displayMore = false;
 
-                // also change displayActions back to default
-                this.displayActions = false;
-            }
+            // also change displayActions back to default
+            this.displayActions = false;
         },
         // to toggle actions menu
         toggleMessageActions() {
-            this.displayActions = !this.displayActions;
+            if (!this.blocked) {
+                this.displayActions = !this.displayActions;
+            }
         },
         // to show edit message interface
         enterEdit() {
