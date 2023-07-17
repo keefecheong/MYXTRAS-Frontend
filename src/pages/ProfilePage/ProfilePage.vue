@@ -427,10 +427,10 @@ export default {
             location.href = '/chat.html';
         },
         // to toggle between created and saved blogs
-        viewSaved(viewSaved) {
+        async viewSaved(viewSaved) {
             // if user is viewing his own profile and toggles to saved posts, retrieved saved posts if not already retrieved
             if (viewSaved && this.isSelf && !this.savedLoaded) {
-                this.getSavedPosts();
+                await this.getSavedPosts();
             }
 
             this.viewingSaved = viewSaved;
