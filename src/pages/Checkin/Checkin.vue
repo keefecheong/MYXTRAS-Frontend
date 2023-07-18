@@ -28,11 +28,11 @@
                 <div id="missionsContainer" >
                     <div id="missionContainer" v-for="mission in missions">
                         <div class="left-content">
-                            <p>{{ mission }}</p>
+                            <p>{{ mission.title }}</p>
                         </div>
                         <div class="right-content d-flex justify-content-end">
                             <div class="d-flex">
-                                <!-- <p>{{ mission.gem_count }}</p> -->
+                                <p>{{ mission.gem_count }}</p>
                                 <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
                                 <btn class="pink-btn"><p>Claim</p></btn>
                             </div>
@@ -182,14 +182,14 @@ export default {
     methods: {
         async initData(){
             // get user profile and follow status
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/missions`, {
                 methods: 'GET',
                 credentials: 'include',
                 mode: 'cors'
             }).then(async (res) => {
                 await res.json().then(data => {
                     // save user data
-                    this.missions = data.daily_missions
+                    this.missions = data
                 });
             }).catch(error => {
                 console.log(error);
