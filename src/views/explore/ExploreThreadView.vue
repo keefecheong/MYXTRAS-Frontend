@@ -32,6 +32,7 @@
             <div v-else>
                 <ThreadDetailedLayout
                     :thread="filteredThreads[selectedIndex]"
+                    :key="filteredThreads[selectedIndex]._id"
                     :showBackArrow="false"
                     @close-detailed-view="() => toggleDetailedThread(false, selectedIndex)"
                 />
@@ -191,157 +192,150 @@ export default {
 }
 </script>
 
+<style scoped>
+h1 {
+    font-weight: normal !important;
+}
+</style>
+
 <style>
-    @import url('../../styles/main.css');
-    h1 {
-        font-weight: normal !important;
-    }
-    #filterRow {
-        margin-bottom: 5vh;
-    }
-    #no-filtered-threads {
-        text-align: center;
-        margin: 5vh;
-    }
-    #forumContainer {
-        padding-top: 10px;
-    }
-    #forumContainer:hover {
-        border: 1px solid var(--primary);
-        border-radius: 10px;
-        cursor: pointer;
-    }
+#filterRow {
+    margin-bottom: 5vh;
+}
+#no-filtered-threads {
+    text-align: center;
+    margin: 5vh;
+}
+#forumContainer {
+    padding-top: 10px;
+}
+#forumContainer:hover {
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    cursor: pointer;
+}
 
-    #clearAll-btn{
-        width: 6em;
-        color: white;
-        border: none;
-        background: linear-gradient(45deg,#FF6363, #E53A73);
-        border-radius: 10px;
-        padding: 7px 7px;
-        margin-right: 5px;
-    }
-    .interestCommunity{
-        font-size: 1.2rem;
-        background-color: rgba(255, 150, 183, 0.6);
-        width: 100%;
-        border-bottom: 1px solid #443b3b;
-        margin: 0;
-    }
-    #gallery-interest-selection {
-        display: flex;
-        flex-direction: row;
-        column-gap: 15px;
-        align-items: center;
-        justify-content: center;
-    }
-    .sticky-div {
-        position: sticky;
-        top: 20vh;
-        right: 5vw;
-        display: flex;
-        justify-content: flex-end;
-        z-index: 1;
-    }
-    .sticky-filter {
-        position: sticky;
-        top: 15vh;
-        right: 5vw;
-        display: flex;
-        justify-content: flex-end;
-        z-index: 1;
-    }
-    .popular-community {
-        border-radius: 13px;
-        height: 100%;
-        width: 20rem;
-        padding-top: 20px;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        transition: all 0.3s;
-    }
+.interestCommunity{
+    font-size: 1.2rem;
+    background-color: rgba(255, 150, 183, 0.6);
+    width: 100%;
+    border-bottom: 1px solid #443b3b;
+    margin: 0;
+}
+#gallery-interest-selection {
+    display: flex;
+    flex-direction: row;
+    column-gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+.sticky-div {
+    position: sticky;
+    top: 20vh;
+    right: 5vw;
+    display: flex;
+    justify-content: flex-end;
+    z-index: 1;
+}
+.sticky-filter {
+    position: sticky;
+    top: 15vh;
+    right: 5vw;
+    display: flex;
+    justify-content: flex-end;
+    z-index: 1;
+}
+.popular-community {
+    border-radius: 13px;
+    height: 100%;
+    width: 20rem;
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    transition: all 0.3s;
+}
 
-    .pop-header {
-        margin: 0;
-        padding: 1em 0;
-        border-top-right-radius: 15px;
-        border-top-left-radius: 15px;
-        width: 100%;
-        border: var(--primary) solid 2px;
-        font-size: 1.5rem;
-        color: var(--primary);
-        font-weight: bold;
-        border-bottom: solid transparent;
-    }
+.pop-header {
+    margin: 0;
+    padding: 1em 0;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    width: 100%;
+    border: var(--primary) solid 2px;
+    font-size: 1.5rem;
+    color: var(--primary);
+    font-weight: bold;
+    border-bottom: solid transparent;
+}
 
-    .dropdown-content a {
-        text-decoration: none !important;
-        color: black !important;
-    }
+.dropdown-content a {
+    text-decoration: none !important;
+    color: black !important;
+}
 
-    .cat {
-        font-size: 1.2rem;
-        background-color: var(--primary);
-        width: 100%;
-        color: #ffffff;
-        display: flex;
-        justify-content: right;
-        padding: 10px;
-        border-bottom: 1px solid #443b3b;
-        margin: 0;
-    }
+.cat {
+    font-size: 1.2rem;
+    background-color: var(--primary);
+    width: 100%;
+    color: #ffffff;
+    display: flex;
+    justify-content: right;
+    padding: 10px;
+    border-bottom: 1px solid #443b3b;
+    margin: 0;
+}
 
-    .dropdown-content {
-        display: none;
-        border-left: var(--primary) solid 2px;
-        border-right: var(--primary) solid 2px;
-    }
+.dropdown-content {
+    display: none;
+    border-left: var(--primary) solid 2px;
+    border-right: var(--primary) solid 2px;
+}
 
-    .triangle-up {
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 15px solid #ffffff;
-        margin-left: 30px;
-        margin-right: 70px;
-        cursor: pointer;
-        display: grid;
-        place-self: center;
-    }
+.triangle-up {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 15px solid #ffffff;
+    margin-left: 30px;
+    margin-right: 70px;
+    cursor: pointer;
+    display: grid;
+    place-self: center;
+}
 
-    .triangle-down {
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-top: 15px solid #ffffff;
-        margin-left: 30px;
-        margin-right: 70px;
-        cursor: pointer;
-        display: grid;
-        place-self: center;
-    }
+.triangle-down {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 15px solid #ffffff;
+    margin-left: 30px;
+    margin-right: 70px;
+    cursor: pointer;
+    display: grid;
+    place-self: center;
+}
 
-    .open-forum {
-        display: block;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-    }
+.open-forum {
+    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
 
-    .forum-pic {
-        height: 30px;
-        width: 30px;
-        border-radius: 100%;
-        margin-right: 20px; 
-    }
+.forum-pic {
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+    margin-right: 20px; 
+}
 
-    .last, .last.dropdown-content {
-        border-bottom-right-radius: 15px;
-        border-bottom-left-radius: 15px;
-    }
+.last, .last.dropdown-content {
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
 </style>

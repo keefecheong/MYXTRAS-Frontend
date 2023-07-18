@@ -3,46 +3,48 @@
         {{ alertMsg }}
     </AlertPrompt>
 
+    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+        {{ confirmMsg }}
+    </ConfirmPrompt>
+
     <div id="main-container">
         <NavSidebar/>
-        <div id="main-content" class="container-fluid">       
-            <div class="row">
-                <!-- chat list (shows list of chats) -->
-                <div class="col-3" id="chatlist-container">
-                    <h1 id="chatlist-header">Chats</h1>
+        <div id="main-content">
+            <!-- chat list (shows list of chats) -->
+            <div class="col-3" id="chatlist-container">
+                <h1 id="chatlist-header">Chats</h1>
 
-                    <div class="chatlist-placeholder" v-if="!dataInitialized">
-                        <p>Loading...</p>
-                    </div>
-
-                    <div class="chatlist-placeholder" v-if="dataInitialized && orderedChats.length <= 0">
-                        <p>No chats found</p>
-                    </div>
-
-                    <div v-if="dataInitialized && orderedChats.length > 0">
-                        <ChatListLayout 
-                            v-for="chat in orderedChats" 
-                            :chat="chat" 
-                            :selected="chatSelected && (chat._id == selectedChat._id)" 
-                        />
-                    </div>
+                <div class="chatlist-placeholder" v-if="!dataInitialized">
+                    <p>Loading...</p>
                 </div>
 
-                <!-- chat interface (shows messages)-->
-                <div class="col-9" id="chat-interface-container">
-                    <div id="no-chat-selected" v-if="!chatSelected || !dataInitialized">
-                        <h1>Select a chat on the left</h1>
-                    </div>
+                <div class="chatlist-placeholder" v-if="dataInitialized && orderedChats.length <= 0">
+                    <p>No chats found</p>
+                </div>
 
-                    <div v-else style="height: 100%">
-                        <keep-alive>
-                            <ChatInterfaceLayout 
-                                :key="selectedChat._id"
-                                :chat="selectedChat"
-                                :messages="selectedChatMessages"
-                            />
-                        </keep-alive>
-                    </div>
+                <div v-if="dataInitialized && orderedChats.length > 0">
+                    <ChatListLayout 
+                        v-for="chat in orderedChats" 
+                        :chat="chat" 
+                        :selected="chatSelected && (chat._id == selectedChat._id)" 
+                    />
+                </div>
+            </div>
+
+            <!-- chat interface (shows messages)-->
+            <div class="col-9" id="chat-interface-container">
+                <div id="no-chat-selected" v-if="!chatSelected || !dataInitialized">
+                    <h1>Select a chat on the left</h1>
+                </div>
+
+                <div v-else style="height: 100%">
+                    <keep-alive>
+                        <ChatInterfaceLayout 
+                            :key="selectedChat._id"
+                            :chat="selectedChat"
+                            :messages="selectedChatMessages"
+                        />
+                    </keep-alive>
                 </div>
             </div>
         </div>
@@ -56,14 +58,17 @@ import ChatListLayout from '../../components/chat/ChatListLayout.vue';
 import ChatInterfaceLayout from '../../components/chat/ChatInterfaceLayout.vue';
 import { useChatStore } from '../../stores/ChatStore.js';
 import { useAlertStore } from '../../stores/AlertStore.js';
+import { useConfirmStore } from '../../stores/ConfirmStore';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
+import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 
 export default {
     components: {
         NavSidebar,
         ChatListLayout,
         ChatInterfaceLayout,
-        AlertPrompt
+        AlertPrompt,
+        ConfirmPrompt
     },
     data() {
         return {
@@ -72,7 +77,8 @@ export default {
             store: useChatStore(),
             dataInitialized: false,
             retrievedChatIds: [],
-            alertStore: useAlertStore()
+            alertStore: useAlertStore(),
+            confirmStore: useConfirmStore()
         }
     },
     async created() {
@@ -92,6 +98,10 @@ export default {
         // check for new chat/selected chat set from profile page
         initChat() {
             var selectedChat = sessionStorage.getItem('selectedChat');
+
+            if (!selectedChat) {
+                return;
+            }
 
             this.store.newChat(JSON.parse(selectedChat));
             
@@ -197,6 +207,10 @@ export default {
         // to close alert prompt
         closeAlert() {
             this.alertStore.closeAlert();
+        },
+        // to close confirm prompt
+        closeConfirm(decision) {
+            this.confirmStore.closeConfirm(decision);
         }
     },
     computed: {
@@ -224,6 +238,14 @@ export default {
         // to get alertMsg value
         alertMsg() {
             return this.alertStore.alertMsg;
+        },
+        // to get showConfirm value
+        showConfirm() {
+            return this.confirmStore.showConfirm;
+        },
+        // to get confirmMsg value
+        confirmMsg() {
+            return this.confirmStore.confirmMsg;
         }
     }
 }
@@ -231,16 +253,6 @@ export default {
 
 <style>
 @import url('../../styles/main.css');
-
-/* general styles */
-#main-content {
-    display: flex;
-    flex-direction: row;
-}
-
-#main-content .row > div {
-    padding: 0;
-}
 
 /* chat list styles */
 #chatlist-container {
@@ -251,7 +263,7 @@ export default {
 
 #chatlist-header {
     background-color: var(--primary);
-    color: white;
+    color: white !important;
     padding: 11px;
     border-bottom: 2px solid black;
     margin-bottom: 0;
@@ -277,36 +289,17 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
-/* temp styles for chat creation */
-/* once taken away the interface will be normal height */
-#main-content {
-    flex-direction: column;
-}
-
-#create-chat {
-    display: flex;
-    column-gap: 5px;
-    flex-direction: row;
-    border: 1px dashed black;
-}
-
-#create-chat div {
-    width: fit-content;
-    padding: 5px;
-    display: flex;
-    column-gap: 5px;
-    align-items: center;
-}
-
-#main-content .row:last-child {
-    height: 100%;
-}
 </style>
 
 <style scoped>
 /* to get rid of column between sidebar and chat */
 #main-container {
     column-gap: 0;
+}
+
+#main-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
 }
 </style>

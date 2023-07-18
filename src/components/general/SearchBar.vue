@@ -2,18 +2,27 @@
     <div class="row pink-header-search" >
         <div class="col-md-3">
         </div>
-        <div class="col-md-6 centerElements" id="search-input"> 
+        <div class="col-md-6 centerElements" id="search-input" > 
             <span class="material-symbols-outlined" style="color: black" id="search-icon" @click="performSearch" title="Click to search">search</span>
-            <input v-model='searchTerm' class="search-bar" type="text" placeholder="Search for Xtras like you!" @keyup.enter="performSearch">
-            <SearchResults :results="searchResults" :currentPage="currentPage"/>
+            <input 
+                class="search-bar"
+                type="text"
+                placeholder="Search for Xtras like you!"
+                v-model='searchTerm'
+                @keyup.enter="performSearch" 
+                @focus.capture="() => toggleResults(true)" 
+                @blur.capture="(e) => toggleResults(false, e)">
+
+            <SearchResults v-if="showResults && searchResults != null" :results="searchResults" />
         </div>
-        <div v-if="currentPage === 'forums'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
-            <button v-if="currentPage === 'forums'" id="createForumBtn" class="white-btn" @click="showForumForm">
+        <div v-if="currentPage.startsWith('/forum.html')" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
+            <button id="createForumBtn" class="white-btn" @click="showForumForm">
                 Create Forum
             </button>
             
         </div>
-        <div v-if="currentPage === 'feed' || currentPage === 'xplore'" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
+
+        <div v-else-if="!currentPage.startsWith('/admin/')" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
             <!-- check for identity after authentication -->
             <div v-if="login" class="col-md-4 margin-top">
                 <p class="realname hide-overflow-text" :title="realname">{{ realname }}</p>
@@ -23,7 +32,8 @@
              
             <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
-        <div v-if="currentPage === 'admin'" class="col-md-2 d-flex justify-content-end adminContainter centerElements">
+
+        <div v-else class="col-md-2 d-flex justify-content-end adminContainter centerElements">
             <a class="admin">
                 <img class="" src="../../assets/shield_person.svg">
                 <p class="admin-text">Admin Panel</p>
@@ -85,6 +95,9 @@
 
 #search-input {
     position: relative;
+    height: fit-content;
+    margin: auto;
+    padding: 0;
 }
 
 #search-icon {
@@ -95,7 +108,6 @@
 .search-bar {
     display: flex;
     align-items: center;
-    margin: auto !important;
     padding: 15px;
     padding-left: 63px;
     border: none;
@@ -193,20 +205,16 @@ export default {
     components: {
         SearchResults
     },
-    props: {
-        currentPage: {
-            type: String,
-            required: true
-        }
-    },
     data() {
         return {
             login: false,
             realname: '',
             school: '',
             course: '',
-            searchResults: [],
+            searchResults: null,
             searchTerm: '',
+            showResults: false,
+            currentPage: location.pathname
         }
     },
     mounted() {
@@ -222,21 +230,17 @@ export default {
         },
         async performSearch() {
             let searchObject;
-            if (this.searchTerm.trim() !== '') {
-                document.querySelector('.resultsContainer').style.display = 'block';
+            
+            if (this.currentPage.startsWith('/feed.html')) {
+                searchObject = 'users';
             }
-            else {
-                document.querySelector('.resultsContainer').style.display = 'none';
+            else if(this.currentPage.startsWith('/forum.html')) {
+                searchObject = 'forums';
             }
-            if (this.currentPage === 'feed') {
-                searchObject = 'users'
+            else if (this.currentPage.startsWith('/explore.html')) {
+                searchObject = 'users-forums';
             }
-            else if (this.currentPage === 'forums'){
-                searchObject = this.currentPage
-            }
-            else if (this.currentPage === 'xplore'){
-                searchObject = 'users-forums'
-            }
+            
             try {
                 await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search/${searchObject}?term=${this.searchTerm.trim()}`, {
                 method: 'GET',
@@ -244,7 +248,9 @@ export default {
                 }).then(async response => {
                     await response.json().then(data => {
                         this.searchResults = data.topSixResults;
-                    })
+
+                        this.showResults = true;
+                    });
                 })
             } catch (error) {
                 console.error('Error performing search:', error);
@@ -288,6 +294,17 @@ export default {
 
                 document.getElementById('compensate-searchbar-height').style.height = searchbarHeight;
             }, 100);
+        },
+        // to show/hide results
+        toggleResults(show, e) {
+            // dont hide results if the new focused element is the search results container
+            const searchResultsContainer = document.querySelector('.resultsContainer');
+            
+            if (searchResultsContainer && searchResultsContainer == e?.relatedTarget) {
+                return;
+            }
+
+            this.showResults = show;
         }
     }
 }

@@ -41,6 +41,11 @@
                             <span class="material-symbols-outlined" @click="() => toggleThreadForm(true)" title="Edit this thread">edit</span>
                             <span class="material-symbols-outlined" @click="deleteThread" title="Delete this thread">delete</span>
                         </div>
+
+                        <!-- report button -->
+                        <div v-else>
+                            <span class="material-symbols-outlined report-button" @click="() => toggleReportForm(true)" title="Report this thread">flag</span>
+                        </div>
                     </div>
                 </div>
 
@@ -85,6 +90,7 @@
                             :comment="comment"
                             :thread="thread"
                             @deleted-comment="() => handleDeletedComment(index)"
+                            @report-comment="handleReportComment"
                         />
                     </div>
                     
@@ -97,6 +103,15 @@
     </div>
     
     <ThreadFormLayout v-if="showThreadForm" :thread="thread" :editMode="true" @close-thread-form="() => toggleThreadForm(false)" />
+
+    <ReportFormLayout
+        v-if="showReportForm"
+        :forumId="thread.parent_id._id"
+        :threadId="thread._id"
+        :commentId="reportCommentId"
+        :type="reportType"
+        @close-report-form="() => toggleReportForm(false)"
+    />
 </template>
 
 <script>
@@ -111,6 +126,7 @@ import viewForum from '../../utils/general/viewForum.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ThreadFormLayout from './ThreadFormLayout.vue';
 import { debounce } from 'lodash';
+import ReportFormLayout from '../report/ReportFormLayout.vue';
 
 export default {
     data() {
@@ -132,7 +148,11 @@ export default {
             debouncedLikeUpdate: null,
             debouncedDislikeUpdate: null,
 
-            showThreadForm: false
+            showThreadForm: false,
+
+            showReportForm: false,
+            reportType: null,
+            reportCommentId: null
         }
     },
     props: [
@@ -148,7 +168,8 @@ export default {
         ThreadCommentLayout,
         LoadingOverlay,
         DynamicTextarea,
-        ThreadFormLayout
+        ThreadFormLayout,
+        ReportFormLayout
     },
     created() {
         // set like/dislike fields
@@ -178,16 +199,6 @@ export default {
     },
     beforeUnmount() {
         this.completeRequests();
-    },
-    watch: {
-        // watch for changes in thread and update comments if thread id changes
-        'thread._id': {
-            handler(newVal, oldVal) {
-                if (newVal != oldVal) {
-                    this.initData();
-                }
-            }
-        }
     },
     methods: {
         // to get comment data
@@ -413,6 +424,17 @@ export default {
         // to toggle thread form
         toggleThreadForm(show) {
             this.showThreadForm = show;
+        },
+        // to show/hide report form
+        toggleReportForm(show, type='thread') {
+            this.reportType = type;
+            this.showReportForm = show;
+        },
+        // to report comment
+        handleReportComment(commentId) {
+            this.reportCommentId = commentId;
+
+            this.toggleReportForm(true, 'threadComment');
         }
     }
 }

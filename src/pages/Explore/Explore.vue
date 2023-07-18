@@ -11,7 +11,7 @@
         <NavSidebar/>
 
         <div id="main-content">
-            <SearchBar currentPage="xplore"/>
+            <SearchBar />
 
             <div class="container-fluid explore-container">
                 <div class="row">

@@ -2,7 +2,7 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
-            <SearchBar currentPage="feed"/>
+            <SearchBar />
             <div id="notfound">
                 <div class="notfound">
                     <div class="notfound-404">

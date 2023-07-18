@@ -35,8 +35,6 @@ export default {
 </script>
 
 <style>
-@import url('../../styles/main.css');
-
 .chatlist-item {
     display: flex;
     padding: 12px;

@@ -16,8 +16,9 @@
                     </div>
 
                     <!-- only if the comment is posted by the current user -->
-                    <div class="comment-privilege-actions" v-if="comment.isOwner">
-                        <span class="material-symbols-outlined" @click="deleteComment">delete</span>
+                    <div class="comment-actions">
+                        <span v-if="comment.isOwner" class="material-symbols-outlined" @click="deleteComment" title="Delete this comment">delete</span>
+                        <span v-else class="report-button material-symbols-outlined" @click="reportComment" title="Report this comment">flag</span>
                     </div>
                 </div>
                 <div class="bottom-content">
@@ -45,12 +46,13 @@ export default {
         }
     },
     props: [
-        'creatorId',
+        'blogCreatorId',
         'postId',
         'comment'
     ],
     emits: [
-        'commentDeleted'
+        'comment-deleted',
+        'report-comment'
     ],
     mounted() {
         // get time difference from when the comment was created and current datetime
@@ -65,7 +67,7 @@ export default {
                 return;
             }
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/user/${this.creatorId}/post/${this.postId}/${this.comment._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/user/${this.blogCreatorId}/post/${this.postId}/${this.comment._id}`, {
                 mode: 'cors',
                 method: 'DELETE',
                 credentials: 'include'
@@ -84,13 +86,16 @@ export default {
         // view user profile of comment creator
         viewUser() {
             viewUser(this.comment.creator_id._id);
+        },
+        // to report comment
+        reportComment() {
+            this.$emit('report-comment', this.comment._id);
         }
     }
 }
 </script>
 
 <style>
-@import url('../../styles/main.css');
 #username-text {
     font-weight: bold;
 }
@@ -149,11 +154,11 @@ export default {
     max-width: 30%;
 }
 
-.comment-privilege-actions {
+.comment-actions {
     flex: 0 0 0% !important;
 }
 
-.comment-privilege-actions .material-symbols-outlined {
+.comment-actions .material-symbols-outlined {
     color: black;
     font-variation-settings: 'FILL' 0;
     user-select: none;

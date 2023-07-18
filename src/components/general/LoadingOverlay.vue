@@ -37,8 +37,6 @@ export default {
 </script>
 
 <style>
-@import url('../../styles/main.css');
-
 .loader-overlay {
     height: 100%;
     width: 100%;

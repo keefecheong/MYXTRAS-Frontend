@@ -11,7 +11,7 @@
         <NavSidebar/>
         
         <div id="main-content">
-            <SearchBar currentPage="feed"/>
+            <SearchBar />
             
             <div class="feed-container container-fluid">
                 <div class="row">

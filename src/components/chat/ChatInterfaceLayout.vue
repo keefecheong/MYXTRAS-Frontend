@@ -45,6 +45,7 @@
                         @edit-message="editMessage"
                         @delete-message="deleteMessage"
                         @reply-to-message="handleReplyMessage"
+                        @report-message="handleReportMessage"
                     />
                 </div>
             </div>
@@ -151,6 +152,13 @@
             <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="isUploadingFile" />
         </div>
     </div>
+
+    <ReportFormLayout
+        v-if="showReportForm"
+        :messageId="reportMessageId"
+        :type="'message'"
+        @close-report-form="() => toggleReportForm(false)"
+    />
 </template>
 
 <script>
@@ -165,29 +173,36 @@ import DynamicTextarea from '../general/DynamicTextarea.vue';
 import { viewUser } from '../../utils/general/viewUser.js';
 import { debounce } from 'lodash';
 import ChatReplyMessageLayout from './ChatReplyMessageLayout.vue';
+import ReportFormLayout from '../../components/report/ReportFormLayout.vue';
 
 export default {
     data() {
         return {
-            store: useChatStore(),
             status: {
                 online: 'Online',
                 offline: 'Offline',
                 typing: 'Typing...'
             },
             debouncedTypingStatusUpdate: null,
+            currentStatus: null,
+
             messageText: '',
             previousMessageLength: 0,
-            currentStatus: null,
             loadingPrevious: false,
-            store: useChatStore(),
+            
             fileInput: false,
             file: {},
             error: '',
             selectedLink: '',
             uploadingFile: false,
+            
+            replyToMessage: null,
+            
+            store: useChatStore(),
             alert: useAlertStore().alert,
-            replyToMessage: null
+
+            showReportForm: false,
+            reportMessageId: null
         }
     },
     props: [
@@ -198,7 +213,8 @@ export default {
         ChatMessageLayout,
         LoadingOverlay,
         DynamicTextarea,
-        ChatReplyMessageLayout
+        ChatReplyMessageLayout,
+        ReportFormLayout
     },
     // when mounted/restored from cache
     activated() {
@@ -624,6 +640,16 @@ export default {
         // handle close-reply-to event
         handleCloseReply() {
             this.replyToMessage = null;
+        },
+        // to show/hide report form
+        toggleReportForm(show) {
+            this.showReportForm = show;
+        },
+        // to report a message
+        handleReportMessage(messageId) {
+            this.reportMessageId = messageId;
+
+            this.toggleReportForm(true);
         }
     },
     computed: {
@@ -648,8 +674,6 @@ export default {
 </script>
 
 <style>
-@import url('../../styles/main.css');
-
 /* container styles */
 #chat-interface-layout-container {
     display: flex;

@@ -133,16 +133,24 @@
                 </div>
             </div>
 
-            <!-- only if the blog is posted by the current user -->
-            <div class="blog-privilege-actions row" v-if="blog.isOwner">
-                <!-- edit button -->
-                <div class="blog-edit col" title="Edit this post">
-                    <span class="material-symbols-outlined" @click="() => editPost(true)">edit</span>
+            <div class="blog-other-actions">
+                <!-- privilege actions only if the blog is posted by the current user -->
+                <div v-if="blog.isOwner">
+                    <!-- edit button -->
+                    <div class="blog-edit" title="Edit this post">
+                        <span class="material-symbols-outlined" @click="() => editPost(true)">edit</span>
+                    </div>
+    
+                    <!-- delete button -->
+                    <div class="blog-delete" title="Delete this post">
+                        <span class="material-symbols-outlined" @click="deletePost">delete</span>
+                    </div>
                 </div>
 
-                <!-- delete button -->
-                <div class="blog-delete col" title="Delete this post">
-                    <span class="material-symbols-outlined" @click="deletePost">delete</span>
+                <!-- report button shown otherwise -->
+                <div v-else>
+                    <!-- report button -->
+                    <span class="report-button material-symbols-outlined" @click="() => toggleReportForm(true)" title="Report this post">flag</span>
                 </div>
             </div>
         </div>
@@ -181,7 +189,8 @@
                         :creatorId="blog.creator_id._id"
                         :postId="blog._id"
                         :key="comment._id"
-                        @commentDeleted="deleteComment"
+                        @comment-deleted="deleteComment"
+                        @report-comment="handleReportComment"
                     />
                 </div>
             </div>
@@ -193,11 +202,18 @@
     </div>
 
     <BlogFormLayout v-if="blog.isOwner && editMode" :editMode="true" :blog="blog" @close-blog-form="() => editPost(false)" />
+
+    <ReportFormLayout 
+        v-if="!blog.isOwner && showReportForm"
+        :userId="blog.creator_id._id"
+        :postId="blog._id" 
+        :commentId="reportCommentId" 
+        :type="reportType" 
+        @close-report-form="() => toggleReportForm(false)"
+    />
 </template>
 
 <style>
-@import url('../../styles/main.css');
-
 /* container styles */
 .blog-container {
     border: #133B5B;
@@ -354,9 +370,16 @@
     align-items: center;
 }
 
-.blog-privilege-actions {
+.blog-other-actions {
     position: absolute;
     right: 0;
+    width: fit-content !important;
+}
+
+.blog-other-actions > div {
+    display: flex;
+    flex-direction: row;
+    column-gap: 5px;
 }
 
 .blog-actions .col {
@@ -445,6 +468,7 @@ import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
 import { viewUser } from '../../utils/general/viewUser.js';
 import { debounce } from 'lodash';
+import ReportFormLayout from '../report/ReportFormLayout.vue';
 
 export default {
     data() {
@@ -470,11 +494,15 @@ export default {
             liked: false,
             debouncedLikeUpdate: null,
             
-            editMode: false,
-            
             savedSaved: false,
             saved: false,
             debouncedSaveUpdate: null,
+            
+            editMode: false,
+
+            showReportForm: false,
+            reportType: null,
+            reportCommentId: null,
             
             alert: useAlertStore().alert,
             confirm: useConfirmStore().confirm
@@ -486,7 +514,8 @@ export default {
         BlogFormLayout,
         LoadingOverlay,
         InterestBadgeList,
-        DynamicTextarea
+        DynamicTextarea,
+        ReportFormLayout
     },
     props: [
         'blog'
@@ -518,7 +547,7 @@ export default {
 
         // set event listener to complete pending requests when the page is closed
         window.addEventListener('beforeunload', () => {
-            this.completeSaveRequest();
+            this.completeLikeRequest();
             this.completeSaveRequest();
         });
     },
@@ -789,6 +818,17 @@ export default {
             if (location.pathname != '/profilePage.html') {
                 viewUser(this.blog.creator_id._id);
             }
+        },
+        // toggle report form
+        toggleReportForm(show, type = 'post') {
+            this.showReportForm = show;
+            this.reportType = type;
+        },
+        // to report comment
+        handleReportComment(commentId) {
+            this.reportCommentId = commentId;
+
+            this.toggleReportForm(true, 'postComment');
         }
     },
     computed: {

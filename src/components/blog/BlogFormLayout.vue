@@ -1,104 +1,103 @@
 <template>
-    <div id="blog-form-overlay">
+    <div class="form-overlay">
         <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="isSubmitting || (editMode && !isDataInitialized)" />
-        <div class="scroll-bar">
-            <!-- form to upload images -->
-            <form id="blog-form" @submit.prevent="submitForm">
-                <button id="close-form" @click="closeForm" type="button">
-                    <span class="material-symbols-outlined">Close</span>
-                </button>
-                
-                <h1 class="form-header">{{ editMode ? 'Edit Post' : 'Create New Post' }}</h1>
-                
-                <div id="upload-image-container">
-                    <!-- input to select images -->
-                    <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
-                    <label for="upload-image" id="upload-image-label">
-                        <p>Drag and drop 
-                            <br>
-                            or
-                            <br> 
-                            click <u>here</u> to upload.
-                        </p>
-                    </label>
 
-                    <!-- display errors -->
-                    <div id="upload-image-errors" v-if="files.length > 0 && errors.length > 0">
-                        <span>Error{{ errors.length > 1 ? 's' : '' }}:</span>
-                        <ul>
-                            <li v-for="error in errors">{{ error }}</li>
-                        </ul>
-                    </div>
+        <!-- form to upload images -->
+        <form class="form-overlay-content" @submit.prevent="submitForm">
+            <button class="form-overlay-close" @click="closeForm" type="button">
+                <span class="material-symbols-outlined">Close</span>
+            </button>
+            
+            <h1>{{ editMode ? 'Edit Post' : 'Create New Post' }}</h1>
+            
+            <div id="upload-image-container">
+                <!-- input to select images -->
+                <input type="file" id="upload-image" multiple @change="fileChanged" accept=".jpg, .jpeg, .png" />
+                <label for="upload-image" id="upload-image-label">
+                    <p>Drag and drop 
+                        <br>
+                        or
+                        <br> 
+                        click <u>here</u> to upload.
+                    </p>
+                </label>
 
-                    <!-- display selected file names if there are errors -->
-                    <div id="selected-image-names" v-if="files.length > 0 && invalidFiles.length > 0">
-                        <span>Selected ({{ selectedFileCount }}):</span>
-                        <ul>
-                            <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
-                        </ul>
-                    </div>
-
-                    <!-- preview images if there are files selected with no errors -->
-                    <div v-if="selectedLinks.length > 0 && errors.length == 0">
-                        <span>Selected ({{ selectedFileCount }}):</span>
-                        <div v-for="(link, index) in selectedLinks" class="preview-image-container">
-                            <img :src="link" />
-                            <span class="hide-overflow-text">{{ this.editMode && !this.fileUpdated ? blog.original_names[index] : files[index].name }}</span>
-                            <!-- show size only if new files are uploaded -->
-                            <span v-if="files[index]">({{ calculateSize(files[index].size) }})</span>
-                        </div>
-                    </div>
+                <!-- display errors -->
+                <div id="upload-image-errors" v-if="files.length > 0 && errors.length > 0">
+                    <span>Error{{ errors.length > 1 ? 's' : '' }}:</span>
+                    <ul>
+                        <li v-for="error in errors">{{ error }}</li>
+                    </ul>
                 </div>
 
-                <!-- input for blog caption -->
-                <div class="image-options-container">
-                    <label for="image-caption" id="caption-title" class="image-options-label">Caption:</label>
-                    <DynamicTextarea :id="'image-caption'" :placeholder="'Provide a caption (Optional)'" v-model="caption" />
+                <!-- display selected file names if there are errors -->
+                <div id="selected-image-names" v-if="files.length > 0 && invalidFiles.length > 0">
+                    <span>Selected ({{ selectedFileCount }}):</span>
+                    <ul>
+                        <li v-for="(file, index) in files" :class="{invalidFile: invalidFiles.includes(index)}">{{ file.name }} - {{ calculateSize(file.size) }}</li>
+                    </ul>
                 </div>
-                
-                <!-- input for blog location -->
-                <div class="image-options-container">
-                    <label for="image-location" id="location-title" class="image-options-label">Location:</label>
-                    <input type="text" id="image-location" name="image-location" placeholder="Location (Optional)" v-model="location"/>
-                </div>
-                
-                <!-- input for blog interest tags -->
-                <div class="image-options-container">
-                    <label for="image-tags" id="tags-title" class="image-options-label">Tags:</label>
-                    <div id="image-tags-selection">
-                        <AddInterestButton :selectedOption="tags" @selectedInterests="handlePostTags">
-                            Select Tags For Your Post (Optional):
-                        </AddInterestButton>
+
+                <!-- preview images if there are files selected with no errors -->
+                <div v-if="selectedLinks.length > 0 && errors.length == 0">
+                    <span>Selected ({{ selectedFileCount }}):</span>
+                    <div v-for="(link, index) in selectedLinks" class="preview-image-container">
+                        <img :src="link" />
+                        <span class="hide-overflow-text">{{ this.editMode && !this.fileUpdated ? blog.original_names[index] : files[index].name }}</span>
+                        <!-- show size only if new files are uploaded -->
+                        <span v-if="files[index]">({{ calculateSize(files[index].size) }})</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- input for blog comments enabled option -->
-                <div class="image-options-container">
-                    <span id="comments-title" class="image-options-label">Turn on comments:</span>
-                    <div id="image-comments-options">
-                        <div id="image-comments-checkbox-container">
-                            <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
-                            <label class="switch" for="image-comments-checkbox">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
+            <!-- input for blog caption -->
+            <div class="image-options-container">
+                <label for="image-caption" id="caption-title" class="image-options-label">Caption:</label>
+                <DynamicTextarea :id="'image-caption'" :placeholder="'Provide a caption (Optional)'" v-model="caption" />
+            </div>
+            
+            <!-- input for blog location -->
+            <div class="image-options-container">
+                <label for="image-location" id="location-title" class="image-options-label">Location:</label>
+                <input type="text" id="image-location" name="image-location" placeholder="Location (Optional)" v-model="location"/>
+            </div>
+            
+            <!-- input for blog interest tags -->
+            <div class="image-options-container">
+                <label for="image-tags" id="tags-title" class="image-options-label">Tags:</label>
+                <div id="image-tags-selection">
+                    <AddInterestButton :selectedOption="tags" @selectedInterests="handlePostTags">
+                        Select Tags For Your Post (Optional):
+                    </AddInterestButton>
+                </div>
+            </div>
+
+            <!-- input for blog comments enabled option -->
+            <div class="image-options-container">
+                <span id="comments-title" class="image-options-label">Turn on comments:</span>
+                <div id="image-comments-options">
+                    <div id="image-comments-checkbox-container">
+                        <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
+                        <label class="switch" for="image-comments-checkbox">
+                            <span class="slider"></span>
+                        </label>
                     </div>
                 </div>
+            </div>
 
-                <div id="image-form-controls">
-                    <input class="image-form-control-button" type="reset" value="Clear All" @click="resetAll" />
-                    <!-- 
-                        disable submit button if 
-                        1. not in edit mode and no files are selected
-                        2. files are selected but there are errors
-                        3. in edit mode and no fields are changed and no files are changed
-                        4. submit in progress
-                    -->
-                    <input class="image-form-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" 
-                        :disabled="(!editMode && files.length <= 0) || (files.length > 0 && errors.length > 0) || (editMode && !fieldsChanged && !fileUpdated) || submitting" />
-                </div>
-            </form>
-        </div>
+            <div id="image-form-controls">
+                <input class="form-overlay-control-button" type="reset" value="Clear All" @click="resetAll" />
+                <!-- 
+                    disable submit button if 
+                    1. not in edit mode and no files are selected
+                    2. files are selected but there are errors
+                    3. in edit mode and no fields are changed and no files are changed
+                    4. submit in progress
+                -->
+                <input class="form-overlay-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" 
+                    :disabled="(!editMode && files.length <= 0) || (files.length > 0 && errors.length > 0) || (editMode && !fieldsChanged && !fileUpdated) || submitting" />
+            </div>
+        </form>
     </div>
 </template>
 
@@ -354,56 +353,7 @@ export default {
 </script>
 
 <style>
-#blog-form-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0, 0, 0, 0.5);
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.form-header {
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-#close-form {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    position: absolute;
-    right: 20px;
-    top: 20px;
-}
-
-#blog-form {
-    text-align: center;
-    color: white;
-    width: 109.8%;
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    row-gap: 20px;
-}
-
-.scroll-bar {
-    padding: 40px;
-    border-radius: 20px;
-    background-color: #133B5B;
-    width: 60%;
-    max-width: 80%;
-    max-height: 90%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
+@import url('../../styles/forms/form-overlay-styles.css');
 
 #upload-image-container {
     border-style: solid;
@@ -558,21 +508,5 @@ export default {
     flex-direction: row;
     justify-content: center;
     column-gap: 30px;
-}
-
-.image-form-control-button {
-    background-color: #E53A73;
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    color: white;
-    font-weight: bold;
-    font-size: 1em;
-    cursor: pointer;
-}
-
-.image-form-control-button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
 }
 </style>

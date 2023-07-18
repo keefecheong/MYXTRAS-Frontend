@@ -1,60 +1,59 @@
 <template>
-    <div id="thread-form-overlay">
+    <div class="form-overlay">
         <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="submitting || (editMode && !dataInitialized)" />
-        <div class="scroll-bar">
-            <!-- form -->
-            <form id="thread-form-container" @submit.prevent="submitForm">
-                <!-- button to close thread form -->
-                <button id="close-form" @click="closeForm" type="button">
-                    <span class="material-symbols-outlined">Close</span>
-                </button>
-        
-                <h1 id="form-header">{{ editMode ? 'Edit Thread' : 'Create New Thread' }}</h1>
-                
-                <!-- thread title input -->
-                <div id="thread-title-container">
-                    <div class="thread-field-container">
-                        <label for="thread-title-input" class="thread-label">Title:</label>
-                        <input type="text" id="thread-title-input" v-model="threadTitle" placeholder="Thread title" />
-                    </div>
-                </div>
-        
-                <!-- thread description (content) input -->
-                <div class="thread-field-container">
-                    <label for="thread-content-input" class="thread-label">Content:</label>
-                    <DynamicTextarea :id="'thread-content-input'" v-model="threadContent" :maxlength="500" :placeholder="'Thread content'" />
-                </div>
-                
-                <!-- thread tags input -->
-                <div class="thread-field-container">
-                    <label for="thread-tags-input" class="thread-label">Tags:</label>
-                    <div id="thread-tags-container">
-                        <AddInterestButton :selectedOption="tags" @selectedInterests="handleThreadTags">
-                            Select Tags For Your Thread (Optional):
-                        </AddInterestButton>
-                    </div>
-                </div>
 
-                <!-- Upload picture -->
-                <div id="thread-picture-container">
-                    <label for="thread-picture-input" id="thread-picture-label"><u>Click</u> to Select Picture (Optional)</label>
-        
-                    <span v-if="selectedImageObject && pictureErrors.length > 0" class="errMsg">Invalid file</span>
-
-                    <img v-if="selectedImageLink" :src="selectedImageLink" alt="Banner"  id="thread-picture" />
-                    <input id="thread-picture-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
-                    
-                    <!-- inform user about invalid file -->
-                    <div v-if="pictureErrors.length > 0">
-                        <span>Error:</span>
-                        <br />
-                        <span v-for="error in pictureErrors" class="errMsg">{{ error }}</span>
-                    </div>
+        <!-- form -->
+        <form class="form-overlay-content" @submit.prevent="submitForm">
+            <!-- button to close thread form -->
+            <button class="form-overlay-close" @click="closeForm" type="button">
+                <span class="material-symbols-outlined">Close</span>
+            </button>
+    
+            <h1>{{ editMode ? 'Edit Thread' : 'Create New Thread' }}</h1>
+            
+            <!-- thread title input -->
+            <div id="thread-title-container">
+                <div class="thread-field-container">
+                    <label for="thread-title-input" class="thread-label">Title:</label>
+                    <input type="text" id="thread-title-input" v-model="threadTitle" placeholder="Thread title" />
                 </div>
-                    
-                <button class="thread-form-control-button" :disabled="submitting || !requiredFields">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
-            </form>
-        </div>
+            </div>
+    
+            <!-- thread description (content) input -->
+            <div class="thread-field-container">
+                <label for="thread-content-input" class="thread-label">Content:</label>
+                <DynamicTextarea :id="'thread-content-input'" v-model="threadContent" :maxlength="500" :placeholder="'Thread content'" />
+            </div>
+            
+            <!-- thread tags input -->
+            <div class="thread-field-container">
+                <label for="thread-tags-input" class="thread-label">Tags:</label>
+                <div id="thread-tags-container">
+                    <AddInterestButton :selectedOption="tags" @selectedInterests="handleThreadTags">
+                        Select Tags For Your Thread (Optional):
+                    </AddInterestButton>
+                </div>
+            </div>
+
+            <!-- Upload picture -->
+            <div id="thread-picture-container">
+                <label for="thread-picture-input" id="thread-picture-label"><u>Click</u> to Select Picture (Optional)</label>
+    
+                <span v-if="selectedImageObject && pictureErrors.length > 0" class="errMsg">Invalid file</span>
+
+                <img v-if="selectedImageLink" :src="selectedImageLink" alt="Banner"  id="thread-picture" />
+                <input id="thread-picture-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
+                
+                <!-- inform user about invalid file -->
+                <div v-if="pictureErrors.length > 0">
+                    <span>Error:</span>
+                    <br />
+                    <p v-for="error in pictureErrors" class="errMsg">{{ error }}</p>
+                </div>
+            </div>
+                
+            <button class="form-overlay-control-button" :disabled="submitting || !requiredFields">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
+        </form>
     </div>
 </template>
 
@@ -115,11 +114,12 @@ export default {
         },
         // to handle change in selected files
         fileChanged(e) {
+            this.pictureErrors = [];
+
             // if no files selected then clear relevant fields and return
             if (e.target.files.length <= 0) {
                 this.selectedImageObject = null;
                 this.selectedImageLink = null;
-                this.pictureErrors = [];
 
                 return;
             }
@@ -264,57 +264,7 @@ export default {
 </script>
 
 <style scoped>
-@import url('../../styles/main.css');
-
-#thread-form-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0, 0, 0, 0.5);
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#thread-form-container {
-    width: 109.8%;
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    row-gap: 30px;
-}
-
-.scroll-bar {
-    padding: 40px;
-    border-radius: 20px;
-    background-color: #133B5B;
-    width: 60%;
-    max-width: 80%;
-    max-height: 90%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-#form-header {
-    margin: 0;
-    color: white;
-}
-
-#close-form {
-    background-color: transparent;
-    color: white;
-    border: none;
-    outline: none;
-    position: absolute;
-    right: 20px;
-    top: 20px;
-}
+@import url('../../styles/forms/form-overlay-styles.css');
 
 #thread-picture-container {
     display: flex;
@@ -330,7 +280,7 @@ export default {
     cursor: pointer;
 }
 
-#forum-pic-picture, #thread-picture {
+#thread-picture {
     max-width: 100%;
     object-fit: cover;
     object-position: center;
@@ -347,12 +297,6 @@ export default {
 .thread-label {
     color: white;
     flex-basis: 30%;
-}
-
-.errMsg{
-    color: red;
-    font-weight: bold;
-    margin-bottom: 0;
 }
 
 #thread-title-container {
@@ -382,21 +326,5 @@ export default {
     resize: none;
     outline: none;
     border: none;
-}
-
-.thread-form-control-button {
-    background-color: #E53A73;
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    color: white;
-    font-weight: bold;
-    font-size: 1em;
-    cursor: pointer;
-}
-
-.thread-form-control-button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
 }
 </style>

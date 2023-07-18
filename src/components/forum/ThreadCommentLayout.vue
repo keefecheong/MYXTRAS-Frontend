@@ -16,15 +16,19 @@
                 </div>
 
                 <!-- privileged operations -->
-                <div v-if="comment.isOwner">
-                    <span class="material-symbols-outlined" @click="deleteComment()" title="Delete this comment">delete</span>
+                <div v-if="comment.isOwner" class="privileged-thread-comment-actions">
+                    <span class="material-symbols-outlined" @click="deleteComment" title="Delete this comment">delete</span>
+                </div>
+
+                <!-- report button  -->
+                <div v-else>
+                    <span class="material-symbols-outlined report-button" @click="reportComment" title="Report this comment">flag</span>
                 </div>
             </div>
         </div>
 
         <div class="thread-comment-content">
             <p class="comment">{{ comment.content }}</p>
-            
         </div>
     </div>
     <hr />
@@ -45,7 +49,8 @@ export default {
         }
     },
     emits: [
-        'deleted-comment'
+        'deleted-comment',
+        'report-comment'
     ],
     props: [
         'comment',
@@ -60,7 +65,7 @@ export default {
         viewUser() {
             viewUser(this.comment.creator_id._id);
         },
-
+        // to delete comment
         async deleteComment(){
             const confirmDelete = await this.confirm('Are you sure you want to delete this comment? This action is irreversible!');
 
@@ -80,8 +85,11 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
+        },
+        // to report comment
+        reportComment() {
+            this.$emit('report-comment', this.comment._id);
         }
-
     }
 }
 </script>
@@ -96,7 +104,7 @@ export default {
     align-items: center;
 }
 
-.right-content .material-symbols-outlined {
+.privileged-thread-comment-actions .material-symbols-outlined {
     color: black;
 }
 

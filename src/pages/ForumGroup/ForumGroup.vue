@@ -17,6 +17,7 @@
                 :showCreateThreadButton="true"
                 @show-forum-form="() => toggleForumForm(true)"
                 @show-thread-form="() => toggleThreadForm(true)"
+                @report-forum="() => toggleReportForm(true)"
             />
             
             <div id="threads-container">
@@ -41,9 +42,11 @@
 
                     <div v-if="showDetailedView">
                         <ThreadDetailedLayout 
-                            :thread="threads[selectedIndex]" 
+                            :thread="threads[selectedIndex]"
+                            :key="threads[selectedIndex]._id"
                             :showBackArrow="true" 
-                            @close-detailed-view="() => toggleDetailedView(false, selectedIndex)" />
+                            @close-detailed-view="() => toggleDetailedView(false, selectedIndex)"
+                        />
                     </div>
                 </div>
 
@@ -55,6 +58,13 @@
 
         <ForumFormLayout v-if="showForumForm" :editMode="true" :forum="forum" @close-forum-form="() => toggleForumForm(false)" />
         <ThreadFormLayout v-if="showThreadForm" :editMode="false" :forumID="forum._id" @close-thread-form="() => toggleThreadForm(false)" />
+
+        <ReportFormLayout
+            v-if="showReportForm"
+            :forumId="forum._id"
+            :type="'forum'"
+            @close-report-form="() => toggleReportForm(false)"
+        />
     </div>
 </div>
 
@@ -72,7 +82,7 @@ import ThreadFormLayout from '../../components/forum/ThreadFormLayout.vue';
 import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
-
+import ReportFormLayout from '../../components/report/ReportFormLayout.vue';
 
 export default {
     components: {
@@ -84,7 +94,8 @@ export default {
         AlertPrompt,
         ThreadFormLayout,
         ThreadDetailedLayout,
-        ConfirmPrompt
+        ConfirmPrompt,
+        ReportFormLayout
     },
 
     data() {
@@ -99,11 +110,13 @@ export default {
             contentLoaded: false,
             threads: [],
             selectedIndex: null,
-            scrollBack: false
+            scrollBack: false,
+
+            showReportForm: false
         }
     },
     created() {
-        this.getForumPage()
+        this.initData()
     },
     updated() {
         // if scrollBack is true then scroll to that thread
@@ -121,14 +134,6 @@ export default {
                 this.scrollBack = false;
             }, 500);
         }
-    },
-    watch: {
-        'forum._id': {
-            immediate: false,
-            handler(newVal, oldVal) {
-                this.getThreads();
-            }
-        },
     },
     methods: {
         // handle toggling of detailed thread view
@@ -149,7 +154,8 @@ export default {
         toggleThreadForm(show) {
             this.showThreadForm = show;
         },
-        async getForumPage() {
+        // initialize data
+        async initData() {
             this.forumID = sessionStorage.getItem('forum_id');
             
             // redirect back to forum.html if no forumID
@@ -157,7 +163,11 @@ export default {
                 location.href = '/forum.html';
             }
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forumID}`, {
+            await Promise.all([this.getForumPage(), this.getThreads()]);
+        },
+        // to get forum details
+        getForumPage() {
+            return fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forumID}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -176,10 +186,10 @@ export default {
             .catch((error) => {
                 console.log(error);
             });
-            
         },
-        async getThreads() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.forum._id}`, {
+        // to get threads
+        getThreads() {
+            return fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.forumID}`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -206,6 +216,10 @@ export default {
         // to handle thread deletion
         handleDeletedThread(index) {
             this.threads.splice(index, 1);
+        },
+        // to show/hide report form
+        toggleReportForm(show) {
+            this.showReportForm = show;
         }
     },
     computed: {

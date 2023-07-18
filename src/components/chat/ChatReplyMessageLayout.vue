@@ -52,6 +52,7 @@ export default {
             const target = document.getElementById(this.message._id);
             if (target) {
                 target.scrollIntoView({
+                    block: 'center',
                     behavior: 'smooth'
                 });
 

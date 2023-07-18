@@ -59,15 +59,18 @@
                                 <span id="user-sign-out-text">Sign out</span>
                             </div>
 
-                            <div v-if="!blockedByUser && !blockingUser" id="user-actions-container">
-                                <button v-if="!isSelf" @click="toggleFollow" id="follow-btn" :class="{ 'followed': following }">{{ following ? 'Followed' : 'Follow' }}</button>
-    
-                                <button v-if="!isSelf" id="msg-btn" @click="createChat">Message</button>
-                            </div>
+                            <div v-if="!isSelf" id="user-actions-container">
+                                <div v-if="!blockedByUser && !blockingUser" id="user-interact-actions">
+                                    <button @click="toggleFollow" id="follow-btn" :class="{ 'followed': following }">{{ following ? 'Followed' : 'Follow' }}</button>
+        
+                                    <button id="msg-btn" @click="createChat">Message</button>
+                                </div>
 
-                            <div id="block-user-container" @click="blockUser" v-if="!isSelf" :title="blockingUser ? 'Unblock this user' : 'Block this user'">
-                                <span class="material-symbols-outlined">block</span>
-                                <span>{{ blockingUser ? 'Unblock' : 'Block' }}</span>
+                                <div id="user-report-actions" v-if="!isSelf">
+                                    <span @click="blockUser" :title="blockingUser ? 'Unblock this user' : 'Block this user'">{{ blockingUser ? 'Unblock' : 'Block' }}</span>
+
+                                    <span @click="() => toggleReportForm(true)" :title="'Report this user'">Report</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -120,6 +123,13 @@
             </div>
 
             <BlogFormLayout v-if="showCreateBlog" @close-blog-form="() => { toggleCreateBlog(false) }" />
+
+            <ReportFormLayout
+                v-if="!isSelf && showReportForm"
+                :userId="user._id"
+                :type="'user'"
+                @close-report-form="() => toggleReportForm(false)"
+            />
         </div>
 
     </div>
@@ -142,6 +152,7 @@ import { viewUser } from '../../utils/general/viewUser.js';
 import signOut from '../../utils/authentication/signOut';
 import { debounce } from 'lodash';
 import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
+import ReportFormLayout from '../../components/report/ReportFormLayout.vue';
 
 export default {
     components: {
@@ -153,7 +164,8 @@ export default {
         InterestBadgeList,
         AlertPrompt,
         ConfirmPrompt,
-        LoadingOverlay
+        LoadingOverlay,
+        ReportFormLayout
     },
     data() {
         return {
@@ -180,6 +192,7 @@ export default {
             debouncedFollowUpdate: null,
 
             showCreateBlog: false,
+            showReportForm: false,
             
             alertStore: useAlertStore(),
             confirmStore: useConfirmStore()
@@ -461,6 +474,10 @@ export default {
                     this.handlingBlock = false;
                 });
             });
+        },
+        // to show/hide report form
+        toggleReportForm(show) {
+            this.showReportForm = show;
         }
     },
     computed: {
@@ -610,11 +627,17 @@ export default {
 
 #user-actions-container {
     display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+#user-interact-actions {
+    display: flex;
     flex-direction: row;
     column-gap: 15px;
 }
 
-#sign-out-container, #block-user-container {
+#sign-out-container {
     display: flex;
     flex-direction: row;
     column-gap: 10px;
@@ -624,14 +647,20 @@ export default {
     align-items: center;
 }
 
-#sign-out-container:hover, #block-user-container:hover {
-    opacity: 0.7;
+#user-report-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: fit-content;
+    cursor: pointer;
+    color: #dd1217;
+    position: relative;
+    left: 100%;
+    transform: translateX(-100%);
 }
 
-#block-user-container, #block-user-container .material-symbols-outlined {
-    font-size: 1em;
-    column-gap: 5px;
-    color: #dd1217;
+#sign-out-container:hover, #user-report-actions > span:hover {
+    opacity: 0.7;
 }
 
 #user-edit-icon {
@@ -742,7 +771,7 @@ export default {
     font-size: 24px;
 }
 
-#follow-btn, #block-btn, #msg-btn {
+#follow-btn, #msg-btn {
     background-color: transparent;
     border: var(--primary) solid 3px;
     color: var(--primary);
@@ -752,17 +781,17 @@ export default {
     transition: all 0.3s;
 }
 
-#follow-btn:hover, #block-btn:hover {
+#follow-btn:hover {
     background-color: var(--primary);
     color: white;
 }
 
-#follow-btn.followed, #block-btn.blocked {
+#follow-btn.followed {
     background-color: var(--primary);
     color: white;
 }
 
-#follow-btn.followed:hover, #block-btn.blocked:hover {
+#follow-btn.followed:hover {
     background-color: transparent;
     color: var(--primary);
 }
@@ -770,22 +799,10 @@ export default {
 #msg-btn {
     color: var(--dark);
     border-color: var(--dark);
-    transition: all 0.3s;
 }
 
 #msg-btn:hover {
     background-color: var(--dark);
     color: white;
-}
-
-#msg-btn .material-symbols-outlined {
-    color: var(--dark);
-    font-size: 1.3rem;
-    transition: all 0.3s;
-}
-
-#msg-btn:hover .material-symbols-outlined {
-    color: white;
-    opacity: 1;
 }
 </style>

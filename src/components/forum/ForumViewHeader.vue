@@ -49,10 +49,11 @@
                     </button>
 
                     <button v-if="showCreateThreadButton" @click="showCreateThread" class="white-btn">Create Thread!</button>
+
+                    <span v-if="!forum.isCreator" class="material-symbols-outlined report-button contrast" @click="toggleReportForm" title="Report this forum">flag</span>
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -78,7 +79,8 @@ export default {
     emits: [
         'show-forum-form',
         'show-thread-form',
-        'subscribe'
+        'subscribe',
+        'report-forum'
     ],
     components: {
         InterestBadgeList
@@ -104,6 +106,9 @@ export default {
         // to show create thread form
         showCreateThread() {
             this.$emit('show-thread-form');
+        },
+        toggleReportForm() {
+            this.$emit('report-forum');
         },
         // to toggle subscribe status
         toggleSubscribe() {
@@ -187,8 +192,6 @@ export default {
 </script>
 
 <style>
-@import url('../../styles/main.css');
-
 #banner-picture {
     width: 100%;
     height: 150px;
@@ -245,7 +248,7 @@ export default {
 #forum-header-below {
     width: 100%;
     margin-top: 20px;
-    margin-left: calc(var(--group-icon-size) + 10px);
+    padding-left: calc(var(--group-icon-size) + 10px);
     display: flex;
     flex-direction: row;
     column-gap: 40px;
@@ -253,7 +256,7 @@ export default {
 }
 
 #forum-header-below-info {
-    flex: 0 0 50%;
+    flex: 1 0 40%;
     display: flex;
     flex-direction: column;
     row-gap: 15px;

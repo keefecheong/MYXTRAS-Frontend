@@ -11,7 +11,7 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
-            <SearchBar currentPage="forums" @show-forum-form="() => toggleForumForm(true)" />
+            <SearchBar @show-forum-form="() => toggleForumForm(true)" />
             
             <h1 id="forum-header">Latest Updates!</h1>
 
@@ -44,6 +44,7 @@
 
                     <div class="row" v-else style="position: relative;">
                         <ThreadDetailedLayout 
+                            :key="threadToDisplay._id"
                             :thread="threadToDisplay"
                             :showBackArrow="false"
                             :showForumDetails="true"

@@ -1,5 +1,5 @@
 <template>
-    <div class="resultsContainer">
+    <div class="resultsContainer" tabindex="0">
         <ul>
             <li v-if="results.length > 0" v-for="result in results" @click="handleClick(result)">
                 {{ displayText(result) }}
@@ -13,23 +13,18 @@
 
 <style>
 .resultsContainer{
-    display: none;
-    margin-left: auto;
-    margin-right: auto;
     top: 77%;
-    left: 24px;
-    right: 0;
-    width: 43%;
+    width: 100%;
     position: absolute;
     z-index: 1;
     overflow: auto;
-    background-color: whitesmoke;
-    align-items: center;
 }
 
 ul {
-    margin: 0 !important;
+    margin: 0 auto !important;
     padding: 0 !important;
+    width: 70%;
+    background-color: whitesmoke;
 }
 
 li {
@@ -58,7 +53,7 @@ export default {
             threads: []
         }
     },
-    props: ['results', 'currentPage'],
+    props: ['results'],
     methods: {
         handleClick(result) {
             if (result.hasOwnProperty('forum_id')) {

@@ -74,15 +74,23 @@
                         <!-- privileged actions only for sender -->
                         <div v-if="message.is_sender">
                             <!-- edit message -->
-                            <div @click.stop="enterEdit" title="Edit" class="message-action-button">
+                            <div @click.stop="enterEdit" title="Edit this message" class="message-action-button">
                                 <span class="material-symbols-outlined">edit</span>
                                 <span>Edit</span>
                             </div>
         
                             <!-- delete message -->
-                            <div @click="deleteMessage" title="Delete" class="message-action-button">
+                            <div @click="deleteMessage" title="Delete this message" class="message-action-button">
                                 <span class="material-symbols-outlined">delete</span>
                                 <span>Delete</span>
+                            </div>
+                        </div>
+
+                        <!-- report button only for receivers -->
+                        <div v-else>
+                            <div @click.stop="reportMessage" title="Report this message" class="message-action-button report-button">
+                                <span class="material-symbols-outlined">flag</span>
+                                <span>Report</span>
                             </div>
                         </div>
                     </div>
@@ -144,7 +152,8 @@ export default {
     emits: [
         'edit-message',
         'delete-message',
-        'reply-to-message'
+        'reply-to-message',
+        'report-message'
     ],
     created() {
         this.index = this.message._id;
@@ -245,6 +254,10 @@ export default {
             delete emitMessage.reply_message;
 
             this.$emit('reply-to-message', emitMessage);
+        },
+        // to report message
+        reportMessage() {
+            this.$emit('report-message', this.message._id);
         }
     },
     computed: {
@@ -313,8 +326,6 @@ export default {
 </script>
 
 <style>
-@import url('../../styles/main.css');
-
 /* date styles */
 .new-message-date {
     font-weight: 600;

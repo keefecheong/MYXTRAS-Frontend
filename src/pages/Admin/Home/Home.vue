@@ -2,7 +2,7 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content">
-            <SearchBar currentPage="admin"/>
+            <SearchBar />
             <div id="admin-container">
                 
             </div>
