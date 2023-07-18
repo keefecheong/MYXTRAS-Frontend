@@ -60,6 +60,7 @@
     text-align: center;
     font-weight: bolder !important;
     color: #E53A73 !important;
+    margin-top: 20px;
 }
 #top-line {
     margin-bottom: 50px !important;
