@@ -28,11 +28,11 @@
                 <div id="missionsContainer" >
                     <div id="missionContainer" v-for="mission in missions">
                         <div class="left-content">
-                            <p>{{ mission.title }}</p>
+                            <p>{{ mission }}</p>
                         </div>
                         <div class="right-content d-flex justify-content-end">
                             <div class="d-flex">
-                                <p>{{ mission.gem_count }}</p>
+                                <!-- <p>{{ mission.gem_count }}</p> -->
                                 <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
                                 <btn class="pink-btn"><p>Claim</p></btn>
                             </div>
@@ -174,6 +174,26 @@ export default {
     data() {
         return {
             missions: [{'title':'Like 5 threads', 'gem_count':'100'},{'title':'Follow a new user', 'gem_count':'150'}, {'title':'Like 5 threads', 'gem_count':'100'},{'title':'Follow a new user', 'gem_count':'150'}],
+        }
+    },
+    created(){
+        this.initData();
+    },
+    methods: {
+        async initData(){
+            // get user profile and follow status
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
+                methods: 'GET',
+                credentials: 'include',
+                mode: 'cors'
+            }).then(async (res) => {
+                await res.json().then(data => {
+                    // save user data
+                    this.missions = data.daily_missions
+                });
+            }).catch(error => {
+                console.log(error);
+            });
         }
     }
 }
