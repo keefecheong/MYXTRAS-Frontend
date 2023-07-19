@@ -15,10 +15,11 @@
                     <div id="scroll-view">
                         <div v-for="day in 7" :key="day" class="dayBox" :id="'day' + day">
                             <p>Day {{ day }}</p>
-                            <p>{{ day == 1 ? '50' : '100' }} <span class="material-symbols-outlined symbols" style="color: aqua;">diamond</span></p>
+                            <p>{{ rewards[day - 1] }} <span class="material-symbols-outlined symbols" style="color: aqua;">diamond</span></p>
                             <br>
-                            <btn class="pink-btn material-symbols-outlined symbols" :class="{ locked: day != 1 }" v-if="day != 1">lock</btn>
-                            <btn class="pink-btn" v-else><p>Claim</p></btn>
+                            <button class="pink-btn material-symbols-outlined symbols locked" v-if="day > this.day">lock</button>
+                            <button class="pink-btn locked" v-if="day < this.day" disabled><p>Claimed</p></button>
+                            <button class="pink-btn" v-if="day == this.day " @click="checkIn" :class="{ claimed: claimed }" :disabled="claimed"><p>{{claimed ? "Claimed" : "Claim"}}</p></button>
                         </div>
                     </div>
                 </div>
@@ -124,7 +125,7 @@ h1 {
 .imageContainer {
     width: 60% !important;
 }
-.locked {
+.locked, .claimed {
     opacity: 0.5;
 }
 #missionsContainer {
@@ -174,6 +175,9 @@ export default {
     data() {
         return {
             missions: [{'title':'Like 5 threads', 'gem_count':'100'},{'title':'Follow a new user', 'gem_count':'150'}, {'title':'Like 5 threads', 'gem_count':'100'},{'title':'Follow a new user', 'gem_count':'150'}],
+            rewards: [50, 100, 100, 100, 150, 200, 500],
+            day: null,
+            claimed: false,
         }
     },
     created(){
@@ -192,6 +196,32 @@ export default {
                     this.missions = data
                 });
             }).catch(error => {
+                console.log(error);
+            });
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/daily-checkin`, {
+                mode: 'cors',
+                method: 'GET',
+                credentials: 'include'
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    this.day = data.checkin_count;
+                    this.claimed = data.claimed;
+                    console.log(this.day)
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        async checkIn(){
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/daily-checkin`, {
+                mode: 'cors',
+                method: 'POST',
+                credentials: 'include',
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    this.claimed = true;    
+                });
+            }).catch((error) => {
                 console.log(error);
             });
         }

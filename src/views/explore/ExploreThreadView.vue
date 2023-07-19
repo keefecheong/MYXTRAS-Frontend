@@ -3,10 +3,13 @@
     <div id="gallery-interest-selection" class="">
             <span>Filter by:</span>
 
-            <AddInterestButton
+            <InterestBadgeList
                 :selectedOption="selectedOption"
-                @selectedInterests="handleInterestSelected"
+                :selection="true"
+                @interest-selected="handleInterestSelected"
             />
+
+            <button @click="clearSelection()" id="clearAll-btn">Clear All</button>
         </div>
     </div>
     <div class="row" v-if="this.threads">
@@ -337,5 +340,15 @@ h1 {
 .last, .last.dropdown-content {
     border-bottom-right-radius: 15px;
     border-bottom-left-radius: 15px;
+}
+
+#clearAll-btn{
+    width: 6em;
+    color: white;
+    border: none;
+    background: linear-gradient(45deg,#FF6363, #E53A73);
+    border-radius: 10px;
+    padding: 7px 7px;
+    margin-right: 5px;
 }
 </style>

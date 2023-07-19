@@ -104,10 +104,14 @@
                     <div class="card follower-card">
                         <div class="card-body card-position">
                             <h5 class="card-title">Followers: {{ user.followers.length }}</h5>
-
+                            <div v-if="user.followers.length === 0" class="row center-align">
+                                <p id="no-followers">No followers ☹</p>
+                                <p id="no-followers">Head to the <a href="/explore.html">Xplore</a> page!</p>
+                            </div>
                             <div
                                 class="view-user-follower"
                                 title="View user"
+                                v-else
                                 v-for="follower in user.followers"
                                 :key="follower.username"
                                 @click="viewFollower(follower._id)"
@@ -804,5 +808,9 @@ export default {
 #msg-btn:hover {
     background-color: var(--dark);
     color: white;
+}
+
+#no-followers{
+    margin-top: 30px;
 }
 </style>
