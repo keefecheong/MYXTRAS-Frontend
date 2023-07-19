@@ -5,10 +5,13 @@
             <div id="gallery-interest-selection" class="sticky-filter">
                 <span>Filter by:</span>
 
-                <AddInterestButton
+                <InterestBadgeList
                     :selectedOption="selectedOption"
-                    @selectedInterests="handleInterestSelected"
+                    :selection="true"
+                    @interest-selected="handleInterestSelected"
                 />
+
+                <button @click="clearSelection()" id="clearAll-btn">Clear All</button>
             </div>
 
             <div id="explore-blog-gallery" v-if="filteredBlogs.length > 0">
@@ -104,6 +107,10 @@ export default {
         // handle interest-selected event to update filtered blogs
         handleInterestSelected(newOptions) {
             this.selectedOption = newOptions;
+        },
+
+        clearSelection(){
+            this.selectedOption = [];
         }
     },
     computed: {
@@ -186,5 +193,15 @@ figure {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+#clearAll-btn{
+    width: 6em;
+    color: white;
+    border: none;
+    background: linear-gradient(45deg,#FF6363, #E53A73);
+    border-radius: 10px;
+    padding: 7px 7px;
+    margin-right: 5px;
 }
 </style>
