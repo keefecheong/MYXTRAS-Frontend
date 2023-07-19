@@ -628,7 +628,7 @@ export default {
         },
         // handle updating of like status to backend
         async updateLike() {
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/likes/user/${this.blog.creator_id._id}/post/${this.blog._id}`;
+            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/likes`;
             const options = {
                 mode: 'cors',
                 credentials: 'include'
@@ -748,7 +748,7 @@ export default {
         },
         // retrieve comments for the post
         async getComments() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/user/${this.blog.creator_id._id}/post/${this.blog._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/comments`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
@@ -779,7 +779,7 @@ export default {
             }
 
             // upload comment
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/comments/user/${this.blog.creator_id._id}/post/${this.blog._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/comments`, {
                 mode: 'cors',
                 method: 'POST',
                 body: JSON.stringify({

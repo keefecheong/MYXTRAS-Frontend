@@ -339,7 +339,7 @@ export default {
                 return;
             }
 
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/users/follow/${this.user._id}`;
+            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/users/${this.user._id}/follow`;
             const options = {
                 mode: 'cors',
                 credentials: 'include'
@@ -458,7 +458,7 @@ export default {
 
             this.handlingBlock = true;
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/block/${this.user._id}`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/${this.user._id}/block`, {
                 method: this.blockingUser ? 'DELETE' : 'POST',
                 mode: 'cors',
                 credentials: 'include'

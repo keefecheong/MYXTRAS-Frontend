@@ -127,7 +127,7 @@ export default {
         },
         // to send request to subscribe/unsubscribe
         async updateSubscribe(){
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/subscribe/${this.forum._id}`;
+            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forum._id}/subscribe`;
             const options = {
                 mode: 'cors',
                 credentials: 'include'
