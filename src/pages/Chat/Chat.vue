@@ -103,7 +103,9 @@ export default {
                 return;
             }
 
-            this.store.newChat(JSON.parse(selectedChat));
+            selectedChat = JSON.parse(selectedChat);
+
+            this.store.newChat(selectedChat);
             
             // set currentChat to selectedChat
             this.store.currentChat = selectedChat;
