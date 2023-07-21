@@ -69,6 +69,7 @@
 @import url('../../styles/forums/common-forum-styles.css');
 
 #forum-header {
+    color: var(--primary);
     margin-top: 20px;
 }
 
