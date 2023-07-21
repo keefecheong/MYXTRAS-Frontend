@@ -35,7 +35,8 @@
                             <div class="d-flex">
                                 <p>{{ mission.gem_count }}</p>
                                 <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                                <btn class="pink-btn"><p>Claim</p></btn>
+                                <button class="pink-btn material-symbols-outlined symbols locked" v-if=mission.locked>lock</button>
+                                <btn class="pink-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked"><p>Claim</p></btn>
                             </div>
                         </div>
                     </div>
@@ -174,7 +175,10 @@ export default {
     },
     data() {
         return {
-            missions: [{'title':'Like 5 threads', 'gem_count':'100'},{'title':'Follow a new user', 'gem_count':'150'}, {'title':'Like 5 threads', 'gem_count':'100'},{'title':'Follow a new user', 'gem_count':'150'}],
+            missions: [{'title':'Like 5 threads', 'gem_count':'100', 'claimed':false, 'locked': true},
+            {'title':'Follow a new user', 'gem_count':'150', 'claimed':false, 'locked': true}, 
+            {'title':'Like 5 threads', 'gem_count':'100', 'claimed':false, 'locked': true},
+            {'title':'Follow a new user', 'gem_count':'150', 'claimed':false, 'locked': true}],
             rewards: [50, 100, 100, 100, 150, 200, 500],
             day: null,
             claimed: false,
@@ -193,6 +197,7 @@ export default {
             }).then(async (res) => {
                 await res.json().then(data => {
                     // save user data
+                    console.log(data)
                     this.missions = data
                 });
             }).catch(error => {
