@@ -1,5 +1,5 @@
 <template>
-    <div class="a-container row" v-for="announcement in announcements">
+    <div class="a-container row" v-for="(announcement, index) in announcements">
         <div class="col-md-4 left">
             <span :class="announcement.color + ' date-box'">
                 <p class="month">May</p>
@@ -14,7 +14,10 @@
         <p class="a-caption col-md-6">
             {{ announcement.caption }}
         </p>
-        <div class="more-info">
+        <div class="col-md-1 expand">
+            <span class="triangle-down" :id="`triangle-${index}`" @click="toggleMore(index)"></span>
+        </div>
+        <div class="more-info" :id="`more-${index}`">
             <img class="a-image col-md-5" :src="announcement.image" alt="announcement banner">
             <p class="location col-md-6">Location: {{ announcement.location }}</p>
         </div>
@@ -53,7 +56,8 @@ export default {
                     location: "Ngee Ann Polytechnic 3"
                 }
             ],
-            scrolling: setInterval(() => document.querySelector('.announce').scrollBy(1, 0), 50)
+            scrolling: setInterval(() => document.querySelector('html').scrollBy(0, 1), 50),
+            index: 0
         }
     },
     mounted() {
@@ -64,17 +68,28 @@ export default {
     },
     methods: {
         checkScroll() {
-            const announceElement = document.querySelector('.announce');
+            const announceElement = document.querySelector('html');
 
-            if (Math.ceil(announceElement.scrollLeft + announceElement.clientWidth) >= announceElement.scrollWidth) {
+            if (Math.ceil(announceElement.scrollTop + announceElement.clientHeight) >= announceElement.scrollHeight) {
                 clearInterval(this.scrolling);
                 // Reached end of page
-                this.scrolling = setInterval(() => announceElement.scrollBy(-1, 0), 50);
+                this.scrolling = setInterval(() => announceElement.scrollBy(0, -1), 50);
             }
-            else if (Math.ceil(announceElement.scrollLeft) == 0) {
+            else if (Math.ceil(announceElement.scrollTop) == 0) {
                 clearInterval(this.scrolling);
                 // Reached start of page
-                this.scrolling = setInterval(() => announceElement.scrollBy(1, 0), 50);
+                this.scrolling = setInterval(() => announceElement.scrollBy(0, 1), 50);
+            }
+        },
+        toggleMore(indexValue) {
+            const status = document.getElementById(`triangle-${indexValue}`).className;
+            
+            if (status == "triangle-down") {
+                document.getElementById(`triangle-${indexValue}`).className = "triangle-up";
+                document.getElementById(`more-${indexValue}`).className = "more-info show";
+            } else {
+                document.getElementById(`triangle-${indexValue}`).className = "triangle-down";
+                document.getElementById(`more-${indexValue}`).className = "more-info";
             }
         }
     }
@@ -85,12 +100,13 @@ export default {
 @import url('../../styles/main.css');
 
 .a-container {
-    display: flex;
     border-bottom: #133B5B 1px solid;
+    padding-bottom: 10px;
 }
 
 .more-info {
-    display: flex;
+    display: none;
+    position: relative;
 }
 
 .left {
@@ -100,13 +116,13 @@ export default {
 
 .a-header {
     font-size: 30px;
-    font-weight: bold;
     color: var(--dark);
 }
 
 .a-caption {
     font-size: 15px;
     padding: 30px;
+    padding-left: 50px !important;
     text-align: justify;
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -118,13 +134,17 @@ export default {
     width: 40% !important;
     object-fit: cover;
     border: var(--dark) 1px solid;
-    padding: 0 !important;
     margin: 10px;
 }
 
 .location {
-    font-style: bold !important;
-    bottom: 0 !important;
+    position: absolute;
+    font-weight: bold;
+    font-size: large;
+    color: #000;
+    bottom: 0;
+    right: 6%;
+    height: fit-content;
 }
 
 .date-box {
@@ -152,6 +172,34 @@ export default {
     font-size: 20px;
     color: white;
     margin: 0;
+}
+
+
+.triangle-up {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 15px solid #000;
+    cursor: pointer;
+}
+
+.triangle-down {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 15px solid #000;
+    cursor: pointer;
+}
+
+.expand {
+    text-align: center;
+    place-self: center;
+}
+
+.show {
+    display: flex !important;
 }
 
 .pink {
