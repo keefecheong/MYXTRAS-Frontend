@@ -12,7 +12,7 @@
                     <div v-for="forum in subbedForums" class="mini-forum-layout">
                         <img class="groupPic" :src="forum.forum_pic_link" @click="viewForum(forum)">
     
-                        <p class="forum-name" @click="viewForum(forum)">{{ forum.forum_name }}</p>
+                        <span class="forum-name" @click="viewForum(forum)">{{ forum.forum_name }}</span>
                     </div>
                 </div>
             </div>
@@ -29,10 +29,7 @@
     width: fit-content;
     margin: 0 auto;
 }
-p {
-    margin-top: 5vh;
-    text-align: center;
-}
+
 /* Track */
 ::-webkit-scrollbar-track {
 background: #ffffff; 

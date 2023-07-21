@@ -22,10 +22,7 @@
     min-height: 50vh;
     border-radius: 15px;
 }
-p {
-    margin-top: 10vh;
-    text-align: center;
-}
+
 #popular-thread-container {
     display: flex;
     flex-direction: column;
