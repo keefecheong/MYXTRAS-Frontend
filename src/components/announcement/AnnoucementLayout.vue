@@ -131,10 +131,11 @@ export default {
 .a-image {
     border-radius: 10px;
     height: 9rem;
-    width: 40% !important;
+    width: 35% !important;
     object-fit: cover;
     border: var(--dark) 1px solid;
     margin: 10px;
+    margin-left: 7%;
 }
 
 .location {

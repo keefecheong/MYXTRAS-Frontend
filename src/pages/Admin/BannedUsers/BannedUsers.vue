@@ -146,7 +146,7 @@ export default {
     display: flex;
     flex-direction: row;
     background-color: #133B5B;
-    padding: 50px 100px 50px 100px;
+    padding: 30px 0 30px 0;
     min-height: 17vh;
     margin-left: -20px;
     justify-content: center;
@@ -155,6 +155,8 @@ export default {
 #title{
     color: white;
     text-align: center;
+    border-bottom: #EDEDED 1px solid;
+    width: 45%;
 }
 
 #logs_header{

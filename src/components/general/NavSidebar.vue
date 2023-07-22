@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import { socket } from '../../utils/chat/chatSocket.js';
 import sidebarLinks from '../../assets/sidebar-link-config.json';
 
 export default {
@@ -328,6 +327,7 @@ export default {
     min-height: 100vh;
     background-color: #133B5B;
     z-index: 3;
+    border-right: #EDEDED 1px solid;
 }
 
 #sidebar-wrapper > div {

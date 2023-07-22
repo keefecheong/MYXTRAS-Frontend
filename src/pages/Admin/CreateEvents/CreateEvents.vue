@@ -66,8 +66,8 @@ export default {
     position: fixed;
     background-color: var(--primary);
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,7 +83,7 @@ export default {
     background-color: #f73978;
     border-radius: 100px;
     width: 180px;
-    height: 50px;
+    height: 55px;
     display: flex;
     align-items: center;
     color: white;
@@ -108,8 +108,8 @@ export default {
     position: fixed;
     background-color: #f73978;
     border-radius: 100px;
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     display: flex;
     align-items: center;
     color: white;
