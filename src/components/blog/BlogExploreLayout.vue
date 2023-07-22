@@ -32,6 +32,7 @@ export default {
 .explore-blog-image {
     width: 100%;
     object-fit: cover;
+    object-position: center;
     transition: transform 0.3s ease-out;
     cursor: pointer;
     user-select: none;

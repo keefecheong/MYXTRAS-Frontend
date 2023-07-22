@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import interests from '../../assets/config.json';
+import interests from '../../assets/interest-badge-config.json';
 
 export default {
     props: [
@@ -117,42 +117,6 @@ background: #c9c9c98d;
     border-radius: 20px;
     cursor: pointer;
 }
-
-/* .badge-music{
-    background-color: #1f92e0;
-}
-
-.badge-goth {
-    background-color: #8f8f8f;
-}
-
-.badge-games {
-    background-color: #6FE5FF;
-}
-
-.badge-technology {
-    background-color: #6FFFA8;
-}
-
-.badge-sports{
-    background-color: #FFE27B;
-}
-
-.badge-dancing{
-    background-color: #7B88FF;
-}
-
-.badge-instruments{
-    background-color: #FFAB6F;
-}
-
-.badge-coding{
-    background-color: #6F74FF;
-}
-
-.badge-lifestyle{
-    background-color: #FC5454;
-} */
 
 .selected {
     border: 3px solid black;

@@ -209,7 +209,7 @@ h1 {
 
 <style>
 #filterRow {
-    margin-bottom: 5vh;
+    margin-bottom: 5dvh;
 }
 #no-filtered-threads {
     text-align: center;
@@ -249,7 +249,6 @@ h1 {
 .sticky-filter {
     position: sticky;
     top: 15vh;
-    right: 5vw;
     display: flex;
     justify-content: flex-end;
     z-index: 1;

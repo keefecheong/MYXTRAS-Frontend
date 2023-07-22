@@ -1,127 +1,143 @@
 <template>
-    <div class="row pink-header-search" >
-        <div class="col-md-3">
-        </div>
-        <div class="col-md-6 centerElements" id="search-input" > 
-            <span class="material-symbols-outlined" style="color: black" id="search-icon" @click="performSearch" title="Click to search">search</span>
-            <input 
-                class="search-bar"
+    <div id="searchbar-container" >
+        <div id="search-input">
+            <span class="material-symbols-outlined" id="search-icon" @click="performSearch" title="Click to search">search</span>
+            <input
+                id="searchbar-input"
                 type="text"
-                placeholder="Search for Xtras like you!"
+                placeholder="Search"
                 v-model='searchTerm'
                 @keyup.enter="performSearch" 
                 @focus.capture="() => toggleResults(true)" 
-                @blur.capture="(e) => toggleResults(false, e)">
+                @blur.capture="(e) => toggleResults(false, e)"
+                title="Search for a user or forum"
+            >
 
             <SearchResults v-if="showResults && searchResults != null" :results="searchResults" />
         </div>
-        <div v-if="currentPage.startsWith('/forum.html')" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
-            <button id="createForumBtn" class="white-btn" @click="showForumForm">
-                Create Forum
-            </button>
-            
-        </div>
 
-        <div v-else-if="!currentPage.startsWith('/admin/')" class="col-md-3 d-flex justify-content-end profileContainter centerElements">
-            <!-- check for identity after authentication -->
-            <div v-if="login" class="col-md-4 margin-top">
-                <p class="realname hide-overflow-text" :title="realname">{{ realname }}</p>
-                <p class="school">{{ school + '/' + course }}</p>
+        <div id="searchbar-right">
+            <div v-if="currentPage.startsWith('/forum.html')">
+                <button id="create-forum-btn" class="white-btn" @click="showForumForm">
+                    Create Forum
+                </button>
             </div>
-            <a v-if="login" href="/profilePage.html"><img class="headerprofilepic" :src="pfplink"></a>
-             
-            <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
-        </div>
+            
+            <div v-else-if="login">
+                <div>
+                    <p class="hide-overflow-text" id="searchbar-realname" :title="realname">{{ realname }}</p>
+                    <p class="hide-overflow-text" id="searchbar-school">{{ school + '/' + course }}</p>
+                </div>
 
-        <div v-else class="col-md-2 d-flex justify-content-end adminContainter centerElements">
-            <a class="admin">
-                <img class="" src="../../assets/shield_person.svg">
-                <p class="admin-text">Admin Panel</p>
-            </a>
+                <a href="/profilePage.html"><img class="searchbar-profile-pic" :src="pfplink"></a>
+            </div>
+
+            <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
     </div>
 
-    <div id="compensate-searchbar-height"></div>
+    <!-- <div id="compensate-searchbar-height"></div> -->
 </template>
 
-<style>
+<style scoped>
+p { 
+    margin-bottom: 0;
+}
+</style>
 
-.pink-header-search {
-    position: fixed;
+<style>
+#searchbar-container {
+    --searchbar-height: 10dvh;
+    --min-profile-pic-height: 50px;
+    --max-profile-pic-height: 70px;
+    position: sticky;
     top: 0;
     left: 0;
-    width: 102%;
+    width: 100%;
     z-index: 2;
-    display: flex;
-    flex-wrap: wrap;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px 0;
     background-color: var(--primary);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    column-gap: 20px;
 }
-.disable-scroll {
-  overflow-y: hidden;
+
+#search-input {
+    width: 50%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
+    background-color: white;
+    border-radius: 30px;
+    box-shadow: 2px 2px 4px #5e5e5e;
+    padding: 15px;
 }
-#createForumBtn {
+
+#search-icon {
+    padding-left: 15px;
+    margin: 0;
+    font-size: 1.5rem;
+    color: black;
+}
+
+#searchbar-input {
+    border: none;
+    outline: none;
+    width: 90%;
+    background: none;
+}
+
+#searchbar-input:focus {
+    border-bottom: 1px solid black;
+}
+
+#searchbar-right {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    column-gap: 15px;
+    align-items: center;
+    padding-right: 2% !important;
+}
+
+#create-forum-btn {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 2em 5em;
-    margin-top: 1vh;
-    margin-right: 5vw;
+    margin-bottom: 0;
     border-radius: 10px;
-}
-.button:hover .material-symbols-outlined{
-    color: white !important;
-}
-.centerElements {
-    display: flex; align-items: center;
-}
-.profileContainter {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-.margin-top {
-    margin: 1em 0 0 0!important;
-}
-.realname {
-    display: block;
-    color: white;
-    margin: 0;
-}
-.school {
-    display: block;
-    color: white;
+    box-sizing: border-box;
+    white-space: nowrap;
 }
 
-#search-input {
+#searchbar-right > div {
+    max-width: 45%;
+    height: var(--searchbar-height);
     position: relative;
-    height: fit-content;
-    margin: auto;
-    padding: 0;
-}
-
-#search-icon {
-    position: absolute;
-    left: 30px;
-    font-size: 1.5rem;
-}
-.search-bar {
+    left: 100%;
+    transform: translateX(-100%);
     display: flex;
+    flex-direction: row;
     align-items: center;
-    padding: 15px;
-    padding-left: 63px;
-    border: none;
-    border-radius: 30px;
-    width: 100%;
-    box-shadow: 2px 2px 4px #5e5e5e;
+    column-gap: 20px;
 }
 
-.headerprofilepic {
-    width: 5rem;
-    height: 5rem;
-    border: #133B5B 0.3rem solid;
+#searchbar-realname, #searchbar-school {
+    color: white;
+}
+
+.searchbar-profile-pic {
+    width: clamp(var(--min-profile-pic-height), var(--searchbar-height), var(--max-profile-pic-height));
+    height: clamp(var(--min-profile-pic-height), var(--searchbar-height), var(--max-profile-pic-height));
+    border: #133B5B 4px solid;
     border-radius: 100%;
-    margin-right: 3em;
 }
 
 /* Login button CSS */
@@ -150,7 +166,7 @@
     height: 100%;
     background: linear-gradient(115deg, #bf1950, var(--primary), var(--secondary));
     background-size: 25% 100%;
-    animation: an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop .75s linear infinite;
+    animation: login-border-animation .75s linear infinite;
     animation-play-state: paused;
     translate: -5% 0%;
     transition: translate 0.25s ease-out;
@@ -162,7 +178,7 @@
     translate: 0% 0%;
 }
   
-@keyframes an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop {
+@keyframes login-border-animation {
     to {
         transform: translateX(-25%);
     }
@@ -176,25 +192,6 @@
     background: #ffffff;
     border-radius: 10px;
     height: 100%;
-}
-
-.adminContainter {
-    margin-left: 4%;
-    margin-top: 1% !important;
-    margin-bottom: 1% !important;
-    cursor: pointer;
-}
-
-.admin {
-    display: flex;
-    align-items: center;
-}
-
-.admin-text {
-    color: white;
-    font-weight: bold;
-    margin: 0;
-    margin-left: 1em;
 }
 </style>
 
@@ -289,7 +286,7 @@ export default {
         compensateSearchBar() {
             // set timeout before setting height to wait for browser to finish rendering
             setTimeout(function() {
-                const searchbar = document.querySelector('.pink-header-search');
+                const searchbar = document.getElementById('searchbar-container');
                 const searchbarHeight = window.getComputedStyle(searchbar).height;
 
                 document.getElementById('compensate-searchbar-height').style.height = searchbarHeight;

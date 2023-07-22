@@ -1,0 +1,80 @@
+{
+    "normal": {
+        "links": [
+            {
+                "label": "Profile",
+                "page": "/profilePage.html",
+                "icon": "account_circle"
+            },
+            {
+                "label": "Feed",
+                "page": "/feed.html",
+                "icon": "group"
+            },
+            {
+                "label": "Xplore",
+                "page": "/explore.html",
+                "icon": "emoji_objects"
+            },
+            {
+                "label": "Forum",
+                "page": "/forum.html",
+                "icon": "forum"
+            },
+            {
+                "label": "Chat",
+                "page": "/chat.html",
+                "icon": "stream_apps"
+            },
+            {
+                "label": "Events",
+                "page": "/events.html",
+                "icon": "campaign"
+            },
+            {
+                "label": "Check in",
+                "page": "/checkin.html",
+                "icon": "event_available"
+            },
+            {
+                "label": "About us",
+                "page": "/about.html",
+                "icon": "question_mark"
+            }
+        ] 
+    },
+    "admin": {
+        "links": [
+            {
+                "label": "Home",
+                "page": "/admin/home.html",
+                "icon": "home"
+            },
+            {
+                "label": "Manage Admins",
+                "page": "/admin/manageAdmin.html",
+                "icon": "manage_accounts"
+            },
+            {
+                "label": "Events",
+                "page": "/admin/events.html",
+                "icon": "campaign"
+            },
+            {
+                "label": "Reports",
+                "page": "/admin/reports.html",
+                "icon": "warning"
+            },
+            {
+                "label": "Banned Users",
+                "page": "/admin/bannedUsers.html",
+                "icon": "no_accounts"
+            },
+            {
+                "label": "Logs",
+                "page": "/admin/logs.html",
+                "icon": "lists"
+            }
+        ]
+    }
+}

@@ -13,25 +13,23 @@
         <div id="main-content">
             <SearchBar />
 
-            <div class="container-fluid explore-container">
-                <div class="row">
-                    <div class="col-md-2 sub-navigation-container">
-                        <div class="sub-navigation-links">
-                            <router-link to="/blogs">
-                                <span class="sub-navigation">Blogs</span>
-                            </router-link>
-                            
-                            <router-link to="/threads">
-                                <span class="sub-navigation">Threads</span>
-                            </router-link>
-                        </div>                    
-                    </div>
+            <div class="explore-container">
+                <div class="col-md-2 sub-navigation-container">
+                    <div class="sub-navigation-links">
+                        <router-link to="/blogs">
+                            <span class="sub-navigation">Blogs</span>
+                        </router-link>
+                        
+                        <router-link to="/threads">
+                            <span class="sub-navigation">Threads</span>
+                        </router-link>
+                    </div>                    
+                </div>
 
-                    <div class="col-md-10">
-                        <h1>Explore</h1>
-                        <hr />
-                        <router-view :blogs="blogs" />
-                    </div>
+                <div class="col-md-9">
+                    <h1>Explore</h1>
+                    <hr />
+                    <router-view :blogs="blogs" />
                 </div>
             </div>
         </div>
@@ -44,7 +42,11 @@
 @import url('../../styles/sub-navigation.css');
 
 .explore-container {
-    margin-top: 50px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    column-gap: 15px;
+    position: relative;
 }
 </style>
 

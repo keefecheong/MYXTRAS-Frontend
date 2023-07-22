@@ -294,11 +294,6 @@ export default {
 </style>
 
 <style scoped>
-/* to get rid of column between sidebar and chat */
-#main-container {
-    column-gap: 0;
-}
-
 #main-content {
     display: flex;
     flex-direction: row;

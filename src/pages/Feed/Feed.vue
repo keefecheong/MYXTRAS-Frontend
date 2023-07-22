@@ -13,28 +13,24 @@
         <div id="main-content">
             <SearchBar />
             
-            <div class="feed-container container-fluid">
-                <div class="row">
-                    <div class="feed-content justify-content-center">
-                        <h1 class="feed-header">Your Feed</h1>
+            <div class="feed-container">
+                <h1 class="feed-header">Your Feed</h1>
 
-                        <hr id="top-line"/>
-                        
-                        <div v-if="blogs.length <= 0" class="no-more-blogs">
-                            <p>No new activity.</p>
-                            <p>Follow more people? <a href="/explore.html">Explore!</a></p>
-                        </div>
+                <hr id="top-line"/>
+                
+                <div v-if="blogs.length <= 0" class="no-more-blogs">
+                    <p>No new activity.</p>
+                    <p>Follow more people? <a href="/explore.html">Explore!</a></p>
+                </div>
 
-                        <div v-else>
-                            <BlogLayout v-for="blog in blogs" :key="blog._id" :blog="blog" />
+                <div v-else>
+                    <BlogLayout v-for="blog in blogs" :key="blog._id" :blog="blog" />
 
-                            <hr />
-                        
-                            <div class="no-more-blogs">
-                                <p>That's the end. You're all catched up!</p>
-                                <p>Follow more people? <a href="/explore.html">Explore!</a></p>
-                            </div>
-                        </div>
+                    <hr />
+                
+                    <div class="no-more-blogs">
+                        <p>That's the end. You're all catched up!</p>
+                        <p>Follow more people? <a href="/explore.html">Explore!</a></p>
                     </div>
                 </div>
             </div>
@@ -47,8 +43,8 @@
 @import url('../../styles/main.css');
 
 .feed-container {
+    margin: auto;
     max-width: 50%;
-    margin-top: 20px;
 }
 
 .no-more-blogs {
@@ -62,8 +58,9 @@
     color: #E53A73 !important;
     margin-top: 20px;
 }
+
 #top-line {
-    margin-bottom: 50px !important;
+    margin-bottom: 30px !important;
 }
 </style>
 
