@@ -62,8 +62,7 @@ export default {
             showSingleBlog: false,
             selectedBlogId: '',
             selectedBlogIndex: '',
-            selectedOption: [],
-            blogs: [],
+            selectedOption: []
         }
     },
     props: [
