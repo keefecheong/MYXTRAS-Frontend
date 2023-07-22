@@ -1,6 +1,6 @@
 <template>
     <div id="main-container">
-        <NavSidebar/>
+        <NavSidebar :forAdmin="true" />
         <div id="main-content">
             <SearchBar />
             <div id="admin-container">
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import NavSidebar from '../../../components/admin/adminNavSidebar.vue';
+import NavSidebar from '../../../components/general/NavSidebar.vue';
 import SearchBar from '../../../components/general/SearchBar.vue';
 
 export default {

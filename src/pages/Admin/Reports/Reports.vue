@@ -1,6 +1,6 @@
 <template>
     <div id="main-container">
-        <NavSidebar/>
+        <NavSidebar :forAdmin="true" />
         <div id="main-content">
 
         </div>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import NavSidebar from '../../../components/admin/adminNavSidebar.vue';
+import NavSidebar from '../../../components/general/NavSidebar.vue';
 
 export default {
     components: {

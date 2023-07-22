@@ -95,7 +95,7 @@
 
                     <div class="floating-button-wrapper" v-if="isSelf">
                         <div class="floating-button" @click="() => { toggleCreateBlog(true) }">
-                            <i style="color: white" class="bi bi-plus plus-icon"></i>
+                            <i class="bi bi-plus plus-icon"></i>
                         </div>
                     </div>
                 </div>
@@ -769,6 +769,7 @@ export default {
     justify-content: center;
     cursor: pointer;
     margin-right: 15px;
+    color: white;
 }
 
 .plus-icon {

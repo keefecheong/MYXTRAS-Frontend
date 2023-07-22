@@ -2,10 +2,10 @@
     <!-- sidebar wrapper for medium to large screens -->
     <nav id="sidebar-wrapper" v-if="!narrow" class="stickToTop">
         <!-- maximized sidebar implementation -->
-        <div id="maximized" v-if="maximized">  <!-- maximized sidebar shown when "maximized" is true -->
-            <div id="maximized-header-wrapper">
+        <div id="maximized" v-if="maximized">
+            <div class="sidebar-header-wrapper">
                 <h1 id="maximized-header">MyXtras</h1>
-                <!-- <button class="material-symbols-outlined" id="close-sidebar" @click="toggleSidebar()">keyboard_double_arrow_left</button> -->
+
                 <button class="material-symbols-outlined" id="close-sidebar" @click="toggleSidebar()">keyboard_double_arrow_left</button>
             </div>
             
@@ -13,144 +13,55 @@
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
             </div>
 
-            <a href="/profilePage.html" class="sidebar-link">
-                <span class="material-symbols-outlined">account_circle</span>
-                <p>Profile</p>
-            </a>
-        
-            <a href="/feed.html" class="sidebar-link">
-                <span class="material-symbols-outlined">group</span>
-                <p>Feed</p>
-            </a>
-
-            <a href="/explore.html" class="sidebar-link">
-                <span class="material-symbols-outlined">emoji_objects</span>
-                <p>Xplore</p>
-            </a>
-
-            <a href="/forum.html" class="sidebar-link">
-                <span class="material-symbols-outlined">forum</span>
-                <p>Forum</p>
-            </a>
-
-            <a href="/chat.html" class="sidebar-link">
-                <span class="material-symbols-outlined">stream_apps</span>
-                <p>Chat</p>
-            </a>
-
-            <a href="/events.html" class="sidebar-link">
-                <span class="material-symbols-outlined">campaign</span>
-                <p>Events</p>
-            </a>
-
-            <a href="/checkin.html" class="sidebar-link">
-                <span class="material-symbols-outlined">event_available</span>
-                <p>Check in</p>
-            </a> 
-
-            <a href="/about.html" class="sidebar-link">
-                <span class="material-symbols-outlined">question_mark</span>
-                <p>About us</p>
-            </a>
+            <div v-for="(link, index) in links" :key="index">
+                <a :href="link.page" class="sidebar-link">
+                    <span class="material-symbols-outlined">{{ link.icon }}</span>
+                    <p>{{ link.label }}</p>
+                </a>
+            </div>
         </div>
 
         <!-- minimized sidebar implementation -->
-        <div id="minimized" v-if="!maximized">  <!-- minimized sidebar shown when "maximized" is false -->
-            <!-- <button class="material-symbols-outlined" @click="toggleSidebar()">keyboard_double_arrow_right</button> -->
-            <button class="material-symbols-outlined" @click="toggleSidebar()">keyboard_double_arrow_right</button>
+        <div id="minimized" v-if="!maximized">
+            <div class="sidebar-header-wrapper">
+                <button class="material-symbols-outlined" @click="toggleSidebar()">keyboard_double_arrow_right</button>
+            </div>
 
             <div class="img-container">
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo-mini"/>
             </div>
 
-            <a href="/profilePage.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Feed">account_circle</span>
-            </a>
-
-            <a href="/feed.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Feed">group</span>
-            </a>
-
-            <a href="/explore.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Xplore">emoji_objects</span>
-            </a>
-
-            <a href="/forum.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Forum">forum</span>
-            </a>
-
-            <a href="/chat.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Chat">stream_apps</span>
-            </a>
-
-            <a href="/events.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Events">campaign</span>
-            </a>
-
-            <a href="/checkin.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="Check In">event_available</span>
-            </a> 
-
-            <a href="/about.html" class="sidebar-link">
-                <span class="material-symbols-outlined" title="About">question_mark</span>
-            </a>
+            <div v-for="(link, index) in links" :key="index">
+                <a :href="link.page" class="sidebar-link">
+                    <span class="material-symbols-outlined" :title="link.label">{{ link.icon }}</span>
+                </a>
+            </div>
         </div>
     </nav>
 
     <!-- sidebar (navbar) wrapper for small screens -->
     <nav id="navbar-wrapper" :class="{stickToTop: !expanded}" v-if="narrow">
         <!-- expanded navbar implementation -->
-        <div id="expanded" v-if="expanded">  <!-- expand navbar shown when "expanded" is true -->
-            <div>
-                <h1 id="expanded-header" style="color: white;">MyXtras</h1>
+        <div id="expanded" v-if="expanded">
+            <div class="sidebar-header-wrapper">
+                <h1 id="expanded-header">MyXtras</h1>
                 <button class="material-symbols-outlined" id="close-navbar" @click="toggleNavbar()">close</button>
             </div>
             
-            <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
-        
-            <a href="/profilePage.html" class="navbar-link">
-                <span class="material-symbols-outlined">account_circle</span>
-                <p>Profile</p>
-            </a>
+            <div class="img-container">
+                <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
+            </div>
 
-            <a href="/feed.html" class="navbar-link">
-                <span class="material-symbols-outlined">group</span>
-                <p>Feed</p>
-            </a>
-
-            <a href="/explore.html" class="navbar-link">
-                <span class="material-symbols-outlined">emoji_objects</span>
-                <p>Xplore</p>
-            </a>
-
-            <a href="/forum.html" class="navbar-link">
-                <span class="material-symbols-outlined">forum</span>
-                <p>Forum</p>
-            </a>
-
-            <a href="/chat.html" class="navbar-link">
-                <span class="material-symbols-outlined">stream_apps</span>
-                <p>Chat</p>
-            </a>
-
-            <a href="/events.html" class="navbar-link">
-                <span class="material-symbols-outlined">campaign</span>
-                <p>Events</p>
-            </a>
-
-            <a href="/checkin.html" class="navbar-link">
-                <span class="material-symbols-outlined">event_available</span>
-                <p>Check in</p>
-            </a> 
-
-            <a href="/about.html" class="navbar-link">
-                <span class="material-symbols-outlined">question_mark</span>
-                <p>About us</p>
-            </a>
+            <div v-for="(link, index) in links" :key="index">
+                <a :href="link.page" class="navbar-link">
+                    <span class="material-symbols-outlined">{{ link.icon }}</span>
+                    <p>{{ link.label }}</p>
+                </a>
+            </div>
         </div>
 
         <!-- collapsed navbar implementation -->
-        <div id="collapsed" v-if="!expanded">  <!-- collapse navbar shown when "expanded" is false -->
+        <div id="collapsed" v-if="!expanded"> 
             <h1 id="collapsed-header">MyXtras</h1>
             <button class="material-symbols-outlined" id="open-navbar" @click="toggleNavbar()">menu</button>
         </div>
@@ -159,8 +70,12 @@
 
 <script>
 import { socket } from '../../utils/chat/chatSocket.js';
+import sidebarLinks from '../../assets/sidebar-link-config.json';
 
 export default {
+    created() {
+        this.links = this.forAdmin ? sidebarLinks.admin.links : sidebarLinks.normal.links;
+    },
     mounted() {
         // call handleResize to set up sidebar based on initial window dimensions
         this.handleResize();
@@ -189,12 +104,16 @@ export default {
         window.removeEventListener('scroll', this.handleScroll);
         window.removeEventListener('resize', this.handleResize);
     },
+    props: [
+        'forAdmin'
+    ],
     data() {
         return {
             maximized: false,
             expanded: false,
             narrow: false,
-            currentLocation: 0
+            currentLocation: 0,
+            links: []
         }
     },
     methods: {
@@ -331,11 +250,19 @@ export default {
             const links = document.querySelectorAll('.sidebar-link, .navbar-link');
             for (var i = 0; i < links.length; i++) {
                 const link = links[i];
-                if (link.getAttribute('href').split('/')[1] == window.location.pathname.split('/')[1]) {
+
+                const href = link.getAttribute('href').replace(import.meta.env.VITE_BASE_URL, '');
+                const pathname = window.location.pathname;
+
+                if (pathname.startsWith(href)) {
                     link.classList.add('current');
                 }
                 // set current for feed link if path is /
-                else if (window.location.pathname == '/' && link.getAttribute('href').split('/')[1] == 'feed.html') {
+                else if (pathname == '/' && href == '/feed.html') {
+                    link.classList.add('current');
+                }
+                // set current for forum link if path is /forumGroup.html
+                else if (pathname == '/forumGroup.html' && href == '/forum.html') {
                     link.classList.add('current');
                 }
                 else {
@@ -394,7 +321,6 @@ export default {
 </script>
 
 <style>
-/* container styles */
 /* normal sidebar */
 #sidebar-wrapper {
     width: min-content;
@@ -442,15 +368,10 @@ export default {
 }
 
 /* styles to be inherited by pages that use NavSidebar */
-body {
-    margin: 0;
-}
-
 #main-container {
     position: relative;
     display: flex;
     flex-direction: row;
-    column-gap: 12px;
 }
 
 .hidden {
@@ -478,11 +399,11 @@ body {
 }
 
 .compensateMaximizedSidebar {
-    margin-left: max(202px, 15vw + 42px) !important;
+    margin-left: max(190px, 15vw + 30px) !important;
 }
 
 .compensateMinimizedSidebar {
-    margin-left: 82px !important;
+    margin-left: 70px !important;
 }
 
 /* material symbol styles */
@@ -500,11 +421,13 @@ body {
 }
 
 /* header styles */
-#maximized-header-wrapper {
+.sidebar-header-wrapper {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
+    height: 3.5rem;
+    color: white;
 }
 
 #expanded-header {
@@ -512,15 +435,7 @@ body {
     padding-top: 15px;
 }
 
-#collapsed-header {
-    margin: 0;
-}
-
-#open-navbar {
-    margin: 0;
-}
-
-#close-sidebar {
+#collapsed-header, #open-navbar, #close-sidebar {
     margin: 0;
 }
 
@@ -530,41 +445,35 @@ body {
     top: 15px;
 }
 
-#maximized-header {
-    color: white;
-    font-size: 38px;
+/* logo style */
+.img-container {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* logo style */
 .ngee-ann-logo {
-    width: 45%;
-    margin: 20px auto;
-    text-align: center;
+    width: clamp(40px, 45%, 120px);
     display: block;
     border-radius: 50%;
 }
+
 .ngee-ann-logo-mini {
     width: 100%;
-    margin: 50px auto;
-    text-align: center;
     display: block;
     border-radius: 50%;
 }
+
 /* sidebar link styles */
 a.sidebar-link, a.navbar-link {
     text-decoration: none !important;
     height: fit-content;
-    width: match-parent;
     text-align: center;
     display: block;
     padding: 10px;
     margin-top: 10px;
     color: white;
-}
-
-a > .material-symbols-outlined {
-    margin: 0;
-
 }
 
 a.sidebar-link {
@@ -573,14 +482,13 @@ a.sidebar-link {
 
 a.sidebar-link > .material-symbols-outlined, a.navbar-link > .material-symbols-outlined {
     display: inline;
-    
 }
 
 a.sidebar-link > p, a.navbar-link > p {
     display: inline;
+    margin: 0;
     margin-left: 20px;
-    /* font-size: 1.25em; */
-    font-size: 16px;
+    font-size: 1rem !important;
     vertical-align: middle;
 }
 
@@ -596,9 +504,5 @@ a.sidebar-link > p, a.navbar-link > p {
 
 .current > *, a.sidebar-link:hover > *, a.navbar-link:hover > * {
     color: black !important;
-}
-
-.img-container{
-    height: 110px;
 }
 </style>

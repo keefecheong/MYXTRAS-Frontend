@@ -135,7 +135,6 @@ export default {
 .sticky-filter {
     position: sticky;
     top: 15vh;
-    right: 5vw;
     display: flex;
     justify-content: flex-end;
     z-index: 1;

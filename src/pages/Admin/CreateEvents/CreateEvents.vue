@@ -1,6 +1,6 @@
 <template>
     <div id="main-container">
-        <NavSidebar/>
+        <NavSidebar :forAdmin="true" />
         <div id="main-content">
             <h1 class="row pink-header">Xtra EVENTS! 🔊</h1>
             <AnnoucementLayout/>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import NavSidebar from '../../../components/admin/adminNavSidebar.vue';
+import NavSidebar from '../../../components/general/NavSidebar.vue';
 import AnnoucementLayout from '../../../components/announcement/AnnoucementLayout.vue';
 
 export default {

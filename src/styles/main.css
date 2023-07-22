@@ -11,33 +11,36 @@
     --secondary: #FF6363;
     --dark: #133B5B;
 }
+
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
-  }
-  
+}
+
 /* Track */
 ::-webkit-scrollbar-track {
-background: #f1f1f1; 
-border-radius: 15px;
+    background: #f1f1f1;
+    border-radius: 15px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-background: var(--dark);
-border-radius: 15px;
+    background: var(--dark);
+    border-radius: 15px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-background: var(--secondary);
+    background: var(--secondary);
 }
+
 body {
     font-family: 'Quicksand' !important;
     font-size: calc(.5em + 0.5vw) !important;
     overflow-x: hidden;
 }
+
 .center-align {
     display: flex;
     flex-direction: column;
@@ -67,23 +70,29 @@ body {
     cursor: pointer;
     font-weight: bold;
 }
+
 .card-title {
     font-size: 2rem;
     text-align: center;
 }
+
 a {
     text-decoration: none !important;
 }
-a:hover{
+
+a:hover {
     color: var(--primary);
 }
+
 .imageContainer {
     width: 100%;
 }
+
 .imageContainer img {
     max-height: 100%;
     max-width: 100%;
 }
+
 /* hide overflow text with ... */
 .hide-overflow-text {
     display: -webkit-box;
@@ -111,6 +120,7 @@ h1 {
     cursor: help;
     padding: 4px;
 }
+
 /* Tooltip styling */
 [data-tooltip]:before {
     content: attr(data-tooltip);
@@ -125,6 +135,7 @@ h1 {
     text-align: center;
     border-radius: 4px;
 }
+
 /* Dynamic horizontal centering */
 [data-tooltip-position="top"]:before,
 [data-tooltip-position="bottom"]:before {
@@ -134,6 +145,7 @@ h1 {
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
 }
+
 /* Dynamic vertical centering */
 [data-tooltip-position="right"]:before,
 [data-tooltip-position="left"]:before {
@@ -143,18 +155,22 @@ h1 {
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
 }
+
 [data-tooltip-position="top"]:before {
     bottom: 100%;
     margin-bottom: 6px;
 }
+
 [data-tooltip-position="right"]:before {
     left: 100%;
     margin-left: 6px;
 }
+
 [data-tooltip-position="bottom"]:before {
     top: 100%;
     margin-top: 6px;
 }
+
 [data-tooltip-position="left"]:before {
     right: 100%;
     margin-right: 6px;
@@ -170,38 +186,45 @@ h1 {
     border-color: transparent;
     border-style: solid;
 }
+
 /* Dynamic horizontal centering for the tooltip */
 [data-tooltip-position="top"]:after,
 [data-tooltip-position="bottom"]:after {
     left: 50%;
     margin-left: -6px;
 }
+
 /* Dynamic vertical centering for the tooltip */
 [data-tooltip-position="right"]:after,
 [data-tooltip-position="left"]:after {
     top: 50%;
     margin-top: -6px;
 }
+
 [data-tooltip-position="top"]:after {
     bottom: 100%;
     border-width: 6px 6px 0;
     border-top-color: #000;
 }
+
 [data-tooltip-position="right"]:after {
     left: 100%;
     border-width: 6px 6px 6px 0;
     border-right-color: #000;
 }
+
 [data-tooltip-position="bottom"]:after {
     top: 100%;
     border-width: 0 6px 6px;
     border-bottom-color: #000;
 }
+
 [data-tooltip-position="left"]:after {
     right: 100%;
     border-width: 6px 0 6px 6px;
     border-left-color: #000;
 }
+
 /* Show the tooltip when hovering */
 [data-tooltip]:hover:before,
 [data-tooltip]:hover:after {
@@ -210,10 +233,14 @@ h1 {
 }
 
 /* report button styles */
-.report-button, .report-button .material-symbols-outlined, .report-button.material-symbols-outlined {
+.report-button,
+.report-button .material-symbols-outlined,
+.report-button.material-symbols-outlined {
     color: red;
 }
 
-.report-button.contrast, .report-button.contrast .material-symbols-outlined, .report-button.contrast.material-symbols-outlined {
+.report-button.contrast,
+.report-button.contrast .material-symbols-outlined,
+.report-button.contrast.material-symbols-outlined {
     color: white;
 }

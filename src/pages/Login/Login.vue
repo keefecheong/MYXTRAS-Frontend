@@ -16,7 +16,7 @@
                         <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField" required>
                         <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }" @click="hidePassword">visibility_off</button>
                         <br/>
-                        <div id="recaptcha-container" style="width:300px;margin:auto;"></div>
+                        <div id="recaptcha-container"></div>
 
                         <button @click="loginUser()" id="loginBtn">
                             Log in
@@ -111,6 +111,11 @@ input[type=password] {
 input:focus{
     background-size: 0% 2px;
     outline: none;
+}
+
+#recaptcha-container {
+    width: 300px;
+    margin: auto;
 }
 
 #loginBtn {
