@@ -505,4 +505,20 @@ a.sidebar-link > p, a.navbar-link > p {
 .current > *, a.sidebar-link:hover > *, a.navbar-link:hover > * {
     color: black !important;
 }
+
+/* to center navbar links (narrow, expanded mode) */
+.navbar-link {
+    display: flex !important;
+    flex-direction: row;
+    text-align: start !important;
+}
+
+.navbar-link .material-symbols-outlined {
+    flex: 0 0 40%;
+    text-align: end;
+}
+
+.navbar-link > p {
+    width: 100%;
+}
 </style>
