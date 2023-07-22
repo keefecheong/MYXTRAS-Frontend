@@ -121,7 +121,7 @@ body {
 .whitebox {
     background-color: white;
     position: relative;
-    padding-top: 5vh;
+    padding: 7vh 0;
     display: flex;
     flex-direction: column;
     align-items: center;
