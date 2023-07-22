@@ -61,7 +61,7 @@
 
 <script>
 import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
-import AddInterestButton from '../../components/general/AddInterestButton.vue';
+import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
 import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
 import viewForum from '../../utils/general/viewForum.js';
 
@@ -78,7 +78,7 @@ export default {
     },
     components: {
         ThreadMiniLayout,
-        AddInterestButton,
+        InterestBadgeList,
         ThreadDetailedLayout
     },
     mounted() {
@@ -144,8 +144,14 @@ export default {
             });
             
         },
-        handleInterestSelected(newOptions) {
-            this.selectedOption = newOptions;
+        handleInterestSelected(option) {
+
+            const index = this.selectedOption.indexOf(option)
+            if (index !== -1) {
+                this.selectedOption.splice(index, 1);
+            } else {
+                this.selectedOption.push(option);
+            }
         },
         retrieveForums() {
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/categorized`, {

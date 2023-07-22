@@ -50,16 +50,6 @@ export default {
     data() {
         return {
             options: interests.interestColors.map(item => item.interest)
-            // options:[
-            //     'Music',
-            //     'Games',
-            //     'Technology',
-            //     'Sports',
-            //     'Dancing',
-            //     'Instruments',
-            //     'Goth',
-            //     'Lifestyle'
-            // ]
         }
     },
     emits: [
