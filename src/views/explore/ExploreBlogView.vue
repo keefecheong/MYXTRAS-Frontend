@@ -54,7 +54,7 @@
 <script>
 import BlogExploreLayout from '../../components/blog/BlogExploreLayout.vue';
 import ExploreSingleBlogLayout from '../../components/blog/ExploreSingleBlogLayout.vue';
-import AddInterestButton from '../../components/general/AddInterestButton.vue';
+import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
 
 export default {
     data() {
@@ -62,7 +62,8 @@ export default {
             showSingleBlog: false,
             selectedBlogId: '',
             selectedBlogIndex: '',
-            selectedOption: []
+            selectedOption: [],
+            blogs: [],
         }
     },
     props: [
@@ -71,7 +72,7 @@ export default {
     components: {
         BlogExploreLayout,
         ExploreSingleBlogLayout,
-        AddInterestButton
+        InterestBadgeList
     },
     updated() {
         // scroll to blog if coming back from single blog view
@@ -105,8 +106,14 @@ export default {
             }
         },
         // handle interest-selected event to update filtered blogs
-        handleInterestSelected(newOptions) {
-            this.selectedOption = newOptions;
+        handleInterestSelected(option) {
+
+            const index = this.selectedOption.indexOf(option)
+            if (index !== -1) {
+                this.selectedOption.splice(index, 1);
+            } else {
+                this.selectedOption.push(option);
+            }
         },
 
         clearSelection(){
