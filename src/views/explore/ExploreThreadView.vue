@@ -44,7 +44,8 @@
         <div class="col-md-3">
             <div class="sticky-div">
                 <div class="popular-community">
-                    <h1 class="pop-header" v-if="tagsLoaded">Popular Communities</h1>
+                    <h1 class="pop-header" v-if="tagsLoaded && tags.length !=0">Popular Communities</h1>
+                    <div id="noForums" v-else>No forums created<span class="material-symbols-outlined" style="text-align: center; justify-content: center;">warning</span></div>
                     <div class="interestCommunity" v-for="(tag, index) in tags">
                         <h4 class="cat" @click="openForum(index)">{{ tag._id }}<div class="triangle-down" :id="`triangle-${index}`"></div></h4>
                         <div class="dropdown-content" :id="'dc'+index" >
@@ -223,7 +224,12 @@ h1 {
     border-radius: 10px;
     cursor: pointer;
 }
-
+#noForums {
+    background-color: var(--primary);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
 .interestCommunity{
     font-size: 1.2rem;
     background-color: rgba(255, 150, 183, 0.6);
