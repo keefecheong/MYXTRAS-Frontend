@@ -678,7 +678,7 @@ export default {
         },
         // handle updating of save status to backend
         async updateSave() {
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/users/save/user/${this.blog.creator_id._id}/post/${this.blog._id}`;
+            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/save`;
             const options = {
                 mode: 'cors',
                 credentials: 'include'
