@@ -41,6 +41,11 @@ body {
     overflow-x: hidden;
 }
 
+body, #app {
+    min-width: 100dvw;
+    min-height: 100dvh;
+}
+
 .center-align {
     display: flex;
     flex-direction: column;
@@ -243,4 +248,14 @@ h1 {
 .report-button.contrast .material-symbols-outlined,
 .report-button.contrast.material-symbols-outlined {
     color: white;
+}
+
+/* set diagonal gradient with primary and secondary */
+.use-primary-secondary-gradient {
+    background: linear-gradient(-45deg, var(--primary), var(--secondary));
+}
+
+*:disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
 }

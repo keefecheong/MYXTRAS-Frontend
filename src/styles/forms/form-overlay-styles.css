@@ -52,11 +52,6 @@
     cursor: pointer;
 }
 
-.form-overlay-control-button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
 .errMsg{
     color: red;
     font-weight: bold;

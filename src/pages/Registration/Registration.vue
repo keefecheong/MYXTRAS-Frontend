@@ -3,269 +3,127 @@
         {{ alertMsg }}
     </AlertPrompt>
 
-    <div id="main-container">
+    <div id="main-container" class="center-main-container">
         <img src="../../assets/ngeeannxtras.jpg" :draggable="false" id="ngee-ann-banner">
 
-        <div class="whitebox">
-            <form @submit.prevent="login">
-                <h1 id="register-form-header">Register Now!</h1>
+        <div class="form-container">
+            <form @submit.prevent="registerUser">
+                <h1>Register Now!</h1>
 
-                <input v-model="emailAddress" type="email" placeholder="Email Address" id="emailField" required
-                    @input="verifyEmail">
+                <input title="Please enter your email" v-model="emailAddress" type="email" placeholder="Email Address"
+                    required @input="verifyEmail">
 
-                <p class="genErr">{{ emailErr }}</p>
+                <p class="registration-error" v-if="showEmailErr">Invalid email address</p>
 
                 <!-- Password Field -->
-                <input
-                    title="Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters"
-                    :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" id="passwordField"
-                    class="custom-input" :maxlength="20" required>
+                <div class="password-field-container">
+                    <input
+                        title="Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters"
+                        :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password"
+                        class="registration-password-field" :maxlength="20" required>
 
-                <button class="material-symbols-outlined overlay-button" :class="{ 'pressed': isPressed }"
-                    @click="hidePassword(1)">
-                    visibility_off
-                </button>
+                    <button type="button" class="material-symbols-outlined" :class="{ 'show-password': showPassword }"
+                        @click="hidePassword(1)">
+                        visibility_off
+                    </button>
 
-                <div v-if="password != ''">
-                    <span class="material-symbols-outlined" :class="passwordRequirements" id="infoSym">info</span>
-                    <p :class="passwordRequirements" id="passErr">{{ passwordStrengthMessage }}</p>
+                    <div v-if="password != ''" id="password-strength-info">
+                        <span class="material-symbols-outlined" :class="passwordRequirements">info</span>
+                        <p :class="passwordRequirements" class="registration-error">{{ passwordStrengthMessage }}</p>
+                    </div>
                 </div>
 
-                <input :type="showPasswordrepeated ? 'text' : 'password'" v-model="repeatedPassword"
-                    placeholder="Confirm Password" id="repeatPasswordField" :maxlength="20" required>
+                <div class="password-field-container">
+                    <input title="Confirm your password" :type="showRepeatPassword ? 'text' : 'password'"
+                        v-model="repeatedPassword" placeholder="Confirm Password" class="registration-password-field"
+                        :maxlength="20" required>
 
-                <button class="material-symbols-outlined overlay-button" :class="{ 'pressedrepeated': isPressedrepeated }"
-                    @click="hidePassword(2)">
-                    visibility_off
-                </button>
+                    <button type="button" class="material-symbols-outlined" :class="{ 'show-password': showRepeatPassword }"
+                        @click="hidePassword(2)">
+                        visibility_off
+                    </button>
+                </div>
 
                 <!-- Phone Number Field -->
-                <input v-model="phoneNumber" type="text" placeholder="Phone Number" id="numberField" @input="() => {
-                    filterNumber();
-                    verifyPhone();
-                }" required :class="{ 'disabled': verifiedotp }" :disabled="verifiedotp">
+                <div class="phone-number-field-container">
+                    <input title="Please enter your phone number" v-model="phoneNumber" type="text"
+                        placeholder="Phone Number" id="numberField" @input="() => {
+                            filterNumber();
+                            verifyPhone();
+                        }" required :disabled="otpSent">
 
-                <button @click="sendOTP" id="sendOtpBtn" class="overlay-button" :class="{ 'disabled': disableOTP }"
-                    :disabled="disableOTP">
-                    Send OTP
-                </button>
+                    <button type="button" @click="sendOTP" class="registration-otp-button use-primary-secondary-gradient"
+                        :class="{ 'disabled': disableOTP }" :disabled="disableOTP || otpSent">
+                        Send OTP
+                    </button>
 
-                <p v-if="showPhoneErr" id="phoneErr">Enter a valid phone number</p>
-                <p class="genErr">{{ phoneErr }}</p>
+                    <p v-if="showPhoneErr" class="registration-error">Invalid phone number</p>
+                </div>
 
                 <!-- Reveals after OTP is sent -->
-                <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" id="otpField" @input="() => {
-                    filterNumber();
-                    verifyPhone();
-                }" :maxlength="6" required :class="{ 'disabled': verifiedotp }">
+                <div class="phone-number-field-container">
+                    <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" @input="() => {
+                        filterNumber();
+                        verifyPhone();
+                    }" :maxlength="6" required :disabled="otpVerified">
 
-                <button v-if="otpSent" @click="verifyOTP" id="sendOtpBtn" class="overlay-button"
-                    :class="{ 'disabled': verifiedotp }">
-                    Verify OTP
-                </button>
+                    <button type="button" v-if="otpSent" @click="verifyOTP"
+                        class="registration-otp-button use-primary-secondary-gradient" :disabled="otpVerified">
+                        Verify OTP
+                    </button>
 
-                <p v-if="verifiedotp" class="otp-verified">OTP verified</p>
+                    <p v-if="otpVerified" class="otp-verified">OTP verified</p>
+                </div>
+
                 <div id="recaptcha-container"></div>
 
-                <p v-if="registerFail" class="genErr"> {{ generalErrMsg }}</p>
+                <p v-if="registerFail" class="registration-error"> {{ generalErrMsg }}</p>
 
-                <button @click="registerUser()" id="registerBtn">
+                <button type="submit" class="submit-button use-primary-secondary-gradient" :disabled="invalidFields">
                     Register
                 </button>
-
-                <a href="/login.html" id="loginBtn">
-                    Already have an account? Login Now!
-                </a>
             </form>
+
+            <a href="/login.html" class="redirect-link">
+                Already have an account? Login Now!
+            </a>
         </div>
     </div>
 </template>
   
 <style>
 @import url('../../styles/main.css');
+@import url('../../styles/login-register-styles.css');
 
-body {
-    background: linear-gradient(45deg, #FF6363, var(--primary));
-    min-height: 100vh;
-    background-repeat: no-repeat;
-    animation: gradientAnimation 2s infinite linear;
-    background-size: 400% 400%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-#main-container {
-    display: flex;
-    flex-direction: row;
-    width: 90%;
-    margin: auto;
-}
-
-#phoneErr,
-.genErr {
-    padding: 0 4em 0 4em;
+.registration-error {
     color: red;
     font-weight: bold;
 }
 
-#register-form-header {
-    margin-bottom: 5vh;
-}
-
-#ngee-ann-banner {
-    opacity: 0.75;
-}
-
-.whitebox {
-    background-color: white;
-    position: relative;
-    padding: 7vh 0;
+#password-strength-info {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    column-gap: 5px;
     align-items: center;
-    justify-content: center;
-    text-align: center;
 }
 
-#ngee-ann-banner,
-.whitebox {
-    display: inline-block;
-    width: 50%;
+#password-strength-info p {
+    margin: 0;
 }
 
-input[type=text],
-input[type=password],
-input[type=email] {
-    border: none;
-    border-bottom: 2px solid transparent;
-    background-image: linear-gradient(45deg, #FF6363, var(--primary));
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    background-size: 100% 2px;
-    margin-bottom: 30px;
-    width: 80%;
-    padding-bottom: 10px;
-}
-
-input:focus {
-    background-size: 0% 2px;
-    outline: none;
-}
-
-#sendOtpBtn {
+.registration-otp-button {
     width: 6em;
     height: 2em;
-    color: white;
-    margin-top: calc(.5em + 0.1vw);
-    border: none;
-    background: linear-gradient(45deg, #FF6363, var(--primary));
-    transform: translateX(-3.3rem);
+    box-sizing: border-box;
+    color: white !important;
+    top: -15px;
 }
 
-#sendOtpBtn:hover {
+.registration-otp-button:hover {
     background: transparent;
-    color: var(--primary);
+    color: var(--primary) !important;
     font-weight: bolder;
-    border: solid;
-    border-color: var(--primary);
-}
-
-#recaptcha-container {
-    width: 300px;
-    margin: auto;
-}
-
-.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-#hint {
-    padding: 0 5em 0 5em;
-    font-size: 0.7em;
-}
-
-#registerBtn {
-    width: 10em;
-    height: 3em;
-    color: white;
-    margin-top: calc(.5em + 0.1vw);
-    border: none;
-    background: linear-gradient(45deg, #FF6363, var(--primary));
-}
-
-#registerBtn:hover {
-    background: transparent;
-    color: var(--primary);
-    font-weight: bolder;
-    border: solid;
-    border-color: var(--primary);
-}
-
-#passwordField,
-#repeatPasswordField {
-    transform: translatex(1.4vh);
-}
-
-#numberField,
-#otpField {
-    transform: translatex(6vh);
-}
-
-.overlay-button {
-    border: none;
-    transform: translateX(-100%);
-    background-color: transparent;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    outline: none;
-}
-
-.pressed,
-.pressedrepeated {
-    color: gray;
-}
-
-#loginBtn {
-    color: black;
-    text-decoration: none;
-    position: absolute;
-    bottom: 20px;
-    /* Adjust the distance from the bottom as needed */
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-#loginBtn::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(45deg, #FF6363, var(--primary));
-    transform: scaleX(0);
-    transition: transform 0.3s ease-in-out;
-}
-
-#loginBtn:hover::after {
-    transform: scaleX(1);
-}
-
-#loginBtn:hover {
-    color: var(--primary);
-}
-
-#infoSym {
-    display: inline-block;
-}
-
-#passErr {
-    display: inline-block;
-    margin: 0;
-    transform: translate(0, -0.9vh);
+    border: 3px solid var(--primary);
 }
 
 .very-weak {
@@ -287,20 +145,6 @@ input:focus {
 .otp-verified {
     color: rgb(30, 196, 30);
 }
-
-@keyframes gradientAnimation {
-    0% {
-        background-position: 0 50%;
-    }
-
-    50% {
-        background-position: 100% 0%;
-    }
-
-    100% {
-        background-position: 0 50%;
-    }
-}
 </style>
 
 <script>
@@ -321,7 +165,6 @@ export default {
             phoneNumber: '',
             password: '',
             repeatedPassword: '',
-            userObject: null,
             generalErrMsg: '',
             passwordStrengthMessage: '',
             passwordStrength: 0,
@@ -330,18 +173,16 @@ export default {
             confirmResult: null,
 
             // Booleans
-            isPressed: false,
-            isPressedrepeated: false,
-            showPhoneErr: false,
             showPassword: false,
-            showPasswordrepeated: false,
+            showRepeatPassword: false,
             registerFail: false,
             otpSent: false,
-            verifiedotp: false,
+            otpVerified: false,
             disableOTP: true,
+            
             // Error
-            emailErr: null,
-            phoneErr: null,
+            showPhoneErr: false,
+            showEmailErr: false,
 
             // debounce
             debouncedVerifyEmail: null,
@@ -415,6 +256,39 @@ export default {
         // to get alertMsg value
         alertMsg() {
             return this.alertStore.alertMsg;
+        },
+        // check for empty or invalid fields
+        invalidFields() {
+            let userDetailsList = [this.emailAddress, this.phoneNumber, this.password];
+
+            // Check for empty fields
+            if (userDetailsList.some(item => item === '')) {
+                return this.generalErrMsg = "Please enter all fields";
+            }
+            
+            if (this.showEmailErr) {
+                return this.generalErrMsg = 'Invalid email address';
+            }
+
+            if (this.phoneNumber.length != 8) {
+                return this.generalErrMsg = "Invalid phone number";
+            }
+
+            if (!this.otpVerified) {
+                return this.generalErrMsg = "Please verify your phone number";
+            }
+
+            // Password complexity check
+            if (this.passwordStrength < 2) {
+                return this.generalErrMsg = "Password is weak";
+            }
+
+            // Password confirm
+            if (this.password !== this.repeatedPassword) {
+                return this.generalErrMsg = "Passwords do not match";
+            }
+
+            return null;
         }
     },
     created() {
@@ -425,7 +299,7 @@ export default {
         this.debouncedVerifyPhone = debounce(this.debounceVerifyPhoneFunction, 1000);
     },
     mounted() {
-        this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('registerBtn', {
+        this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('register-button', {
             'size': 'invisible',
             'callback': (response) => {
                 // reCAPTCHA solved, allow signInWithPhoneNumber.
@@ -482,7 +356,7 @@ export default {
             this.confirmResult.confirm(this.otp)
                 .then(async (result) => {
                     await this.alert("OTP verified", result)
-                    this.verifiedotp = true
+                    this.otpVerified = true
                     this.disableOTP = true;
                 })
                 .catch((error) => {
@@ -490,17 +364,12 @@ export default {
                 })
         },
         hidePassword(num) {
-            switch (num) {
-                case (1):
-                    this.showPassword = !this.showPassword;
-                    this.isPressed = !this.isPressed;
-                    break;
-                case (2):
-                    this.showPasswordrepeated = !this.showPasswordrepeated;
-                    this.isPressedrepeated = !this.isPressedrepeated;
-                    break;
+            if (num == 1) {
+                this.showPassword = !this.showPassword;
             }
-
+            else {
+                this.showRepeatPassword = !this.showRepeatPassword;
+            }
         },
         filterNumber() {
             // Remove any non-numeric characters except the minus sign at the beginning
@@ -509,23 +378,21 @@ export default {
         async debounceVerifyEmailFunction() {
             try {
                 const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/email`, {
+                    mode: 'cors',
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json; charset=UTF-8',
                     },
-                    credentials: "include",
                     body: JSON.stringify({ email: this.emailAddress })
                 });
 
                 if (response.ok) {
-                    this.emailErr = null;
-                    return;
+                    this.showEmailErr = false;
                 } else if (response.status === 400) {
                     const data = await response.json();
 
                     if (data.message === 'Email already exists') {
-                        this.emailErr = "Email already taken";
-                        return;
+                        this.showEmailErr = true;
                     } else {
                         throw new Error('Error: ' + response.status);
                     }
@@ -535,27 +402,34 @@ export default {
             }
         },
         verifyEmail() {
+            this.showEmailErr = false;
+
+            if (!this.emailAddress) {
+                return;
+            }
+
             this.debouncedVerifyEmail();
         },
         async debounceVerifyPhoneFunction() {
             try {
                 const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/phone`, {
                     method: 'POST',
+                    mode: 'cors',
                     headers: {
                         'Content-Type': 'application/json; charset=UTF-8',
                     },
-                    credentials: "include",
                     body: JSON.stringify({ phoneNumber: this.phoneNumber })
                 });
 
                 if (response.ok) {
-                    this.phoneErr = null;
+                    this.showPhoneErr = false;
                     this.disableOTP = false;
-                    return;
-                } else if (response.status === 400) {
+                }
+                else {
                     const data = await response.json();
-                    if (data.message === 'Phone Number already exists') {
-                        this.phoneErr = "Phone Number already taken";
+
+                    if (data.message === 'Phone number already exists') {
+                        this.showPhoneErr = true;
                         this.disableOTP = true;
                         return;
                     } else {
@@ -567,43 +441,24 @@ export default {
             }
         },
         verifyPhone() {
-            if (this.phoneNumber.length !== 8) {
+            this.showPhoneErr = false;
+
+            if (this.phoneNumber.length != 8) {
                 return;
             }
 
             this.debouncedVerifyPhone();
         },
         async registerUser() {
-            if (!this.verifiedotp) {
-                return this.generalErrMsg = "Verify your phone number";
-            }
-            let userDetailsList = [this.emailAddress, this.phoneNumber, this.password];
-            if (this.phoneNumber.length != 8) {
-                this.showNumError = true;
+            if (this.invalidFields) {
                 this.registerFail = true;
-                return this.generalErrMsg = "Invalid phone number";
+                return;
             }
-            // Password complexity check
-            if (this.passwordStrength < 2) {
-                this.registerFail = true;
-                return this.generalErrMsg = "Password is weak";
-            }
-            // Password confirm
-            if (this.password !== this.repeatedPassword) {
-                this.registerFail = true;
-                return this.generalErrMsg = "Password mismatch";
-            }
-            // Check for empty fields
-            if (userDetailsList.some(item => item === '')) {
-                this.registerFail = true;
-                return this.generalErrMsg = "Please enter all fields";
-            }
-            else {
-                this.userObject = {
-                    'emailAddress': this.emailAddress,
-                    'phoneNumber': this.phoneNumber,
-                    'password': this.password
-                }
+
+            user = {
+                'emailAddress': this.emailAddress,
+                'phoneNumber': this.phoneNumber,
+                'password': this.password
             }
 
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/register`, {
@@ -612,21 +467,19 @@ export default {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
                 credentials: "include",
-                body: JSON.stringify(this.userObject)
+                body: JSON.stringify(user)
             }).then((response) => {
                 if (response.ok) {
                     sessionStorage.setItem('to_setup_profile', true);
                     location.href = '/setupProfile.html';
                 }
-                else if (response.status === 400) {
+                else {
                     response.json().then(async (data) => {
                         await this.alert(data.message);
                         throw new Error(data.message)
                     });
-                    return;
                 }
-            })
-                .catch(error => {
+            }).catch(error => {
                     console.error('Error:', error);
                 });
         },
@@ -634,8 +487,7 @@ export default {
         closeAlert() {
             this.alertStore.closeAlert();
         }
-
-    },
+    }
 }
 </script>
 
