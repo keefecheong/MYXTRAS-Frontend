@@ -216,7 +216,6 @@ export default {
     },
     mounted() {
         this.checkAuth();
-        this.compensateSearchBar();
     },
     emits: [
         'show-forum-form'
@@ -281,16 +280,6 @@ export default {
                 .catch(error => {
                     console.error('Error:', error);
                 });
-        },
-        // to compensate height of searchbar (absolute positioned)
-        compensateSearchBar() {
-            // set timeout before setting height to wait for browser to finish rendering
-            setTimeout(function() {
-                const searchbar = document.getElementById('searchbar-container');
-                const searchbarHeight = window.getComputedStyle(searchbar).height;
-
-                document.getElementById('compensate-searchbar-height').style.height = searchbarHeight;
-            }, 100);
         },
         // to show/hide results
         toggleResults(show, e) {
