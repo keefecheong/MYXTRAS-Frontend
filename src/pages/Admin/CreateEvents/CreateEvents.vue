@@ -11,7 +11,9 @@
                     +
                 </div>
             </div>
-            <h1 class="row pink-header">Xtra EVENTS! 🔊</h1>
+            <div id="header">
+                <h1 id="title">Xtra EVENTS! 🔊</h1>
+            </div>
             <AnnoucementLayout/>
         </div>
     </div>
@@ -49,13 +51,21 @@ export default {
 <style>
 @import url('../../../styles/main.css');
 
-.pink-header {
-    margin: 0 -12px 0 -12px;
-    padding-top: 3vh;
-    padding-bottom: 3vh;
-    background-color: var(--primary);
-    color: white;
+#header{
+    display: flex;
+    flex-direction: row;
+    background-color: #133B5B;
+    padding: 30px 0 30px 0;
+    min-height: 17vh;
+    margin-left: -20px;
     justify-content: center;
+}
+
+#title{
+    color: white;
+    text-align: center;
+    border-bottom: #EDEDED 1px solid;
+    width: 45%;
 }
 
 .create-event {
@@ -66,14 +76,14 @@ export default {
     position: fixed;
     background-color: var(--primary);
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     bottom: 6%;
-    right: 2.9%;
+    right: 2.7%;
     font-size: 24px;
     z-index: 2;
 }
@@ -83,12 +93,12 @@ export default {
     background-color: #f73978;
     border-radius: 100px;
     width: 180px;
-    height: 50px;
+    height: 55px;
     display: flex;
     align-items: center;
     color: white;
     bottom: 6%;
-    right: 2.9%;
+    right: 2.7%;
     font-size: 15px;
     padding-left: 25px;
     z-index: 1;
@@ -108,13 +118,13 @@ export default {
     position: fixed;
     background-color: #f73978;
     border-radius: 100px;
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     display: flex;
     align-items: center;
     color: white;
     bottom: 6%;
-    right: 2.9%;
+    right: 2.7%;
     font-size: 15px;
     padding-left: 25px;
     z-index: 1;

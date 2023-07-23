@@ -23,7 +23,7 @@
 ul {
     margin: 0 auto !important;
     padding: 0 !important;
-    width: 70%;
+    width: 86%;
     background-color: whitesmoke;
 }
 
