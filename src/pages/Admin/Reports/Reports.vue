@@ -51,17 +51,18 @@ export default {
 }
 
 .report-options {
-    margin-top: 30px;
     display: flex;
     flex-direction: row;
     color: white;
-    justify-content: center;
+    place-content: center;
+    margin: 30px 0 0 4.5% !important;
 }
 
 .option {
-    margin: 0 50px 0 50px !important;
-    width: 10% !important;
+    margin-right: 150px;
+    width: 70%;
     text-align: center;
+    color: white;
 }
 
 .option:hover {
