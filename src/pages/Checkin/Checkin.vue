@@ -36,7 +36,7 @@
                                 <p>{{ mission.gem_count }}</p>
                                 <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
                                 <button class="pink-btn material-symbols-outlined symbols locked" v-if=mission.locked>lock</button>
-                                <btn class="pink-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked"><p>Claim</p></btn>
+                                <btn class="pink-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>Claim</p></btn>
                             </div>
                         </div>
                     </div>
@@ -223,6 +223,24 @@ export default {
             }).then(async (res) => {
                 await res.json().then((data) => {
                     this.claimed = true;    
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+
+        async claimMission(targetTitle){
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/missions/${targetTitle}`, {
+                mode: 'cors',
+                method: 'POST',
+                credentials: 'include',
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    const targetMission = this.missions.find(mission => mission.title === targetTitle);
+                    if (targetMission) {
+                        // Update the claimed property to true
+                        targetMission.claimed = true;
+                    }
                 });
             }).catch((error) => {
                 console.log(error);
