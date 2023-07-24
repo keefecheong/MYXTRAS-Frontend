@@ -1,0 +1,23 @@
+.gashaponHolder{ position:relative; width:100%; margin-top:50px; }
+.gashaponHolder .prizesHolder{ position:relative; margin:0 4%; width:92%; }
+.gashaponHolder .cover{ width:100%; height:100%; position:absolute; top:0; left:0 }
+.gashaponHolder .glassMask{ width:100%; height:100%; position:absolute; overflow:hidden; top:0; left:0 }
+.gashaponHolder .glassHolder{ position:absolute; width:100%; height:100%; top:0; left:0; z-index:100; }
+.gashaponHolder .machineHolder { position:relative; }
+.gashaponHolder .machineHolder .machineButton{ position:absolute; left: 10%; top: 10%; width: 30%; cursor: pointer; }
+.gashaponHolder .machineHolder .machineDrop{ position:absolute; left: 52%; top: 10%; width: 35%; overflow:hidden; }
+
+.gashaponHolder .itemsWrapper { position:absolute; width:100%; height:100%; left:0; }
+.gashaponHolder .itemsWrapper .items{ position:absolute; width:100%; height:100%; top:0; left:0; }
+.gashaponHolder .finalResult{ position:absolute; top:0; left:0; width:100%; height:100%; }
+.gashaponHolder .finalResult .item, .gashaponHolder .machineDrop .item, .gashaponHolder .itemsWrapper .item{ position:absolute; }
+
+.gashaponHolder.layout2 .prizesHolder{ margin-top: -9%; }
+.gashaponHolder.layout2 .machineButton{ left: 32%; top: -9%; width: 36%; z-index: 100; }
+.gashaponHolder.layout2 .machineDrop{ left: 35%; top: 51%; width: 30%; }
+.gashaponHolder.layout3 .prizesHolder{ margin:0; width:100%; }
+.gashaponHolder.layout3 .machineButton{ left: 54%; top: 12%; width: 36%; }
+.gashaponHolder.layout3 .machineDrop{ left: 15%; top: 16%; width: 35%; }
+.gashaponHolder.fitImg img{ width:100%; height:auto; display:block; }
+
+/* Credits: https://demonisblack.com/code/2022/gashaponmachineanimation/demo/ */

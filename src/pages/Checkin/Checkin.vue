@@ -55,7 +55,7 @@
                         </div>
                     </div>
                 </div>
-                <button id="bottom-right-button"><span class="material-symbols-outlined">shopping_cart</span></button>
+                <button id="bottom-right-button"><span class="material-symbols-outlined" @click="gachapon">shopping_cart</span></button>
             </div>
         </div>
     </div>
@@ -168,6 +168,7 @@ h1 {
 </style>
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
+import Gachapon from '../Gachapon/Gachapon.vue';
 
 export default {
     components: {
@@ -175,10 +176,7 @@ export default {
     },
     data() {
         return {
-            missions: [{'title':'Like 5 threads', 'gem_count':'100', 'claimed':false, 'locked': true},
-            {'title':'Follow a new user', 'gem_count':'150', 'claimed':false, 'locked': true}, 
-            {'title':'Like 5 threads', 'gem_count':'100', 'claimed':false, 'locked': true},
-            {'title':'Follow a new user', 'gem_count':'150', 'claimed':false, 'locked': true}],
+            missions: null,
             rewards: [50, 100, 100, 100, 150, 200, 500],
             day: null,
             claimed: false,
@@ -229,6 +227,9 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
+        },
+        gachapon(){
+            window.location.href = "/gachapon.html"
         }
     }
 }

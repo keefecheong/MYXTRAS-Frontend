@@ -187,8 +187,8 @@ export default {
         this.dateCreated = calcDateDifference(this.thread.creation_time);
 
         // set debounce functions to only send requests to update backend if user has not clicked the like/dislike button for 3 seconds
-        this.debouncedLikeUpdate = debounce(this.updateLike, 3000);
-        this.debouncedDislikeUpdate = debounce(this.updateDislike, 3000);
+        this.debouncedLikeUpdate = debounce(this.updateLike, 1000);
+        this.debouncedDislikeUpdate = debounce(this.updateDislike, 1000);
 
         // set event listener to complete pending like/dislike requests when the page is closed
         window.addEventListener('beforeunload', this.completeRequests);
