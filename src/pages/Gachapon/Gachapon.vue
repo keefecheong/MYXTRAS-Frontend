@@ -47,8 +47,8 @@
 
                 </div>
                 <div id="buttons-container">
-                    <button id="spinOneBtn">Spin 1</button>
-                    <button id="spinTenBtn">Spin 10</button>
+                    <button id="spinOneBtn" @click="rollGacha(1)">Spin 1</button>
+                    <button id="spinTenBtn" @click="rollGacha(10)">Spin 10</button>
                 </div>
                 <div id="buttons-container">
                     <p>160 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
@@ -139,7 +139,6 @@ export default {
     data() {
         return {
             gems: 0,
-            numOfRolls: null,
         }
     },
     created(){
@@ -160,22 +159,10 @@ export default {
             }).catch(error => {
                 console.log(error);
             });
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/daily-checkin`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then((data) => {
-                    this.day = data.checkin_count;
-                    this.claimed = data.claimed;
-                    console.log(this.day)
-                });
-            }).catch((error) => {
-                console.log(error);
-            });
+           
         },
-        async checkIn(){
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/spin/${this.numOfRolls}`, {
+        async rollGacha(numOfRolls){
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/gachapon/${numOfRolls}`, {
                 mode: 'cors',
                 method: 'POST',
                 credentials: 'include',
