@@ -1,8 +1,9 @@
-import { createApp } from 'vue'
-import App from './Forum.vue'
+import App from './Forum.vue';
 import 'bootstrap/dist/js/bootstrap.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import { createPinia } from 'pinia';
-const app = createApp(App);
+import dynamicMount from '../../utils/authentication/authAccessControl.js';
+
+const app = await dynamicMount(App);
 
 app.use(createPinia()).mount('#app');

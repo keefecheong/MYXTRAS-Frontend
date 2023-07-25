@@ -264,6 +264,10 @@ export default {
                 else if (pathname == '/forumGroup.html' && href == '/forum.html') {
                     link.classList.add('current');
                 }
+                // set current for admin home page link if path is /
+                else if ((pathname == '/admin' || pathname == '/admin/') && href == '/admin/home.html') {
+                    link.classList.add('current');
+                }
                 else {
                     link.classList.remove('current');
                 }

@@ -2,6 +2,7 @@
 export default async function validateUser() {
     let authenticated = false;
     let is_profile_setup = false;
+    let is_admin = false;
 
     await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
         method: 'get',
@@ -11,6 +12,7 @@ export default async function validateUser() {
             await res.json().then(user => {
                 authenticated = true;
                 is_profile_setup = user.is_profile_setup;
+                is_admin = user.is_admin;
             });
         }
         else {
@@ -22,5 +24,5 @@ export default async function validateUser() {
         console.log(error);
     });
 
-    return { authenticated, is_profile_setup };
+    return { authenticated, is_profile_setup, is_admin };
 }

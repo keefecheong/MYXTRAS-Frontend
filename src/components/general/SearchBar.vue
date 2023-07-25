@@ -35,8 +35,6 @@
             <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
     </div>
-
-    <!-- <div id="compensate-searchbar-height"></div> -->
 </template>
 
 <style scoped>
@@ -47,7 +45,7 @@ p {
 
 <style>
 #searchbar-container {
-    --searchbar-height: 10dvh;
+    --right-content-height: 10dvh;
     --min-profile-pic-height: 50px;
     --max-profile-pic-height: 70px;
     position: sticky;
@@ -119,7 +117,7 @@ p {
 
 #searchbar-right > div {
     max-width: 45%;
-    height: var(--searchbar-height);
+    height: var(--right-content-height);
     position: relative;
     left: 100%;
     transform: translateX(-100%);
@@ -134,8 +132,8 @@ p {
 }
 
 .searchbar-profile-pic {
-    width: clamp(var(--min-profile-pic-height), var(--searchbar-height), var(--max-profile-pic-height));
-    height: clamp(var(--min-profile-pic-height), var(--searchbar-height), var(--max-profile-pic-height));
+    width: clamp(var(--min-profile-pic-height), var(--right-content-height), var(--max-profile-pic-height));
+    height: clamp(var(--min-profile-pic-height), var(--right-content-height), var(--max-profile-pic-height));
     border: #133B5B 4px solid;
     border-radius: 100%;
 }

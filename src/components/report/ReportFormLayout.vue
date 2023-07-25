@@ -12,7 +12,7 @@
             <!-- input for report reason -->
             <label for="report-reason">Why are you reporting this {{ type.includes('Comment') ? 'comment' : type }}?</label>
             <select name="report-reason" id="report-reason-input" v-model="selectedReason">
-                <option value="None" disabled selected>Select an option</option>
+                <option value="None" disabled selected hidden>Select an option</option>
                 <option v-for="(reason, index) in reasons" :key="index" :value="reason">{{ reason }}</option>
             </select>
 

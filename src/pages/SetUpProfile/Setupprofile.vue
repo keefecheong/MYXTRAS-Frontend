@@ -1,153 +1,79 @@
 <template>
-
     <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
         {{ alertMsg }}
     </AlertPrompt>
 
-    <div id="main-container">
-        <div id="main-content">
-            <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-6 whitebox">
-                    <form @submit.prevent="login">
-                        <h2 id="header">Set up your profile</h2>
-                        <input type="text" placeholder="Name" id="realnameField" v-model="realname" :required="!showPopup" :maxlength="32" @input="noIntegers">
-                        <input type="text" placeholder="Username" id="usernameField" v-model="username" :maxlength="25" :required="!showPopup" @input="verifyUsername">
-                        <p id="err"> {{ this.usernameErr }}</p>
-                        <DynamicTextarea :placeholder="'Bio (Max 100 characters)'" v-model="biography" :maxlength="100" id="bio" />
-                        <div class="interest-container">  
-                            <label for="inputInterest" style="display: block; margin-bottom: 5px; margin-left: 53px;">Interest: </label>
-                            <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
-                        </div>
-                        
-                        <select v-model="selectedSchool" :required="!showPopup">
-                            <option value="" disabled selected hidden>Select a school</option>
-                            <option v-for="school in schools" :value="school">{{ school }}</option>
-                        </select>
-                        <br/>
-                        <br/>
-                        <select v-if="selectedSchool != '' || selectedSchool != null" v-model="selectedCourse" :required="!showPopup">
-                            <option value="" disabled selected hidden>Select a Course</option>
-                            <option v-for="course in selectedSchoolCourses" :value="course">{{ course }}</option>
-                        </select>
-                        <br>
-                        <br>
-                        <p class="warning">Warning: School and course cannot be modified in a later date. Ensure that <br> 
-                            you have chosen the most accurate description of your course of study</p>
-                        <br>
-                        <button @click="setupprofile" id="getStartedBtn" :disabled="!verifiedUsername" :class="{'disabled': !verifiedUsername}">
-                            Get Started
-                        </button>
-                    </form>
-                </div>
-                <div class="col-md-3"></div>
+    <LoadingOverlay v-if="showLoading" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
+
+    <div class="center-main-container form-container">
+        <form @submit.prevent="setupProfile">
+            <h1>Set up your profile</h1>
+
+            <input type="text" placeholder="Name" v-model="realname" maxlength="32" required @input="noIntegers">
+            <input type="text" placeholder="Username" v-model="username" maxlength="25" required
+                @input="verifyUsername">
+
+            <p class="warning normal-font-size" v-if="usernameErr"> {{ this.usernameErr }}</p>
+
+            <DynamicTextarea :placeholder="'Bio (Max 100 characters)'" v-model="biography" :maxlength="100"
+                :padding="'1px 2px'" />
+
+            <div id="interest-container">
+                <label>Interests: </label>
+                <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests" />
             </div>
-        </div>
+
+            <select v-model="selectedSchool" required>
+                <option value="" disabled selected hidden>Select a school</option>
+                <option v-for="school in schools" :value="school">{{ school }}</option>
+            </select>
+
+            <select v-model="selectedCourse" required :disabled="!selectedSchool">
+                <option value="" disabled selected hidden>Select a Course</option>
+                <option v-for="course in selectedSchoolCourses" :value="course">{{ course }}</option>
+            </select>
+
+            <p class="warning">School and course cannot be modified in a later date. Please ensure that
+                you have chosen the most accurate description of your course of study</p>
+
+            <button type="submit" class="submit-button use-primary-secondary-gradient" :disabled="invalidFields">
+                Get Started
+            </button>
+        </form>
     </div>
 </template>
 
+<style scoped>
+.form-container {
+    width: 40%;
+}
+
+form p {
+    width: 80%;
+}
+</style>
+
 <style>
-.disabled {
-	opacity: 0.5;
-	cursor: not-allowed;
-}
-body {
-    background: linear-gradient(45deg,#FF6363, #E53A73);
-    height: 100%;
-    animation: gradientAnimation 2s infinite linear;
-    background-size: 400% 400%;
-    background-repeat: no-repeat;
-    font-size: calc(.5em + 0.5vw) !important;
-}
-.whitebox {
-    background-color: white;
-    width: 90%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-top: 5vh !important;
-    padding: 10vh 0;
-    
-}
-#err {
-    color: #FF0000;
-}
-input[type=text],
-select,
-textarea{
-  border: none;
-  border-bottom: 2px solid transparent;
-  background-image: linear-gradient(90deg,#FF6363, #E53A73);
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  background-size: 100% 2px;
-  margin-bottom: 30px;
-  width: 80%;
-  padding-bottom: 10px;
-  appearance: none;
-}
+@import url('../../styles/main.css');
+@import url('../../styles/login-register-styles.css');
 
-input:focus,
-textarea{
-    background-size: 0% 2px;
-    outline: none;
-}
-
-#bio {
-    margin-left: 50px;
-}
-
-#header{
-    margin-bottom: 60px;
-}
-
-.warning{
-    color: #FF0000;
+.warning {
+    color: red;
     font-size: 12px;
+    text-align: center;
 }
 
-.v-select {
-    width: 100%;
+.warning.normal-font-size {
+    font-size: 1em;
 }
 
-#getStartedBtn {
-    width: 10em;
-    color: white;
-    margin-top: calc(.5em + 0.1vw);
-    border: none;
-    background: linear-gradient(45deg,#FF6363, #E53A73);
-    border-radius: 10px;
-    padding: 20px 25px;
-}
-
-.interest-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.interest-container label {
-  margin-right: 10px;
-}
-
-textarea {
-    padding: 0 !important;
-}
-
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0 50%;
-  }
-  50% {
-    background-position: 100% 0%;
-  }
-  100% {
-    background-position: 0 50%;
-  }
-  
+#interest-container {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    column-gap: 20px;
 }
 </style>
 
@@ -159,29 +85,37 @@ import DynamicTextarea from '../../components/general/DynamicTextarea.vue';
 import redirectUser from '../../utils/authentication/redirectAuthenticatedUser.js';
 import signOut from '../../utils/authentication/signOut.js';
 import { debounce } from 'lodash';
+import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
 
 export default {
     components: {
-       AddInterestButton,
-       AlertPrompt,
-       DynamicTextarea
+        AddInterestButton,
+        AlertPrompt,
+        DynamicTextarea,
+        LoadingOverlay
     },
 
     data() {
         return {
-            realname: '',
-            username: '',
-            selectedSchool: '',
-            selectedCourse: '',
-            biography: '',
-            selectedOption: [],
-            schools: [],
-            courses: [],
-            schoolData: null,
             alert: useAlertStore().alert,
             alertStore: useAlertStore(),
+
+            showLoading: false,
+
+            realname: '',
+            username: '',
+            biography: '',
+            selectedOption: [],
+            selectedSchool: '',
+            selectedCourse: '',
+            schools: [],
+            courses: [],
+
             setupComplete: false,
+
             usernameErr: null,
+            errMsg: '',
+            
             debouncedVerifyUsername: null,
             verifiedUsername: false
         };
@@ -194,6 +128,51 @@ export default {
         // to get alertMsg value
         alertMsg() {
             return this.alertStore.alertMsg;
+        },
+        // get courses based on selected school
+        selectedSchoolCourses() {
+            if (this.selectedSchool != '' || this.selectedSchool != null) {
+                return this.courses[this.schools.indexOf(this.selectedSchool)];
+            }
+            else {
+                return this.courses[0];
+            }
+        },
+        // check if fields are valid
+        invalidFields() {
+            let detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
+
+            if (detailsList.some(item => item.trim() == "")) {
+                return this.errMsg = 'Please enter all fields';
+            }
+
+            if (/^[0-9]+$/.test(this.realname)) {
+                return this.errMsg = 'Your real name should not contain integers';
+            }
+
+            if (this.realname.length > 32) {
+                return this.errMsg = 'Maximum of 32 characters are allowed for real name';
+            }
+
+            if (this.usernameErr) {
+                return this.errMsg = 'Invalid username';
+            }
+
+            if (this.username.length > 25) {
+                return this.errMsg = 'Maximum of 25 characters are allowed for username';
+            }
+
+            if (!this.schools.includes(this.selectedSchool)) {
+                return this.errMsg = 'School does not exist';
+            }
+
+            if (!this.selectedSchoolCourses.includes(this.selectedCourse)) {
+                return this.errMsg = 'Course does not exist';
+            }
+
+            this.errMsg = '';
+
+            return;
         }
     },
     created() {
@@ -233,109 +212,72 @@ export default {
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/schools`, {
                 method: 'GET',
                 mode: 'cors'
-            }) .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error: ' + response.error);
-                    } else {
-                        return response.json();
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Error: ' + response.error);
+                } else {
+                    return response.json();
+                }
+            }).then(data => {
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        this.schools.push(key);
+                        this.courses.push(Object.keys(data[key]["courses"]));
                     }
-                })
-                .then(data => {
-                    this.schoolData = data;
-                    for (const key in data) {
-                        if (data.hasOwnProperty(key)) {
-                            this.schools.push(key);
-                            this.courses.push(Object.keys(data[key]["courses"]));
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         },
         handleSelectedInterests(selectedInterests) {
             // Retrieve the selected interests here and perform necessary actions
             // You can store the selected interests in a data property or send them to an API, etc.
             this.selectedOption = selectedInterests;
         },
-        async validationCheck(){
-            let detailsList = [this.realname, this.username, this.selectedSchool, this.selectedCourse];
-            
-            if (detailsList.some(item => item.trim() === "")) {
-                await this.alert("Please enter all fields");
-                return false;
-            }
-            
-            if (/^[0-9]+$/.test(this.realname)) {
-                await this.alert("No integers in your real name");
-                return false;
-            }
-            
-            if (this.realname.length > 32) {
-                await this.alert("Real name must not be more than 32 characters long");
-                return false;
-            }
-            
-            if (this.username.length > 16) {
-                await this.alert("Username must not be more than 16 characters long");
-                return false;
-            }
-            
-            if (!(this.selectedSchool in this.schools)) {
-                await this.alert("School does not exist");
-                return false;
-            }
-            
-            if (!this.selectedCourse in this.selectedSchoolCourses) {
-                await this.alert("Course does not exist");
-                return false;
-            }
-
-            return true;
-        },
-        async setupprofile() {
-            if (!this.validationCheck()){
+        async setupProfile() {
+            // do nothing if there are invalid fields
+            if (this.invalidFields) {
+                await this.alert(this.errMsg);
                 return;
             }
-            else {
-                this.userObject = {
-                    'realName': this.realname,
-                    'userName': this.username,
-                    'biography': this.biography,
-                    'selectedSchool': this.selectedSchool,
-                    'selectedCourse': this.selectedCourse,
-                    'selectedInterests': this.selectedOption,
-                }
+
+            this.showLoading = true;
+            
+            this.userObject = {
+                'realName': this.realname,
+                'userName': this.username,
+                'biography': this.biography,
+                'selectedSchool': this.selectedSchool,
+                'selectedCourse': this.selectedCourse,
+                'selectedInterests': this.selectedOption,
             }
-           
+
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/setup`, {
-                method: 'PATCH', 
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: JSON.stringify(this.userObject),
                 credentials: "include",
-            }) .then(response => {
-                    if (response.status === 400) {
-                        response.json().then(async (data) => {
-                            await this.alert(data.message);
-                            throw new Error(data.message)
-                        });
-                        return;
-                    } else if (response.ok){
-                        this.setupComplete = true;
-                        window.location.href = '/feed.html';
-                    } else {
-                        throw new Error(response.error)
-                    }
-                }).catch(error => {
-                    console.error('Error:', error);
-                });
-                
-            // console.log(this.userObject);
+            }).then(response => {
+                if (response.status === 400) {
+                    response.json().then(async (data) => {
+                        await this.alert(data.message);
+                    });
+                } else if (response.ok) {
+                    this.setupComplete = true;
+                    window.location.href = '/feed.html';
+                } else {
+                    throw new Error(response.error)
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+
+            this.showLoading = false;
         },
         async verifyUsername() {
-        	this.verifiedUsername = false;
+            this.verifiedUsername = false;
             this.debouncedVerifyUsername();
         },
         async debounceVerifyUsernameFunction() {
@@ -358,7 +300,6 @@ export default {
 
                     if (data.message === 'Username already exists') {
                         this.usernameErr = "Username already taken";
-                        return;
                     } else {
                         throw new Error('Error: ' + response.status);
                     }
@@ -373,16 +314,6 @@ export default {
         // to close alert prompt
         closeAlert() {
             this.alertStore.closeAlert();
-        }
-    },
-    computed: {
-        selectedSchoolCourses() {
-            if (this.selectedSchool != '' || this.selectedSchool != null) {
-                return this.courses[this.schools.indexOf(this.selectedSchool)];
-            }
-            else {
-                return this.courses[0];
-            }
         }
     }
 }

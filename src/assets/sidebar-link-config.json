@@ -51,27 +51,22 @@
                 "icon": "home"
             },
             {
-                "label": "Manage Admins",
-                "page": "/admin/manageAdmin.html",
-                "icon": "manage_accounts"
-            },
-            {
-                "label": "Events",
-                "page": "/admin/events.html",
-                "icon": "campaign"
-            },
-            {
-                "label": "Reports",
+                "label": "Manage Reports",
                 "page": "/admin/reports.html",
                 "icon": "warning"
             },
             {
-                "label": "Banned Users",
-                "page": "/admin/bannedUsers.html",
-                "icon": "no_accounts"
+                "label": "Manage Accounts",
+                "page": "/admin/manageAccounts.html",
+                "icon": "manage_accounts"
             },
             {
-                "label": "Logs",
+                "label": "Manage Events",
+                "page": "/admin/events.html",
+                "icon": "campaign"
+            },
+            {
+                "label": "View Logs",
                 "page": "/admin/logs.html",
                 "icon": "lists"
             }

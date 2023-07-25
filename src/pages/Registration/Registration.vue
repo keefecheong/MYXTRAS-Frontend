@@ -3,6 +3,8 @@
         {{ alertMsg }}
     </AlertPrompt>
 
+    <LoadingOverlay v-if="showLoading" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
+
     <div id="main-container" class="center-main-container">
         <img src="../../assets/ngeeannxtras.jpg" :draggable="false" id="ngee-ann-banner">
 
@@ -47,7 +49,7 @@
                 <!-- Phone Number Field -->
                 <div class="phone-number-field-container">
                     <input title="Please enter your phone number" v-model="phoneNumber" type="text"
-                        placeholder="Phone Number" id="numberField" @input="() => {
+                        placeholder="Phone Number (+65)" id="numberField" @input="() => {
                             filterNumber();
                             verifyPhone();
                         }" required :disabled="otpSent">
@@ -112,7 +114,7 @@
 }
 
 .registration-otp-button {
-    width: 6em;
+    width: 6.5em;
     height: 2em;
     box-sizing: border-box;
     color: white !important;
@@ -153,6 +155,7 @@ import { debounce } from 'lodash';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import redirectUser from '../../utils/authentication/redirectAuthenticatedUser.js';
+import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
 
 export default {
     data() {
@@ -179,6 +182,7 @@ export default {
             otpSent: false,
             otpVerified: false,
             disableOTP: true,
+            showLoading: false,
             
             // Error
             showPhoneErr: false,
@@ -191,6 +195,7 @@ export default {
     },
     components: {
         AlertPrompt,
+        LoadingOverlay
     },
     computed: {
         passwordRequirements() {
@@ -329,39 +334,46 @@ export default {
             if (this.phoneNumber.length != 8 || this.phoneNumber === '') {
                 return this.showPhoneErr = true;
             } else {
+                this.showLoading = true;
+                
                 this.showPhoneErr = false;
+                
                 // Send otp using Firebase
-                this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
-                this.recaptchaVerifier.render().then((widgetId) => {
-                    this.recaptchaWidgetId = widgetId
-                })
+                this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+                await this.recaptchaVerifier.render().then(() => {
+                    this.showLoading = false;
+                }).catch(error => console.log('Could not render recaptcha'));
 
                 let phoneNum = "+65" + this.phoneNumber;
                 firebase.auth().signInWithPhoneNumber(phoneNum, this.recaptchaVerifier)
                     .then(async (confirmationResult) => {
                         // SMS sent. Prompt user to type the code from the message, then sign the
                         // user in with confirmationResult.confirm(code).
-                        this.confirmResult = confirmationResult
-                        await this.alert("Sms Sent!")
+                        this.confirmResult = confirmationResult;
                         this.otpSent = true;
-                        document.getElementById("recaptcha-container").style.display = "none";
+
+                        await this.alert("OTP Sent!");
+                        this.recaptchaVerifier.clear();
                     }).catch((error) => {
                         // Error; SMS not sent
-                        console.log(error)
+                        console.log('Could not send OTP')
                     });
             }
 
         },
         async verifyOTP() {
-            this.confirmResult.confirm(this.otp)
+            this.showLoading = true;
+
+            await this.confirmResult.confirm(this.otp)
                 .then(async (result) => {
+                    this.showLoading = false;
                     await this.alert("OTP verified", result)
                     this.otpVerified = true
                     this.disableOTP = true;
                 })
                 .catch((error) => {
-                    console.log(error)
-                })
+                    console.log('Could not verify OTP')
+                });
         },
         hidePassword(num) {
             if (num == 1) {
@@ -455,13 +467,15 @@ export default {
                 return;
             }
 
-            user = {
+            this.showLoading = true;
+
+            const user = {
                 'emailAddress': this.emailAddress,
                 'phoneNumber': this.phoneNumber,
                 'password': this.password
             }
 
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/register`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
@@ -481,7 +495,9 @@ export default {
                 }
             }).catch(error => {
                     console.error('Error:', error);
-                });
+            });
+
+            this.showLoading = false;
         },
         // to close alert prompt
         closeAlert() {

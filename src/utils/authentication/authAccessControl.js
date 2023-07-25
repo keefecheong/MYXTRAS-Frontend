@@ -16,14 +16,14 @@ import { createApp } from 'vue';
 import validateUser from './verifyAuthentication.js';
 import UnauthorizedView from '../../views/general/UnauthorizedView.vue';
 
-export default async function dynamicMount(originalApp, fromSetupProfile) {
+export default async function dynamicMount(originalApp, fromSetupProfile, requireAdmin) {
     const result = await validateUser();
 
     let app;
 
     if (result.authenticated) {
-        app = createApp(originalApp);
-
+        app = createApp(UnauthorizedView);
+        
         if (!result.is_profile_setup) {
             // if profile is not setup set to_setup_profile to true to prevent redirection at setupProfile
             sessionStorage.setItem('to_setup_profile', true);
@@ -32,6 +32,13 @@ export default async function dynamicMount(originalApp, fromSetupProfile) {
             if (!fromSetupProfile) {
                 location.href = '/setupProfile.html';
             }
+        }
+        else if (requireAdmin && !result.is_admin) {
+            // if page requires user to be admin but user is not admin then redirect back to feed
+            // location.href = '/feed.html';
+        }
+        else {
+            app = createApp(originalApp);
         }
     }
     else {

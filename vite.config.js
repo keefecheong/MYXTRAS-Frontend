@@ -1,5 +1,5 @@
-import { defineConfig, loadEnv } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig, loadEnv } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
 // custom plugin to redirect request urls
 const redirectIndexPlugin = {
@@ -13,6 +13,10 @@ const redirectIndexPlugin = {
             // set up redirection for explore router
             else if (req.url === '/explore.html/blogs' || req.url === '/explore.html/threads') {
                 req.url = '/explore.html';
+            }
+            // set up redirection for admin pages
+            else if (req.url === '/admin' || req.url === '/admin/') {
+                req.url = '/admin/home.html';
             }
             // redirect any 404 error to a custom error page (not working)
             else if (res.statusCode === 404) {
@@ -34,4 +38,4 @@ export default defineConfig(({ command, mode }) => {
             port: env.VITE_PORT
         }
     }
-})
+});

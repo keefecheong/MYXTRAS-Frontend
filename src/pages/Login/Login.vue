@@ -2,7 +2,9 @@
     <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
         {{ alertMsg }}
     </AlertPrompt>
-    
+
+    <LoadingOverlay v-if="showLoading" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
+
     <div id="main-container" class="center-main-container">
         <img src="../../assets/ngeeannxtras.jpg" draggable="false" id="ngee-ann-banner">
 
@@ -41,6 +43,7 @@ import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import firebase from 'firebase';
 import redirectUser from '../../utils/authentication/redirectAuthenticatedUser.js';
+import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
 
 export default {
     data() {
@@ -50,11 +53,13 @@ export default {
             showPassword: false,
             recaptchaVerifier: null,
             alertStore: useAlertStore(),
-            alert: useAlertStore().alert
+            alert: useAlertStore().alert,
+            showLoading: false
         }
     },
     components: {
-        AlertPrompt
+        AlertPrompt,
+        LoadingOverlay
     },
     created() {
         redirectUser();
@@ -90,11 +95,12 @@ export default {
                 await this.alert("Please enter all fields");
                 return;
             }
-            else {
-                this.userObject = {
+
+            this.showLoading = true;
+
+            const user = {
                 'emailAddress': this.emailAddress,
                 'password': this.password
-                }
             }
 
             try {
@@ -104,7 +110,7 @@ export default {
                         'Content-Type': 'application/json; charset=UTF-8'
                     },
                     credentials: 'include',
-                    body: JSON.stringify(this.userObject),
+                    body: JSON.stringify(user),
                 });
 
                 if (response.ok) {
@@ -129,6 +135,8 @@ export default {
                 // Display a generic error message on the frontend
                 await this.alert('An error occurred. Please try again later.');
             }
+
+            this.showLoading = false;
         },
         // to close alert prompt
         closeAlert() {
