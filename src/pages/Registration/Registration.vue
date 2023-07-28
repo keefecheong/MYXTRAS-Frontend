@@ -362,6 +362,10 @@ export default {
 
         },
         async verifyOTP() {
+            if (!this.otp) {
+                return;
+            }
+            
             this.showLoading = true;
 
             await this.confirmResult.confirm(this.otp)
@@ -371,8 +375,9 @@ export default {
                     this.otpVerified = true
                     this.disableOTP = true;
                 })
-                .catch((error) => {
-                    console.log('Could not verify OTP')
+                .catch(async (error) => {
+                    this.showLoading = false;
+                    await this.alert('Could not verify OTP');
                 });
         },
         hidePassword(num) {

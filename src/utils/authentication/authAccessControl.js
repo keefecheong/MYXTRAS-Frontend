@@ -22,23 +22,25 @@ export default async function dynamicMount(originalApp, fromSetupProfile, requir
     let app;
 
     if (result.authenticated) {
-        app = createApp(UnauthorizedView);
-        
-        if (!result.is_profile_setup) {
+        if (requireAdmin && !result.is_admin) {
+            app = createApp(UnauthorizedView);
+
+            // if page requires user to be admin but user is not admin then redirect back to feed
+            location.href = '/feed.html';
+        }
+        else {
+            app = createApp(originalApp);
+
+            if (result.is_profile_setup) return app;
+            
             // if profile is not setup set to_setup_profile to true to prevent redirection at setupProfile
             sessionStorage.setItem('to_setup_profile', true);
 
             // if not from setupProfile then redirect to setupProfile
             if (!fromSetupProfile) {
+                app = createApp(UnauthorizedView);
                 location.href = '/setupProfile.html';
             }
-        }
-        else if (requireAdmin && !result.is_admin) {
-            // if page requires user to be admin but user is not admin then redirect back to feed
-            // location.href = '/feed.html';
-        }
-        else {
-            app = createApp(originalApp);
         }
     }
     else {
