@@ -12,7 +12,7 @@ usage:
 .sub-navigation-container {
     height: fit-content;
     position: sticky;
-    top: 15vh;
+    top: clamp(80px, 15dvh, 100px);
 }
 
 .sub-navigation-links {

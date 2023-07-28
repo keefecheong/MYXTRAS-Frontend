@@ -42,7 +42,7 @@ li:hover {
 
 <script>
 import viewForum from '../../utils/general/viewForum.js';
-import { viewUser } from '../../utils/general/viewUser';
+import viewUser from '../../utils/general/viewUser';
 
 export default {
     data() {

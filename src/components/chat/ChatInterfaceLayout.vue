@@ -170,7 +170,7 @@ import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
-import { viewUser } from '../../utils/general/viewUser.js';
+import viewUser from '../../utils/general/viewUser.js';
 import { debounce } from 'lodash';
 import ChatReplyMessageLayout from './ChatReplyMessageLayout.vue';
 import ReportFormLayout from '../../components/report/ReportFormLayout.vue';

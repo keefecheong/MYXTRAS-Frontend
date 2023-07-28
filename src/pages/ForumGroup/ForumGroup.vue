@@ -43,8 +43,9 @@
                     <div v-if="showDetailedView">
                         <ThreadDetailedLayout 
                             :thread="threads[selectedIndex]"
+                            :showBackArrow="true"
+                            :highlightComment="commentId"
                             :key="threads[selectedIndex]._id"
-                            :showBackArrow="true" 
                             @close-detailed-view="() => toggleDetailedView(false, selectedIndex)"
                         />
                     </div>
@@ -72,17 +73,23 @@
 
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
-import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
+
 import RecommendedForums from '../../components/forum/RecommendedForums.vue';
 import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
 import ForumViewHeader from '../../components/forum/ForumViewHeader.vue';
-import AlertPrompt from '../../components/general/AlertPrompt.vue';
-import { useAlertStore } from '../../stores/AlertStore.js';
-import ThreadFormLayout from '../../components/forum/ThreadFormLayout.vue';
+
+import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
 import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
+import ThreadFormLayout from '../../components/forum/ThreadFormLayout.vue';
+
+import { useAlertStore } from '../../stores/AlertStore.js';
+import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
+
 import ReportFormLayout from '../../components/report/ReportFormLayout.vue';
+
+import highlightElement from '../../utils/general/highlightElement.js';
 
 export default {
     components: {
@@ -110,13 +117,32 @@ export default {
             contentLoaded: false,
             threads: [],
             selectedIndex: null,
+            commentId: null,
             scrollBack: false,
 
             showReportForm: false
         }
     },
     created() {
-        this.initData()
+        this.initData().then(() => {
+            const query = location.search;
+
+            if (!query) return;
+
+            const params = new URLSearchParams(query);
+
+            if (!params.has('thread')) return;
+
+            this.toggleDetailedView(true, null, params.get('thread'));
+
+            setTimeout(() => {
+                highlightElement(document.getElementById('thread-detailed-layout-container'));
+            }, 300);
+
+            if (params.has('comment')) {
+                this.commentId = params.get('comment');
+            }
+        });
     },
     updated() {
         // if scrollBack is true then scroll to that thread
@@ -137,8 +163,8 @@ export default {
     },
     methods: {
         // handle toggling of detailed thread view
-        toggleDetailedView(show, index) {
-            this.selectedIndex = index;
+        toggleDetailedView(show, index, id) {
+            this.selectedIndex = index != null ? index : this.threads.findIndex(thread => thread._id == id);
 
             if (!show) {
                 this.scrollBack = true;

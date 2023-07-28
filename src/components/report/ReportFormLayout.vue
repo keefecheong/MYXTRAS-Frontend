@@ -3,21 +3,40 @@
         <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="submitting" />
 
         <form class="form-overlay-content" @submit.prevent="submitReport">
-            <button class="form-overlay-close" @click="closeForm" type="button">
+            <button class="form-overlay-close" @click="() => closeForm(false)" type="button">
                 <span class="material-symbols-outlined">Close</span>
             </button>
 
-            <h1>Report {{ type.includes('Comment') ? 'comment' : type }}</h1>
+            <h1>{{ resolve ? 'Resolve' : 'Report' }} {{ type.includes('Comment') ? 'comment' : type }}</h1>
+
+            <!-- input for choosing action if resolving report -->
+            <div v-if="resolve" class="report-form-selection-container">
+                <label for="resolve-report-action" id="resolve-report-action-label">Action after resolving report:</label>
+
+                <select name="resolve-report-action" id="resolve-report-action-input" v-model="selectedResolveAction">
+                    <option value="" disabled selected hidden>Select an action</option>
+                    <option 
+                        v-for="action in resolveActions"
+                        :value="action"
+                        :hidden="hideAction(action)"
+                    >
+                        {{ action }}
+                    </option>
+                </select>
+            </div>
 
             <!-- input for report reason -->
-            <label for="report-reason">Why are you reporting this {{ type.includes('Comment') ? 'comment' : type }}?</label>
-            <select name="report-reason" id="report-reason-input" v-model="selectedReason">
-                <option value="None" disabled selected hidden>Select an option</option>
-                <option v-for="(reason, index) in reasons" :key="index" :value="reason">{{ reason }}</option>
-            </select>
+            <div v-if="!resolve || (resolve && selectedResolveAction && selectedResolveAction != RESOLVE_ACTION_NONE)"  class="report-form-selection-container">
+                <label for="report-reason">{{ formTitle }}</label>
+    
+                <select name="report-reason" id="report-reason-input" v-model="selectedReason">
+                    <option value="" disabled selected>Select a reason for reporting</option>
+                    <option v-for="reason in reasons" :value="reason">{{ reason }}</option>
+                </select>
+            </div>
 
             <!-- input for supporting evidence if reporting user -->
-            <div v-if="type == 'user'" id="report-evidence-container">
+            <div v-if="type == 'user' && !resolve" id="report-evidence-container">
                 <label for="report-evidence-input" id="report-evidence-label"><u>Click</u> to Select Picture as Evidence (Optional)</label>
     
                 <span v-if="evidenceObject && errors.length > 0" class="errMsg">Invalid file</span>
@@ -33,22 +52,22 @@
                 </div>
             </div>
 
-            <button class="form-overlay-control-button" :disabled="submitting || !reasons.includes(selectedReason)">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
+            <button class="form-overlay-control-button" :disabled="submitting || !enableSubmit">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
         </form>
     </div>
 </template>
 
 <script>
 import LoadingOverlay from '../general/LoadingOverlay.vue';
-import { useAlertStore } from '../../stores/AlertStore';
-import { useConfirmStore } from '../../stores/ConfirmStore';
+import { useAlertStore } from '../../stores/AlertStore.js';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
 
 export default {
     data() {
         return {
             submitting: false,
 
-            selectedReason: 'None',
+            selectedReason: '',
             reasons: [
                 'Spam',
                 'Nudity or sexual activity',
@@ -67,9 +86,24 @@ export default {
             evidenceLink: null,
             errors: [],
 
+            selectedResolveAction: '',
+            RESOLVE_ACTION_NONE: 'None',
+            RESOLVE_ACTION_DELETE: 'Delete content',
+            RESOLVE_ACTION_SUSPEND: 'Suspend user',
+            RESOLVE_ACTION_TERMINATE: 'Terminate user',
+            resolveActions: null,
+
             alert: useAlertStore().alert,
             confirm: useConfirmStore().confirm
         }
+    },
+    created() {
+        this.resolveActions = [
+            this.RESOLVE_ACTION_NONE,
+            this.RESOLVE_ACTION_DELETE,
+            this.RESOLVE_ACTION_SUSPEND,
+            this.RESOLVE_ACTION_TERMINATE
+        ]
     },
     components: {
         LoadingOverlay
@@ -81,26 +115,53 @@ export default {
         'forumId',
         'threadId',
         'commentId',
-        'messageId'
+        'messageId',
+        'resolve'
     ],
     emits: [
         'close-report-form'
     ],
+    computed: {
+        // to generate label for selecting report reason
+        formTitle() {
+            const reportType = this.type.includes('Comment') ? 'Comment' : this.type;
+
+            return !this.resolve ? `Why are you reporting this ${reportType}?` : `Resolve report for ${reportType}:`;
+        },
+        // to check if fields are valid to enable submit
+        // submit allowed: 1. if resolving, when a valid resolve action and reason is selected, 2. otherwise, when a valid reason is selected
+        enableSubmit() {
+            const validAction = this.resolve && this.resolveActions.includes(this.selectedResolveAction);
+            const validReason = this.reasons.includes(this.selectedReason);
+
+            const validResolve = validAction && (this.selectedResolveAction == this.RESOLVE_ACTION_NONE || validReason);
+            const validReport = !this.resolve && validReason;
+
+            return validResolve || validReport;
+        }
+    },
     methods: {
         // to close report form
-        closeForm() {
-            this.$emit('close-report-form');
+        closeForm(submitted) {
+            this.$emit('close-report-form', submitted);
         },
         // to submit report
         async submitReport() {
             this.submitting = true;
 
             // if invalid reason is selected then do nothing
-            if (!this.reasons.includes(this.selectedReason)) {
+            if (this.selectedResolveAction != this.RESOLVE_ACTION_NONE && !this.reasons.includes(this.selectedReason)) {
                 this.submitting = false;
 
                 await this.alert('Invalid report reason');
                 return;
+            }
+
+            // if resolving report, check if actions is valid
+            if (this.resolve && !this.resolveActions.includes(this.selectedResolveAction)) {
+                this.submitting = false;
+
+                await this.alert('Invalid resolve action.');
             }
 
             // do nothing if there are errors in the files provided
@@ -111,7 +172,7 @@ export default {
                 return;
             }
 
-            const confirmReport = await this.confirm('Report information cannot be changed, are you sure you want to continue?');
+            const confirmReport = await this.confirm('This operation cannot be reversed, are you sure you want to continue?');
 
             if (!confirmReport) {
                 this.submitting = false;
@@ -119,20 +180,46 @@ export default {
             }
 
             // set url and body based on report type
-            let url = `${import.meta.env.VITE_APP_SERVER_URL}/api/report/submit`;
+            let url;
+            const failedReport = this.resolve && this.selectedResolveAction == this.RESOLVE_ACTION_NONE;
+
+            if (this.resolve) {
+                url = `${import.meta.env.VITE_APP_SERVER_URL}/api/admin/report/resolve`;
+
+                if (failedReport) {
+                    url += '/failed';
+                }
+                else {
+                    url += '/success';
+                }
+            }
+            else {
+                url = `${import.meta.env.VITE_APP_SERVER_URL}/api/report/submit`;
+            }
 
             let body = JSON.stringify({
                 reason: this.selectedReason
             });
 
             let sendingFormData = false;
+            let objectId;
 
-            switch (this.type) {
+            // set url based on type of report
+            switch (this.type.toLowerCase()) {
                 case 'user':
-                    url += `/user/${this.userId}`;
+                    if (this.resolve) {
+                        if (failedReport) {
+                            objectId = this.userId;
 
-                    // if report is for a user and an image is selected then change body to FormData object
-                    if (this.evidenceObject) {
+                            break;
+                        }
+
+                        url += `/user/${this.userId}/${ this.selectedResolveAction == this.RESOLVE_ACTION_TERMINATE ? 'terminate' : 'suspend' }`;
+                        
+                        break;
+                    }
+                    // if submitting report for a user and an image is selected then change body to FormData object
+                    else if (this.evidenceObject) {
                         body = new FormData();
 
                         body.append('reason', this.selectedReason);
@@ -140,31 +227,75 @@ export default {
 
                         sendingFormData = true;
                     }
+                    
+                    url += `/user/${this.userId}`;
 
                     break;
 
                 case 'post':
+                    if (failedReport) {
+                        objectId = this.postId;
+
+                        break;
+                    }
+
                     url += `/user/${this.userId}/post/${this.postId}`;
+
                     break;
 
                 case 'forum':
+                    if (failedReport) {
+                        objectId = this.forumId;
+
+                        break;
+                    }
+
                     url += `/forum/${this.forumId}`;
+
                     break;
 
                 case 'thread':
+                    if (failedReport) {
+                        objectId = this.threadId;
+
+                        break;
+                    }
+
                     url += `/forum/${this.forumId}/thread/${this.threadId}`;
+
                     break;
 
-                case 'postComment':
+                case 'postcomment':
+                    if (failedReport) {
+                        objectId = this.commentId;
+
+                        break;
+                    }
+                    
                     url += `/user/${this.userId}/post/${this.postId}/comment/${this.commentId}`;
+
                     break;
 
-                case 'threadComment':
+                case 'threadcomment':
+                    if (failedReport) {
+                        objectId = this.commentId;
+
+                        break;
+                    }
+
                     url += `/forum/${this.forumId}/thread/${this.threadId}/comment/${this.commentId}`;
+
                     break;
 
                 case 'message':
+                    if (failedReport) {
+                        objectId = this.messageId;
+
+                        break;
+                    }
+                    
                     url += `/message/${this.messageId}`;
+
                     break;
 
                 default:
@@ -172,13 +303,18 @@ export default {
 
                     await this.alert('Invalid report type.');
                     
-                    this.closeForm();
+                    this.closeForm(false);
                     break;
+            }
+
+            // centrally update url if resolve report with no action
+            if (failedReport) {
+                url += `/${objectId}`;
             }
 
             const options = {
                 mode: 'cors',
-                method: 'POST',
+                method: this.resolve ? 'PATCH' : 'POST',
                 credentials: 'include',
                 body
             };
@@ -189,14 +325,12 @@ export default {
                 }
             }
 
-            console.log(url)
-
             // send request
             await fetch(url, options).then(async res => {
                 await res.json().then(async data => {
                     await this.alert(data.message);
 
-                    this.closeForm();
+                    this.closeForm(true);
                 })
             }).catch(error => {
                 console.log(error);
@@ -244,6 +378,14 @@ export default {
 
             // otherwise preview images
             this.evidenceLink = URL.createObjectURL(this.evidenceObject);
+        },
+        // hide terminate and suspend if resolving reports for anything other than user
+        // hide delete if resolving reports for user
+        hideAction(action) {
+            return (
+                (this.type != 'User' && (action == this.RESOLVE_ACTION_TERMINATE || action == this.RESOLVE_ACTION_SUSPEND)) ||
+                (this.type == 'User' && action == this.RESOLVE_ACTION_DELETE)
+            )
         }
     }
 }
@@ -253,11 +395,21 @@ export default {
 label {
     font-size: 1.2em;
     cursor: pointer;
+    text-align: end;
 }
 </style>
 
 <style>
 @import url('../../styles/forms/form-overlay-styles.css');
+
+.report-form-selection-container {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
 
 #report-evidence-container {
     display: flex;

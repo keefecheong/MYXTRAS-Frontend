@@ -64,11 +64,6 @@
                 "label": "Manage Events",
                 "page": "/admin/events.html",
                 "icon": "campaign"
-            },
-            {
-                "label": "View Logs",
-                "page": "/admin/logs.html",
-                "icon": "lists"
             }
         ]
     }

@@ -1,5 +1,5 @@
 <template>
-    <div id="searchbar-container" >
+    <div id="searchbar-container" class="banner-container">
         <div id="search-input">
             <span class="material-symbols-outlined" id="search-icon" @click="performSearch" title="Click to search">search</span>
             <input
@@ -44,22 +44,13 @@ p {
 </style>
 
 <style>
+@import url('../../styles/banner-styles.css');
+
 #searchbar-container {
-    --right-content-height: 10dvh;
-    --min-profile-pic-height: 50px;
-    --max-profile-pic-height: 70px;
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 2;
-    padding: 10px 0;
+    --ideal-right-content-height: 10dvh;
+    --min-right-content-height: 54px;
+    --max-right-content-height: 70px;
     background-color: var(--primary);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: nowrap;
-    column-gap: 20px;
 }
 
 #search-input {
@@ -117,7 +108,7 @@ p {
 
 #searchbar-right > div {
     max-width: 45%;
-    height: var(--right-content-height);
+    height: clamp(var(--min-right-content-height), var(--ideal-right-content-height), var(--max-right-content-height));
     position: relative;
     left: 100%;
     transform: translateX(-100%);
@@ -131,11 +122,16 @@ p {
     color: white;
 }
 
+#searchbar-right > div > a {
+    height: 100%;
+}
+
 .searchbar-profile-pic {
-    width: clamp(var(--min-profile-pic-height), var(--right-content-height), var(--max-profile-pic-height));
-    height: clamp(var(--min-profile-pic-height), var(--right-content-height), var(--max-profile-pic-height));
+    max-height: 100%;
     border: #133B5B 4px solid;
     border-radius: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 /* Login button CSS */

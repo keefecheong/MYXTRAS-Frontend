@@ -85,7 +85,12 @@
                         </div>
                         
                         <div v-if="blogsToDisplay.length > 0 && !blockedByUser && !blockingUser">
-                            <BlogLayout v-for="blog in blogsToDisplay" :key="blog._id" :blog="blog" />
+                            <BlogLayout
+                                v-for="blog in blogsToDisplay"
+                                :blog="blog"
+                                :highlightComment="(blog._id == postId && commentId) ? commentId : null"
+                                :key="blog._id"
+                            />
                         </div>
 
                         <div v-if="blogsToDisplay.length <= 0 || blockedByUser || blockingUser" id="profile-no-posts">
@@ -141,22 +146,32 @@
 
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
+
 import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 import CreatedForums from '../../components/forum/CreatedForums.vue';
+
 import banner from '../../assets/CustomBanner.png';
+
 import BlogLayout from '../../components/blog/BlogLayout.vue';
 import BlogFormLayout from '../../components/blog/BlogFormLayout.vue';
+
 import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
+
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
-import ObjectID from 'bson-objectid';
-import { viewUser } from '../../utils/general/viewUser.js';
-import signOut from '../../utils/authentication/signOut';
-import { debounce } from 'lodash';
 import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
+
 import ReportFormLayout from '../../components/report/ReportFormLayout.vue';
+
+import ObjectID from 'bson-objectid';
+import { debounce } from 'lodash';
+import viewUser from '../../utils/general/viewUser.js';
+import signOut from '../../utils/authentication/signOut';
+import { ref } from 'vue';
+
+import highlightElement from '../../utils/general/highlightElement.js';
 
 export default {
     components: {
@@ -187,8 +202,9 @@ export default {
             blogs: [],
             savedBlogs: [],
             savedLoaded: false,
-            forums: [],
             viewingSaved: false,
+            postId: '',
+            commentId: '',
 
             following: false,
             savedFollowing: false,
@@ -219,9 +235,24 @@ export default {
         // initialize data
         this.initData();
         
-        // automatically open create blog form if href is /profilePage.html?create and requested user is self
-        if (window.location.search == '?create' && this.isSelf) {
-            this.showCreateBlog = true;
+        const query = location.search;
+        
+        if (query) {
+            // automatically open create blog form if href is /profilePage.html?create and requested user is self
+            if (query == '?create' && this.isSelf) {
+                this.showCreateBlog = true;
+            }
+
+            const params = new URLSearchParams(query);
+
+            // set postId and commentId to highlight item (coming from admin reports page)
+            if (params.has('post')) {
+                this.postId = params.get('post');
+
+                if (params.has('comment')) {
+                    this.commentId = params.get('comment');
+                }
+            }
         }
 
         // set debounce function to only send request to update backend if user has not clicked the follow button for 3 seconds
@@ -231,6 +262,22 @@ export default {
         window.addEventListener('beforeunload', this.completeFollowRequest);
 
         window.addEventListener('beforeunload', this.handleUnload);
+    },
+    mounted() {
+        if (!this.postId) return;
+
+        // if postId is set then scroll to and highlight the post and remove highlight after 5 seconds
+        setTimeout(() => {
+            const targetPost = document.getElementById(this.postId);
+
+            if (targetPost) {
+                targetPost.scrollIntoView({
+                    block: 'center'
+                });
+
+                highlightElement(targetPost);
+            }
+        }, 100);
     },
 
     beforeUnmount() {

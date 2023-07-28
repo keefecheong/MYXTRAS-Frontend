@@ -105,7 +105,6 @@
 import AddInterestButton from '../general/AddInterestButton.vue';
 import calculateSize from '../../utils/general/formatFileSize.js';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
-import AlertPrompt from '../general/AlertPrompt.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
 
@@ -113,7 +112,6 @@ export default {
     components: {
         AddInterestButton,
         LoadingOverlay,
-        AlertPrompt,
         DynamicTextarea
     },
     data() {

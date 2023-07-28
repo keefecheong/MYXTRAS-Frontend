@@ -254,7 +254,7 @@ h1 {
 }
 .sticky-filter {
     position: sticky;
-    top: 15vh;
+    top: clamp(80px, 15dvh, 100px);
     display: flex;
     justify-content: flex-end;
     z-index: 1;

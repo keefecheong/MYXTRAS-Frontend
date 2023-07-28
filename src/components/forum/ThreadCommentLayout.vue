@@ -1,5 +1,5 @@
 <template>
-    <div class="thread-comment-container">
+    <div class="thread-comment-container" :id="comment._id">
         <div class="thread-comment-header">
             <!-- creator profile pic -->
             <img class="thread-comment-profile-pic" :src="comment.creator_id.profile_pic_link" @click="viewUser" title="View user" />
@@ -36,7 +36,7 @@
 
 <script>
 import calcDateDifference from '../../utils/general/calcDateDifference';
-import { viewUser } from '../../utils/general/viewUser.js';
+import viewUser from '../../utils/general/viewUser.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import { useAlertStore } from '../../stores/AlertStore';
 
@@ -54,8 +54,7 @@ export default {
     ],
     props: [
         'comment',
-        'thread',
-        'userId'
+        'thread'
     ],
     created() {
         this.dateCreated = calcDateDifference(this.comment.creation_time);
@@ -120,6 +119,7 @@ export default {
     margin: 0 auto;
     margin-top: 20px;
     padding: 10px;
+    transition: background-color 1s ease-out;
 }
 
 .thread-comment-header {

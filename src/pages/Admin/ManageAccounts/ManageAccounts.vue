@@ -1,137 +1,182 @@
 <template>
+    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+        {{ alertMsg }}
+    </AlertPrompt>
+
+    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+        {{ confirmMsg }}
+    </ConfirmPrompt>
+
     <div id="main-container">
         <NavSidebar :forAdmin="true" />
+
         <div id="main-content">
-            <div id="header">
-                <h1 id="title">Banned Users</h1>
+            <AdminBanner>
+                <template v-slot:header>
+                    <h1>Manage Accounts</h1>
+                </template>
+
+                <template v-slot:right-content>
+                    <div class="banner-toggle-container">
+                        <button class="use-primary-secondary-gradient details-button hover-contrast" :class="{ 'active': viewUsers }" title="View users" @click="() => toggleViewUsers(1)">Users</button>
+                        <button class="use-primary-secondary-gradient details-button hover-contrast" :class="{ 'active': viewAdmins }" title="View admins" @click="() => toggleViewUsers(2)">Admins</button>
+                        <button class="use-primary-secondary-gradient details-button hover-contrast" :class="{ 'active': viewSuspended }" title="View suspended accounts" @click="() => toggleViewUsers(3)">Suspended</button>
+                        <button class="use-primary-secondary-gradient details-button hover-contrast" :class="{ 'active': viewTerminated }" title="View terminated accounts" @click="() => toggleViewUsers(4)">Terminated</button>
+                    </div>
+                </template>
+            </AdminBanner>
+
+            <div v-if="usersToDisplay.length > 0">
+                <div v-if="!viewDetailed">
+                    <UserLayout 
+                        :showHeader="true"
+                        :viewSuspended="viewSuspended"
+                        :viewTerminated="viewTerminated"
+                    />
+
+                    <div v-for="(user, index) in usersToDisplay">
+                        <UserLayout
+                            :user="user"
+                            :viewSuspended="viewSuspended"
+                            :viewTerminated="viewTerminated"
+                            :key="user._id"
+                            @view-user-details="() => toggleUserDetails(true, index)"
+                        />
+                    </div>
+                </div>
+    
+                <div v-else>
+                    <UserDetailsLayout :user="usersToDisplay[selectedIndex]" @close-user-details="() => toggleUserDetails(false)" />
+                </div>
             </div>
 
-            <div id="logs_header" class="row">
-                <div class="col-sm-1">
-                    <p id="header_content"></p>
-                </div> 
-                <div class="col-sm-2">
-                    <p id="header_content">Real Name</p>
-                </div>      
-                <div class="col-sm-2">
-                    <p id="header_content">Username</p>
-                </div>     
-                <div class="col-sm-3">
-                    <p id="header_content">Reason of Termination</p>
-                </div>     
-                <div class="col-sm-2">
-                    <p id="header_content">Date of Termination</p>
-                </div>                
-                <div class="col-sm-2">
-                    <p></p>
-                </div>      
+            <div v-else>
+                <p class="no-items">No users found.</p>
             </div>
-
-            <div id="logs_content" class="row">
-                <div class="col-sm-1">
-                    <img :src="profilePicture" alt="Profile Picture" id="profile-picture"/>
-                </div> 
-                <div class="col-sm-2">
-                    <p>Ching Chong Seng</p>
-                </div>      
-                <div class="col-sm-2">
-                    <p>@wakakaka</p>
-                </div>     
-                <div class="col-sm-3">
-                    <p>Posted graphical content into the blogs...</p>
-                </div>     
-                <div class="col-sm-2">
-                    <p>12-3-23, 5:10PM</p>
-                </div>                
-                <div class="col-sm-2">
-                    <button id="viewMoreButton">View more</button>
-                </div>      
-            </div>
-
-            <hr>
-
-            <div id="logs_content" class="row">
-                <div class="col-sm-1">
-                    <img :src="profilePicture" alt="Profile Picture" id="profile-picture"/>
-                </div> 
-                <div class="col-sm-2">
-                    <p>Ching Chong Seng</p>
-                </div>      
-                <div class="col-sm-2">
-                    <p>@wakakaka</p>
-                </div>     
-                <div class="col-sm-3">
-                    <p>Posted graphical content into the blogs...</p>
-                </div>     
-                <div class="col-sm-2">
-                    <p>12-3-23, 5:10PM</p>
-                </div>                
-                <div class="col-sm-2">
-                    <button id="viewMoreButton">View more</button>
-                </div>      
-            </div>
-
-            <hr>
-
-            <div id="logs_content" class="row">
-                <div class="col-sm-1">
-                    <img :src="profilePicture" alt="Profile Picture" id="profile-picture"/>
-                </div> 
-                <div class="col-sm-2">
-                    <p>Ching Chong Seng</p>
-                </div>      
-                <div class="col-sm-2">
-                    <p>@wakakaka</p>
-                </div>     
-                <div class="col-sm-3">
-                    <p>Posted graphical content into the blogs...</p>
-                </div>     
-                <div class="col-sm-2">
-                    <p>12-3-23, 5:10PM</p>
-                </div>                
-                <div class="col-sm-2">
-                    <button id="viewMoreButton">View more</button>
-                </div>      
-            </div>
-
-            <hr>
-
-            <div id="logs_content" class="row">
-                <div class="col-sm-1">
-                    <img :src="profilePicture" alt="Profile Picture" id="profile-picture"/>
-                </div> 
-                <div class="col-sm-2">
-                    <p>Ching Chong Seng</p>
-                </div>      
-                <div class="col-sm-2">
-                    <p>@wakakaka</p>
-                </div>     
-                <div class="col-sm-3">
-                    <p>Posted graphical content into the blogs...</p>
-                </div>     
-                <div class="col-sm-2">
-                    <p>12-3-23, 5:10PM</p>
-                </div>                
-                <div class="col-sm-2">
-                    <button id="viewMoreButton">View more</button>
-                </div>      
-            </div>
-
-            <hr>
-
         </div>
     </div>
 </template>
 
 <script>
 import NavSidebar from '../../../components/general/NavSidebar.vue';
+import AdminBanner from '../../../components/admin/AdminBanner.vue';
+import UserLayout from '../../../components/admin/ManageUsers/UserLayout.vue';
+import UserDetailsLayout from '../../../components/admin/ManageUsers/UserDetailsLayout.vue';
+import AlertPrompt from '../../../components/general/AlertPrompt.vue';
+import ConfirmPrompt from '../../../components/general/ConfirmPrompt.vue';
+import { useAlertStore } from '../../../stores/AlertStore.js';
+import { useConfirmStore } from '../../../stores/ConfirmStore.js';
+
 export default {
     components: {
         NavSidebar,
+        AdminBanner,
+        UserLayout,
+        UserDetailsLayout,
+        AlertPrompt,
+        ConfirmPrompt
     },
-    data(){
+    data() {
         return{
-            profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/003/337/584/small/default-avatar-photo-placeholder-profile-icon-vector.jpg'
+            profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/003/337/584/small/default-avatar-photo-placeholder-profile-icon-vector.jpg',
+            users: [],
+            viewDetailed: false,
+            selectedIndex: null,
+
+            viewUsers: true,
+            viewAdmins: false,
+            viewSuspended: false,
+            viewTerminated: false,
+
+            alertStore: useAlertStore(),
+            confirmStore: useConfirmStore()
+        }
+    },
+    created() {
+        this.getUsers();
+    },
+    methods: {
+        // to get user data
+        async getUsers() {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/admin/manage`, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include'
+            }).then(async res => {
+                await res.json().then(data => {
+                    this.users = data;
+                });
+            }).catch(error => console.log('Could not retrieve users.'));
+        },
+        // to toggle between user list and user details
+        toggleUserDetails(show, index) {
+            this.viewDetailed = show;
+            this.selectedIndex = index;
+        },
+        // to toggle between the group of users to view
+        toggleViewUsers(value) {
+            this.toggleUserDetails(false);
+            this.viewUsers = value == 1;
+            this.viewAdmins = value == 2;
+            this.viewSuspended = value == 3;
+            this.viewTerminated = value == 4;
+        },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        },
+        // to close confirm prompt
+        closeConfirm(decision) {
+            this.confirmStore.closeConfirm(decision);
+        }
+    },
+    computed: {
+        // filter users list to get suspended accounts
+        suspendedAccounts() {
+            return this.users.filter(user => user.status?.status == 'Suspended');
+        },
+        // filter users list to get terminated accounts
+        terminatedAccounts() {
+            return this.users.filter(user => user.status?.status == 'Terminated');
+        },
+        // filter users list to get user accounts
+        userAccounts() {
+            return this.users.filter(user => !user.is_admin);
+        },
+        // filter users list to get admin accounts
+        adminAccounts() {
+            return this.users.filter(user => user.is_admin);
+        },
+        // to get list of users to display
+        usersToDisplay() {
+            if (this.viewSuspended) {
+                return this.suspendedAccounts;
+            }
+            else if (this.viewTerminated) {
+                return this.terminatedAccounts;
+            }
+            else if (this.viewAdmins) {
+                return this.adminAccounts;
+            }
+            else {
+                return this.userAccounts;
+            }
+        },
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
+        },
+        // to get showConfirm value
+        showConfirm() {
+            return this.confirmStore.showConfirm;
+        },
+        // to get confirmMsg value
+        confirmMsg() {
+            return this.confirmStore.confirmMsg;
         }
     }
 }
@@ -139,54 +184,5 @@ export default {
 
 <style>
 @import url('../../../styles/main.css');
-#header{
-    display: flex;
-    flex-direction: row;
-    background-color: #133B5B;
-    padding: 30px 0 30px 0;
-    min-height: 17vh;
-    margin-left: -20px;
-    justify-content: center;
-}
-#title{
-    color: white;
-    text-align: center;
-    border-bottom: #EDEDED 1px solid;
-    width: 45%;
-}
-#logs_header{
-    display: flex;
-    flex-direction: row;
-    background-color: #EDEDED;
-    padding: 50px 100px 50px 100px;
-    height: 50px;;
-    margin-left: -20px;
-    justify-content: center;
-}
-#header_content{
-    margin-bottom: 0px;
-    font-weight: bold;
-    margin-top: -12px;
-}
-#logs_content{
-    display: flex;
-    flex-direction: row;
-    padding: 50px 100px 50px 100px;
-    height: 50px;;
-    margin-left: -20px;
-    justify-content: center;
-}
-#profile-picture{
-    border-radius: 50%;
-    max-height: 58%;
-    margin-left: -50px;
-    margin-top: -36px;
-}
-#viewMoreButton{
-    color: #E53A73;
-    border: 2px solid #E53A73;
-    background-color: white;
-    font-weight: bold;
-    border-radius: 5px;
-}
+@import url('../../../styles/admin/common-admin-entry-styles.css');
 </style>

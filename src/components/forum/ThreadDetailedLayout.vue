@@ -84,13 +84,15 @@
                     <div v-if="comments.length > 0">
                         <h4>Comments ({{ comments.length }})</h4>
                         
-                        <ThreadCommentLayout
+                        <CommentLayout
                             v-for="(comment, index) in comments"
                             :key="index"
                             :comment="comment"
-                            :thread="thread"
-                            @deleted-comment="() => handleDeletedComment(index)"
-                            @report-comment="handleReportComment"
+                            :threadId="thread._id"
+                            :forumId="thread.parent_id._id"
+                            :forPost="false"
+                            @comment-deleted="() => handleDeletedComment(index)"
+                            @report-comment="() => handleReportComment(comment._id)"
                         />
                     </div>
                     
@@ -116,16 +118,22 @@
 
 <script>
 import InterestBadgeList from '../general/InterestBadgeList.vue';
-import ThreadCommentLayout from './ThreadCommentLayout.vue';
+
 import { useAlertStore } from '../../stores/AlertStore';
-import calcDateDifference from '../../utils/general/calcDateDifference';
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
+
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
-import { viewUser } from '../../utils/general/viewUser.js';
+import viewUser from '../../utils/general/viewUser.js';
 import viewForum from '../../utils/general/viewForum.js';
-import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import highlightElement from '../../utils/general/highlightElement.js';
+import calcDateDifference from '../../utils/general/calcDateDifference.js';
+
+import CommentLayout from '../comment/CommentLayout.vue';
 import ThreadFormLayout from './ThreadFormLayout.vue';
+
 import { debounce } from 'lodash';
+
 import ReportFormLayout from '../report/ReportFormLayout.vue';
 
 export default {
@@ -159,13 +167,14 @@ export default {
         'thread',
         'showBackArrow',
         'showForumDetails',
+        'highlightComment'
     ],
     emits: [
         'close-detailed-view'
     ],
     components: {
         InterestBadgeList,
-        ThreadCommentLayout,
+        CommentLayout,
         LoadingOverlay,
         DynamicTextarea,
         ThreadFormLayout,
@@ -181,7 +190,19 @@ export default {
         this.dislikeCount = this.thread.dislikes.length;
 
         // get comment data
-        this.initData();
+        this.initData().then(() => {
+            if (this.highlightComment) {
+                setTimeout(() => {
+                    const targetComment = document.getElementById(this.highlightComment);
+
+                    targetComment.scrollIntoView({
+                        block: 'center'
+                    });
+
+                    highlightElement(targetComment);
+                }, 300);
+            }
+        });
 
         // get time difference from when thread was created and current datetime
         this.dateCreated = calcDateDifference(this.thread.creation_time);
@@ -443,13 +464,13 @@ export default {
 <style>
 @import url('../../styles/forums/similar-thread-layout-styles.css');
 
+#thread-detailed-layout-container {
+    transition: background-color 1s ease-out;
+}
+
 #thread-detailed-layout-content {
     cursor: auto;
     margin-bottom: 0;
-}
-
-#thread-detailed-layout-container > .material-symbols-outlined {
-    user-select: none;
 }
 
 #close-detailed-thread-container-arrow {

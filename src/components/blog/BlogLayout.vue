@@ -1,5 +1,5 @@
 <template>
-    <div class="blog-container" :id="uniqueId" v-if="!deleted">
+    <div class="blog-container" :id="blog._id" v-if="!deleted">
         <!-- heading - contains creator's profile pic, username, time posted, and location -->
         <div class="blog-header">
             <div>
@@ -183,14 +183,15 @@
                 <LoadingOverlay v-if="!commentsLoaded" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
 
                 <div v-else class="blog-comments-container">
-                    <BlogCommentLayout
-                        v-for="comment in commentData"
+                    <CommentLayout
+                        v-for="(comment, index) in commentData"
                         :comment="comment"
-                        :creatorId="blog.creator_id._id"
+                        :blogCreatorId="blog.creator_id._id"
                         :postId="blog._id"
+                        :forPost="true"
                         :key="comment._id"
-                        @comment-deleted="deleteComment"
-                        @report-comment="handleReportComment"
+                        @comment-deleted="() => deleteComment(index)"
+                        @report-comment="() => handleReportComment(index)"
                     />
                 </div>
             </div>
@@ -204,10 +205,10 @@
     <BlogFormLayout v-if="blog.isOwner && editMode" :editMode="true" :blog="blog" @close-blog-form="() => editPost(false)" />
 
     <ReportFormLayout 
-        v-if="!blog.isOwner && showReportForm"
+        v-if="(!blog.isOwner || !reportComment?.isOwner) && showReportForm"
         :userId="blog.creator_id._id"
         :postId="blog._id" 
-        :commentId="reportCommentId" 
+        :commentId="reportComment._id" 
         :type="reportType" 
         @close-report-form="() => toggleReportForm(false)"
     />
@@ -216,8 +217,6 @@
 <style>
 /* container styles */
 .blog-container {
-    border: #133B5B;
-    border-style: solid 1rem;
     margin: auto;
     width: 100%;
     box-shadow: 1px 1px 5px 1px rgba(65, 48, 48, 0.3);
@@ -227,6 +226,7 @@
     display: flex;
     flex-direction: column;
     row-gap: 12px;
+    transition: background-color 1s ease-out;
 }
 
 /* blog header styles */
@@ -458,7 +458,7 @@
 
 <script>
 import { RouterLink } from 'vue-router';
-import BlogCommentLayout from './BlogCommentLayout.vue';
+import CommentLayout from '../comment/CommentLayout.vue';
 import calcDateDifference from '../../utils/general/calcDateDifference.js';
 import BlogFormLayout from './BlogFormLayout.vue';
 import LoadingOverlay from '../general/LoadingOverlay.vue';
@@ -466,14 +466,14 @@ import InterestBadgeList from '../general/InterestBadgeList.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
 import DynamicTextarea from '../general/DynamicTextarea.vue';
-import { viewUser } from '../../utils/general/viewUser.js';
+import viewUser from '../../utils/general/viewUser.js';
 import { debounce } from 'lodash';
 import ReportFormLayout from '../report/ReportFormLayout.vue';
+import highlightElement from '../../utils/general/highlightElement.js';
 
 export default {
     data() {
         return {
-            uniqueId: 'a' + this.blog._id,
             currentId: 1,
             showPrev: false,
             showNext: false,
@@ -502,7 +502,7 @@ export default {
 
             showReportForm: false,
             reportType: null,
-            reportCommentId: null,
+            reportComment: null,
             
             alert: useAlertStore().alert,
             confirm: useConfirmStore().confirm
@@ -510,7 +510,7 @@ export default {
     },
     components: {
         RouterLink,
-        BlogCommentLayout,
+        CommentLayout,
         BlogFormLayout,
         LoadingOverlay,
         InterestBadgeList,
@@ -518,8 +518,17 @@ export default {
         ReportFormLayout
     },
     props: [
-        'blog'
+        'blog',
+        'highlightComment'
     ],
+    created() {
+        // if to highlight comment then start loading comments first
+        if (this.highlightComment) {
+            this.showComments = true;
+
+            this.getComments();
+        }
+    },
     mounted() {
         // get time difference from when post was created and current datetime
         this.dateCreated = calcDateDifference(this.blog.creation_time);
@@ -540,6 +549,21 @@ export default {
         // initialize saved value
         this.savedSaved = this.blog.saved;
         this.saved = this.blog.saved;
+
+        // if to highlight comment then scroll to and highlight comment
+        if (this.highlightComment) {
+            setTimeout(() => {
+                const targetComment = document.getElementById(this.highlightComment);
+
+                if (targetComment) {
+                    targetComment.scrollIntoView({
+                        block: 'center'
+                    });
+                }
+
+                highlightElement(targetComment);
+            }, 300);
+        }
         
         // debounce function to only send request to update backend if user has not clicked the like/save button for 3 seconds
         this.debouncedLikeUpdate = debounce(this.updateLike, 3000);
@@ -568,7 +592,7 @@ export default {
         // show the next slide
         nextSlide() {
             // do nothing if the active image is the last image
-            if (this.currentId == document.querySelectorAll(`#${this.uniqueId} .blog-content .blog-image-container .blog-item`).length) {
+            if (this.currentId == this.blog.content_links.length) {
                 return;
             }
 
@@ -595,7 +619,7 @@ export default {
         // set showPrev and showNext based on the currentId
         toggleControls() {
             // hide next control if the active image is the last image and show otherwise
-            if (this.currentId == document.querySelectorAll(`#${this.uniqueId} .blog-content .blog-image-container .blog-item`).length) {
+            if (this.currentId == this.blog.content_links.length) {
                 this.showNext = false;
             }
             else {
@@ -807,10 +831,10 @@ export default {
             })
         },
         // remove deleted comment's id from the comments list to update the dom immediately
-        deleteComment(commentId) {
+        deleteComment(index) {
             this.blog.comment_count -= 1;
-            const commentIndex = this.commentData.findIndex(comment => comment._id == commentId);
-            this.commentData.splice(commentIndex, 1);
+            
+            this.commentData.splice(index, 1);
         },
         // go to profile page to view the creator's profile
         viewUser(){
@@ -825,8 +849,8 @@ export default {
             this.reportType = type;
         },
         // to report comment
-        handleReportComment(commentId) {
-            this.reportCommentId = commentId;
+        handleReportComment(index) {
+            this.reportComment = this.commentData[index];
 
             this.toggleReportForm(true, 'postComment');
         }
