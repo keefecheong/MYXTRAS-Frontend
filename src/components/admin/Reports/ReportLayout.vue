@@ -4,7 +4,7 @@
     <div class="report-layout-container layout-container" :class="{ 'header': header }">
         <div>
             <span class="hide-overflow-text flex-10" :title="displayType">{{ displayType }}</span>
-            <span class="hide-overflow-text flex-15" v-if="!reviewed" :title="displayTarget">{{ displayTarget }}</span>
+            <span class="hide-overflow-text flex-15" :title="displayTarget">{{ displayTarget }}</span>
             <span class="hide-overflow-text flex-20" v-if="!reviewed" :title="displayParent">{{ displayParent }}</span>
             <span class="hide-overflow-text flex-5" v-if="aggregated" :title="displayCount">{{ displayCount }}</span>
             <span class="hide-overflow-text flex-15" :title="displayOwner">{{ displayOwner }}</span>
