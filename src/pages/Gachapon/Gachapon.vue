@@ -3,6 +3,8 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content" class="gachaponBody">
+            
+            <Pet/>
             <div id="left-content">
                 <h2>
                     Your Wallet: 
@@ -131,10 +133,12 @@
 </style>
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
+import Pet from '../../components/gamification/pet.vue';
 
 export default {
     components: {
-        NavSidebar
+        NavSidebar,
+        Pet
     },
     data() {
         return {

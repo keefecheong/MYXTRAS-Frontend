@@ -57,7 +57,6 @@
                 </div>
                 <div id="pet">
                     <div id="runner"></div>
-                    <div id="road"></div>
                 </div>
                 <button id="bottom-right-button"><span class="material-symbols-outlined" @click="gachapon">shopping_cart</span></button>
             </div>
@@ -174,10 +173,16 @@ h1 {
     border-bottom: 7px dashed black;
 }
 
-#runner{
-    background: url("../../assets/panda_colour.png");
+#pet {
     width: 250px;
     height: 330px;
+}
+#runner{
+    background: url("../../assets/panda_colour.png");
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    height: 100%;
     animation: walk 10s steps(12) infinite;
 }
 
@@ -203,7 +208,6 @@ h1 {
 
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
-import Gachapon from '../Gachapon/Gachapon.vue';
 
 export default {
     components: {
