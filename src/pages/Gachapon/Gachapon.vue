@@ -57,6 +57,24 @@
                     <p>1600 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
                 </div>
             </div>
+            <v-dialog v-model="showModal" max-width="500">
+                <v-card>
+                    <v-card-title v-if="!insufficientGems">Rolled Pets</v-card-title>
+                    <v-card-text>
+                    <!-- Display the rolledPets data here -->
+                    <ul>
+                        <li v-for="pet in rolledPets" :key="pet.name">{{ pet.name }}</li>
+                    </ul>
+                    <p v-if="insufficientGems">
+                        Insufficient gems! Need {{ this.gemsReq }} more gems.
+                    </p>
+                    </v-card-text>
+                    <v-card-actions>
+                    <!-- Button to close the modal -->
+                    <v-btn @click="showModal = false">Close</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </div>
     </div>
 
@@ -143,6 +161,9 @@ export default {
     data() {
         return {
             gems: 0,
+            showModal: false, 
+            rolledPets: [],
+            insufficientGems: false,
         }
     },
     created(){
@@ -166,13 +187,23 @@ export default {
            
         },
         async rollGacha(numOfRolls){
+            if (((this.gems - numOfRolls * 160) < 0)){
+                this.insufficientGems = true;
+                this.showModal = true;
+                this.gemsReq = Math.abs(this.gems - numOfRolls * 160)
+                return
+            }
+            this.insufficientGems = false;
+            this.gems -= numOfRolls * 160
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/gachapon/${numOfRolls}`, {
                 mode: 'cors',
                 method: 'POST',
                 credentials: 'include',
             }).then(async (res) => {
                 await res.json().then((data) => {
-                    this.claimed = true;    
+                    this.rolledPets = data;
+                    this.showModal = true;
+
                 });
             }).catch((error) => {
                 console.log(error);
