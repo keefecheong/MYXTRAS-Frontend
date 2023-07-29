@@ -490,7 +490,7 @@ export default {
             }).then((response) => {
                 if (response.ok) {
                     sessionStorage.setItem('to_setup_profile', true);
-                    location.href = '/setupProfile.html';
+                    location.href = '/setupprofile.html';
                 }
                 else {
                     response.json().then(async (data) => {
