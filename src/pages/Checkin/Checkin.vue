@@ -57,6 +57,7 @@
                 </div>
                 <div id="pet">
                     <div id="runner"></div>
+                    <div id="road"></div>
                 </div>
                 <button id="bottom-right-button"><span class="material-symbols-outlined" @click="gachapon">shopping_cart</span></button>
             </div>
@@ -169,22 +170,39 @@ h1 {
   }
 }
 
-#road{
+/* #road{
     border-bottom: 7px dashed black;
+} */
+
+#pet{
+    position: fixed;
+    bottom: 0;
 }
 
-#pet {
-    width: 250px;
-    height: 330px;
-}
 #runner{
     background: url("../../assets/panda_colour.png");
-    object-fit: cover;
-    object-position: center;
-    width: 100%;
-    height: 100%;
+    width: 62.5px;
+    height: 82.5px;
     animation: walk 10s steps(12) infinite;
-}
+    background-size: 750px 88.5px;
+
+} 
+/* 
+#runner{
+    background: url("../../assets/chicken.png");
+    width: 85px;
+    height: 101px;
+    /* animation: walk 10s steps(8) infinite; */
+    /* background-size: 750px 88.5px; */
+/* 
+#runner{
+    background: url("../../assets/scoobydoo.png");
+    width: 1100px;
+    height: 82.5px;
+    animation: walk 10s steps(12) infinite;
+    background-size: 750px 88.5px;
+
+} */
 
 @keyframes walk {
     0% {
@@ -208,6 +226,7 @@ h1 {
 
 <script>
 import NavSidebar from '../../components/general/NavSidebar.vue';
+import Gachapon from '../Gachapon/Gachapon.vue';
 
 export default {
     components: {
