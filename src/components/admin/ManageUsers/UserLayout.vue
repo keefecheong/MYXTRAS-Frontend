@@ -1,6 +1,6 @@
 <!-- layout for displaying users in manageAccounts.html -->
 <template>
-    <div class="user-layout-container layout-container" :class="{ 'header': showHeader }" :id="userId">
+    <div class="user-layout-container layout-container" :class="{ 'header': showHeader }">
         <div>
             <span class="hide-overflow-text flex-15" :title="displayUserId">{{ displayUserId }}</span>
             <span class="hide-overflow-text flex-15" :title="displayUsername">{{ displayUsername }}</span>
@@ -62,19 +62,3 @@ export default {
     }
 }
 </script>
-
-<style>
-.user-layout-container {
-    .user-layout-userid {
-        flex: 0 0 20%;
-    }
-
-    .user-layout-username {
-        flex: 0 0 15%;
-    }
-
-    .user-layout-warnings {
-        flex: 0 0 10%;
-    }
-}
-</style>

@@ -4,7 +4,6 @@
     align-items: center;
     justify-content: center;
     column-gap: 30px;
-    margin: 15px;
 
     > .active {
         border-color: white;
@@ -26,16 +25,21 @@
     display: flex;
     flex-direction: row;
     column-gap: 30px;
-    justify-content: space-between;
+    justify-content: end;
     align-items: center;
     padding: 15px 30px;
+    padding-left: 10px;
     border-bottom: 1px solid lightgray;
 }
 
 .layout-container {
+    flex-wrap: wrap;
+
     > div {
         justify-content: start;
         border: none;
+        flex: 0 0 90%;
+        margin-right: auto;
     }
 }
 
@@ -49,10 +53,17 @@
 
     > button, > a {
         visibility: hidden;
+        height: 0;
+        border-top-width: 0;
+        border-bottom-width: 0;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 }
 
 .details-button {
+    width: fit-content;
+    height: fit-content;
     border: 2px solid transparent;
     outline: none;
     color: white;

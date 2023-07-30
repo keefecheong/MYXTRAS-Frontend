@@ -5,14 +5,13 @@
         <div>
             <span class="hide-overflow-text flex-10" :title="displayType">{{ displayType }}</span>
             <span class="hide-overflow-text flex-15" :title="displayTarget">{{ displayTarget }}</span>
-            <span class="hide-overflow-text flex-20" v-if="!reviewed" :title="displayParent">{{ displayParent }}</span>
-            <span class="hide-overflow-text flex-5" v-if="aggregated" :title="displayCount">{{ displayCount }}</span>
-            <span class="hide-overflow-text flex-15" :title="displayOwner">{{ displayOwner }}</span>
+            <span class="hide-overflow-text flex-5" v-if="aggregated && !reviewed" :title="displayCount">{{ displayCount }}</span>
+            <span class="hide-overflow-text flex-10" :title="displayOwner">{{ displayOwner }}</span>
             <span class="hide-overflow-text flex-10" v-if="!reviewed" :title="displayReporter">{{ displayReporter }}</span>
             <span class="hide-overflow-text flex-15" v-if="!reviewed" :title="displayReportTime">{{ displayReportTime }}</span>
 
             <span class="hide-overflow-text flex-10" v-if="reviewed" :title="displayStatus">{{ displayStatus }}</span>
-            <span class="hide-overflow-text flex-15" v-if="reviewed" :title="displayReviewer">{{ displayReviewer }}</span>
+            <span class="hide-overflow-text flex-10" v-if="reviewed" :title="displayReviewer">{{ displayReviewer }}</span>
             <span class="hide-overflow-text flex-15" v-if="reviewed" :title="displayReviewTime">{{ displayReviewTime }}</span>
         </div>
 
@@ -46,22 +45,6 @@ export default {
             return this.header ? 'Reported Object' : (
                 this.aggregated ? this.report._id : this.report.report_target
             );
-        },
-        displayParent() {
-            if (this.header) return 'Parent Object';
-
-            switch (this.report.report_target_type) {
-                case this.REPORT_TARGET_TYPE_COMMENT:
-                    return `${this.report.meta.comment_parent_type} - ${this.report.meta.post_id || this.report.meta.thread_id}`;
-
-                case this.REPORT_TARGET_TYPE_THREAD:
-                    return `Forum - ${this.report.meta.forum_id}`;
-
-                case this.REPORT_TARGET_TYPE_MESSAGE:
-                    return `Chat - ${this.report.meta.chat_id}`;
-            }
-
-            return 'NA';
         },
         displayCount() {
             return this.header ? 'Reports' : this.report.count;

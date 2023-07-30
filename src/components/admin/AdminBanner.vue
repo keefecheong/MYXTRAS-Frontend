@@ -10,19 +10,15 @@
 @import url('../../styles/banner-styles.css');
 
 #admin-banner-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: clamp(60px, 10dvh, 90px);
+    flex-wrap: wrap;
+    flex-direction: column;
     background-color: var(--dark);
+    padding: 10px 0;
+    row-gap: 10px;
 
     > h1 {
-        width: 50%;
         color: white;
-        position: relative;
-        left: 50%;
         white-space: nowrap;
-        transform: translateX(-50%);
         text-decoration: underline;
         text-underline-offset: 10px;
         text-decoration-thickness: 2px;
@@ -41,14 +37,5 @@
         position: relative;
         left: -1px;
     }
-}
-
-#admin-banner-right-content {
-    width: 50%;
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    padding-right: 2%;
-    z-index: 1;
 }
 </style>
