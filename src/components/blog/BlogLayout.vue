@@ -1,4 +1,6 @@
 <template>
+    <LoadingOverlay v-if="(showComments && !commentsLoaded) || submittingComment" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
+
     <div class="blog-container" :id="blog._id" v-if="!deleted">
         <!-- heading - contains creator's profile pic, username, time posted, and location -->
         <div class="blog-header">
@@ -162,8 +164,6 @@
                 <DynamicTextarea v-model="commentText" :placeholder="'Add a comment...'" :maxRows="5" />
                 <hr />
                 <div class="create-comment-submit-container">
-                    <LoadingOverlay v-if="submittingComment" :horizontalCenter="true" :backgroundColor="'rgba(0, 0, 0, 0.5)'" />
-
                     <input 
                         class="create-comment-button"
                         type="submit"
@@ -179,22 +179,20 @@
                 <p>No comments yet, be the first!</p>
             </div>
 
-            <div v-else style="position: relative;">
-                <LoadingOverlay v-if="!commentsLoaded" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
-
-                <div v-else class="blog-comments-container">
-                    <CommentLayout
-                        v-for="(comment, index) in commentData"
-                        :comment="comment"
-                        :blogCreatorId="blog.creator_id._id"
-                        :postId="blog._id"
-                        :forPost="true"
-                        :key="comment._id"
-                        @comment-deleted="() => deleteComment(index)"
-                        @report-comment="() => handleReportComment(index)"
-                    />
-                </div>
+            <div v-if="commentsLoaded" class="blog-comments-container">
+                <CommentLayout
+                    v-for="(comment, index) in commentData"
+                    :comment="comment"
+                    :blogCreatorId="blog.creator_id._id"
+                    :postId="blog._id"
+                    :forPost="true"
+                    :key="comment._id"
+                    @comment-deleted="() => deleteComment(index)"
+                    @report-comment="() => handleReportComment(index)"
+                />
             </div>
+            <!-- <div v-if="commentsLoaded" style="position: relative;">
+            </div> -->
         </div>
     </div>
 
