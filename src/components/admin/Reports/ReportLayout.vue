@@ -8,6 +8,7 @@
             <span class="hide-overflow-text flex-20" v-if="!reviewed" :title="displayParent">{{ displayParent }}</span>
             <span class="hide-overflow-text flex-5" v-if="aggregated" :title="displayCount">{{ displayCount }}</span>
             <span class="hide-overflow-text flex-15" :title="displayOwner">{{ displayOwner }}</span>
+            <span class="hide-overflow-text flex-10" v-if="!reviewed" :title="displayReporter">{{ displayReporter }}</span>
             <span class="hide-overflow-text flex-15" v-if="!reviewed" :title="displayReportTime">{{ displayReportTime }}</span>
 
             <span class="hide-overflow-text flex-10" v-if="reviewed" :title="displayStatus">{{ displayStatus }}</span>
@@ -67,6 +68,9 @@ export default {
         },
         displayOwner() {
             return this.header ? 'Object Owner' : this.report.report_target_owner_username;
+        },
+        displayReporter() {
+            return this.header ? 'Reported By' : this.report.reporter.subject.join(', ');
         },
         displayReportTime() {
             return this.header ? 'Report Time' : this.getTimeToDisplay(this.report.report_time);

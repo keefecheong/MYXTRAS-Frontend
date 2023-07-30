@@ -59,6 +59,11 @@
 
             <div>
                 <div>
+                    <span>Reporter(s):</span>
+                    <span>{{ report.reporter.subject.join(', ') }}</span>
+                </div>
+
+                <div>
                     <span>Report Reason(s):</span>
 
                     <ul v-if="aggregated">
@@ -296,7 +301,7 @@ export default {
                     if (this.messages.length <= 0) {
                         this.showLoading = true;
     
-                        await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/admin/report/user/${this.report.reporter_id}/messages/${this.report.report_target}`, {
+                        await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/admin/report/user/${this.report.reporter.id}/messages/${this.report.report_target}`, {
                             mode: 'cors',
                             method: 'GET',
                             credentials: 'include'
