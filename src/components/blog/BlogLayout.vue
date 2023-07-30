@@ -87,7 +87,7 @@
         </div>
 
         <!-- caption -->
-        <div class="row blog-caption" v-if="blog.caption">
+        <div class="row blog-caption">
             <span>{{ blog.caption }}</span>
         </div>
 
@@ -191,8 +191,6 @@
                     @report-comment="() => handleReportComment(index)"
                 />
             </div>
-            <!-- <div v-if="commentsLoaded" style="position: relative;">
-            </div> -->
         </div>
     </div>
 
@@ -250,8 +248,8 @@
 .blog-profile-pic {
     border-radius: 100%;
     object-fit: cover;
-    height: 50px;
-    width: 50px;
+    height: clamp(35px, 5dvw, 50px);
+    width: clamp(35px, 5dvw, 50px);
 }
 
 .blog-username {
@@ -361,27 +359,33 @@
 /* blog action styles */
 .blog-actions {
     position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    --bs-gutter-x: 0 !important;
+    margin: 0 !important;
+
+    > * > * {
+        padding: 0 !important;
+    }
 }
 
-.blog-actions .row {
-    width: fit-content;
-    align-items: center;
-}
-
-.blog-other-actions {
-    position: absolute;
-    right: 0;
+.blog-other-actions, .blog-normal-actions {
     width: fit-content !important;
 }
 
-.blog-other-actions > div {
+.blog-other-actions > div, .blog-normal-actions {
     display: flex;
     flex-direction: row;
-    column-gap: 5px;
+    column-gap: 10px;
 }
 
 .blog-actions .col {
     display: flex;
+}
+
+.blog-normal-actions {
+    column-gap: 15px;
 }
 
 .blog-actions .material-symbols-outlined {
@@ -389,7 +393,7 @@
     font-variation-settings: 'FILL' 0;
     user-select: none;
     display: inline;
-    margin-right: 5px;
+    margin-right: 2px;
     font-size: 1.5em;
 }
 

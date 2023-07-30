@@ -13,8 +13,8 @@
         <div id="main-content">
             <SearchBar />
             
-            <div class="feed-container">
-                <h1 class="feed-header">Your Feed</h1>
+            <div id="feed-container">
+                <h1 id="feed-header">Your Feed</h1>
 
                 <hr id="top-line"/>
                 
@@ -28,7 +28,7 @@
 
                     <hr />
                 
-                    <div class="no-more-blogs">
+                    <div id="no-more-blogs">
                         <p>That's the end. You're all catched up!</p>
                         <p>Follow more people? <a href="/explore.html">Explore!</a></p>
                     </div>
@@ -42,17 +42,17 @@
 <style>
 @import url('../../styles/main.css');
 
-.feed-container {
+#feed-container {
     margin: auto;
-    max-width: 50%;
+    width: clamp(350px, 50%, 1000px);
 }
 
-.no-more-blogs {
+#no-more-blogs {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.feed-header {
+#feed-header {
     text-align: center;
     font-weight: bolder !important;
     color: #E53A73 !important;

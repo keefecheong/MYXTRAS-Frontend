@@ -169,7 +169,6 @@ import ObjectID from 'bson-objectid';
 import { debounce } from 'lodash';
 import viewUser from '../../utils/general/viewUser.js';
 import signOut from '../../utils/authentication/signOut';
-import { ref } from 'vue';
 
 import highlightElement from '../../utils/general/highlightElement.js';
 
@@ -727,7 +726,7 @@ export default {
 }
 
 #profile-page-content {
-    width: 60%;
+    width: clamp(350px, 50%, 1000px);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
