@@ -21,6 +21,8 @@
                 @start-loading="() => toggleChildLoading(true)"
                 @stop-loading="() => toggleChildLoading(false)"
             />
+
+            <Pets/>
         </div>
     </div>
 </template>

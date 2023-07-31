@@ -523,7 +523,7 @@ export default {
 }
 
 .thread-reaction-button {
-    color: black;
+    color: black !important;
     font-size: 2em;
 }
 
