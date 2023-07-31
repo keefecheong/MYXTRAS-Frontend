@@ -242,14 +242,8 @@
 }
 </style>
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
-import Pet from '../../components/gamification/pet.vue';
 
 export default {
-    components: {
-        NavSidebar,
-        Pet
-    },
     data() {
         return {
             gems: 0,

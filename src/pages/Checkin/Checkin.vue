@@ -55,7 +55,12 @@
                         </div>
                     </div>
                 </div>
-                <button id="bottom-right-button" @click="gachapon"><span class="material-symbols-outlined">shopping_cart</span></button>
+                <!-- <div id="pet">
+                    <div id="runner"></div>
+                    <div id="road"></div>
+                </div> -->
+                <Pets />
+                <button id="bottom-right-button"><span class="material-symbols-outlined" @click="gachapon">shopping_cart</span></button>
             </div>
         </div>
     </div>
@@ -166,6 +171,23 @@ h1 {
   }
 }
 
+/* #road{
+    border-bottom: 7px dashed black;
+} */
+
+/* #pet{
+    position: fixed;
+    bottom: 0;
+}
+
+#runner{
+    background: url("../../assets/panda_colour.png");
+    width: 62.5px;
+    height: 82.5px;
+    animation: walk 10s steps(12) infinite;
+    background-size: 750px 88.5px;
+
+}  */
 /* 
 #runner{
     background: url("../../assets/chicken.png");
@@ -183,16 +205,29 @@ h1 {
 
 } */
 
+/* @keyframes walk {
+    0% {
+        background-position: 0px;
+        transform: translateX(0) scaleX(1);
+    }
+    49.999999999999% {
+        background-position: 3000px;
+        transform: translateX(1200px) scaleX(1);
+    }
+    50% {
+        background-position: 3000px;
+        transform: translateX(1200px) scaleX(-1);
+    }
+    100% {
+        background-position: 0px;
+        transform: translateX(0) scaleX(-1);
+    }
+} */
 </style>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
-import Gachapon from '../Gachapon/Gachapon.vue';
 
 export default {
-    components: {
-        NavSidebar
-    },
     data() {
         return {
             missions: null,

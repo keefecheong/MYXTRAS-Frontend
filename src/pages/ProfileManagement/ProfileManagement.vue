@@ -99,7 +99,6 @@
 
   
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue'
 import AddInterestButton from '../../components/general/AddInterestButton.vue'
 import ngeeann from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
@@ -108,7 +107,6 @@ import { debounce } from 'lodash';
 
 export default {
     components: {
-        NavSidebar,
         AddInterestButton,
         Cropper,
         ngeeann,

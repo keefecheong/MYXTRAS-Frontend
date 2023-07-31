@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
 import ChatListLayout from '../../components/chat/ChatListLayout.vue';
 import ChatInterfaceLayout from '../../components/chat/ChatInterfaceLayout.vue';
 import { useChatStore } from '../../stores/ChatStore.js';
@@ -64,7 +63,6 @@ import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 
 export default {
     components: {
-        NavSidebar,
         ChatListLayout,
         ChatInterfaceLayout,
         AlertPrompt,
