@@ -3,96 +3,100 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content" class="gachaponBody">
-            
             <Pet/>
-            <div class="left-content">
-                <div class="wallet-container">
+            <div class="container">
+                <div class="left-content">
+                    <div class="wallet-container">
+                        <h2>
+                            Your Wallet: <span class="material-symbols-outlined" style="display: inline;">account_balance_wallet</span>
+                        </h2>
+                        <p>{{ this.gems }}<span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
+                    </div>
                     <h2>
-                        Your Wallet: 
+                        Your Pets Collection: 
                     </h2>
-                    <p>{{ this.gems }}<span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
-                </div>
-                <h2>
-                    Your Pets Collection: 
-                </h2>
-                <div id="white-container">
-                    <ul v-for="pet in inventoryPets">
-                        <li id="petsList" class="listOptions">{{ pet.name }}
-                            
-                            <div class="imageContainer">
-                                <img src="../../assets/bunnyAir.png">
+                    <div id="white-container">
+                        <ul v-for="pet in inventoryPets">
+                            <li id="petsList" class="listOptions">{{ pet.name }}
+                                <div class="imageContainer">
+                                    <img src="../../assets/bunnyAir.png">
+                                </div>
+                            </li>
+                            <li id="petsList" class="listOptions">{{ pet.rarity }}</li>
+                        </ul>
+                    </div>
+                    <h2 id="settings-header">Settings</h2>
+                    <div class="settings-container">
+                        <span id="enable-title" class="image-options-label">Enable Pets:</span>
+                        <div id="settings-options">
+                            <div id="settings-checkbox-container">
+                                <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
+                                <label class="switch" for="image-comments-checkbox">
+                                    <span class="slider"></span>
+                                </label>
                             </div>
-                        </li>
-                        <li id="petsList" class="listOptions">{{ pet.rarity }}</li>
-                    </ul>
-                </div>
-                <h2 id="settings-header">Settings</h2>
-                <div class="settings-container">
-                    <span id="enable-title" class="image-options-label">Enable Pets:</span>
-                    <div id="settings-options">
-                        <div id="settings-checkbox-container">
-                            <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
-                            <label class="switch" for="image-comments-checkbox">
-                                <span class="slider"></span>
-                            </label>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="right-content">
-                <div class="machine">
-                    <div id="redMachineHolder" class="gashaponHolder fitImg">
-                        <img src="../../assets/red_machine_top.svg"/>
-                        <div class="prizesHolder">
-                            <img src="../../assets/red_glass_bg.svg"/>
-                            
-                            <div class="glassMask">
-                                <div class="itemsWrapper"></div>
-                                <div class="glassHolder">
-                                    <img src="../../assets/red_glass.svg"/>
+                <div class="right-content">
+                    <div class="machine">
+                        <div id="redMachineHolder" class="gashaponHolder fitImg">
+                            <img src="../../assets/red_machine_top.svg"/>
+                            <div class="prizesHolder">
+                                <img src="../../assets/red_glass_bg.svg"/>
+                                
+                                <div class="glassMask">
+                                    <div class="itemsWrapper"></div>
+                                    <div class="glassHolder">
+                                        <img src="../../assets/red_glass.svg"/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="machineHolder">
-                            <img src="../../assets/red_machine_bottom.svg"/>
-                            <div class="machineButton">
-                                <img src="../../assets/red_button.svg"/>
-                            </div>
+                            
+                            <div class="machineHolder">
+                                <img src="../../assets/red_machine_bottom.svg"/>
+                                <div class="machineButton">
+                                    <img src="../../assets/red_button.svg"/>
+                                </div>
 
-                            <div class="machineDrop">
-                                <img src="../../assets/drop.svg"/>
-                                <div class="dropResult"></div>
+                                <div class="machineDrop">
+                                    <img src="../../assets/drop.svg"/>
+                                    <div class="dropResult"></div>
+                                </div>
+                                <div class="finalResult"></div>
                             </div>
-                            <div class="finalResult"></div>
                         </div>
+
                     </div>
-
-                </div>
-                <div id="buttons-container">
-                    <button id="spinOneBtn" @click="rollGacha(1)">Spin 1</button>
-                    <button id="spinTenBtn" @click="rollGacha(10)">Spin 10</button>
-                </div>
-                <div id="buttons-container">
-                    <p>160 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
-                    <p>1600 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
+                    <div id="buttons-container">
+                        <button id="spinOneBtn" @click="rollGacha(1)">Spin 1</button>
+                        <button id="spinTenBtn" @click="rollGacha(10)">Spin 10</button>
+                    </div>
+                    <div id="buttons-container">
+                        <p>160 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
+                        <p>1600 <span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
+                    </div>
                 </div>
             </div>
+            
             <v-dialog v-model="showModal" max-width="500">
                 <v-card>
                     <v-card-title v-if="!insufficientGems">Rolled Pets</v-card-title>
-                    <v-card-text>
-                    <!-- Display the rolledPets data here -->
-                    <ul v-if="!insufficientGems">
-                        <li v-for="pet in rolledPets" :key="pet.name" class="listOptions">{{ pet.name }}</li>
-                    </ul>
-                    <p v-if="insufficientGems">
-                        Insufficient gems! Need {{ this.gemsReq }} more gems.
-                    </p>
-                    </v-card-text>
+                        <v-card-text>
+                        <!-- Display the rolledPets data here -->
+                        <ul v-if="!insufficientGems">
+                            <li v-for="pet in rolledPets" :key="pet.name" class="listOptions">{{ pet.name }} 
+                                <span v-if="pet.new">(New!)</span>
+                                <p>{{ pet.rarity }}</p>
+                            </li>
+                        </ul>
+                        <p v-if="insufficientGems">
+                            Insufficient gems! Need {{ this.gemsReq }} more gems.
+                        </p>
+                        </v-card-text>
                     <v-card-actions>
-                    <!-- Button to close the modal -->
-                    <v-btn @click="showModal = false">Close</v-btn>
+                        <!-- Button to close the modal -->
+                        <v-btn @click="showModal = false">Close</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -130,14 +134,20 @@
     display: flex;
     background-color: white;
     border-radius: 10px;
-    max-width: 100%;
+    max-width: 50vw;
     padding-right: 2rem;
     overflow-x: scroll;
 }
-.left-content, .right-content{
-    flex: 1;
+.container {
+    display: flex;
 }
-
+.left-content{
+    flex: 1;
+    max-width: 100%;
+}
+.right-content {
+    flex: 2;
+}
 #buttons-container {
     display: flex;
     flex-direction: row;
@@ -267,7 +277,12 @@ export default {
                 await res.json().then(data => {
                     // save user data
                     this.gems = data.gems
-                    this.inventoryPets = data.pets
+                    this.inventoryPets = data.pets.sort((a, b) => a.name.localeCompare(b.name));
+                    this.inventoryPets = this.inventoryPets.sort((a, b) => {
+                        const rarityOrder = { "ultra rare": 3, "rare": 2, "common": 1 };
+                        return rarityOrder[b.rarity] - rarityOrder[a.rarity];
+                    });
+                    
                 });
             }).catch(error => {
                 console.log(error);
@@ -291,6 +306,24 @@ export default {
                 await res.json().then((data) => {
                     this.rolledPets = data;
                     this.showModal = true;
+
+                    // Push rolled pets (including duplicates into the users inventory)
+                    for (const pet in this.rolledPets){
+                        this.inventoryPets.push(this.rolledPets[pet])
+                    }
+                    // Filter out unique elements based on a specific property (e.g., 'name')
+                    this.inventoryPets = this.inventoryPets.filter((obj, index, arr) => {
+                        return arr.findIndex((item) => item.name === obj.name) === index;
+                    });
+
+                    // Sort by alphabetical order
+                    this.inventoryPets = this.inventoryPets.sort((a, b) => a.name.localeCompare(b.name));
+                    
+                    // sort by rarity
+                    this.inventoryPets = this.inventoryPets.sort((a, b) => {
+                        const rarityOrder = { "ultra rare": 3, "rare": 2, "common": 1 };
+                        return rarityOrder[b.rarity] - rarityOrder[a.rarity];
+                    });
 
                 });
             }).catch((error) => {
