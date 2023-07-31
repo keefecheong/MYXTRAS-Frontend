@@ -28,25 +28,21 @@
 
             <div v-if="usersToDisplay.length > 0">
                 <div v-if="!viewDetailed">
-                    <UserLayout 
-                        :showHeader="true"
+                    <UserLayout
+                        v-for="(user, index) in usersToDisplay"
+                        :user="user"
                         :viewSuspended="viewSuspended"
                         :viewTerminated="viewTerminated"
+                        :key="user._id"
+                        @view-user-details="() => toggleUserDetails(true, index)"
                     />
-
-                    <div v-for="(user, index) in usersToDisplay">
-                        <UserLayout
-                            :user="user"
-                            :viewSuspended="viewSuspended"
-                            :viewTerminated="viewTerminated"
-                            :key="user._id"
-                            @view-user-details="() => toggleUserDetails(true, index)"
-                        />
-                    </div>
                 </div>
     
                 <div v-else>
-                    <UserDetailsLayout :user="usersToDisplay[selectedIndex]" @close-user-details="() => toggleUserDetails(false)" />
+                    <UserDetailsLayout
+                        :user="usersToDisplay[selectedIndex]"
+                        @close-user-details="() => toggleUserDetails(false)"
+                    />
                 </div>
             </div>
 

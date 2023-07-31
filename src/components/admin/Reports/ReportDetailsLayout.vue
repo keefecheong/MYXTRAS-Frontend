@@ -17,7 +17,7 @@
                     <span>{{ report.report_target_type }}</span>
                 </div>
 
-                <div>
+                <div v-if="admin">
                     <span>Object ID:</span>
                     <span>{{ aggregated ? report._id : report.report_target }}</span>
                 </div>
@@ -36,12 +36,12 @@
             <div>
                 <div>
                     <span>Creator Username:</span>
-                    <span>{{ report.report_target_owner_username }}</span>
+                    <span>{{ report.report_target_owner.username }}</span>
                 </div>
     
-                <div>
+                <div v-if="admin">
                     <span>Creator ID:</span>
-                    <span class="details-layout-profile-link" title="Click to view user" @click="() => viewUser(report.report_target_owner)">{{ report.report_target_owner }}</span>
+                    <span class="details-layout-profile-link" title="Click to view user" @click="() => viewUser(report.report_target_owner._id)">{{ report.report_target_owner._id }}</span>
                 </div>
             </div>
 
@@ -58,7 +58,7 @@
             </div>
 
             <div>
-                <div>
+                <div v-if="aggregated">
                     <span>Reporter(s):</span>
                     <span>{{ report.reporter.subject.join(', ') }}</span>
                 </div>
@@ -82,14 +82,14 @@
             </div>
 
             <div>
-                <div v-if="reviewed">
+                <div v-if="reviewed && admin">
                     <span>Reviewer Username:</span>
-                    <span>{{ report.reviewer_username || report.reviewer_id.username }}</span>
+                    <span>{{ report.reviewer_id.username }}</span>
                 </div>
     
-                <div v-if="reviewed">
+                <div v-if="reviewed && admin">
                     <span>Reviewer ID:</span>
-                    <span class="details-layout-profile-link" title="Click to view user" @click="() => viewUser(report.reviewer_id)">{{ report.reviewer_id?._id || report.reviewer_id }}</span>
+                    <span class="details-layout-profile-link" title="Click to view user" @click="() => viewUser(report.reviewer_id._id)">{{ report.reviewer_id._id }}</span>
                 </div>
     
                 <div v-if="reviewed">
@@ -112,7 +112,7 @@
                     :message="message" 
                     :previous_creation_time="previousCreationTime(index)" 
                     :previous_is_sender="previousIsSender(index)"
-                    :name="report.report_target_owner_username"
+                    :name="report.report_target_owner.username"
                     :blocked="true"
                     :key="index"
                 />
@@ -120,7 +120,7 @@
         </div>
 
         <div class="detailed-layout-side-container right">
-            <button class="use-primary-secondary-gradient details-button" v-if="!reviewed" @click="() => toggleReportForm(true)" title="Resolve report">Resolve</button>
+            <button class="use-primary-secondary-gradient details-button" v-if="!reviewed && admin" @click="() => toggleReportForm(true)" title="Resolve report">Resolve</button>
         </div>
     </div>
 
@@ -148,22 +148,20 @@ import highlightElement from '../../../utils/general/highlightElement.js';
 import getFormattedTime from '../../../utils/general/getFormattedTime.js';
 
 export default {
-    inject: [
-        'REPORT_TARGET_TYPE_USER',
-        'REPORT_TARGET_TYPE_POST',
-        'REPORT_TARGET_TYPE_FORUM',
-        'REPORT_TARGET_TYPE_THREAD',
-        'REPORT_TARGET_TYPE_COMMENT',
-        'REPORT_TARGET_TYPE_POST_COMMENT',
-        'REPORT_TARGET_TYPE_THREAD_COMMENT',
-        'REPORT_TARGET_TYPE_MESSAGE',
-    ],
     data() {
         return {
             showReportForm: false,
             showLoading: false,
             messages: [],
-            viewMessages: false
+            viewMessages: false,
+            REPORT_TARGET_TYPE_USER: 'User',
+            REPORT_TARGET_TYPE_POST: 'Post',
+            REPORT_TARGET_TYPE_FORUM: 'Forum',
+            REPORT_TARGET_TYPE_THREAD: 'Thread',
+            REPORT_TARGET_TYPE_COMMENT: 'Comment',
+            REPORT_TARGET_TYPE_POST_COMMENT: 'postComment',
+            REPORT_TARGET_TYPE_THREAD_COMMENT: 'threadComment',
+            REPORT_TARGET_TYPE_MESSAGE: 'Message'
         }
     },
     components: {
@@ -174,12 +172,16 @@ export default {
     props: [
         'report',
         'aggregated',
-        'reviewed'
+        'admin'
     ],
     emits: [
         'close-report-details'
     ],
     computed: {
+        // check if report is reviewed
+        reviewed() {
+            return this.report.status != 'Submitted';
+        },
         // generate title/display text for view reported object button
         viewTitle() {
             return this.report.report_target_type == this.REPORT_TARGET_TYPE_USER ? 'View User' : 'View Content'
@@ -301,7 +303,7 @@ export default {
                     if (this.messages.length <= 0) {
                         this.showLoading = true;
     
-                        await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/admin/report/user/${this.report.reporter.id}/messages/${this.report.report_target}`, {
+                        await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/admin/report/user/${this.report.reporter.id?._id || this.report.reporter.id}/messages/${this.report.report_target}`, {
                             mode: 'cors',
                             method: 'GET',
                             credentials: 'include'

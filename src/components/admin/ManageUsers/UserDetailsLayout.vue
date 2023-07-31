@@ -111,39 +111,13 @@
                 <div>
                     <span>Warnings:</span>
 
-                    <ul v-if="user.warnings.length > 0" id="user-details-warnings-container">
-                        <li class="user-details-warning" v-for="warning in user.warnings">
-                            <div>
-                                <span>Object ID:</span>
-                                <span>{{ warning.object_id }}</span>
-                            </div>
-
-                            <div>
-                                <span>Object Type:</span>
-                                <span>{{ warning.object_type }}</span>
-                            </div>
-
-                            <div>
-                                <span>Violation:</span>
-                                <span>{{ warning.reason }}</span>
-                            </div>
-
-                            <div>
-                                <span>Reviewer Username:</span>
-                                <span>{{ warning.reviewer_id.username }}</span>
-                            </div>
-
-                            <div>
-                                <span>Reviewer ID:</span>
-                                <span class="details-layout-profile-link" title="Click to view user" @click="() => viewUser(warning.reviewer_id._id)">{{ warning.reviewer_id._id }}</span>
-                            </div>
-
-                            <div>
-                                <span>Reviewed At:</span>
-                                <span>{{ getTimeToDisplay(warning.review_time) }}</span>
-                            </div>
-                        </li>
-                    </ul>
+                    <div v-if="user.warnings.length > 0" id="user-details-warnings-container">
+                        <WarningLayout
+                            v-for="warning in user.warnings"
+                            :warning="warning"
+                            :admin="true"
+                        />
+                    </div>
                     
                     <span v-else>None</span>
                 </div>
@@ -161,6 +135,7 @@
 <script>
 import LoadingOverlay from '../../general/LoadingOverlay.vue';
 import InterestBadgeList from '../../general/InterestBadgeList.vue';
+import WarningLayout from './WarningLayout.vue';
 
 import getFormattedTime from '../../../utils/general/getFormattedTime.js';
 import viewUser from '../../../utils/general/viewUser.js';
@@ -171,7 +146,8 @@ import { useConfirmStore } from '../../../stores/ConfirmStore.js';
 export default {
     components: {
         LoadingOverlay,
-        InterestBadgeList
+        InterestBadgeList,
+        WarningLayout
     },
     props: [
         'user'
@@ -233,23 +209,9 @@ export default {
 <style>
 #user-details-warnings-container {
     width: 100%;
-    list-style-type: none;
-}
 
-.user-details-warning {
-    padding: 10px;
-    border-bottom: 1px solid lightgray;
-
-    > div {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        flex-wrap: wrap;
-        column-gap: 30px;
-
-        > *:first-child {
-            flex: 0 0 50%;
-        }
+    .detailed-layout-content-container > div {
+        width: 80%;
     }
 }
 </style>
