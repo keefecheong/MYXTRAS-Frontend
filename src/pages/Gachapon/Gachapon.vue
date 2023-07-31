@@ -5,20 +5,41 @@
         <div id="main-content" class="gachaponBody">
             
             <Pet/>
-            <div id="left-content">
-                <h2>
-                    Your Wallet: 
-                </h2>
-                <p>{{ this.gems }}<span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
-                
+            <div class="left-content">
+                <div class="wallet-container">
+                    <h2>
+                        Your Wallet: 
+                    </h2>
+                    <p>{{ this.gems }}<span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
+                </div>
                 <h2>
                     Your Pets Collection: 
                 </h2>
                 <div id="white-container">
+                    <ul v-for="pet in inventoryPets">
+                        <li id="petsList" class="listOptions">{{ pet.name }}
+                            
+                            <div class="imageContainer">
+                                <img src="../../assets/bunnyAir.png">
+                            </div>
+                        </li>
+                        <li id="petsList" class="listOptions">{{ pet.rarity }}</li>
+                    </ul>
                 </div>
-                
+                <h2 id="settings-header">Settings</h2>
+                <div class="settings-container">
+                    <span id="enable-title" class="image-options-label">Enable Pets:</span>
+                    <div id="settings-options">
+                        <div id="settings-checkbox-container">
+                            <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
+                            <label class="switch" for="image-comments-checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="right-content">
+            <div class="right-content">
                 <div class="machine">
                     <div id="redMachineHolder" class="gashaponHolder fitImg">
                         <img src="../../assets/red_machine_top.svg"/>
@@ -62,8 +83,8 @@
                     <v-card-title v-if="!insufficientGems">Rolled Pets</v-card-title>
                     <v-card-text>
                     <!-- Display the rolledPets data here -->
-                    <ul>
-                        <li v-for="pet in rolledPets" :key="pet.name">{{ pet.name }}</li>
+                    <ul v-if="!insufficientGems">
+                        <li v-for="pet in rolledPets" :key="pet.name" class="listOptions">{{ pet.name }}</li>
                     </ul>
                     <p v-if="insufficientGems">
                         Insufficient gems! Need {{ this.gemsReq }} more gems.
@@ -93,6 +114,9 @@
     width: 100%;
     margin-top: 50px;
 }
+.wallet-container {
+    margin-bottom: 5rem;
+}
 .gachaponBody {
     display: flex;
     background-color: #1C1B25;
@@ -101,25 +125,23 @@
 }
 .material-symbols-outlined {
     display: inline;
-}
+}   
 #white-container {
+    display: flex;
     background-color: white;
     border-radius: 10px;
-    min-height: 50vh;
-    width: 100%;
+    max-width: 100%;
+    padding-right: 2rem;
+    overflow-x: scroll;
 }
-#left-content, #right-content {
+.left-content, .right-content{
     flex: 1;
-    padding: 0 2vw;
 }
+
 #buttons-container {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-}
-#left-content {
-    display: flex;
-    flex-direction: column;
 }
 #spinOneBtn, #spinTenBtn {
     padding: 10px;
@@ -130,12 +152,82 @@
     background-color: orange;
 }
 #spinTenBtn {
-    background-color: yellow;
+    background-color: rgb(128, 0, 255);
 }
 
 #spinOneBtn:hover, #spinTenBtn:hover {
     animation: neonGlow 2s ease-in-out infinite alternate;
 
+}
+
+.listOptions {
+    list-style-type: none;
+    color: black;
+}
+#rarityList {
+    text-align: right;
+}
+#petsList {
+    font-weight: bold;
+}
+#petsList, #rarityList{
+    margin: 2em 0
+}
+
+#settings-header {
+    margin: 5rem 0 1rem 0;
+}
+#settings-options {
+    margin-top: 1rem;
+}
+/* The switch - the box around the slider */
+#settings-checkbox-container {
+    width: 4em;
+    height: 2em;
+    padding: 0;
+    position: relative;
+    font-size: 0.8em;
+}
+
+/* Hide default HTML checkbox */
+#image-comments-checkbox {
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+}
+
+.switch {
+    width: 100%;
+    height: 100%;
+    background-color: lightgray;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+/* The slider */
+.slider {
+    width: 2em;
+    height: 2em;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+}
+
+.checkbox:checked + .switch {
+    background-color: #34C759;
+}
+
+.checkbox:checked + .switch .slider {
+    left: 2em;
+    top: 0;
 }
 @keyframes neonGlow {
   0% {
@@ -163,6 +255,7 @@ export default {
             gems: 0,
             showModal: false, 
             rolledPets: [],
+            inventoryPets: [],
             insufficientGems: false,
         }
     },
@@ -179,7 +272,8 @@ export default {
             }).then(async (res) => {
                 await res.json().then(data => {
                     // save user data
-                    this.gems = data
+                    this.gems = data.gems
+                    this.inventoryPets = data.pets
                 });
             }).catch(error => {
                 console.log(error);
