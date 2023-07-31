@@ -28,8 +28,6 @@
 </template>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
-
 import { useAlertStore } from '../../stores/AlertStore.js';
 import AlertPrompt from '../../components/general/AlertPrompt.vue';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
@@ -38,10 +36,9 @@ import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
 
 export default {
     components: {
-        NavSidebar,
         AlertPrompt,
         ConfirmPrompt,
-        LoadingOverlay,
+        LoadingOverlay
     },
     data() {
         return {
