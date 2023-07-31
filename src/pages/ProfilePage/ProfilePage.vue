@@ -139,6 +139,8 @@
                 :type="'user'"
                 @close-report-form="() => toggleReportForm(false)"
             />
+
+            <Pets/>
         </div>
 
     </div>

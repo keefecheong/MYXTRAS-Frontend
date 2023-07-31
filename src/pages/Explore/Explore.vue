@@ -32,6 +32,7 @@
                     <router-view :blogs="blogs" />
                 </div>
             </div>
+            <Pets/>
         </div>
     </div>
 

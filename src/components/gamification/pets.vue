@@ -25,11 +25,11 @@
     }
     49.999999999999% {
         background-position: 3000px;
-        transform: translateX(1200px) scaleX(1);
+        transform: translateX(1350px) scaleX(1);
     }
     50% {
         background-position: 3000px;
-        transform: translateX(1200px) scaleX(-1);
+        transform: translateX(1350px) scaleX(-1);
     }
     100% {
         background-position: 0px;

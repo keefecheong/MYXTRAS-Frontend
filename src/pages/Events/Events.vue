@@ -4,6 +4,7 @@
         <div id="main-content">
             <h1 class="row pink-header">Xtra EVENTS! 🔊</h1>
             <AnnoucementLayout/>
+            <Pets />
         </div>
     </div>
 

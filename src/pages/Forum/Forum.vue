@@ -60,6 +60,7 @@
             
             <ForumFormLayout v-if="showForumForm" @close-forum-form="() => toggleForumForm(false)" />
         </div>
+        <Pets/>
     </div>
 
 </template>
