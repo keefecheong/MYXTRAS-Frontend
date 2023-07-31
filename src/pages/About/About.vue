@@ -15,12 +15,8 @@
 </template>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
 
 export default {
-    components: {
-        NavSidebar
-    }
 }
 </script>
 

@@ -55,10 +55,11 @@
                         </div>
                     </div>
                 </div>
-                <div id="pet">
+                <!-- <div id="pet">
                     <div id="runner"></div>
                     <div id="road"></div>
-                </div>
+                </div> -->
+                <Pets />
                 <button id="bottom-right-button"><span class="material-symbols-outlined" @click="gachapon">shopping_cart</span></button>
             </div>
         </div>
@@ -174,7 +175,7 @@ h1 {
     border-bottom: 7px dashed black;
 } */
 
-#pet{
+/* #pet{
     position: fixed;
     bottom: 0;
 }
@@ -186,7 +187,7 @@ h1 {
     animation: walk 10s steps(12) infinite;
     background-size: 750px 88.5px;
 
-} 
+}  */
 /* 
 #runner{
     background: url("../../assets/chicken.png");
@@ -204,7 +205,7 @@ h1 {
 
 } */
 
-@keyframes walk {
+/* @keyframes walk {
     0% {
         background-position: 0px;
         transform: translateX(0) scaleX(1);
@@ -221,17 +222,12 @@ h1 {
         background-position: 0px;
         transform: translateX(0) scaleX(-1);
     }
-}
+} */
 </style>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
-import Gachapon from '../Gachapon/Gachapon.vue';
 
 export default {
-    components: {
-        NavSidebar
-    },
     data() {
         return {
             missions: null,
