@@ -10,7 +10,7 @@
                         <h2>
                             Your Wallet: <span class="material-symbols-outlined" style="display: inline;">account_balance_wallet</span>
                         </h2>
-                        <p>{{ this.gems }}<span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
+                        <p>{{ this.gems }}<span v-if="deduction" style="color: red;">-{{ deduction }}</span><span class="material-symbols-outlined" style="color: aqua;">diamond</span></p>
                     </div>
                     <h2>
                         Your Pets Collection: 
@@ -96,7 +96,7 @@
                         </v-card-text>
                     <v-card-actions>
                         <!-- Button to close the modal -->
-                        <v-btn @click="showModal = false">Close</v-btn>
+                        <v-btn @click="showModal = false; deduction = null">Close</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -261,6 +261,7 @@ export default {
             rolledPets: [],
             inventoryPets: [],
             insufficientGems: false,
+            deduction: null,
         }
     },
     created(){
@@ -290,14 +291,17 @@ export default {
            
         },
         async rollGacha(numOfRolls){
-            if (((this.gems - numOfRolls * 160) < 0)){
+            const cost = numOfRolls * 160
+
+            if (((this.gems - cost) < 0)){
                 this.insufficientGems = true;
                 this.showModal = true;
-                this.gemsReq = Math.abs(this.gems - numOfRolls * 160)
+                this.gemsReq = Math.abs(this.gems - cost)
                 return
             }
             this.insufficientGems = false;
-            this.gems -= numOfRolls * 160
+            this.gems -= cost
+            this.deduction = cost
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/gachapon/${numOfRolls}`, {
                 mode: 'cors',
                 method: 'POST',
