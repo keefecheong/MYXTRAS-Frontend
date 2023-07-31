@@ -50,7 +50,8 @@
                             <div class="d-flex">
                                 <p>500</p>
                                 <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                                <btn class="pink-btn"><p>Claim</p></btn>
+                                <button class="pink-btn material-symbols-outlined symbols locked" v-if="allClaimed.locked">lock</button>
+                                <btn class="pink-btn" :class="{claimed : allClaimed.claimed}" v-else="!allClaimed.locked" @click="claimMission('allClaim')"><p>Claim</p></btn>                            
                             </div>
                         </div>
                     </div>
@@ -234,6 +235,7 @@ export default {
             rewards: [50, 100, 100, 100, 150, 200, 500],
             day: null,
             claimed: false,
+            allClaimed: {'claimed': false, 'locked': true},
         }
     },
     created(){
@@ -250,7 +252,9 @@ export default {
                 await res.json().then(data => {
                     // save user data
                     console.log(data)
-                    this.missions = data
+                    this.missions = data.daily_missions;
+                    this.allClaimed = data.allClaimed;
+                    this.checkAllClaimed();
                 });
             }).catch(error => {
                 console.log(error);
@@ -268,6 +272,7 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
+            
         },
         async checkIn(){
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/daily-checkin`, {
@@ -290,11 +295,17 @@ export default {
                 credentials: 'include',
             }).then(async (res) => {
                 await res.json().then((data) => {
-                    const targetMission = this.missions.find(mission => mission.title === targetTitle);
-                    if (targetMission) {
-                        // Update the claimed property to true
-                        targetMission.claimed = true;
+                    if (targetTitle == 'allClaim'){
+                        this.allClaimed.claimed = true;
                     }
+                    else{
+                        const targetMission = this.missions.find(mission => mission.title === targetTitle);
+                        if (targetMission) {
+                            // Update the claimed property to true
+                            targetMission.claimed = true;
+                        }
+                    }
+                    
                 });
             }).catch((error) => {
                 console.log(error);
@@ -302,7 +313,15 @@ export default {
         },
         gachapon(){
             window.location.href = "/gachapon.html"
-        }
+        },
+
+        checkAllClaimed(){
+            const allLockedAreFalse = this.missions.every(item => item.locked === false);
+            console.log(allLockedAreFalse)
+            if (allLockedAreFalse){
+                this.allClaimed.locked = false;
+            }
+        },
     }
 }
 </script>
