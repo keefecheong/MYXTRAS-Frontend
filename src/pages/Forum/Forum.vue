@@ -84,7 +84,6 @@
 </style>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
 import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 import CreatedForums from '../../components/forum/CreatedForums.vue';
@@ -99,7 +98,6 @@ import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
 
 export default {
     components: {
-    NavSidebar,
     SearchBar,
     CreatedForums,
     SubscribedForums,

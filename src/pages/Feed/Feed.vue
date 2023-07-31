@@ -65,7 +65,6 @@
 </style>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
 import SearchBar from '../../components/general/SearchBar.vue';
 import BlogLayout from '../../components/blog/BlogLayout.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
@@ -82,7 +81,6 @@ export default {
         }
     },
     components: {
-        NavSidebar,
         SearchBar,
         BlogLayout,
         AlertPrompt,

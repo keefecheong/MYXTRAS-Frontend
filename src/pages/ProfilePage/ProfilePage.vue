@@ -145,8 +145,6 @@
 </template>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
-
 import SubscribedForums from '../../components/forum/SubscribedForums.vue';
 import CreatedForums from '../../components/forum/CreatedForums.vue';
 
@@ -174,7 +172,6 @@ import highlightElement from '../../utils/general/highlightElement.js';
 
 export default {
     components: {
-        NavSidebar,
         SubscribedForums,
         CreatedForums,
         BlogLayout,
