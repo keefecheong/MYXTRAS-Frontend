@@ -14,6 +14,10 @@ const redirectIndexPlugin = {
             else if (req.url === '/explore.html/blogs' || req.url === '/explore.html/threads') {
                 req.url = '/explore.html';
             }
+            // set up redirection for profile page router
+            else if (req.url === '/profilePage.html/support') {
+                req.url = '/profilePage.html';
+            }
             // set up redirection for admin pages
             else if (req.url === '/admin' || req.url === '/admin/') {
                 req.url = '/admin/home.html';

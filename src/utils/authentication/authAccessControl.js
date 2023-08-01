@@ -13,15 +13,22 @@
 // app.use(router).mount('#app');
 
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import validateUser from './verifyAuthentication.js';
 import UnauthorizedView from '../../views/general/UnauthorizedView.vue';
+import { useAlertStore } from '../../stores/AlertStore.js';
 
 export default async function dynamicMount(originalApp, fromSetupProfile, requireAdmin) {
     const result = await validateUser();
 
     let app;
 
-    if (result.authenticated) {
+    if (result?.authenticated) {
+        // alert user if there are new warnings
+        if (result?.warning) {
+            useAlertStore(createPinia()).alert(`You received a warning due to ${result.warning.reason}`);
+        }
+
         if (requireAdmin && !result.is_admin) {
             app = createApp(UnauthorizedView);
 

@@ -7,6 +7,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import GlobalComponentsPlugin from '../../utils/general/globalComponenet';
 
 const app = await dynamicMount(App);
 
@@ -16,5 +17,6 @@ const vuetify = createVuetify({
   })
   
 app.use(vuetify);
+app.use(GlobalComponentsPlugin);
 
 app.mount('#app');

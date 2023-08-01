@@ -66,14 +66,13 @@
             :type="'forum'"
             @close-report-form="() => toggleReportForm(false)"
         />
+        <Pets/>
     </div>
 </div>
 
 </template>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
-
 import RecommendedForums from '../../components/forum/RecommendedForums.vue';
 import ForumFormLayout from '../../components/forum/ForumFormLayout.vue';
 import ForumViewHeader from '../../components/forum/ForumViewHeader.vue';
@@ -93,7 +92,6 @@ import highlightElement from '../../utils/general/highlightElement.js';
 
 export default {
     components: {
-        NavSidebar,
         ThreadMiniLayout,
         RecommendedForums,
         ForumFormLayout,

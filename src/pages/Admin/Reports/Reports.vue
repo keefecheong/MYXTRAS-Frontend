@@ -24,30 +24,28 @@
                 </template>
             </AdminBanner>
 
-            <div v-if="reportsToDisplay.length > 0 && !viewDetails">
-                <ReportLayout :header="true" :aggregated="true" :reviewed="viewReviewed" />
-
-                <div v-for="(report, index) in reportsToDisplay">
+            <div v-if="reportsToDisplay.length > 0">
+                <div v-if="!viewDetails">
                     <ReportLayout
-                        :header="false"
+                        v-for="(report, index) in reportsToDisplay"
                         :report="report"
                         :aggregated="true"
-                        :reviewed="viewReviewed"
                         :key="report._id"
                         @view-report-details="() => toggleReportDetails(true, index)"
                     />
                 </div>
+
+                <div v-else>
+                    <ReportDetailsLayout
+                        :report="reportsToDisplay[viewDetailsIndex]"
+                        :aggregated="true"
+                        :admin="true"
+                        @close-report-details="handleCloseReportDetails"
+                    />
+                </div>
             </div>
 
-            <ReportDetailsLayout
-                v-if="viewDetails"
-                :report="reportsToDisplay[viewDetailsIndex]"
-                :aggregated="true"
-                :reviewed="viewReviewed"
-                @close-report-details="handleCloseReportDetails"
-            />
-
-            <div v-if="reportsToDisplay.length <= 0">
+            <div v-else>
                 <p class="no-items">No reports found</p>
             </div>
         </div>
@@ -65,16 +63,6 @@ import { useAlertStore } from '../../../stores/AlertStore.js';
 import { useConfirmStore } from '../../../stores/ConfirmStore.js';
 
 export default {
-    provide: {
-        REPORT_TARGET_TYPE_USER: 'User',
-        REPORT_TARGET_TYPE_POST: 'Post',
-        REPORT_TARGET_TYPE_FORUM: 'Forum',
-        REPORT_TARGET_TYPE_THREAD: 'Thread',
-        REPORT_TARGET_TYPE_COMMENT: 'Comment',
-        REPORT_TARGET_TYPE_POST_COMMENT: 'postComment',
-        REPORT_TARGET_TYPE_THREAD_COMMENT: 'threadComment',
-        REPORT_TARGET_TYPE_MESSAGE: 'Message',
-    },
     data() {
         return {
             pendingReports: [],

@@ -4,18 +4,17 @@
         <div id="main-content">
             <h1 class="row pink-header">Xtra EVENTS! 🔊</h1>
             <AnnoucementLayout/>
+            <Pets />
         </div>
     </div>
 
 </template>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
 import AnnoucementLayout from '../../components/announcement/AnnoucementLayout.vue'; 
 
 export default {
     components: {
-        NavSidebar,
         AnnoucementLayout
     }
 }

@@ -357,7 +357,7 @@ export default {
     color: white;
     padding: 15px;
     box-sizing: border-box;
-    z-index: 1000;
+    z-index: 90;
 }
 
 #expanded {

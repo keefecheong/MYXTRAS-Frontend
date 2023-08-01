@@ -2,7 +2,7 @@
     <div v-if="createdForums.length !== 0">
         <div class="card shadow">
             <div class="card-body card-position">
-                <h5 class="card-title">Created Forums</h5>
+                <h5 class="card-title">Your Created Forums</h5>
                 
                 <div id="created-forum-container">
                     <div v-for="forum in createdForums" class="mini-forum-layout">

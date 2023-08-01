@@ -1,11 +1,13 @@
+import { useSessionStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
+import { createResolveId, resolve } from '../utils/alert/resolveHandler.js'
 
 export const useAlertStore = defineStore('alertStore', {
     state: () => {
         return {
-            showAlert: false,
-            alertMsg: '',
-            resolveAlert: null
+            showAlert: useSessionStorage('showAlert', false),
+            alertMsg: useSessionStorage('alertMsg', ''),
+            resolveAlertId: useSessionStorage('resolveAlertId', null)
         }
     },
     actions: {
@@ -15,12 +17,13 @@ export const useAlertStore = defineStore('alertStore', {
                 this.alertMsg = message;
                 this.showAlert = true;
 
-                this.resolveAlert = resolve;
+                this.resolveAlertId = createResolveId(resolve);
             });
         },
         // to resolve promise and close alert
         closeAlert() {
-            this.resolveAlert();
+            this.resolveAlertId = resolve(this.resolveAlertId);
+            
             this.showAlert = false;
             this.alertMsg = '';
         }
