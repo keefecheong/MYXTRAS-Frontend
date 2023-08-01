@@ -1,10 +1,10 @@
 # .ls-lint.yml
  
 ls:
-  .js: pascal-case
+  .js: PascalCase
   .css: regex:([.a-z]*)([-.][a-z]+)*
-  .vue: pascal-case
-  .html: camel-case
+  .vue: PascalCase
+  .html: camelCase
  
 ignore:
   - node_modules
