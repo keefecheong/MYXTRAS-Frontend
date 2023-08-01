@@ -1,18 +1,30 @@
 <!-- layout for displaying users in manageAccounts.html -->
 <template>
-    <div class="user-layout-container layout-container" :class="{ 'header': showHeader }">
-        <div>
-            <span class="hide-overflow-text flex-15" :title="displayUserId">{{ displayUserId }}</span>
-            <span class="hide-overflow-text flex-15" :title="displayUsername">{{ displayUsername }}</span>
-            <span class="hide-overflow-text flex-10" :title="displayIsAdmin">{{ displayIsAdmin }}</span>
-            <span class="hide-overflow-text flex-10" :title="displayStatus">{{ displayStatus }}</span>
-            <span class="hide-overflow-text flex-15" v-if="viewSuspended" :title="displayEndTime">{{ displayEndTime }}</span>
-            <span class="hide-overflow-text flex-15" v-if="viewSuspended || viewTerminated" :title="displayPerformedBy">{{ displayPerformedBy }}</span>
-            <span class="hide-overflow-text flex-10" :title="displayWarnings">{{ displayWarnings }}</span>
-        </div>
+    <div class="parent-layout-container">
+        <div
+            v-for="i in ['header', 'value']"
+            class="layout-container"
+            :class="{ 'header': i == 'header' }"
+        >
+            <div>
+                <span class="hide-overflow-text flex-15" :title="displayUserId[i]">{{ displayUserId[i] }}</span>
 
-        <button class="use-primary-secondary-gradient details-button" title="View user details"
-            @click="showUserDetails">Details</button>
+                <span class="hide-overflow-text flex-15" :title="displayUsername[i]">{{ displayUsername[i] }}</span>
+
+                <span class="hide-overflow-text flex-10" :title="displayIsAdmin[i]">{{ displayIsAdmin[i] }}</span>
+
+                <span class="hide-overflow-text flex-10" :title="displayStatus[i]">{{ displayStatus[i] }}</span>
+
+                <span class="hide-overflow-text flex-15" v-if="viewSuspended" :title="displayEndTime[i]">{{ displayEndTime[i] }}</span>
+
+                <span class="hide-overflow-text flex-15" v-if="viewSuspended || viewTerminated" :title="displayPerformedBy[i]">{{ displayPerformedBy[i] }}</span>
+
+                <span class="hide-overflow-text flex-10" :title="displayWarnings[i]">{{ displayWarnings[i] }}</span>
+
+            </div>
+
+            <button class="use-primary-secondary-gradient details-button" title="View user details" @click="showUserDetails">Details</button>
+        </div>
     </div>
 </template>
 
@@ -21,7 +33,6 @@ import getFormattedTime from '../../../utils/general/getFormattedTime.js';
 
 export default {
     props: [
-        'showHeader',
         'viewSuspended',
         'viewTerminated',
         'user'
@@ -37,27 +48,46 @@ export default {
     },
     computed: {
         displayUserId() {
-            return this.showHeader ? 'User ID' : this.user._id;
+            return {
+                header: 'User ID',
+                value: this.user._id
+            }
         },
         displayUsername() {
-            return this.showHeader ? 'Username' : this.user.username;
+            return {
+                header: 'Username',
+                value: this.user.username
+            }
         },
         displayIsAdmin() {
-            return this.showHeader ? 'Admin' : this.user.is_admin;
+            return {
+                header: 'Admin',
+                value: this.user.is_admin
+            }
         },
         displayStatus() {
-            return this.showHeader ? 'Status' : (
-                this.user.status?.status ? this.user.status.status : 'NA'
-            );
+            return {
+                header: 'Status',
+                value: this.user.status?.status ? this.user.status.status : 'NA'
+            }
         },
         displayEndTime() {
-            return this.showHeader ? 'Suspend Till' : getFormattedTime(this.user.status?.end_time);
+            return {
+                header: 'Suspend Till',
+                value: getFormattedTime(this.user.status?.end_time)
+            }
         },
         displayPerformedBy() {
-            return this.showHeader ? `${ this.viewSuspended ? 'Suspended' : 'Terminated' } By:` : this.user.status?.performed_by.username;
+            return {
+                header: `${ this.viewSuspended ? 'Suspended' : 'Terminated' } By:`,
+                value: this.user.status?.performed_by.username
+            }
         },
         displayWarnings() {
-            return this.showHeader ? 'Warnings' : this.user.warnings.length;
+            return {
+                header: 'Warnings',
+                value: this.user.warnings.length
+            }
         }
     }
 }

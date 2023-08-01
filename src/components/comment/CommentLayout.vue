@@ -11,7 +11,7 @@
                 </div>
 
                 <!-- creation time (time difference) -->
-                <div class="comment-creation-time">
+                <div class="comment-creation-time hide-overflow-text">
                     <span :title="new Date(comment.creation_time)">{{ dateCreated }}</span>
                 </div>
 
@@ -102,6 +102,7 @@ export default {
 
 <style>
 .comment-container {
+    --comment-profile-pic-size: clamp(35px, 5dvw, 48px);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -117,8 +118,8 @@ export default {
 .comment-profile-pic {
     border-radius: 100%;
     object-fit: cover;
-    height: 48px;
-    width: 48px;
+    height: var(--comment-profile-pic-size);
+    width: var(--comment-profile-pic-size);
     cursor: pointer;
     user-select: none;
 }

@@ -2,7 +2,7 @@
     <div >
         <div class="card shadow">
             <div class="card-body card-position">
-                <h5 class="card-title">Subscribed Forums</h5>
+                <h5 class="card-title">Your Subscribed Forums</h5>
                 <div class="row center-align" v-if="subbedForums.length === 0">
                     <p>No subscribed forums ☹</p>
                     <p>Head to the <a href="/explore.html">Xplore</a> page!</p>

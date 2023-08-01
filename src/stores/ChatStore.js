@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useLocalStorage, useSessionStorage } from '@vueuse/core';
+import { useSessionStorage } from '@vueuse/core';
 
 export const useChatStore = defineStore('chatStore', {
     state: () => ({
@@ -34,6 +34,7 @@ export const useChatStore = defineStore('chatStore', {
         // check if a message array exists for the specified chat id
         // if does not exist, initialize as empty array
         initMessages(chat_id) {
+            // eslint-disable-next-line no-prototype-builtins
             if (!this.messages.hasOwnProperty(chat_id)) {
                 this.messages[chat_id] = [];
             }

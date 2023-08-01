@@ -114,6 +114,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
+            <Pets :enabled="enabled"/>
         </div>
     </div>
 
@@ -328,6 +329,7 @@ export default {
             inventoryPets: [],
             insufficientGems: false,
             deduction: null,
+            enabled: null
         }
     },
     created(){
@@ -363,11 +365,12 @@ export default {
                 await res.json().then(data => {
                     // save user data
                     this.gems = data.gems
-                    this.inventoryPets = data.pets.sort((a, b) => a.name.localeCompare(b.name));
+                    this.inventoryPets = data.pets.inventory.sort((a, b) => a.name.localeCompare(b.name));
                     this.inventoryPets = this.inventoryPets.sort((a, b) => {
                         const rarityOrder = { "ultra rare": 3, "rare": 2, "common": 1 };
                         return rarityOrder[b.rarity] - rarityOrder[a.rarity];
                     });
+                    this.enabled = data.pets.enabled;
                 });
             }).catch(error => {
                 console.log(error);
@@ -422,6 +425,19 @@ export default {
                 console.log(error);
             });
         },
+
+        async enablePets(){
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/gachapon/enabled`, {
+                mode: 'cors',
+                method: 'POST',
+                credentials: 'include',
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
     }
 }
 </script>
