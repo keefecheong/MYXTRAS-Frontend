@@ -60,7 +60,7 @@
                     <div id="road"></div>
                 </div> -->
                 <Pets />
-                <button id="bottom-right-button"><span class="material-symbols-outlined" @click="gachapon">shopping_cart</span></button>
+                <button id="bottom-right-button" @click="gachapon"><span class="material-symbols-outlined" >shopping_cart</span></button>
             </div>
         </div>
     </div>
