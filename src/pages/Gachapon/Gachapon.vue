@@ -365,7 +365,7 @@ export default {
                 await res.json().then(data => {
                     // save user data
                     this.gems = data.gems
-                    this.inventoryPets = data.pets.inventory.sort((a, b) => a.name.localeCompare(b.name));
+                    this.inventoryPets = data.pets.sort((a, b) => a.name.localeCompare(b.name));
                     this.inventoryPets = this.inventoryPets.sort((a, b) => {
                         const rarityOrder = { "ultra rare": 3, "rare": 2, "common": 1 };
                         return rarityOrder[b.rarity] - rarityOrder[a.rarity];
