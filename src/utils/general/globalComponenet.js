@@ -1,13 +1,6 @@
-import { createApp } from 'vue';
+// import { createApp } from 'vue';
 import Pets from '../../components/gamification/pets.vue';
 import NavSidebar from '../../components/general/NavSidebar.vue';
-
-// const app = createApp({});
-
-// // Register components globally
-// app.component('Pets', Pets);
-
-// export default app;
 
 const GlobalComponentsPlugin = {
     install(app) {
