@@ -9,4 +9,4 @@ const GlobalComponentsPlugin = {
     }
   };
   
-  export default GlobalComponentsPlugin;
+export default GlobalComponentsPlugin;

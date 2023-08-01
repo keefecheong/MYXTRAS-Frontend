@@ -3,7 +3,6 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content" class="gachaponBody">
-            <Pet/>
             <div class="container">
                 <div class="left-content">
                     <div class="wallet-container">
@@ -30,7 +29,7 @@
                         <span id="enable-title" class="image-options-label">Enable Pets:</span>
                         <div id="settings-options">
                             <div id="settings-checkbox-container">
-                                <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
+                                <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="enabled" @click="enablePets()"/>
                                 <label class="switch" for="image-comments-checkbox">
                                     <span class="slider"></span>
                                 </label>
@@ -100,6 +99,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
+            <Pets :enabled="enabled"/>
         </div>
     </div>
 
@@ -262,6 +262,7 @@ export default {
             inventoryPets: [],
             insufficientGems: false,
             deduction: null,
+            enabled: null
         }
     },
     created(){
@@ -278,12 +279,12 @@ export default {
                 await res.json().then(data => {
                     // save user data
                     this.gems = data.gems
-                    this.inventoryPets = data.pets.sort((a, b) => a.name.localeCompare(b.name));
+                    this.inventoryPets = data.pets.inventory.sort((a, b) => a.name.localeCompare(b.name));
                     this.inventoryPets = this.inventoryPets.sort((a, b) => {
                         const rarityOrder = { "ultra rare": 3, "rare": 2, "common": 1 };
                         return rarityOrder[b.rarity] - rarityOrder[a.rarity];
                     });
-                    
+                    this.enabled = data.pets.enabled;
                 });
             }).catch(error => {
                 console.log(error);
@@ -329,6 +330,19 @@ export default {
                         return rarityOrder[b.rarity] - rarityOrder[a.rarity];
                     });
 
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+
+        async enablePets(){
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/gachapon/enabled`, {
+                mode: 'cors',
+                method: 'POST',
+                credentials: 'include',
+            }).then(async (res) => {
+                await res.json().then((data) => {
                 });
             }).catch((error) => {
                 console.log(error);
