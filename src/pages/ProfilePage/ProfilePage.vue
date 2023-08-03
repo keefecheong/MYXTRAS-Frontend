@@ -116,6 +116,14 @@ export default {
         // handle child loading
         toggleChildLoading(loading) {
             this.childLoading = loading;
+        },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        },
+        // to close confirm prompt
+        closeConfirm(decision){
+            this.confirmStore.closeConfirm(decision);
         }
     },
     computed: {

@@ -434,7 +434,7 @@ export default {
                 credentials: 'include'
             }).then(async (res) => {
                 await res.json().then(async (data) => {
-                    this.alert(data.message);
+                    await this.alert(data.message);
                     
                     location.reload();
                 });
