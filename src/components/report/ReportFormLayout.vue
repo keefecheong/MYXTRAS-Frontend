@@ -25,8 +25,15 @@
                 </select>
             </div>
 
+            <!-- input for entering suspend duration if resolving report and suspending user -->
+            <div v-if="resolve && selectedResolveAction == RESOLVE_ACTION_SUSPEND" class="report-form-selection-container">
+                <label for="suspend-duration">Suspend user for: (minutes)</label>
+
+                <input type="number" name="suspend-duration" min="0" step="1" v-model="suspendDuration" />
+            </div>
+
             <!-- input for report reason -->
-            <div v-if="!resolve || (resolve && selectedResolveAction && selectedResolveAction != RESOLVE_ACTION_NONE)"  class="report-form-selection-container">
+            <div v-if="!resolve || (resolve && selectedResolveAction && selectedResolveAction != RESOLVE_ACTION_NONE)" class="report-form-selection-container">
                 <label for="report-reason">{{ formTitle }}</label>
     
                 <select name="report-reason" id="report-reason-input" v-model="selectedReason">
@@ -93,6 +100,9 @@ export default {
             RESOLVE_ACTION_TERMINATE: 'Terminate user',
             resolveActions: null,
 
+            // duration to suspend user, in minutes
+            suspendDuration: 0,
+
             alert: useAlertStore().alert,
             confirm: useConfirmStore().confirm
         }
@@ -134,7 +144,7 @@ export default {
             const validAction = this.resolve && this.resolveActions.includes(this.selectedResolveAction);
             const validReason = this.reasons.includes(this.selectedReason);
 
-            const validResolve = validAction && (this.selectedResolveAction == this.RESOLVE_ACTION_NONE || validReason);
+            const validResolve = validAction && (this.selectedResolveAction == this.RESOLVE_ACTION_NONE || validReason) && (this.selectedResolveAction == this.RESOLVE_ACTION_SUSPEND && this.suspendDuration > 0);
             const validReport = !this.resolve && validReason;
 
             return validResolve || validReport;
@@ -162,6 +172,15 @@ export default {
                 this.submitting = false;
 
                 await this.alert('Invalid resolve action.');
+                return;
+            }
+
+            // if resolving report to suspend user, check if suspendDuration is valid
+            if (this.resolve && this.selectedResolveAction == this.RESOLVE_ACTION_SUSPEND && !this.suspendDuration) {
+                this.submitting = false;
+
+                await this.alert('Invalid suspend duration.');
+                return;
             }
 
             // do nothing if there are errors in the files provided
@@ -197,9 +216,9 @@ export default {
                 url = `${import.meta.env.VITE_APP_SERVER_URL}/api/report/submit`;
             }
 
-            let body = JSON.stringify({
+            let body = {
                 reason: this.selectedReason
-            });
+            };
 
             let sendingFormData = false;
             let objectId;
@@ -214,7 +233,15 @@ export default {
                             break;
                         }
 
-                        url += `/user/${this.userId}/${ this.selectedResolveAction == this.RESOLVE_ACTION_TERMINATE ? 'terminate' : 'suspend' }`;
+                        const toTerminate = this.selectedResolveAction == this.RESOLVE_ACTION_TERMINATE;
+
+                        url += `/user/${this.userId}/${ toTerminate ? 'terminate' : 'suspend' }`;
+
+                        // add suspendDuration if to suspend user
+                        if (!toTerminate) {
+                            // convert suspendDuration to milliseconds
+                            body.duration = this.suspendDuration * 60 * 1000;
+                        }
                         
                         break;
                     }
@@ -319,10 +346,12 @@ export default {
                 body
             };
 
+            // if not sending formData then stringify body and set headers
             if (!sendingFormData) {
+                options.body = JSON.stringify(body);
                 options.headers = {
                     'Content-Type': 'application/json'
-                }
+                };
             }
 
             // send request

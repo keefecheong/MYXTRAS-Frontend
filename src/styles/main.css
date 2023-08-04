@@ -241,7 +241,7 @@ h1 {
 .report-button,
 .report-button .material-symbols-outlined,
 .report-button.material-symbols-outlined {
-    color: red;
+    color: red !important;
 }
 
 .report-button.contrast,
