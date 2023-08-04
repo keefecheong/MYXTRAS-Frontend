@@ -46,11 +46,6 @@
     "admin": {
         "links": [
             {
-                "label": "Home",
-                "page": "/admin/home.html",
-                "icon": "home"
-            },
-            {
                 "label": "Manage Reports",
                 "page": "/admin/reports.html",
                 "icon": "warning"

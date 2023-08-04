@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="right-content">
-                    <div id="scroll-view">
+                    <div id="scroll-view" v-dragscroll>
                         <div v-for="day in 7" :key="day" class="dayBox" :id="'day' + day">
                             <p>Day {{ day }}</p>
                             <p>{{ rewards[day - 1] }} <span class="material-symbols-outlined symbols" style="color: aqua;">diamond</span></p>
@@ -100,6 +100,7 @@ h1 {
     display: flex;
     flex-direction: row;
     height: 100%;
+    cursor: grab;
 }
 .left-content {
     width: 20vw;

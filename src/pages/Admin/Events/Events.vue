@@ -3,7 +3,11 @@
         <NavSidebar :forAdmin="true" />
         
         <div id="main-content">
-            <div class="create-event" @click="createEvent()" @mouseover="expandBtn(true)" @mouseleave="expandBtn(false)">
+            <div id="header">
+                <h1 id="title">Xtra EVENTS! 🔊</h1>
+            </div>
+            <AnnoucementLayout/>
+            <div class="create-event" @click="togglePopup(true)" @mouseover="expandBtn(true)" @mouseleave="expandBtn(false)">
                 <div class="minimized-btn" id="expanded-btn">
                     Create Event
                 </div>
@@ -11,10 +15,7 @@
                     +
                 </div>
             </div>
-            <div id="header">
-                <h1 id="title">Xtra EVENTS! 🔊</h1>
-            </div>
-            <AnnoucementLayout/>
+            <EventsFormLayout v-if="showForm" @close-event-form="() => { togglePopup(false) }"/>
         </div>
     </div>
 </template>
@@ -22,20 +23,23 @@
 <script>
 import NavSidebar from '../../../components/general/NavSidebar.vue';
 import AnnoucementLayout from '../../../components/announcement/AnnoucementLayout.vue';
+import EventsFormLayout from '../../../components/admin/Events/EventsFormLayout.vue';
 
 export default {
     components: {
         NavSidebar,
-        AnnoucementLayout
+        AnnoucementLayout,
+        EventsFormLayout
     },
     data() {
         return {
-            hover: false
+            hover: false,
+            showForm: false
         }
     },
     methods: {
-        createEvent() {
-            console.log("Create event")
+        togglePopup(showForm) {
+            this.showForm = showForm;
         },
         expandBtn(bool) {
             if (bool) {
