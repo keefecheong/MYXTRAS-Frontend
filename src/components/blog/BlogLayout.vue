@@ -204,7 +204,7 @@
         v-if="(!blog.isOwner || !reportComment?.isOwner) && showReportForm"
         :userId="blog.creator_id._id"
         :postId="blog._id" 
-        :commentId="reportComment._id" 
+        :commentId="reportComment?._id" 
         :type="reportType" 
         @close-report-form="() => toggleReportForm(false)"
     />

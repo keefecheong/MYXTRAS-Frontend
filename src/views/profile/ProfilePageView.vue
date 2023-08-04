@@ -152,6 +152,9 @@ import signOut from '../../utils/authentication/signOut';
 
 import highlightElement from '../../utils/general/highlightElement.js';
 
+import { useConfirmStore } from '../../stores/ConfirmStore';
+import { useAlertStore } from '../../stores/AlertStore';
+
 export default {
     components: {
         SubscribedForums,
@@ -191,7 +194,9 @@ export default {
             debouncedFollowUpdate: null,
 
             showCreateBlog: false,
-            showReportForm: false
+            showReportForm: false,
+
+            alert: useAlertStore().alert
         }
     },
     created() {
@@ -372,14 +377,14 @@ export default {
                 methods: 'GET',
                 credentials: 'include'
             }).then(async (res) => {
-                await res.json().then(data => {
+                await res.json().then(async data => {
                     if (res.ok) {
                         target = data.existingChat;
                     }
                     else {
                         // if response is not ok either an error occurred on backend/user is requesting to chat with himself
                         // display error and do nothing
-                        this.alertStore.alert(data.message);
+                        await this.alert(data.message);
                         return;
                     }
                 });
@@ -417,7 +422,7 @@ export default {
         },
         // to block/unblock a user
         async blockUser() {
-            const confirmBlock = await this.confirmStore.confirm(`Are you sure you want to ${this.blockingUser ? 'unblock' : 'block'} this user?`);
+            const confirmBlock = await useConfirmStore().confirm(`Are you sure you want to ${this.blockingUser ? 'unblock' : 'block'} this user?`);
 
             if (!confirmBlock) {
                 return;
@@ -431,7 +436,7 @@ export default {
                 credentials: 'include'
             }).then(async res => {
                 await res.json().then(async data => {
-                    await this.alertStore.alert(data.message);
+                    await this.alert(data.message);
 
                     // only update blockingUser if response is ok (block/unblock succeeded)
                     if (res.ok) {

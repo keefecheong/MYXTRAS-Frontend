@@ -40,7 +40,15 @@
             <div v-if="reportsLoaded && reports.length > 0">
                 <div v-if="!viewDetails">
                     <ReportLayout
-                        v-for="(report, index) in reports"
+                        v-for="(report, index) in pendingReports"
+                        :report="report"
+                        :fromProfile="true"
+                        :key="report._id"
+                        @view-report-details="() => toggleReportDetails(true, index)"
+                    />
+
+                    <ReportLayout
+                        v-for="(report, index) in reviewedReports"
                         :report="report"
                         :fromProfile="true"
                         :key="report._id"
@@ -93,6 +101,12 @@ export default {
     computed: {
         user() {
             return this.userData.user;
+        },
+        reviewedReports() {
+            return this.reports.filter(report => report.status != 'Submitted');
+        },
+        pendingReports() {
+            return this.reports.filter(report => report.status == 'Submitted');
         }
     },
     methods: {
