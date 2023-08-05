@@ -185,7 +185,7 @@ export default {
             rewards: [50, 100, 100, 100, 150, 200, 500],
             day: null,
             claimed: false,
-            allClaimed: {'claimed': false, 'locked': true},
+            allClaimed: {'claimed': null, 'locked': null},
         }
     },
     created(){
@@ -201,6 +201,7 @@ export default {
             }).then(async (res) => {
                 await res.json().then(data => {
                     // save user data
+                    
                     console.log(data)
                     this.missions = data.daily_missions;
                     this.allClaimed = data.allClaimed;
@@ -217,7 +218,6 @@ export default {
                 await res.json().then((data) => {
                     this.day = data.checkin_count;
                     this.claimed = data.claimed;
-                    console.log(this.day)
                 });
             }).catch((error) => {
                 console.log(error);
