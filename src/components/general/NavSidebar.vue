@@ -183,8 +183,6 @@ export default {
                 sidebar.style.position = 'absolute';
                 sidebar.style.top = `${Math.abs(sidebar.getBoundingClientRect().top) - (sidebar.offsetHeight - window.innerHeight)}px`;
                 sidebar.style.left = '0';
-
-                return;
             }
             // stick sidebar to the top if the top of the sidebar touches the top of the window
             else {
@@ -331,7 +329,7 @@ export default {
     min-height: 100vh;
     background-color: #133B5B;
     z-index: 3;
-    border-right: #EDEDED 1px solid;
+    /* border-right: #EDEDED 1px solid; */
 }
 
 #sidebar-wrapper > div {
