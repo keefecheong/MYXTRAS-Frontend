@@ -20,7 +20,7 @@
                 <div id="white-container">
                     <p v-if="inventoryPets.length == 0 " id="no-pets-text">No pets in inventory!</p>
                     <ul v-for="pet in inventoryPets">
-                        <div id="pet-list-container">
+                        <div id="pet-list-container" @click="selectPet(pet)">
                             <li id="petsList" class="listOptions">{{ pet.name }}
                                 <div class="imageContainer">
                                     <img :src="pet.gif_link">
@@ -114,7 +114,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <Pets :enabled="enabled"/>
+            <Pets :enabled="enabled" :selectedPet="selectedPet"/>
         </div>
     </div>
 
@@ -329,7 +329,8 @@ export default {
             inventoryPets: [],
             insufficientGems: false,
             deduction: null,
-            enabled: null
+            enabled: null,
+            selectedPet: null
         }
     },
     created(){
@@ -434,6 +435,21 @@ export default {
                 credentials: 'include',
             }).then(async (res) => {
                 await res.json().then((data) => {
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+
+        async selectPet(pet){
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/pets/${pet.name}`, {
+                mode: 'cors',
+                method: 'POST',
+                credentials: 'include',
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    this.selectedPet = pet.name;
+                    console.log(this.selectedPet)
                 });
             }).catch((error) => {
                 console.log(error);
