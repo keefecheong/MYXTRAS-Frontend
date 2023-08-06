@@ -8,7 +8,7 @@
                     <h1>Daily Log-in!</h1>
                     <p>Resets every week</p>
                     <div class="imageContainer">
-                        <img src="../../assets/MP_JP_Pyroxene.png">
+                        <img src="../../assets/gemsPile.png">
                     </div>
                 </div>
                 <div class="right-content">
@@ -36,13 +36,13 @@
                             <p>{{ mission.title }}</p>
                         </div>
                         <div class="right-content d-flex justify-content-end">
-                            <div class="d-flex">
+                            <div class="d-flex mission-container">
                                 <p>{{ mission.gem_count }}</p>
-                                <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                                <button class="white-btn symbols locked" v-if=mission.locked>
+                                <span class="material-symbols-outlined symbols" style="color: aqua; transform: translateY(-20%) translateX(25%) !important;">diamond</span>
+                                <button class="white-btn locked" v-if=mission.locked>
                                     <p class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</p>
                                 </button>
-                                <btn class="white-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>Claim</p></btn>
+                                <btn class="white-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>Claimed</p></btn>
                             </div>
                         </div>
                     </div>
@@ -53,11 +53,11 @@
                             <p>Complete all dailies</p>
                         </div>
                         <div class="right-content d-flex justify-content-end">
-                            <div class="d-flex">
+                            <div class="d-flex mission-container">
                                 <p>500</p>
-                                <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                                <button class="white-btn symbols locked" v-if="allClaimed.locked">
-                                    <p class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</p>
+                                <span class="material-symbols-outlined symbols" style="color: aqua; transform: translateY(-20%) translateX(25%) !important;">diamond</span>
+                                <button class="white-btn locked" v-if="allClaimed.locked">
+                                    <p class="material-symbols-outlined">lock</p>
                                 </button>
                                 <btn class="white-btn" :class="{claimed : allClaimed.claimed}" v-else="!allClaimed.locked" @click="claimMission('allClaim')"><p>Claim</p></btn>                            
                             </div>
@@ -92,16 +92,18 @@ h3 {
     display: flex;
     flex-direction: row;
     background-color: #0D283D;
-    padding: 50px 100px 50px 100px;
-    min-height: 40vh;
-    margin-left: -20px;
+    padding: 50px 80px;
+    min-height: 40dvh;
 }
-
+.mission-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 #dailyTasksDiv {
     background-color: #1C1B25;
-    padding: 50px 100px 50px 100px;
-    min-height: 60vh;
-    margin-left: -20px;
+    padding: 50px 80px;
+    min-height: 60dvh;
 }
 #scroll-view {
     overflow-x: scroll;
@@ -204,6 +206,53 @@ h3 {
   }
 }
 
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+body {
+    font-size: 14px !important;
+}
+#main-content {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+}
+.dayBox {
+    width: 10vw !important;
+}
+h1 {
+    width: 100%;
+    text-align: center !important;
+}
+#dailyLogInDiv {
+    display: flex;
+    flex-direction: column;
+}
+
+.left-content,
+.right-content {
+    width: 100%;
+    text-align: center;
+}
+.imageContainer {
+    margin: auto;
+}
+#scroll-view {
+    overflow-x: auto;
+    width: 100%;
+}
+.dayBox {
+    margin: 10px;
+    min-width: 40vw;
+}
+#missionContainer {
+    width: 100%;
+}
+#dailyLogInDiv,
+#dailyTasksDiv {
+    padding: 20px;
+}
+
+}
 
 </style>
 

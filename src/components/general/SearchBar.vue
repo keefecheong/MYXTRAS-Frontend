@@ -31,8 +31,6 @@
 
                 <a href="/profilePage.html"><img class="searchbar-profile-pic" :src="pfplink"></a>
             </div>
-
-            <a v-if="!login" href="/login.html" class="codepen-button"><span>Log in🔒</span></a>
         </div>
     </div>
 </template>

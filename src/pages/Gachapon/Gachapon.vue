@@ -3,16 +3,17 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content" class="gachaponBody">
+            <button class="toggle-button" @click="toggleBetween">{{ viewingGacha ? 'View Inventory' : "Gachapon" }}</button>
             <Pet/>
-            <div class="left-content">
+            <div id="left-content" >
                 <div class="wallet-container">
                     <h2>
                         Your Wallet: <span class="material-symbols-outlined" style="display: inline;">account_balance_wallet</span>
                     </h2>
-                    <p>{{ this.gems }}
+                    <h5>{{ this.gems }}
                         <span class="material-symbols-outlined gemIcon">diamond</span>
                         <span v-if="deduction" style="color: red;">-{{ deduction }}</span>
-                    </p>
+                    </h5>
                 </div>
                 <h2 class="header">
                     Your Pets Collection: 
@@ -20,8 +21,11 @@
                 <div id="white-container">
                     <p v-if="inventoryPets.length == 0 " id="no-pets-text">No pets in inventory!</p>
                     <ul v-for="pet in inventoryPets">
-                        <div id="pet-list-container" @click="selectPet(pet)">
-                            <li id="petsList" class="listOptions">{{ pet.name }}
+                        <div id="pet-list-container">
+                            <li id="petsList" class="listOptions" @click="selectPet(pet)">
+                                <p>
+                                    {{ pet.name }}
+                                </p>
                                 <div class="imageContainer">
                                     <img :src="pet.gif_link">
                                 </div>
@@ -45,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <div class="right-content">
+            <div id="right-content" >
                 <div class="machine">
                     <div id="redMachineHolder" class="gashaponHolder fitImg">
                         <img src="../../assets/red_machine_top.svg"/>
@@ -141,13 +145,15 @@ button:hover {
   background-color: #0056b3;
 }
 .imageContainer {
-    max-height: 100%;   
+    min-height: 15vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .imageContainer > img {
-    max-height: 10vh;
+    max-height: 15vh;
     text-align: center;
     justify-content: center;
-
 }
 .machine {
     max-width: 50%;
@@ -189,11 +195,11 @@ button:hover {
 .container {
     display: flex;
 }
-.left-content{
+#left-content{
     flex: 1;
     max-width: 100%;
 }
-.right-content {
+#right-content {
     flex: 2;
 }
 #buttons-container {
@@ -224,7 +230,10 @@ button:hover {
 }
 #petsList {
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1vw;
+}
+ul {
+    padding: 0 1vw !important;
 }
 #petsList, #rarityList{
     margin: 2em 0 0 1em;
@@ -316,6 +325,47 @@ button:hover {
 }
 #pet-list-container {
     min-width: 10rem;
+    text-align: center;
+}
+.hide {
+    display: none;
+}
+.toggle-button {
+    display: none;
+}
+/* Mobile port */
+@media screen and (max-width: 768px) {
+body {
+    text-align: center !important;
+    font-size: 14px !important;
+}
+p {
+    font-size: 14px;
+}
+#white-container {
+    max-width: 100vw;
+}
+.toggle-button {
+    display: block;
+    border: 5px solid var(--primary);
+    background-color: var(--primary);
+}
+.toggle-button:hover {
+    background-color: transparent;
+}
+#left-content, #right-content {
+    width: 100%;
+}
+#main-content {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    min-height: 100vh;
+}
+#settings-options {
+    display: inline-block;
+    margin-left: 3vw
+}
 }
 </style>
 <script>
@@ -330,13 +380,50 @@ export default {
             insufficientGems: false,
             deduction: null,
             enabled: null,
-            selectedPet: null
+            selectedPet: null,
+            viewingGacha: true
         }
     },
     created(){
         this.initData();
     },
+    mounted() {
+        // Check if the current view is mobile or not
+        this.checkIsMobileView();
+        // Listen for window resize events to update the isMobileView property
+        window.addEventListener('resize', this.handleWindowResize);
+    },
+    beforeDestroy() {
+        // Remove the event listener to avoid memory leaks
+        window.removeEventListener('resize', this.handleWindowResize);
+    },
     methods: {
+        checkIsMobileView() {
+            const left_content = document.getElementById("left-content");
+            const right_content = document.getElementById("right-content");
+            // Use the window innerWidth to determine if it's mobile or not (you can adjust the breakpoint as needed)
+            if (window.innerWidth <= 767){
+                left_content.classList.add("hide");
+                right_content.classList.remove("hide")
+            }
+        },
+        handleWindowResize() {
+            // Update the isMobileView property whenever the window is resized
+            this.isMobileView = this.checkIsMobileView();
+        },
+        toggleBetween() {
+            const left_content = document.getElementById("left-content");
+            const right_content = document.getElementById("right-content");
+
+            this.viewingGacha = !this.viewingGacha; // Toggle
+            if (this.viewingGacha){
+                left_content.classList.add("hide");
+                right_content.classList.remove("hide")
+            } else {
+                left_content.classList.remove("hide");
+                right_content.classList.add("hide")
+            }
+        },
         getRarityStyle(rarity) {
             let color;
             switch (rarity) {
