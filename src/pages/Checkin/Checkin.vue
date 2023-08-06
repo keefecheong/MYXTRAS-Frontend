@@ -210,48 +210,50 @@ h3 {
 
 /* Responsive styles */
 @media screen and (max-width: 768px) {
-  #main-content {
+body {
+    font-size: 14px !important;
+}
+#main-content {
     display: flex;
     flex-direction: column;
-    padding: 10px;
-  }
-
-  .dayBox {
-    margin: 10px;
-    min-width: auto;
+    padding: 0 10px;
+}
+.dayBox {
+    width: 10vw !important;
+}
+h1 {
     width: 100%;
-  }
+    text-align: center !important;
+}
+#dailyLogInDiv {
+    display: flex;
+    flex-direction: column;
+}
 
-  .left-content,
-  .right-content {
+.left-content,
+.right-content {
     width: 100%;
-  }
-
-  #scroll-view {
+    text-align: center;
+}
+.imageContainer {
+    margin: auto;
+}
+#scroll-view {
     overflow-x: auto;
-  }
-
-  #dailyLogInDiv,
-  #dailyTasksDiv {
+    width: 100%;
+}
+.dayBox {
+    margin: 10px;
+    min-width: 40vw;
+}
+#missionContainer {
+    width: 100%;
+}
+#dailyLogInDiv,
+#dailyTasksDiv {
     padding: 20px;
-  }
+}
 
-  .pink-btn,
-  .white-btn {
-    font-size: 14px;
-  }
-
-  .pink-btn,
-  .white-btn,
-  .pink-btn:hover {
-    margin-bottom: 10px;
-  }
-
-  #bottom-right-button {
-    bottom: 1em;
-    right: 1em;
-    padding: 0.5em;
-  }
 }
 
 </style>
