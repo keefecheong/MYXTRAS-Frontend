@@ -12,10 +12,10 @@
 
 #runner{
     background: url("../../assets/panda_colour.png");
-    width: 62.5px;
-    height: 82.5px;
+    width: 62.5px;                    /* divide one frame by 4 */
+    height: 82.5px;                   /* divide one frame by 4 */
     animation: walk 10s steps(12) infinite;
-    background-size: 750px 88.5px;
+    background-size: 750px 88.5px;  /*divide the width adn height by 4*/
 
 } 
     @keyframes walk {
@@ -82,7 +82,6 @@ export default{
                 mode: 'cors'
             }).then(async (res) => {
                 await res.json().then(data => {
-                    // save user data
                     this.selectedChoice = data.pets.enabled;
                 });
             }).catch(error => {

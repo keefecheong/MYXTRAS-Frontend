@@ -37,7 +37,7 @@
                     <span id="enable-title" class="image-options-label">Enable Pets:</span>
                     <div id="settings-options">
                         <div id="settings-checkbox-container">
-                            <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="commentsEnabled" />
+                            <input type="checkbox" class="checkbox" id="image-comments-checkbox" v-model="enabled" @click="enablePets()"/>
                             <label class="switch" for="image-comments-checkbox">
                                 <span class="slider"></span>
                             </label>
@@ -364,13 +364,14 @@ export default {
             }).then(async (res) => {
                 await res.json().then(data => {
                     // save user data
-                    this.gems = data.gems
-                    this.inventoryPets = data.pets.sort((a, b) => a.name.localeCompare(b.name));
+                    this.gems = data.gems;
+                    this.enabled = data.pets.enabled;
+                    this.inventoryPets = data.pets.inventory.sort((a, b) => a.name.localeCompare(b.name));
                     this.inventoryPets = this.inventoryPets.sort((a, b) => {
                         const rarityOrder = { "ultra rare": 3, "rare": 2, "common": 1 };
                         return rarityOrder[b.rarity] - rarityOrder[a.rarity];
                     });
-                    this.enabled = data.pets.enabled;
+                    
                 });
             }).catch(error => {
                 console.log(error);
