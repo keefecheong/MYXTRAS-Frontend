@@ -53,7 +53,7 @@
                     />
                 </div>
                 <div class="color-picker"></div>
-                <input class="color-result" type="text" placeholder="Color Hex Value" maxlength="7">
+                <input class="color-result" type="text" placeholder="Color Hex Value" maxlength="7" readonly>
             </div>
 
             <div id="event-form-controls">
