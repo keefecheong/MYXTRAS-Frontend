@@ -9,10 +9,10 @@
                     <h2>
                         Your Wallet: <span class="material-symbols-outlined" style="display: inline;">account_balance_wallet</span>
                     </h2>
-                    <p>{{ this.gems }}
+                    <h5>{{ this.gems }}
                         <span class="material-symbols-outlined gemIcon">diamond</span>
                         <span v-if="deduction" style="color: red;">-{{ deduction }}</span>
-                    </p>
+                    </h5>
                 </div>
                 <h2 class="header">
                     Your Pets Collection: 
@@ -21,7 +21,10 @@
                     <p v-if="inventoryPets.length == 0 " id="no-pets-text">No pets in inventory!</p>
                     <ul v-for="pet in inventoryPets">
                         <div id="pet-list-container">
-                            <li id="petsList" class="listOptions">{{ pet.name }}
+                            <li id="petsList" class="listOptions">
+                                <p>
+                                    {{ pet.name }}
+                                </p>
                                 <div class="imageContainer">
                                     <img :src="pet.gif_link">
                                 </div>
@@ -141,13 +144,15 @@ button:hover {
   background-color: #0056b3;
 }
 .imageContainer {
-    max-height: 100%;   
+    min-height: 15vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .imageContainer > img {
-    max-height: 10vh;
+    max-height: 15vh;
     text-align: center;
     justify-content: center;
-
 }
 .machine {
     max-width: 50%;
@@ -224,7 +229,10 @@ button:hover {
 }
 #petsList {
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1vw;
+}
+ul {
+    padding: 0 1vw !important;
 }
 #petsList, #rarityList{
     margin: 2em 0 0 1em;
@@ -316,6 +324,7 @@ button:hover {
 }
 #pet-list-container {
     min-width: 10rem;
+    text-align: center;
 }
 </style>
 <script>
