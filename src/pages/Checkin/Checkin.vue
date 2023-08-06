@@ -232,9 +232,7 @@ export default {
             }).then(async (res) => {
                 await res.json().then(data => {
                     // save user data
-                    
                     this.missions = data.daily_missions;
-                    console.log(this.missions)
                     this.allClaimed = data.allClaimed;
                     this.checkAllClaimed();
                 });
