@@ -14,10 +14,14 @@
                 <div class="right-content">
                     <div id="scroll-view" v-dragscroll>
                         <div v-for="day in 7" :key="day" class="dayBox" :id="'day' + day">
-                            <p>Day {{ day }}</p>
-                            <p>{{ rewards[day - 1] }} <span class="material-symbols-outlined symbols" style="color: aqua;">diamond</span></p>
+                            <div class="">
+                                <h3>Day {{ day }}</h3>
+                                <p class="daily-points-text" style="display: inline;">{{ rewards[day - 1] }} <span class="material-symbols-outlined symbols" style="color: aqua; ">diamond</span></p>
+                            </div>
                             <br>
-                            <button class="pink-btn material-symbols-outlined symbols locked" v-if="day > this.day">lock</button>
+                            <button class="pink-btn symbols locked" v-if="day > this.day">
+                                <p class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</p>
+                            </button>
                             <button class="pink-btn locked" v-if="day < this.day" disabled><p>Claimed</p></button>
                             <button class="pink-btn" v-if="day == this.day " @click="checkIn" :class="{ claimed: claimed }" :disabled="claimed"><p>{{claimed ? "Claimed" : "Claim"}}</p></button>
                         </div>
@@ -35,8 +39,10 @@
                             <div class="d-flex">
                                 <p>{{ mission.gem_count }}</p>
                                 <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                                <button class="pink-btn material-symbols-outlined symbols locked" v-if=mission.locked>lock</button>
-                                <btn class="pink-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>Claim</p></btn>
+                                <button class="white-btn symbols locked" v-if=mission.locked>
+                                    <p class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</p>
+                                </button>
+                                <btn class="white-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>Claim</p></btn>
                             </div>
                         </div>
                     </div>
@@ -50,16 +56,14 @@
                             <div class="d-flex">
                                 <p>500</p>
                                 <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                                <button class="pink-btn material-symbols-outlined symbols locked" v-if="allClaimed.locked">lock</button>
-                                <btn class="pink-btn" :class="{claimed : allClaimed.claimed}" v-else="!allClaimed.locked" @click="claimMission('allClaim')"><p>Claim</p></btn>                            
+                                <button class="white-btn symbols locked" v-if="allClaimed.locked">
+                                    <p class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</p>
+                                </button>
+                                <btn class="white-btn" :class="{claimed : allClaimed.claimed}" v-else="!allClaimed.locked" @click="claimMission('allClaim')"><p>Claim</p></btn>                            
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- <div id="pet">
-                    <div id="runner"></div>
-                    <div id="road"></div>
-                </div> -->
                 <Pets />
                 <button id="bottom-right-button" @click="gachapon"><span class="material-symbols-outlined" >shopping_cart</span></button>
             </div>
@@ -70,15 +74,19 @@
 
 <style>
 @import url('../../styles/main.css');
-h1, p {
-    color: white !important
-}
-h1 {
-    text-align: left !important;
+body {
+    color: white !important;
 }
 
+h1 {
+    margin: 1em 0;
+    text-align: left !important;
+}
+h3 {
+    margin: 1em 0 !important;
+}
 .symbols{
-    float: right;
+    display: inline !important;
 }
 #dailyLogInDiv {
     display: flex;
@@ -113,22 +121,45 @@ h1 {
     flex-direction: column;
     background-color: #133B5B;
     border-radius: 5px;
-    margin: 0 25px;
-    padding: 25px 50px;
+    margin: 0 2vw;
     text-align: center;
     min-width: 10vw;
 }
 .pink-btn {
+    font-weight: bold;
     background-color: var(--primary);
     color:white;
-    border-radius: 10px;
-    padding: 0.5em;
+    border-radius: 5px;
+    margin: 0 2vw;
+    white-space: normal;
+    text-align: center;
+    font-size: 1vw;
+    transition: all 0.3s;
+    margin-bottom: 5%;
+    text-decoration: none;
 }
 .pink-btn:hover {
     background-color: transparent;
-    border: 2px solid var(--primary);
+    border: 3px solid var(--primary);
     cursor: pointer;
     color:var(--primary);
+}
+.pink-btn:hover > .material-symbols-outlined {
+    color:var(--primary);
+}
+.white-btn {
+    font-weight: bold;
+    background-color: white;
+    color:black;
+    border-radius: 5px;
+    margin: 0 2vw;
+    white-space: normal;
+    text-align: center;
+    font-size: 1vw;
+    color: black;
+}
+.white-btn > .material-symbols-outlined {
+    color: black;
 }
 .imageContainer {
     width: 60% !important;
@@ -185,7 +216,7 @@ export default {
             rewards: [50, 100, 100, 100, 150, 200, 500],
             day: null,
             claimed: false,
-            allClaimed: {'claimed': null, 'locked': null},
+            allClaimed: {'claimed': false, 'locked': true},
         }
     },
     created(){
@@ -202,8 +233,8 @@ export default {
                 await res.json().then(data => {
                     // save user data
                     
-                    console.log(data)
                     this.missions = data.daily_missions;
+                    console.log(this.missions)
                     this.allClaimed = data.allClaimed;
                     this.checkAllClaimed();
                 });
