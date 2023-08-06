@@ -1,7 +1,7 @@
 <template>
     <div class="a-container row" v-for="(announcement, index) in announcements">
         <div class="col-md-4 left">
-            <span :class="announcement.color + ' date-box'">
+            <span class="date-box" :style="{ backgroundColor: announcement.color }">
                 <p class="month">May</p>
                 <p class="day">31</p>
             </span>
@@ -12,7 +12,7 @@
             <br>
         </div>
         <p class="a-caption col-md-6">
-            {{ announcement.caption }}
+            {{ announcement.description }}
         </p>
         <div class="col-md-1 expand">
             <span class="triangle-down" :id="`triangle-${index}`" @click="toggleMore(index)"></span>
@@ -30,33 +30,32 @@ export default {
             announcements: [
                 {
                     title: "Halloween 👻",
-                    caption: "As the crisp autumn air settles in and the leaves crunch underfoot, the time for spooky fun draws near. Halloween is just around the corner, and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it! Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇",
+                    description: "As the crisp autumn air settles in and the leaves crunch underfoot, the time for spooky fun draws near. Halloween is just around the corner, and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it! Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇",
                     image: "https://img.freepik.com/free-vector/gradient-gaming-youtube-channel-art_23-2148878727.jpg?w=1380&t=st=1689929980~exp=1689930580~hmac=7c54fe004113f58ccd981b5f4f6ca5b61e3dcc16381c355e34920376c7c2b1ee",
-                    color: "red",
+                    color: "#F44336",
                     date: "31 May 2021",
                     time: "8:00PM",
                     location: "Ngee Ann Polytechnic 1"
                 },
                 {
                     title: "NP Christmas Party!",
-                    caption: "As the crisp autumn air settles in and the leaves crunch underfoot, the time for spooky fun draws near. Halloween is just around the corner, and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it! Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇",
+                    description: "As the crisp autumn air settles in and the leaves crunch underfoot, the time for spooky fun draws near. Halloween is just around the corner, and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it! Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇",
                     image: "https://upload.wikimedia.org/wikipedia/en/e/e0/Ngee_Ann_Polytechnic_logo.svg",
-                    color: "yellow",
+                    color: "#E91E63",
                     date: "31 May 2021",
                     time: "8:00PM",
                     location: "Ngee Ann Polytechnic 2"
                 },
                 {
                     title: "Graduation Ceremony",
-                    caption: "As the crisp autumn air settles in and the leaves crunch underfoot, the time for spooky fun draws near. Halloween is just around the corner, and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it! Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇",
+                    description: "As the crisp autumn air settles in and the leaves crunch underfoot, the time for spooky fun draws near. Halloween is just around the corner, and with it comes the thrill of the unknown and the excitement of dressing up in ghoulish costumes. So grab your broomsticks and don your masks, because it's time to embrace the spooky season and all the thrills that come with it! Let’s celebrate Halloween together at Ngee Ann Polytechnic! 🦇",
                     image: "https://upload.wikimedia.org/wikipedia/en/e/e0/Ngee_Ann_Polytechnic_logo.svg",
-                    color: "pink",
+                    color: "#E91E63",
                     date: "31 May 2021",
                     time: "8:00PM",
                     location: "Ngee Ann Polytechnic 3"
                 }
             ],
-            scrolling: setInterval(() => document.querySelector('html').scrollBy(0, 1), 50),
             index: 0
         }
     },
@@ -67,20 +66,6 @@ export default {
         this.autoScroll();
     },
     methods: {
-        checkScroll() {
-            const announceElement = document.querySelector('html');
-
-            if (Math.ceil(announceElement.scrollTop + announceElement.clientHeight) >= announceElement.scrollHeight) {
-                clearInterval(this.scrolling);
-                // Reached end of page
-                this.scrolling = setInterval(() => announceElement.scrollBy(0, -1), 50);
-            }
-            else if (Math.ceil(announceElement.scrollTop) == 0) {
-                clearInterval(this.scrolling);
-                // Reached start of page
-                this.scrolling = setInterval(() => announceElement.scrollBy(0, 1), 50);
-            }
-        },
         toggleMore(indexValue) {
             const status = document.getElementById(`triangle-${indexValue}`).className;
             
