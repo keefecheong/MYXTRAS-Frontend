@@ -48,7 +48,9 @@ body, #app {
     min-width: 100dvw;
     min-height: 100dvh;
 }
-
+.symbols {
+    
+}
 .center-align {
     display: flex;
     flex-direction: column;

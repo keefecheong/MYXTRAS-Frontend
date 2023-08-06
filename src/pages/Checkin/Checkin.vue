@@ -8,7 +8,7 @@
                     <h1>Daily Log-in!</h1>
                     <p>Resets every week</p>
                     <div class="imageContainer">
-                        <img src="../../assets/MP_JP_Pyroxene.png">
+                        <img src="../../assets/gemsPile.png">
                     </div>
                 </div>
                 <div class="right-content">
@@ -36,13 +36,13 @@
                             <p>{{ mission.title }}</p>
                         </div>
                         <div class="right-content d-flex justify-content-end">
-                            <div class="d-flex">
+                            <div class="d-flex mission-container">
                                 <p>{{ mission.gem_count }}</p>
-                                <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                                <button class="white-btn symbols locked" v-if=mission.locked>
+                                <span class="material-symbols-outlined symbols" style="color: aqua; transform: translateY(-20%) translateX(25%) !important;">diamond</span>
+                                <button class="white-btn locked" v-if=mission.locked>
                                     <p class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</p>
                                 </button>
-                                <btn class="white-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>Claim</p></btn>
+                                <btn class="white-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>Claimed</p></btn>
                             </div>
                         </div>
                     </div>
@@ -53,11 +53,11 @@
                             <p>Complete all dailies</p>
                         </div>
                         <div class="right-content d-flex justify-content-end">
-                            <div class="d-flex">
+                            <div class="d-flex mission-container">
                                 <p>500</p>
-                                <span class="material-symbols-outlined" style="color: aqua;">diamond</span>
-                                <button class="white-btn symbols locked" v-if="allClaimed.locked">
-                                    <p class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</p>
+                                <span class="material-symbols-outlined symbols" style="color: aqua; transform: translateY(-20%) translateX(25%) !important;">diamond</span>
+                                <button class="white-btn locked" v-if="allClaimed.locked">
+                                    <p class="material-symbols-outlined">lock</p>
                                 </button>
                                 <btn class="white-btn" :class="{claimed : allClaimed.claimed}" v-else="!allClaimed.locked" @click="claimMission('allClaim')"><p>Claim</p></btn>                            
                             </div>
@@ -95,7 +95,11 @@ h3 {
     padding: 50px 80px;
     min-height: 40dvh;
 }
-
+.mission-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 #dailyTasksDiv {
     background-color: #1C1B25;
     padding: 50px 80px;
@@ -202,6 +206,51 @@ h3 {
   }
 }
 
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  #main-content {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .dayBox {
+    margin: 10px;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .left-content,
+  .right-content {
+    width: 100%;
+  }
+
+  #scroll-view {
+    overflow-x: auto;
+  }
+
+  #dailyLogInDiv,
+  #dailyTasksDiv {
+    padding: 20px;
+  }
+
+  .pink-btn,
+  .white-btn {
+    font-size: 14px;
+  }
+
+  .pink-btn,
+  .white-btn,
+  .pink-btn:hover {
+    margin-bottom: 10px;
+  }
+
+  #bottom-right-button {
+    bottom: 1em;
+    right: 1em;
+    padding: 0.5em;
+  }
+}
 
 </style>
 
