@@ -92,16 +92,14 @@ h3 {
     display: flex;
     flex-direction: row;
     background-color: #0D283D;
-    padding: 50px 100px 50px 100px;
-    min-height: 40vh;
-    margin-left: -20px;
+    padding: 50px 80px;
+    min-height: 40dvh;
 }
 
 #dailyTasksDiv {
     background-color: #1C1B25;
-    padding: 50px 100px 50px 100px;
-    min-height: 60vh;
-    margin-left: -20px;
+    padding: 50px 80px;
+    min-height: 60dvh;
 }
 #scroll-view {
     overflow-x: scroll;
