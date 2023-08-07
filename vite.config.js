@@ -23,7 +23,11 @@ const redirectIndexPlugin = {
                 req.url = '/admin/home.html';
             }
             // redirect any 404 error to a custom error page (not working)
-            else if (res.statusCode === 404) {
+            // else if (res.statusCode === 404) {
+            //     req.url = '/error.html';
+            // }
+            // add any other checks
+            else if (req.url.endsWith('.html') || req.url.endsWith('.html/')) {
                 req.url = '/error.html';
             }
             next();
