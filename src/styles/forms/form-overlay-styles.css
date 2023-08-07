@@ -57,3 +57,28 @@
     font-weight: bold;
     margin-bottom: 0;
 }
+
+@media screen and (max-width: 768px) {
+/* for form overlay content (actual form) */
+.form-overlay-content {
+    text-align: center;
+    color: white;
+    overflow: auto;
+    row-gap: 20px;
+    padding: 40px;
+    border-radius: 20px;
+    background-color: #133B5B;
+    min-width: 90%;
+    min-height: 90%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+#forum-banner-container > img{
+    min-width: 70vw;
+}
+.forum-field-container {
+    min-width: 100%;
+}
+}

@@ -201,7 +201,7 @@ export default {
     text-align: center;
     font-size: 1vw;
     color: black;
-    width: 16vw !important;
+    width: 10vw !important;
     font-size: 14px;
 }
 #banner-picture {
@@ -322,7 +322,7 @@ export default {
     color: white;
     border-radius: 10px;
     height: 3rem;
-    width: 8.5rem;
+    width: 10vw;
     transition: all 0.3s;
 }
 

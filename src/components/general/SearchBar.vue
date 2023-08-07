@@ -42,8 +42,19 @@ p {
 </style>
 
 <style>
+@import url('../../styles/main.css');
 @import url('../../styles/banner-styles.css');
-
+.white-btn {
+    font-weight: bold;
+    background-color: white;
+    color:black;
+    border-radius: 5px;
+    margin: 0 2vw;
+    white-space: normal;
+    text-align: center;
+    font-size: 1vw;
+    color: black;
+}
 #searchbar-container {
     --ideal-right-content-height: 10dvh;
     --min-right-content-height: 54px;

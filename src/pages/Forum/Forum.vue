@@ -20,7 +20,9 @@
                    <CreatedForums />
                    <SubscribedForums />
                 </div>
-            
+                <div class="col-md-3" v-if="isMobile">
+                    <PopularThreads @show-thread="(thread) => toggleDetailedThread(true, null, thread)" @show-detailed-view="showForumDetails" />
+                </div>
                 <div class="col-md-6 forum-middle-content">
                     <div class="row" v-if="!showDetailedThread">
                         <div class="card shadow" v-if="recentThreads.length === 0">
@@ -53,7 +55,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-3" v-if="!isMobile">
                     <PopularThreads @show-thread="(thread) => toggleDetailedThread(true, null, thread)" @show-detailed-view="showForumDetails" />
                 </div>
             </div>
@@ -73,7 +75,9 @@
     color: var(--primary);
     margin-top: 20px;
 }
-
+.card {
+    margin-bottom: 60px;
+}
 #forum-view-container {
     padding: 20px;
 }
@@ -81,6 +85,12 @@
     margin: 5vh;
     text-align: center;
 
+}
+
+@media screen and (max-width: 768px) {
+.whiteBox {
+    margin: 5vh 0;
+}
 }
 </style>
 
@@ -127,7 +137,8 @@ export default {
             selectedIndex: null,
             selectedPopularThread: null,
             showDetailedThread: false,
-            scrollBack: false
+            scrollBack: false,
+            isMobile: false
         }
     },
     created() {
@@ -150,7 +161,20 @@ export default {
             }, 500);
         }
     },
+    beforeDestroy() {
+        // Clean up the event listener
+        window.removeEventListener("resize", this.handleResize);
+    },
+    mounted() {
+        // Check the window width on mount and set the view accordingly
+        this.isMobile = window.innerWidth <= 768;
+        window.addEventListener("resize", this.handleResize);
+    },
     methods: {
+        handleResize() {
+        // Update the view when the window width changes
+        this.isMobile = window.innerWidth <= 768;
+        },
         // toggle forum form
         toggleForumForm(show) {
             this.showForumForm = show;

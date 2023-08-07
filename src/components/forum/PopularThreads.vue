@@ -9,7 +9,7 @@
                     <h5 class="thread_title">{{ thread.title }}</h5>
 
                     <div class="imageContainer" v-if="thread.content_link">
-                        <img id="popThreadPic" :src="thread.content_link" :draggable="false">
+                        <img :src="thread.content_link" :draggable="false">
                     </div>
                 </div>
             </div>
@@ -33,6 +33,35 @@
 .popular-thread-layout {
     cursor: pointer;
     border-bottom: 1px solid lightgray;
+}
+@media screen and (max-width: 768px) {
+.card {
+min-height: 30vh;
+}
+#popular-thread-container{
+    display: flex;
+    flex-direction: row;
+    max-width: 100%;
+    overflow-x: scroll;
+
+}
+.popular-thread-layout {
+    cursor: pointer;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    min-width: 50vw;
+    padding: 0 1.8vw;
+    border-right: 1px solid lightgray;
+    border-bottom: none;
+    height: 20vh !important;
+    align-items: center !important; 
+    justify-content: center !important;
+}
+.popular-thread-layout > .imageContainer {
+    max-width: 100%;
+    max-height: 100%;
+}
 }
 </style>
 

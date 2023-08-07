@@ -56,6 +56,20 @@ background: #c9c9c98d;
 .card-body {
     overflow-y: scroll;
 }
+@media screen and (max-width: 768px) {
+.card {
+padding: 1em 0 1em 0;
+border-radius: 15px;
+margin-bottom: 60px;
+min-height: 10vh;
+}
+#subscribed-forum-container {
+    display: flex;
+    flex-direction: row;
+    max-width: 100%;
+    overflow-x: scroll;
+}
+}
 </style>
 
 <script>
