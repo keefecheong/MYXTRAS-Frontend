@@ -70,6 +70,9 @@ const redirectIndexPlugin = {
             else if (req.url === '/admin/events' || req.url === '/admin/events.html') {
                 req.url = '/admin/events.html';
             }
+            else if (req.url === '/about.html' || req.url === '/about' || req.url === '/about.html/') {
+                req.url = '/about.html';
+            }
             else if (req.url.endsWith('.html') || req.url.endsWith('.html/')) {
                 req.url = '/error.html';
             }
