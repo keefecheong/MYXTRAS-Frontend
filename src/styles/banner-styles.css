@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 10;
+    z-index: var(--banner-z-index);
     padding: 10px 0;
     background-color: var(--primary);
     display: flex;

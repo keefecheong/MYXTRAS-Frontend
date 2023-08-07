@@ -4,7 +4,7 @@
         <div
             v-for="i in ['header', 'value']"
             class="layout-container"
-            :class="{ 'header': i == 'header' }"
+            :class="{ 'header': i == 'header', 'display-header': index == 0 }"
         >
             <div>
                 <span class="hide-overflow-text flex-15" :title="displayUserId[i]">{{ displayUserId[i] }}</span>
@@ -35,7 +35,8 @@ export default {
     props: [
         'viewSuspended',
         'viewTerminated',
-        'user'
+        'user',
+        'index'
     ],
     emits: [
         'view-user-details'
@@ -68,7 +69,7 @@ export default {
         displayStatus() {
             return {
                 header: 'Status',
-                value: this.user.status?.status ? this.user.status.status : 'NA'
+                value: this.user.status?.status ? this.user.status.status : 'Active'
             }
         },
         displayEndTime() {

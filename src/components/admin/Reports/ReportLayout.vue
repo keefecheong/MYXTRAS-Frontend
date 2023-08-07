@@ -5,7 +5,7 @@
         <div
             v-for="i in ['header', 'value']"
             class="layout-container"
-            :class="{ 'header': i == 'header' }"
+            :class="{ 'header': i == 'header', 'display-header': index == 0 }"
         >
 
             <div>
@@ -42,7 +42,8 @@ export default {
     props: [
         'report',
         'aggregated',
-        'fromProfile'
+        'fromProfile',
+        'index'
     ],
     emits: [
         'view-report-details'

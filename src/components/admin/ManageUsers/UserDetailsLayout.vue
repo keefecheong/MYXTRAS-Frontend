@@ -88,7 +88,7 @@
             <div>
                 <div>
                     <span>Status:</span>
-                    <span>{{ user.status?.status || 'None' }}</span>
+                    <span>{{ user.status?.status || 'Active' }}</span>
                 </div>
 
                 <div v-if="user.status?.status == 'Suspended'">
@@ -127,8 +127,59 @@
         </div>
 
         <div class="detailed-layout-side-container right">
-            <button v-if="!user.status?.status || user.is_admin" class="use-primary-secondary-gradient details-button" :title="`${action} User`" @click="changeUserRole">{{ action }}</button>
+            <!-- only show actions if not viewing self -->
+            <div v-if="!user.isSelf">
+                <!-- to promote/demote user -->
+                <button
+                    v-if="showPromote.show"
+                    class="use-primary-secondary-gradient details-button"
+                    :title="`${showPromote.title} User`"
+                    @click="() => performAction(showPromote)"
+                >
+                    {{ showPromote.title }}
+                </button>
+
+                <!-- to suspend/unsuspend user -->
+                <button 
+                    v-if="showSuspend.show" 
+                    class="use-primary-secondary-gradient details-button" 
+                    :title="`${showSuspend.title} User`" 
+                    @click="() => { showSuspend.suspended ? performAction(showSuspend) : toggleSuspendForm(true) }"
+                >
+                    {{ showSuspend.title }}
+                </button>
+
+                <!-- to terminate/unterminate user -->
+                <button 
+                    class="use-primary-secondary-gradient details-button" 
+                    :title="`${showTerminate.title} User`" 
+                    @click="() => performAction(showTerminate)"
+                >
+                    {{ showTerminate.title }}
+                </button>
+            </div>
         </div>
+    </div>
+
+    <div class="form-overlay" v-if="showSuspendForm">
+        <form class="form-overlay-content" id="suspend-form" @submit.prevent="performAction(showSuspend)">
+            <button class="form-overlay-close" @click="() => toggleSuspendForm(false)" type="button">
+                <span class="material-symbols-outlined">Close</span>
+            </button>
+
+            <h1>Suspend User</h1>
+
+            <div id="suspend-duration-container">
+                <label id="suspend-duration-label" for="suspend-duration">
+                    <span>Suspend user for:</span>
+                    <input type="number" id="suspend-duration" min="0" step="1" v-model="suspendDuration"/>
+                    <span>(minutes)</span>
+                </label>
+
+            </div>
+
+            <button class="form-overlay-control-button" :disabled="suspendDuration <= 0">Suspend</button>
+        </form>
     </div>
 </template>
 
@@ -144,6 +195,16 @@ import { useAlertStore } from '../../../stores/AlertStore.js';
 import { useConfirmStore } from '../../../stores/ConfirmStore.js';
 
 export default {
+    data() {
+        return {
+            showLoading: false,
+            showSuspendForm: false,
+            suspendDuration: 0,
+            
+            alert: useAlertStore().alert,
+            confirm: useConfirmStore().confirm
+        }
+    },
     components: {
         LoadingOverlay,
         InterestBadgeList,
@@ -156,9 +217,37 @@ export default {
         'close-user-details'
     ],
     computed: {
-        // get name of action to perform (promote/demote)
-        action() {
-            return this.user.is_admin ? 'Demote' : 'Promote';
+        // get title of button to promote/demote user and show promote/demote button if the user is an admin or the user is not terminated nor suspended
+        showPromote() {
+            return {
+                title: this.user.is_admin ? 'Demote' : 'Promote',
+                show: this.user.is_admin || !this.user.status?.status,
+                method: this.user.is_admin ? 'DELETE' : 'POST',
+                url: `/admin/${this.user._id}`
+            };
+        },
+        // get title of button to terminate/unterminate user
+        showTerminate() {
+            const check = this.user.status?.status == 'Terminated';
+
+            return {
+                title: check ? 'Unterminate' : 'Terminate',
+                show: true,
+                method: check ? 'DELETE' : 'POST',
+                url: `/terminate/${this.user._id}`
+            };
+        },
+        // get title of button to suspend/unsuspend user and show suspend button if user is not terminated
+        showSuspend() {
+            const check = this.user.status?.status == 'Suspended';
+
+            return {
+                suspended: check,
+                title: check ? 'Unsuspend' : 'Suspend',
+                show: this.user.status?.status != 'Terminated',
+                method: check ? 'DELETE' : 'POST',
+                url: `/suspend/${this.user._id}`
+            };
         }
     },
     methods: {
@@ -174,44 +263,89 @@ export default {
         viewUser(userId) {
             viewUser(userId, true);
         },
-        // promote/demote user/admin
-        async changeUserRole() {
-            // do nothing if user is suspended or terminated and user is not admin
-            if (this.user.status?.status && !this.user.is_admin) {
+        // perform actions on user status/role
+        async performAction(action) {
+            // do nothing if trying to perform actions on self
+            if (this.user.isSelf) {
+                await this.alert(`Cannot ${action} yourself.`);
+
                 return;
             }
 
-            const confirmAction = await useConfirmStore().confirm(`Are you sure you want to ${this.action} this user?`);
+            // do nothing if button should not be shown
+            if (!action.show) {
+                await this.alert(`Unable to ${action.title} user.`);
+
+                return;
+            }
+
+            const confirmAction = await this.confirm(`Are you sure you want to ${action.title} this user?`);
 
             if (!confirmAction) {
                 return;
             }
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/admin/manage/${this.user._id}`, {
-                method: this.user.is_admin ? 'DELETE' : 'POST',
+            const tempDuration = this.suspendDuration;
+
+            this.toggleSuspendForm(false);
+
+            this.showLoading = true;
+
+            const options = {
+                method: action.method,
                 mode: 'cors',
                 credentials: 'include'
-            }).then(async res => {
+            };
+
+            if (action.title == 'Suspend') {
+                options.body = JSON.stringify({
+                    duration: tempDuration * 60 * 1000
+                });
+
+                options.headers = {
+                    'Content-Type': 'application/json'
+                };
+            }
+
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/admin/accounts${action.url}`, options).then(async res => {
                 await res.json().then(async data => {
-                    await useAlertStore().alert(data.message);
+                    await this.alert(data.message);
 
                     if (res.ok) {
-                        this.user.is_admin = !this.user.is_admin;
-                        this.closeDetailedView();
+                        location.reload();
                     }
                 });
-            }).catch(error => console.log(`Could not ${action} user.`));
+            }).catch(error => console.log(`Could not ${action.title} user.`));
+            
+            this.showLoading = false;
+        },
+        // to toggle form to input suspend duration
+        toggleSuspendForm(show) {
+            this.showSuspendForm = show;
+
+            if (!show) {
+                this.suspendDuration = 0;
+            }
         }
     }
 }
 </script>
 
 <style>
+@import url('../../../styles/forms/form-overlay-styles.css');
+
 #user-details-warnings-container {
     width: 100%;
 
     .detailed-layout-content-container > div {
         width: 80%;
     }
+}
+
+#suspend-duration-label {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
 }
 </style>

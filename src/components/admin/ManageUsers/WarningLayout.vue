@@ -18,7 +18,7 @@
                 <span>{{ warning.file_name }}</span>
             </div>
 
-            <div>
+            <div v-if="warning.content">
                 <span>Content:</span>
                 <span>{{ warning.content }}</span>
             </div>

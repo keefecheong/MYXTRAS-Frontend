@@ -22,7 +22,7 @@
     </div>
     
         <div v-if="viewWarnings">
-            <h1>Warnings</h1>
+            <h1 class="profile-support-page-header">Warnings</h1>
     
             <div v-if="user.warnings.length > 0">
                 <WarningLayout
@@ -39,30 +39,35 @@
         <div v-else>
             <div v-if="reportsLoaded && reports.length > 0">
                 <div v-if="!viewDetails">
+                    <h1 class="profile-support-page-header">Pending</h1>
                     <ReportLayout
                         v-for="(report, index) in pendingReports"
                         :report="report"
                         :fromProfile="true"
+                        :index="index"
                         :key="report._id"
-                        @view-report-details="() => toggleReportDetails(true, index)"
+                        @view-report-details="() => toggleReportDetails(true, false, index)"
                     />
 
+                    <h1 class="profile-support-page-header">Reviewed</h1>
                     <ReportLayout
                         v-for="(report, index) in reviewedReports"
                         :report="report"
                         :fromProfile="true"
+                        :index="index"
                         :key="report._id"
-                        @view-report-details="() => toggleReportDetails(true, index)"
+                        @view-report-details="() => toggleReportDetails(true, true, index)"
                     />
                 </div>
     
                 <div v-else>
                     <ReportDetailsLayout
-                        :report="reports[viewDetailsIndex]"
+                        :report="fromReviewed ? reviewedReports[viewDetailsIndex] : pendingReports[viewDetailsIndex]"
                         @close-report-details="() => toggleReportDetails(false)"
                     />
                 </div>
             </div>
+
             <div v-else>
                 <p class="no-items">You have not submitted any reports.</p>
             </div>
@@ -82,7 +87,8 @@ export default {
             reportsLoaded: false,
             reports: [],
             viewDetails: false,
-            viewDetailsIndex: null
+            viewDetailsIndex: null,
+            fromReviewed: null
         }
     },
     components: {
@@ -124,8 +130,9 @@ export default {
             this.viewWarnings = show;
         },
         // to view/hide report details
-        toggleReportDetails(show, index) {
+        toggleReportDetails(show, fromReviewed, index) {
             this.viewDetails = show;
+            this.fromReviewed = fromReviewed;
             this.viewDetailsIndex = index;
         },
         // to fetch submitted reports
@@ -162,10 +169,16 @@ export default {
     position: absolute;
     top: 25px;
     left: 25px;
-    z-index: 92;
+    z-index: var(--above-banner-z-index);
 
     .material-symbols-outlined {
         font-size: 2rem;
     }
+}
+
+.profile-support-page-header {
+    margin: 10px 0;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
 }
 </style>

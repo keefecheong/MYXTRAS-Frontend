@@ -26,7 +26,7 @@ export default async function dynamicMount(originalApp, fromSetupProfile, requir
     if (result?.authenticated) {
         // alert user if there are new warnings
         if (result?.warning) {
-            useAlertStore(createPinia()).alert(`You received a warning due to ${result.warning.reason}`);
+            useAlertStore(createPinia()).alert(`You received a warning: ${result.warning.reason}`);
         }
 
         if (requireAdmin && !result.is_admin) {

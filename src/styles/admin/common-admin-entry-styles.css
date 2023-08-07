@@ -22,13 +22,14 @@
 }
 
 /* brief layout styles */
-/* only show the first header by default */
-.parent-layout-container > .header {
-    display: none;
-}
+.parent-layout-container {
+    > .header {
+        display: none;
+    }
 
-.parent-layout-container:first-child > .header {
-    display: flex;
+    > .display-header {
+        display: flex;
+    }
 }
 
 .layout-container, .layout-container > div {
@@ -182,10 +183,19 @@
 .detailed-layout-side-container.right {
     padding-right: 5dvw;
 
-    > button {
-        font-size: x-large;
+    > div {
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
         position: sticky;
         top: 140px;
+    }
+
+    > button, > div > button {
+        font-size: large;
+        position: sticky;
+        top: 140px;
+        width: 100%;
     }
 }
 

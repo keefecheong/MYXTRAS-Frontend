@@ -80,6 +80,7 @@ h1 {
     background-color: transparent;
     position: absolute;
     right: 0;
+    padding: 0;
 }
 
 .password-field-container > button.show-password {

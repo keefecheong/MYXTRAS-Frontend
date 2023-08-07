@@ -7,12 +7,20 @@
 }
 
 :root {
+    /* colors */
     --primary: #E22262;
     --secondary: #FF6363;
     --dark: #133B5B;
     --green: #00ce1f;
     --red: #dc0000;
     --grey-overlay: #5d5d5d81;
+    /* important z-index values */
+    --nav-z-index: 80;
+    --banner-z-index: 85;
+    --above-banner-z-index: 90;
+    --loading-z-index: 95;
+    --prompt-z-index: 100;
+    --above-all: 1000;
 }
 
 /* width */

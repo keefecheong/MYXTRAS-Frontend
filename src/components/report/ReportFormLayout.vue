@@ -11,9 +11,9 @@
 
             <!-- input for choosing action if resolving report -->
             <div v-if="resolve" class="report-form-selection-container">
-                <label for="resolve-report-action" id="resolve-report-action-label">Action after resolving report:</label>
+                <label for="resolve-report-action-input" id="resolve-report-action-label">Action after resolving report:</label>
 
-                <select name="resolve-report-action" id="resolve-report-action-input" v-model="selectedResolveAction">
+                <select id="resolve-report-action-input" v-model="selectedResolveAction">
                     <option value="" disabled selected hidden>Select an action</option>
                     <option 
                         v-for="action in resolveActions"
@@ -29,17 +29,22 @@
             <div v-if="resolve && selectedResolveAction == RESOLVE_ACTION_SUSPEND" class="report-form-selection-container">
                 <label for="suspend-duration">Suspend user for: (minutes)</label>
 
-                <input type="number" name="suspend-duration" min="0" step="1" v-model="suspendDuration" />
+                <input type="number" id="suspend-duration" min="0" step="1" v-model="suspendDuration" />
             </div>
 
             <!-- input for report reason -->
             <div v-if="!resolve || (resolve && selectedResolveAction && selectedResolveAction != RESOLVE_ACTION_NONE)" class="report-form-selection-container">
-                <label for="report-reason">{{ formTitle }}</label>
+                <label for="report-reason-input">{{ formTitle }}</label>
     
-                <select name="report-reason" id="report-reason-input" v-model="selectedReason">
+                <select id="report-reason-input" v-model="selectedReason">
                     <option value="" disabled selected>Select a reason for reporting</option>
                     <option v-for="reason in reasons" :value="reason">{{ reason }}</option>
                 </select>
+            </div>
+
+            <!-- input for description if report reason is 'Other' -->
+            <div v-if="selectedReason == 'Other'" class="report-form-selection-container">
+                <DynamicTextarea v-model="otherReason" :placeholder="'Please elaborate...'" :maxRows="5" />
             </div>
 
             <!-- input for supporting evidence if reporting user -->
@@ -68,6 +73,7 @@
 import LoadingOverlay from '../general/LoadingOverlay.vue';
 import { useAlertStore } from '../../stores/AlertStore.js';
 import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import DynamicTextarea from '../general/DynamicTextarea.vue';
 
 export default {
     data() {
@@ -86,8 +92,10 @@ export default {
                 'Suicide or self-injury',
                 'Eating disorders',
                 'Scams or fraud',
-                'False information'
+                'False information',
+                'Other'
             ],
+            otherReason: '',
 
             evidenceObject: null,
             evidenceLink: null,
@@ -116,7 +124,8 @@ export default {
         ]
     },
     components: {
-        LoadingOverlay
+        LoadingOverlay,
+        DynamicTextarea
     },
     props: [
         'type',
@@ -142,9 +151,12 @@ export default {
         // submit allowed: 1. if resolving, when a valid resolve action and reason is selected, 2. otherwise, when a valid reason is selected
         enableSubmit() {
             const validAction = this.resolve && this.resolveActions.includes(this.selectedResolveAction);
-            const validReason = this.reasons.includes(this.selectedReason);
+            const validReason = this.reasons.includes(this.selectedReason) && (this.selectedReason != 'Other' || (this.selectedReason == 'Other' && this.otherReason));
 
-            const validResolve = validAction && (this.selectedResolveAction == this.RESOLVE_ACTION_NONE || validReason) && (this.selectedResolveAction == this.RESOLVE_ACTION_SUSPEND && this.suspendDuration > 0);
+            const validResolve = validAction &&
+                (this.selectedResolveAction == this.RESOLVE_ACTION_NONE || validReason) &&
+                (this.selectedResolveAction != this.RESOLVE_ACTION_SUSPEND || (this.selectedResolveAction == this.RESOLVE_ACTION_SUSPEND && this.suspendDuration > 0));
+
             const validReport = !this.resolve && validReason;
 
             return validResolve || validReport;
@@ -152,35 +164,47 @@ export default {
     },
     methods: {
         // to close report form
-        closeForm(submitted) {
-            this.$emit('close-report-form', submitted);
+        closeForm(submitted, resolveDetails) {
+            this.$emit('close-report-form', submitted, resolveDetails);
         },
         // to submit report
         async submitReport() {
             this.submitting = true;
 
+            if (this.resolve) {
+                // if resolving report, check if actions is valid
+                if (!this.resolveActions.includes(this.selectedResolveAction)) {
+                    this.submitting = false;
+        
+                    await this.alert('Invalid resolve action.');
+                    return;
+                }
+    
+                // if resolving report to suspend user, check if suspendDuration is valid
+                if (this.selectedResolveAction == this.RESOLVE_ACTION_SUSPEND && !this.suspendDuration) {
+                    this.submitting = false;
+    
+                    await this.alert('Invalid suspend duration.');
+                    return;
+                }
+            }
+
             // if invalid reason is selected then do nothing
-            if (this.selectedResolveAction != this.RESOLVE_ACTION_NONE && !this.reasons.includes(this.selectedReason)) {
-                this.submitting = false;
-
-                await this.alert('Invalid report reason');
-                return;
+            if (!this.reasons.includes(this.selectedReason)) {
+                if (!(this.resolve && this.selectedResolveAction == this.RESOLVE_ACTION_NONE)) {
+                    this.submitting = false;
+    
+                    await this.alert('Invalid report reason');
+                    return;
+                }
             }
+            // check if otherReason is valid if reason is 'Other'
+            else if (this.selectedReason == 'Other') {
+                if (!this.otherReason) {
+                    this.submitting = false;
 
-            // if resolving report, check if actions is valid
-            if (this.resolve && !this.resolveActions.includes(this.selectedResolveAction)) {
-                this.submitting = false;
-
-                await this.alert('Invalid resolve action.');
-                return;
-            }
-
-            // if resolving report to suspend user, check if suspendDuration is valid
-            if (this.resolve && this.selectedResolveAction == this.RESOLVE_ACTION_SUSPEND && !this.suspendDuration) {
-                this.submitting = false;
-
-                await this.alert('Invalid suspend duration.');
-                return;
+                    await this.alert('Description required for reason "Other"');
+                }
             }
 
             // do nothing if there are errors in the files provided
@@ -217,7 +241,8 @@ export default {
             }
 
             let body = {
-                reason: this.selectedReason
+                reason: this.selectedReason,
+                otherReason: this.otherReason
             };
 
             let sendingFormData = false;
@@ -359,8 +384,8 @@ export default {
                 await res.json().then(async data => {
                     await this.alert(data.message);
 
-                    this.closeForm(true);
-                })
+                    this.closeForm(true, data.resolveDetails);
+                });
             }).catch(error => {
                 console.log(error);
             });

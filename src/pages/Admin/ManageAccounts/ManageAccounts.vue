@@ -33,6 +33,7 @@
                         :user="user"
                         :viewSuspended="viewSuspended"
                         :viewTerminated="viewTerminated"
+                        :index="index"
                         :key="user._id"
                         @view-user-details="() => toggleUserDetails(true, index)"
                     />
@@ -94,7 +95,7 @@ export default {
     methods: {
         // to get user data
         async getUsers() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/admin/manage`, {
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/admin/accounts/admin`, {
                 method: 'GET',
                 mode: 'cors',
                 credentials: 'include'

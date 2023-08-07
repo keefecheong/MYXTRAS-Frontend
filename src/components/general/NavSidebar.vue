@@ -328,7 +328,7 @@ export default {
     height: fit-content;
     min-height: 100vh;
     background-color: #133B5B;
-    z-index: 3;
+    z-index: var(--nav-z-index);
     /* border-right: #EDEDED 1px solid; */
 }
 
@@ -355,7 +355,7 @@ export default {
     color: white;
     padding: 15px;
     box-sizing: border-box;
-    z-index: 90;
+    z-index: var(--nav-z-index);
 }
 
 #expanded {
