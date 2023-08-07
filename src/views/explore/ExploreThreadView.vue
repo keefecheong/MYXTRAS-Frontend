@@ -54,7 +54,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bottom-radius"></div>
+                    <div class="bottom-radius" v-if="tagsLoaded && tags.length !=0"></div>
                 </div>
             </div>
         </div>

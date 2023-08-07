@@ -510,7 +510,7 @@ export default {
             }).then((response) => {
                 if (response.ok) {
                     sessionStorage.setItem('to_setup_profile', true);
-                    location.href = '/setupprofile.html';
+                    location.href = '/setupProfile.html';
                 }
                 else {
                     response.json().then(async (data) => {

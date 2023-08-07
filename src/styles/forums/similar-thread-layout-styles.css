@@ -81,3 +81,20 @@
     row-gap: 15px;
     width: 100%;
 }
+
+@media screen and (max-width: 768px) {
+.thread-layout-left {
+    display: none;
+}
+.thread-layout-container {
+    padding: 10vh 2vw;
+}
+.thread-creator-profile-pic {
+    margin-left: 16px;
+    width: 64px;
+    height: 64px;
+}
+.thread-layout-container {
+    padding: 40px;
+}
+}

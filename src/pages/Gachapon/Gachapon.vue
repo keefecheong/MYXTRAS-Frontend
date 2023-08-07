@@ -31,7 +31,7 @@
                                 </div>
                             </li>
                             <li class="listOptions" :class="{'rainbow rainbow_text_animated' : pet.rarity === 'ultra rare'}" :style="getRarityStyle(pet.rarity)">
-                                ({{ pet.rarity }})
+                                {{ pet.rarity }}
                             </li>
                         </div>
                     </ul>
@@ -147,7 +147,6 @@ button:hover {
 .imageContainer {
     min-height: 15vh;
     display: flex;
-    align-items: center;
     justify-content: center;
 }
 .imageContainer > img {
@@ -447,10 +446,11 @@ export default {
                 case 'ultra rare':
                     break;
                 case 'rare':
-                    color = 'orange';
+                    color = 'var(--orange)';
                     break;
                 case 'common':
-                    color = 'blue';
+                    // blue
+                    color = 'var(--blue)';
                     break;
                 default:
                     color = 'black'; // Default color for any other rarity (optional)
@@ -458,6 +458,8 @@ export default {
 
             return {
                 color: color,
+                'font-weight': 'bolder',
+                'font-size': '1.1em'
             };
         },
         async initData(){

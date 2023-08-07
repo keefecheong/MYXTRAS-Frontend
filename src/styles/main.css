@@ -14,6 +14,8 @@
     --green: #00ce1f;
     --red: #dc0000;
     --grey-overlay: #5d5d5d81;
+    --blue: #425af5;
+    --orange: #ff841f;
     /* important z-index values */
     --nav-z-index: 80;
     --banner-z-index: 85;
@@ -50,6 +52,7 @@ body {
     font-family: 'Quicksand' !important;
     font-size: calc(.5em + 0.5vw) !important;
     overflow-x: hidden;
+    width: 100vw;
 }
 
 body, #app {
@@ -113,7 +116,13 @@ a:hover {
     max-height: 100%;
     max-width: 100%;
 }
-
+img {
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
 /* hide overflow text with ... */
 .hide-overflow-text {
     display: -webkit-box;

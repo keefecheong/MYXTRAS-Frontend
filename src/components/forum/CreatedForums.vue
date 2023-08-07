@@ -1,9 +1,8 @@
 <template>
     <div v-if="createdForums.length !== 0">
         <div class="card shadow">
-            <div class="card-body card-position">
+            <div class="card-body">
                 <h5 class="card-title">Your Created Forums</h5>
-                
                 <div id="created-forum-container">
                     <div v-for="forum in createdForums" class="mini-forum-layout">
                         <img class="groupPic" :src="forum.forum_pic_link" @click="viewForum(forum)">
@@ -17,6 +16,7 @@
 </template>
 
 <style scoped>
+    
 #created-forum-container {
     display: flex;
     flex-direction: column;
@@ -26,7 +26,7 @@
     margin: 0 auto;
 }
 .mini-forum-layout {
-    margin: 5px
+    margin: 5px;
 }
 .card {
     padding: 1em 0 1em 0;
@@ -34,10 +34,6 @@
     margin-bottom: 60px;
     min-height: 50vh;
     max-height: 60vh;
-}
-
-.card-body {
-    overflow-y: scroll;
 }
 
 /* Track */
@@ -55,6 +51,24 @@ border-radius: 15px;
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
 background: #c9c9c98d;
+}
+@media screen and (max-width: 768px) {
+#created-forum-container {
+    display: flex;
+    flex-direction: row;    
+    overflow-x: scroll;
+    max-width: 100%;
+}
+.card {
+    padding: 1em 0 1em 0;
+    border-radius: 15px;
+    margin-bottom: 60px;
+    min-height: 10vh;
+}
+.mini-forum-layout {
+    margin: 5px;
+    width: 30vw;
+}
 }
 </style>
 
