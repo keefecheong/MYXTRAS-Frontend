@@ -29,7 +29,10 @@ export default{
     },
     created() {
         this.initData();
-        console.log(this.selectedPet);
+    },
+
+    updated(){
+        this.updatePet();
     },
 
     methods: {
@@ -44,7 +47,6 @@ export default{
                     this.selectedChoice = data.pets.enabled;
                     this.selectedPet = data.chosenPetData;
                     this.changeRunner();
-                    console.log(this.selectedPet);
                 });
             }).catch(error => {
                 console.log(error);
@@ -68,41 +70,57 @@ export default{
             document.head.appendChild(styleElement);
             // create a string variable that contains the CSS code for the runner and the keyframes
             const runnerCSS = `
-            #pet{
-                position: fixed;
-                bottom: 0;
-            }
+                #pet{
+                    position: fixed;
+                    bottom: 0;
+                }
 
-            #runner{
-                background: url("${this.selectedPet.sprite_sheet_link}");
-                width: ${this.selectedPet.width/this.selectedPet.number/3}px;
-                height: ${this.selectedPet.height/3}px;
-                animation: walk 10s steps(${this.selectedPet.number}) infinite;
-                background-size: ${this.selectedPet.width/3}px ${this.selectedPet.height/3}px;
-            } 
+                #runner{
+                    background: url("${this.selectedPet.sprite_sheet_link}");
+                    width: ${this.selectedPet.width/this.selectedPet.number/3}px;
+                    height: ${this.selectedPet.height/3}px;
+                    animation: walk 10s steps(${this.selectedPet.number}) infinite;
+                    background-size: ${this.selectedPet.width/3}px ${this.selectedPet.height/3}px;
+                } 
 
-            @keyframes walk {
-                0% {
-                    background-position: 0px;
-                    transform: translateX(0) scaleX(1);
+                @keyframes walk {
+                    0% {
+                        background-position: 0px;
+                        transform: translateX(0) scaleX(1);
+                    }
+                    49.999999999999% {
+                        background-position: ${this.selectedPet.width}px;
+                        transform: translateX(1325px) scaleX(1);
+                    }
+                    50% {
+                        background-position: ${this.selectedPet.width}px;
+                        transform: translateX(1325px) scaleX(-1);
+                    }
+                    100% {
+                        background-position: 0px;
+                        transform: translateX(0) scaleX(-1);
+                    }
                 }
-                49.999999999999% {
-                    background-position: ${this.selectedPet.width}px;
-                    transform: translateX(1345px) scaleX(1);
-                }
-                50% {
-                    background-position: ${this.selectedPet.width}px;
-                    transform: translateX(1345px) scaleX(-1);
-                }
-                100% {
-                    background-position: 0px;
-                    transform: translateX(0) scaleX(-1);
-                }
-            }
-        `;
-        // append the runnerCSS string to the style element
-        styleElement.appendChild(document.createTextNode(runnerCSS));
+            `;
+            // append the runnerCSS string to the style element
+            styleElement.appendChild(document.createTextNode(runnerCSS));
 
+        },
+
+        async updatePet(){
+            // get user profile and follow status
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/gachapon`, {
+                methods: 'GET',
+                credentials: 'include',
+                mode: 'cors'
+            }).then(async (res) => {
+                await res.json().then(data => {
+                    this.selectedPet = data.chosenPetData;
+                    this.changeRunner();
+                });
+            }).catch(error => {
+                console.log(error);
+            });
         }
     }
 }
