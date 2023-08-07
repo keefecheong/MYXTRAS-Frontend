@@ -4,7 +4,7 @@
     
     <div id="profile-page-view-container">
         <div id="left-content">
-            <img :src="banner" alt="Banner" id="banner-picture" />
+            <img :src="user.banner_pic_link" alt="Banner" id="banner-picture" />
 
             <div id="header-content">
                 <div id="header-user-details-container">

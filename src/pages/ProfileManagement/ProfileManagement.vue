@@ -166,7 +166,7 @@ export default {
                             this.gender = data.gender;
                             this.userId = data._id;
                             this.profilePicture = data.profile_pic_link;
-                            // this.banner = data.banner_pic_link
+                            this.banner = data.banner_pic_link
                             this.dataRetrieved = true
                         }
                     })
@@ -256,7 +256,23 @@ export default {
                 });
             } else {
                 this.banner = URL.createObjectURL(file);
-                console.log(this.banner)
+                // Extract original image name and type from the file input
+                const originalName = this.$refs.bannerInput.files[0].name;
+                const originalType = this.$refs.bannerInput.files[0].type;
+
+                fetch(this.banner)
+                    .then((response) => response.blob())
+                    .then((blob) => {
+                        // Create a new File object with the cropped image data
+                        const croppedFile = new File([blob], originalName, { type: originalType });
+
+                        // Assign the cropped File object to a separate variable
+                        this.croppedBannerFile = croppedFile;
+
+
+                })
+                console.log(this.croppedBannerFile)
+
             }
 
         },
@@ -288,6 +304,7 @@ export default {
                     this.showBtn = false;
 
                 });
+            console.log(this.croppedImageFile)
         },
 
 
@@ -345,8 +362,8 @@ export default {
             formData.append('userObject', JSON.stringify(this.userObject));
             // formData.append('selectedImages', this.$refs.fileInput.files[0]);
             const files = [];
-            formData.append('selectedImages', this.croppedImageFile);
-            formData.append('selectedImages', this.banner)
+            formData.append('selectedImages', this.croppedImageFile, 'profilePicture');
+            formData.append('selectedImages', this.croppedBannerFile, 'banner');
             try {
                 const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
                     method: 'PATCH',
