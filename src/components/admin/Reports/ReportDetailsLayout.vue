@@ -35,12 +35,12 @@
             
             <div>
                 <div>
-                    <span>Creator Username:</span>
+                    <span>Object Owner Username:</span>
                     <span>{{ report.report_target_owner.username }}</span>
                 </div>
     
                 <div v-if="admin">
-                    <span>Creator ID:</span>
+                    <span>Object Owner ID:</span>
                     <span class="details-layout-profile-link" title="Click to view user" @click="() => viewUser(report.report_target_owner._id)">{{ report.report_target_owner._id }}</span>
                 </div>
             </div>
@@ -72,6 +72,16 @@
 
                     <span v-else>{{ report.report_reason }}</span>
                 </div>
+
+                <div v-if="report.report_reasons?.includes('Other') || report.report_reason == 'Other'">
+                    <span>Supporting Description(s):</span>
+
+                    <ul v-if="aggregated">
+                        <li v-for="reason in report.report_other_reasons">{{ reason }}</li>
+                    </ul>
+
+                    <span v-else>{{ report.report_other_reason }}</span>
+                </div>
     
                 <div v-if="report.report_target_type == REPORT_TARGET_TYPE_USER && report.report_evidence">
                     <span>Report Evidence:</span>
@@ -100,6 +110,11 @@
                 <div>
                     <span>Status:</span>
                     <span>{{ report.status }}</span>
+                </div>
+
+                <div v-if="report.status == 'Success'">
+                    <span>Reason:</span>
+                    <span>{{ report.review_reason }}</span>
                 </div>
             </div>
 
@@ -177,6 +192,9 @@ export default {
     emits: [
         'close-report-details'
     ],
+    mounted() {
+        window.scrollTo(0, 0);
+    },
     computed: {
         // check if report is reviewed
         reviewed() {
@@ -221,7 +239,7 @@ export default {
         },
         // get forumId to pass to reportFormLayout
         resolveForumId() {
-            if ([this.REPORT_TARGET_TYPE_FORUM, this.REPORT_TARGET_TYPE_THREAD, this.REPORT_TARGET_TYPE_THREAD_COMMENT].includes(this.resolveReportType)) return null;
+            if (![this.REPORT_TARGET_TYPE_FORUM, this.REPORT_TARGET_TYPE_THREAD, this.REPORT_TARGET_TYPE_THREAD_COMMENT].includes(this.resolveReportType)) return null;
 
             return this.report.meta?.forum_id || this.report.report_target;
         },
@@ -242,8 +260,8 @@ export default {
     },
     methods: {
         // close report details view
-        closeDetails(resolved) {
-            this.$emit('close-report-details', resolved);
+        closeDetails(resolved, resolveDetails) {
+            this.$emit('close-report-details', resolved, resolveDetails);
         },
         // get time for display
         getTimeForDisplay(timeString) {
@@ -254,11 +272,11 @@ export default {
             this.showReportForm = show;
         },
         // close form for resolving report and close details if report is resolved
-        handleCloseReportForm(submitted) {
+        handleCloseReportForm(submitted, resolveDetails) {
             this.toggleReportForm(false);
 
             if (submitted) {
-                this.closeDetails(true);
+                this.closeDetails(true, resolveDetails);
             }
         },
         // to view user

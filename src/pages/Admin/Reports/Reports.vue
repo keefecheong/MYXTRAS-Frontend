@@ -30,7 +30,8 @@
                         v-for="(report, index) in reportsToDisplay"
                         :report="report"
                         :aggregated="true"
-                        :key="report._id"
+                        :index="index"
+                        :key="`${report._id}_${report.status}`"
                         @view-report-details="() => toggleReportDetails(true, index)"
                     />
                 </div>
@@ -116,13 +117,20 @@ export default {
             this.viewDetails = show;
             this.viewDetailsIndex = index;
         },
-        // close report details, and if the report is resolved remove from reports
-        handleCloseReportDetails(resolved) {
-            this.toggleReportDetails(false);
-            
+        // close report details, and if the report is resolved update it and put in pendingReports
+        handleCloseReportDetails(resolved, resolveDetails) {
             if (resolved) {
-                this.reports.splice(this.viewDetailsIndex, 1);
+                const resolvedReport = this.pendingReports[this.viewDetailsIndex];
+                resolvedReport.reviewer_id = { _id: resolveDetails.reviewerId, username: resolveDetails.reviewerUsername };
+                resolvedReport.status = resolveDetails.status;
+                resolvedReport.review_reason = resolveDetails.reviewReason;
+                resolvedReport.review_time = resolveDetails.reviewTime;
+
+                this.reviewedReports.push(resolvedReport);
+                this.pendingReports.splice(this.viewDetailsIndex, 1);
             }
+            
+            this.toggleReportDetails(false);
         },
         // to toggle between pending and reviewed reports
         toggleReviewed(showReviewed) {

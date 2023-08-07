@@ -39,11 +39,13 @@ export default {
 <style>
 .loader-overlay {
     height: 100%;
+    max-height: 100dvh;
     width: 100%;
-    position: absolute;
+    max-width: 100dvw;
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 98;
+    z-index: var(--loading-z-index);
 }
 
 .loader-container {

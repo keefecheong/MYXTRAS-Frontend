@@ -28,7 +28,7 @@
 
                     <hr />
                 
-                    <div id="no-more-blogs">
+                    <div class="no-more-blogs">
                         <p>That's the end. You're all catched up!</p>
                         <p>Follow more people? <a href="/explore.html">Explore!</a></p>
                     </div>
@@ -48,7 +48,7 @@
     width: clamp(350px, 50%, 1000px);
 }
 
-#no-more-blogs {
+.no-more-blogs {
     text-align: center;
     margin-bottom: 40px;
 }
