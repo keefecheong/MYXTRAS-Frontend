@@ -18,9 +18,13 @@
 
         <div id="searchbar-right">
             <div v-if="currentPage.startsWith('/forum.html')">
-                <button id="create-forum-btn" class="white-btn" @click="showForumForm">
+                <button v-if="!isMobile" id="create-forum-btn" class="white-btn" @click="showForumForm">
                     Create Forum
                 </button>
+                <div v-if="isMobile" class="mobile-create-container">
+                    <p>Create Forum</p>
+                    <span class="material-symbols-outlined" @click="showForumForm">add_circle</span>
+                </div>
             </div>
             
             <div v-else-if="login">
@@ -196,6 +200,24 @@ p {
     border-radius: 10px;
     height: 100%;
 }
+@media screen and (max-width: 768px) {
+#create-forum-btn {
+font-size: 14px;
+}
+#search-input {
+    min-width: 60vw !important;
+}
+.mobile-create-container {
+    color: white;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
+.mobile-create-container > .material-symbols-outlined {
+    display: block;
+}
+}
 </style>
 
 <script>
@@ -214,16 +236,28 @@ export default {
             searchResults: null,
             searchTerm: '',
             showResults: false,
-            currentPage: location.pathname
+            currentPage: location.pathname,
+            isMobile: false,
         }
     },
     mounted() {
         this.checkAuth();
+        // check if its mobile to display smaller plus icon instead of create button
+        this.isMobile = window.innerWidth <= 768;
+        window.addEventListener("resize", this.handleResize);
+    },
+    beforeDestroy() {
+        // Clean up the event listener
+        window.removeEventListener("resize", this.handleResize);
     },
     emits: [
         'show-forum-form'
     ],
     methods: {
+        handleResize() {
+        // Update the view when the window width changes
+        this.isMobile = window.innerWidth <= 768;
+        },
         showForumForm() {
             this.$emit('show-forum-form');
         },
