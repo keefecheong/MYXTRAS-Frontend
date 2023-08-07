@@ -1,13 +1,19 @@
 <template>
-    <div id="notfound">
-        <div class="notfound">
-            <div class="notfound-404">
-                <h1>Oops!</h1>
+    <div id="main-container">
+        <NavSidebar/>
+        <div id="main-content">
+            <SearchBar />
+            <div id="notfound">
+                <div class="notfound">
+                    <div class="notfound-404">
+                        <h1>Oops!</h1>
+                    </div>
+                    <br>
+                    <h2>404 - Page not found</h2>
+                    <p>The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
+                    <a href="http://127.0.0.1:5173/">Go To Homepage</a>
+                </div>
             </div>
-            <br>
-            <h2>404 - Page not found</h2>
-            <p>The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
-            <a href="/">Go To Homepage</a>
         </div>
     </div>
 </template>
@@ -96,3 +102,15 @@
     }
 }
 </style>
+
+<script>
+import NavSidebar from '../../components/general/NavSidebar.vue';
+import SearchBar from '../../components/general/SearchBar.vue';
+
+export default {
+    components: {
+        NavSidebar,
+        SearchBar
+    },
+}
+</script>

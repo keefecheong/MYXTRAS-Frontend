@@ -5,7 +5,6 @@ import vue from '@vitejs/plugin-vue';
 const redirectIndexPlugin = {
     name: 'redirect-index',
     configureServer(server) {
-        const validRoutes = [];
         server.middlewares.use((req, res, next) => {
             // set root path to feed.html and set up redirection for feed router
             if (req.url === '/') {
@@ -46,6 +45,9 @@ const redirectIndexPlugin = {
             }
             else if (req.url === '/login' || req.url === '/login/' || req.url === '/login.html') {
                 req.url = '/login.html';
+            }
+            else if (req.url === '/explore' || req.url === '/explore/' || req.url === '/explore.html') {
+                req.url = '/explore.html';
             }
             // set up redirection for explore router
             else if (req.url === '/explore.html/blogs' || req.url === '/explore.html/threads') {
