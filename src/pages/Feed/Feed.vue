@@ -48,7 +48,7 @@
     width: clamp(350px, 50%, 1000px);
 }
 
-#no-more-blogs {
+.no-more-blogs {
     text-align: center;
     margin-bottom: 40px;
 }

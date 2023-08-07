@@ -47,15 +47,23 @@
                     <h1 class="pop-header" v-if="tagsLoaded && tags.length !=0">Popular Communities</h1>
                     <div id="noForums" v-else>No forums created<span class="material-symbols-outlined" style="text-align: center; justify-content: center;">warning</span></div>
                     <div class="interestCommunity" v-for="(tag, index) in tags">
-                        <h4 class="cat" @click="openForum(index)">{{ tag._id }}<div class="triangle-down" :id="`triangle-${index}`"></div></h4>
+                        <h4 class="category" @click="openForum(index)">{{ tag._id }}<span class="triangle-down" :id="`triangle-${index}`"></span></h4>
                         <div class="dropdown-content" :id="'dc'+index" >
                             <div v-for="forum in tag.forums" @click="viewForum(forum)" id="forumContainer">
                                 <p><img class="forum-pic" :src="forum.forum_pic_link">{{forum.forum_name}}</p>
                             </div>
                         </div>
                     </div>
+                    <div class="bottom-radius"></div>
                 </div>
             </div>
+        </div>
+        <hr>
+        <div id="no-more-blogs">
+            <p>That's the end. Check again later for more content!</p>
+            <p>
+                <a href="/profilePage.html?create">Create your own?</a>
+            </p>
         </div>
     </div>
 </template>
@@ -232,10 +240,18 @@ h1 {
 }
 .interestCommunity{
     font-size: 1.2rem;
-    background-color: rgba(255, 150, 183, 0.6);
     width: 100%;
     border-bottom: 1px solid #443b3b;
     margin: 0;
+    border-bottom: none;
+}
+.bottom-radius {
+    border: 2px solid var(--primary);
+    border-top: none;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    min-height: 2vh;
+    width: 100%;
 }
 #gallery-interest-selection {
     display: flex;
@@ -288,13 +304,14 @@ h1 {
     color: black !important;
 }
 
-.cat {
+.category {
     font-size: 1.2rem;
     background-color: var(--primary);
     width: 100%;
     color: #ffffff;
     display: flex;
-    justify-content: right;
+    justify-content: center;
+    text-align: center;
     padding: 10px;
     border-bottom: 1px solid #443b3b;
     margin: 0;
@@ -312,8 +329,7 @@ h1 {
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-bottom: 15px solid #ffffff;
-    margin-left: 30px;
-    margin-right: 70px;
+    margin-left: 1vw;
     cursor: pointer;
     display: grid;
     place-self: center;
@@ -325,15 +341,13 @@ h1 {
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-top: 15px solid #ffffff;
-    margin-left: 30px;
-    margin-right: 70px;
+    margin-left: 1vw;
     cursor: pointer;
     display: grid;
     place-self: center;
 }
 
 .open-forum {
-    display: block;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -357,7 +371,7 @@ h1 {
     width: 6em;
     color: white;
     border: none;
-    background: linear-gradient(45deg,#FF6363, #E53A73);
+    background: linear-gradient(45deg, var(--secondary), var(--));
     border-radius: 10px;
     padding: 7px 7px;
     margin-right: 5px;

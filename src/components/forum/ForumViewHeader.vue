@@ -192,6 +192,18 @@ export default {
 </script>
 
 <style>
+.white-btn {
+    font-weight: bold;
+    background-color: white;
+    color:black;
+    border-radius: 5px;
+    white-space: normal;
+    text-align: center;
+    font-size: 1vw;
+    color: black;
+    width: 16vw !important;
+    font-size: 14px;
+}
 #banner-picture {
     width: 100%;
     height: 150px;

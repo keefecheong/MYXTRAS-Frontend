@@ -28,10 +28,11 @@
                         />
                     </keep-alive>
                 </div>
-
                 <div id="no-more-blogs">
                     <p>That's the end. Check again later for more content!</p>
-                    <a href="/profilePage.html?create">Create your own?</a>
+                    <p>
+                        <a href="/profilePage.html?create">Create your own?</a>
+                    </p>
                 </div>
             </div>
 
@@ -192,7 +193,6 @@ figure {
 #no-more-blogs {
     text-align: center;
 }
-
 #no-filtered-blogs {
     width: 100%;
     display: flex;

@@ -261,7 +261,7 @@ h1 {
     font-size: 14px;
 }
 .white-btn {
-    width: 16vw;
+    width: 25vw !important;
     font-size: 14px;
 }
 }
