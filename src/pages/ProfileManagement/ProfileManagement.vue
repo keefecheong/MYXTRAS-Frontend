@@ -356,14 +356,27 @@ export default {
                 'biography': this.biography,
                 'selectedInterests': this.selectedOption,
                 'gender': this.gender,
-                // 'profilePicture': this.$refs.fileInput.files[0],
 
             };
             formData.append('userObject', JSON.stringify(this.userObject));
-            // formData.append('selectedImages', this.$refs.fileInput.files[0]);
             const files = [];
-            formData.append('selectedImages', this.croppedImageFile, 'profilePicture');
-            formData.append('selectedImages', this.croppedBannerFile, 'banner');
+
+            try{
+                formData.append('selectedImages', this.croppedImageFile, 'profilePicture');
+            }
+            catch(error){
+                console.log(error)
+            }
+
+            try{
+                formData.append('selectedImages', this.croppedBannerFile, 'banner');
+            }
+            catch (error){
+                console.log(error)
+            }
+
+            
+
             try {
                 const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
                     method: 'PATCH',
