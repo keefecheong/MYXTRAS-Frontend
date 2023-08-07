@@ -36,6 +36,20 @@
 <style>
 @import url('../../styles/main.css');
 @import url('../../styles/login-register-styles.css');
+@media screen and (max-width: 768px) {
+#ngee-ann-banner {
+    display: none;
+}
+#main-container > * {
+    width: 100vw !important;
+}
+#form-container {
+    display: block;
+}
+#show-password-button {
+    transform: translateY(-50%);
+}
+}
 </style>
 
 <script>

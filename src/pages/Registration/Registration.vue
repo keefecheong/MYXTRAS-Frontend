@@ -24,7 +24,7 @@
                         :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password"
                         class="registration-password-field" :maxlength="20" required>
 
-                    <button type="button" class="material-symbols-outlined" :class="{ 'show-password': showPassword }"
+                    <button type="button" class="material-symbols-outlined" id="show-password-button" :class="{ 'show-password': showPassword }"
                         @click="hidePassword(1)">
                         visibility_off
                     </button>
@@ -40,7 +40,7 @@
                         v-model="repeatedPassword" placeholder="Confirm Password" class="registration-password-field"
                         :maxlength="20" required>
 
-                    <button type="button" class="material-symbols-outlined" :class="{ 'show-password': showRepeatPassword }"
+                    <button type="button" class="material-symbols-outlined" id="show-password-button" :class="{ 'show-password': showRepeatPassword }"
                         @click="hidePassword(2)">
                         visibility_off
                     </button>
@@ -146,6 +146,26 @@
 
 .otp-verified {
     color: rgb(30, 196, 30);
+}
+@media screen and (max-width: 768px) {
+#ngee-ann-banner {
+    display: none;
+}
+#main-container > * {
+    width: 100vw !important;
+}
+#form-container {
+    display: block;
+}
+#show-password-button {
+    transform: translateY(-50%);
+}
+.registration-otp-button {
+    padding-bottom: 3vh;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
 }
 </style>
 

@@ -12,7 +12,7 @@
                     </h2>
                     <h5>{{ this.gems }}
                         <span class="material-symbols-outlined gemIcon">diamond</span>
-                        <span v-if="deduction" style="color: red;">-{{ deduction }}</span>
+                        <span v-if="deduction" style="color: red; margin: 0.5vw;">-{{ deduction }}</span>
                     </h5>
                 </div>
                 <h2 class="header">
@@ -332,6 +332,8 @@ ul {
 }
 .toggle-button {
     display: none;
+    margin: 4vh;
+    border-radius: 5px;
 }
 /* Mobile port */
 @media screen and (max-width: 768px) {
@@ -364,7 +366,8 @@ p {
 }
 #settings-options {
     display: inline-block;
-    margin-left: 3vw
+    margin-left: 3vw;
+    margin-bottom: 10vh;
 }
 }
 </style>
@@ -390,7 +393,7 @@ export default {
     mounted() {
         // Check if the current view is mobile or not
         this.checkIsMobileView();
-        // Listen for window resize events to update the isMobileView property
+        // Listen for window resize events to update the left/right-content classes
         window.addEventListener('resize', this.handleWindowResize);
     },
     beforeDestroy() {
@@ -401,9 +404,14 @@ export default {
         checkIsMobileView() {
             const left_content = document.getElementById("left-content");
             const right_content = document.getElementById("right-content");
-            // Use the window innerWidth to determine if it's mobile or not (you can adjust the breakpoint as needed)
+
+            // Use the window innerWidth to determine if it's mobile or not
             if (window.innerWidth <= 767){
                 left_content.classList.add("hide");
+                right_content.classList.remove("hide")
+            } else {
+                this.viewingGacha = true
+                left_content.classList.remove("hide");
                 right_content.classList.remove("hide")
             }
         },
@@ -424,6 +432,7 @@ export default {
                 right_content.classList.add("hide")
             }
         },
+        // Set colors for different pet rarities
         getRarityStyle(rarity) {
             let color;
             switch (rarity) {
@@ -444,14 +453,13 @@ export default {
             };
         },
         async initData(){
-            // get user profile and follow status
+            // get user's pets and their related data
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/gachapon`, {
                 methods: 'GET',
                 credentials: 'include',
                 mode: 'cors'
             }).then(async (res) => {
                 await res.json().then(data => {
-                    // save user data
                     this.gems = data.gems;
                     this.enabled = data.pets.enabled;
                     this.inventoryPets = data.pets.inventory.sort((a, b) => a.name.localeCompare(b.name));
@@ -495,7 +503,7 @@ export default {
                             this.deduction -= 80
                         }
                     }
-                    // Filter out unique elements based on a specific property (e.g., 'name')
+                    // Filter out unique elements based on a specific name
                     this.inventoryPets = this.inventoryPets.filter((obj, index, arr) => {
                         return arr.findIndex((item) => item.name === obj.name) === index;
                     });

@@ -7,34 +7,13 @@
 <style>
 #pet{
     position: fixed;
+    pointer-events: none; 
     bottom: 0;
 }
-
-
-
-/* 
-#runner{
-    background: url("../../assets/chicken.png");
-    width: 85px;
-    height: 101px;
-    /* animation: walk 10s steps(8) infinite; */
-    /* background-size: 750px 88.5px; */
-/* 
-#runner{
-    background: url("../../assets/scoobydoo.png");
-    width: 1100px;
-    height: 82.5px;
-    animation: walk 10s steps(12) infinite;
-    background-size: 750px 88.5px;
-
-} */
 
 </style>
 
 <script>
-import { useWindowScroll } from '@vueuse/core';
-import { getActivePinia } from 'pinia';
-import { setTransitionHooks } from 'vue';
 
 export default{
     props:[
