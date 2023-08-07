@@ -508,4 +508,5 @@ export default {
     outline: none;
     border: none;
 }
+
 </style>
