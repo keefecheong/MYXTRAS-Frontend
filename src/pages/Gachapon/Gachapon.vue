@@ -21,7 +21,7 @@
                 <div id="white-container">
                     <p v-if="inventoryPets.length == 0 " id="no-pets-text">No pets in inventory!</p>
                     <ul v-for="pet in inventoryPets">
-                        <div id="pet-list-container">
+                        <div id="pet-list-container" :class="{'selected-pet': pet.name === selectedPet}">
                             <li id="petsList" class="listOptions" @click="selectPet(pet)">
                                 <p>
                                     {{ pet.name }}
@@ -369,6 +369,14 @@ p {
     margin-left: 3vw;
     margin-bottom: 10vh;
 }
+
+}
+</style>
+
+<style scoped>
+.selected-pet {
+    /* outline: 1px solid blue; */
+    background-color: #9FDDFF;
 }
 </style>
 <script>
@@ -467,7 +475,7 @@ export default {
                         const rarityOrder = { "ultra rare": 3, "rare": 2, "common": 1 };
                         return rarityOrder[b.rarity] - rarityOrder[a.rarity];
                     });
-                    
+                    this.selectedPet = data.chosenPetData.name
                 });
             }).catch(error => {
                 console.log(error);
