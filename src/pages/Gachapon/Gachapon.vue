@@ -544,7 +544,6 @@ export default {
             }).then(async (res) => {
                 await res.json().then((data) => {
                     this.selectedPet = pet.name;
-                    console.log(this.selectedPet)
                 });
             }).catch((error) => {
                 console.log(error);
