@@ -30,8 +30,8 @@
             </div>
             <div id="dailyTasksDiv">
                 <h1>Daily Tasks</h1>
-                <div id="missionsContainer" >
-                    <div id="missionContainer" v-for="mission in missions">
+                <div id="missions-container" >
+                    <div id="mission-container" v-for="mission in missions">
                         <div class="left-content">
                             <p>{{ mission.title }}</p>
                         </div>
@@ -40,15 +40,15 @@
                                 <p>{{ mission.gem_count }}</p>
                                 <span class="material-symbols-outlined symbols" style="color: aqua; transform: translateY(-20%) translateX(25%) !important;">diamond</span>
                                 <button class="white-btn locked" v-if=mission.locked>
-                                    <p class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</p>
+                                    <span class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</span>
                                 </button>
                                 <btn class="white-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>Claimed</p></btn>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="missionsContainer" >
-                    <div id="missionContainer">
+                <div id="missions-container" >
+                    <div id="mission-container">
                         <div class="left-content">
                             <p>Complete all dailies</p>
                         </div>
@@ -57,7 +57,7 @@
                                 <p>500</p>
                                 <span class="material-symbols-outlined symbols" style="color: aqua; transform: translateY(-20%) translateX(25%) !important;">diamond</span>
                                 <button class="white-btn locked" v-if="allClaimed.locked">
-                                    <p class="material-symbols-outlined">lock</p>
+                                    <span class="material-symbols-outlined">lock</span>
                                 </button>
                                 <btn class="white-btn" :class="{claimed : allClaimed.claimed}" v-else="!allClaimed.locked" @click="claimMission('allClaim')"><p>Claim</p></btn>                            
                             </div>
@@ -140,6 +140,9 @@ h3 {
     margin-bottom: 5%;
     text-decoration: none;
 }
+.pink-btn > p {
+    margin: 1vh 0;
+}
 .pink-btn:hover {
     background-color: transparent;
     border: 3px solid var(--primary);
@@ -163,17 +166,20 @@ h3 {
 .white-btn > .material-symbols-outlined {
     color: black;
 }
+.white-btn > p {
+    margin: 1vh 0;
+}
 .imageContainer {
     width: 60% !important;
 }
 .locked, .claimed {
     opacity: 0.5;
 }
-#missionsContainer {
+#missions-container {
     display: flex;
     flex-wrap: wrap;
 }
-#missionContainer {
+#mission-container {
     display: flex;
     flex-direction: row;
     width: 30vw;
@@ -208,48 +214,56 @@ h3 {
 
 /* Responsive styles */
 @media screen and (max-width: 768px) {
-  #main-content {
+body {
+    font-size: 14px !important;
+}
+#main-content {
     display: flex;
     flex-direction: column;
-    padding: 10px;
-  }
-
-  .dayBox {
-    margin: 10px;
-    min-width: auto;
+}
+.dayBox {
+    width: 10vw !important;
+}
+h1 {
     width: 100%;
-  }
+    text-align: center !important;
+}
+#dailyLogInDiv {
+    display: flex;
+    flex-direction: column;
+}
 
-  .left-content,
-  .right-content {
+.left-content,
+.right-content {
     width: 100%;
-  }
-
-  #scroll-view {
+    text-align: center;
+}
+.imageContainer {
+    margin: auto;
+}
+#scroll-view {
     overflow-x: auto;
-  }
-
-  #dailyLogInDiv,
-  #dailyTasksDiv {
+    width: 100%;
+}
+.dayBox {
+    margin: 10px;
+    min-width: 40vw;
+}
+#mission-container {
+    width: 100%;
+    align-items: center;
+}
+#dailyLogInDiv,
+#dailyTasksDiv {
     padding: 20px;
-  }
-
-  .pink-btn,
-  .white-btn {
+}
+.pink-btn > p {
     font-size: 14px;
-  }
-
-  .pink-btn,
-  .white-btn,
-  .pink-btn:hover {
-    margin-bottom: 10px;
-  }
-
-  #bottom-right-button {
-    bottom: 1em;
-    right: 1em;
-    padding: 0.5em;
-  }
+}
+.white-btn {
+    width: 16vw;
+    font-size: 14px;
+}
 }
 
 </style>

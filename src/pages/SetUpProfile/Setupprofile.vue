@@ -75,6 +75,11 @@ form p {
     justify-content: start;
     column-gap: 20px;
 }
+@media screen and (max-width: 768px) {
+.form-container {
+    width: 80% !important;
+}
+}
 </style>
 
 <script>

@@ -3,15 +3,16 @@
     <div id="main-container">
         <NavSidebar/>
         <div id="main-content" class="gachaponBody">
+            <button class="toggle-button" @click="toggleBetween">{{ viewingGacha ? 'View Inventory' : "Gachapon" }}</button>
             <Pet/>
-            <div class="left-content">
+            <div id="left-content" >
                 <div class="wallet-container">
                     <h2>
                         Your Wallet: <span class="material-symbols-outlined" style="display: inline;">account_balance_wallet</span>
                     </h2>
                     <h5>{{ this.gems }}
                         <span class="material-symbols-outlined gemIcon">diamond</span>
-                        <span v-if="deduction" style="color: red;">-{{ deduction }}</span>
+                        <span v-if="deduction" style="color: red; margin: 0.5vw;">-{{ deduction }}</span>
                     </h5>
                 </div>
                 <h2 class="header">
@@ -21,7 +22,7 @@
                     <p v-if="inventoryPets.length == 0 " id="no-pets-text">No pets in inventory!</p>
                     <ul v-for="pet in inventoryPets">
                         <div id="pet-list-container">
-                            <li id="petsList" class="listOptions">
+                            <li id="petsList" class="listOptions" @click="selectPet(pet)">
                                 <p>
                                     {{ pet.name }}
                                 </p>
@@ -48,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <div class="right-content">
+            <div id="right-content" >
                 <div class="machine">
                     <div id="redMachineHolder" class="gashaponHolder fitImg">
                         <img src="../../assets/red_machine_top.svg"/>
@@ -117,7 +118,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <Pets :enabled="enabled"/>
+            <Pets :enabled="enabled" :selectedPet="selectedPet"/>
         </div>
     </div>
 
@@ -194,11 +195,11 @@ button:hover {
 .container {
     display: flex;
 }
-.left-content{
+#left-content{
     flex: 1;
     max-width: 100%;
 }
-.right-content {
+#right-content {
     flex: 2;
 }
 #buttons-container {
@@ -326,6 +327,49 @@ ul {
     min-width: 10rem;
     text-align: center;
 }
+.hide {
+    display: none;
+}
+.toggle-button {
+    display: none;
+    margin: 4vh;
+    border-radius: 5px;
+}
+/* Mobile port */
+@media screen and (max-width: 768px) {
+body {
+    text-align: center !important;
+    font-size: 14px !important;
+}
+p {
+    font-size: 14px;
+}
+#white-container {
+    max-width: 100vw;
+}
+.toggle-button {
+    display: block;
+    border: 5px solid var(--primary);
+    background-color: var(--primary);
+}
+.toggle-button:hover {
+    background-color: transparent;
+}
+#left-content, #right-content {
+    width: 100%;
+}
+#main-content {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    min-height: 100vh;
+}
+#settings-options {
+    display: inline-block;
+    margin-left: 3vw;
+    margin-bottom: 10vh;
+}
+}
 </style>
 <script>
 
@@ -338,13 +382,57 @@ export default {
             inventoryPets: [],
             insufficientGems: false,
             deduction: null,
-            enabled: null
+            enabled: null,
+            selectedPet: null,
+            viewingGacha: true
         }
     },
     created(){
         this.initData();
     },
+    mounted() {
+        // Check if the current view is mobile or not
+        this.checkIsMobileView();
+        // Listen for window resize events to update the left/right-content classes
+        window.addEventListener('resize', this.handleWindowResize);
+    },
+    beforeDestroy() {
+        // Remove the event listener to avoid memory leaks
+        window.removeEventListener('resize', this.handleWindowResize);
+    },
     methods: {
+        checkIsMobileView() {
+            const left_content = document.getElementById("left-content");
+            const right_content = document.getElementById("right-content");
+
+            // Use the window innerWidth to determine if it's mobile or not
+            if (window.innerWidth <= 767){
+                left_content.classList.add("hide");
+                right_content.classList.remove("hide")
+            } else {
+                this.viewingGacha = true
+                left_content.classList.remove("hide");
+                right_content.classList.remove("hide")
+            }
+        },
+        handleWindowResize() {
+            // Update the isMobileView property whenever the window is resized
+            this.isMobileView = this.checkIsMobileView();
+        },
+        toggleBetween() {
+            const left_content = document.getElementById("left-content");
+            const right_content = document.getElementById("right-content");
+
+            this.viewingGacha = !this.viewingGacha; // Toggle
+            if (this.viewingGacha){
+                left_content.classList.add("hide");
+                right_content.classList.remove("hide")
+            } else {
+                left_content.classList.remove("hide");
+                right_content.classList.add("hide")
+            }
+        },
+        // Set colors for different pet rarities
         getRarityStyle(rarity) {
             let color;
             switch (rarity) {
@@ -365,14 +453,13 @@ export default {
             };
         },
         async initData(){
-            // get user profile and follow status
+            // get user's pets and their related data
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/gachapon`, {
                 methods: 'GET',
                 credentials: 'include',
                 mode: 'cors'
             }).then(async (res) => {
                 await res.json().then(data => {
-                    // save user data
                     this.gems = data.gems;
                     this.enabled = data.pets.enabled;
                     this.inventoryPets = data.pets.inventory.sort((a, b) => a.name.localeCompare(b.name));
@@ -416,7 +503,7 @@ export default {
                             this.deduction -= 80
                         }
                     }
-                    // Filter out unique elements based on a specific property (e.g., 'name')
+                    // Filter out unique elements based on a specific name
                     this.inventoryPets = this.inventoryPets.filter((obj, index, arr) => {
                         return arr.findIndex((item) => item.name === obj.name) === index;
                     });
@@ -443,6 +530,21 @@ export default {
                 credentials: 'include',
             }).then(async (res) => {
                 await res.json().then((data) => {
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+
+        async selectPet(pet){
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/pets/${pet.name}`, {
+                mode: 'cors',
+                method: 'POST',
+                credentials: 'include',
+            }).then(async (res) => {
+                await res.json().then((data) => {
+                    this.selectedPet = pet.name;
+                    console.log(this.selectedPet)
                 });
             }).catch((error) => {
                 console.log(error);
