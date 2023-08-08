@@ -32,6 +32,11 @@
     color: var(--primary);
     cursor: pointer;
 }
+
+
+@media screen and (max-width: 768px) {
+
+}
 </style>
 
 <script>
@@ -71,4 +76,5 @@ export default {
         },
     }
 }
+
 </script>

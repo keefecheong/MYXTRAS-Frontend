@@ -20,8 +20,11 @@
                 @report-forum="() => toggleReportForm(true)"
             />
             
-            <div id="threads-container">
-                <div id="thread-content">
+            <div id="threads-container" >
+                <div id="recommended-forums" v-if="isMobile">
+                    <RecommendedForums />
+                </div>
+                <div id="thread-content" >
                     <div class="card shadow" id="no-threads" v-if="threads.length === 0">
                         <p>No threads found, <span id="noThreadCreateBtn" @click="() => toggleThreadForm(true)">create</span> one?</p>
                     </div>
@@ -51,7 +54,7 @@
                     </div>
                 </div>
 
-                <div id="recommended-forums">
+                <div id="recommended-forums" v-if="!isMobile">
                     <RecommendedForums />
                 </div>
             </div>
@@ -118,7 +121,9 @@ export default {
             commentId: null,
             scrollBack: false,
 
-            showReportForm: false
+            showReportForm: false,
+            isMobile: false
+
         }
     },
     created() {
@@ -159,7 +164,20 @@ export default {
             }, 500);
         }
     },
+    beforeDestroy() {
+        // Clean up the event listener
+        window.removeEventListener("resize", this.handleResize);
+    },
+    mounted() {
+        // Check the window width on mount and set the view accordingly
+        this.isMobile = window.innerWidth <= 768;
+        window.addEventListener("resize", this.handleResize);
+    },
     methods: {
+        handleResize() {
+            // Update the view when the window width changes
+            this.isMobile = window.innerWidth <= 768;
+        },
         // handle toggling of detailed thread view
         toggleDetailedView(show, index, id) {
             this.selectedIndex = index != null ? index : this.threads.findIndex(thread => thread._id == id);
@@ -304,5 +322,27 @@ export default {
 #no-threads {
     padding: 40px;
     text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+#threads-container {
+    padding: 0;
+    flex-direction: column;
+}
+#thread-content {
+    min-width: 100%;
+    margin: 10vh 2vw 0 2vw;
+}
+.thread-layout-container {
+    padding: 20px;
+    margin: auto;
+    margin-bottom: 10vh;
+    max-width: 80%;
+}
+#recommended-forums {
+    width: 80%;
+    margin: auto;
+    margin-top: 10vh;
+}
 }
 </style>
