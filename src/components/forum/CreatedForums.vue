@@ -20,10 +20,13 @@
 #created-forum-container {
     display: flex;
     flex-direction: column;
+    position: relative;
     row-gap: 10px;
     align-items: start;
     width: fit-content;
+    max-height: 30vh;
     margin: 0 auto;
+    overflow-y: scroll;
 }
 .mini-forum-layout {
     margin: 5px;
