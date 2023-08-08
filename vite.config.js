@@ -40,8 +40,8 @@ const redirectIndexPlugin = {
             else if (req.url === '/setupProfile' || req.url === '/setupProfile/' || req.url === '/setupProfile.html') {
                 req.url = '/setupProfile.html';
             }
-            else if (req.url === '/gachpon' || req.url === '/gachpon/' || req.url === '/gachpon.html') {
-                req.url = '/gachpon.html';
+            else if (req.url === '/gachapon' || req.url === '/gachapon/' || req.url === '/gachapon.html') {
+                req.url = '/gachapon.html';
             }
             else if (req.url === '/login' || req.url === '/login/' || req.url === '/login.html') {
                 req.url = '/login.html';
@@ -54,7 +54,7 @@ const redirectIndexPlugin = {
                 req.url = '/explore.html';
             }
             // set up redirection for profile page router
-            else if (req.url === '/profilePage.html/support') {
+            else if (req.url === '/profilePage.html/support' || req.url === '/profilePage.html/') {
                 req.url = '/profilePage.html';
             }
             // set up redirection for admin pages
