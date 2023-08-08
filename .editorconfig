@@ -1,6 +1,6 @@
 # .editorconfig
 
-root = false
+root = true
 
 [*.{js,vue,html}]
 indent_style = space
