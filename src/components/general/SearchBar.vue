@@ -1,5 +1,9 @@
 <template>
     <div id="searchbar-container" class="banner-container">
+        <div class="user-details" v-if="isMobile" >
+            <p class="hide-overflow-text" id="searchbar-realname" :title="realname">{{ realname }}</p>
+            <p class="hide-overflow-text" id="searchbar-school">{{ school + '/' + course }}</p>
+        </div>  
         <div id="search-input">
             <span class="material-symbols-outlined" id="search-icon" @click="performSearch" title="Click to search">search</span>
             <input
@@ -28,12 +32,16 @@
             </div>
             
             <div v-else-if="login">
-                <div>
+                <div v-if="!isMobile" class="user-details">
                     <p class="hide-overflow-text" id="searchbar-realname" :title="realname">{{ realname }}</p>
                     <p class="hide-overflow-text" id="searchbar-school">{{ school + '/' + course }}</p>
                 </div>
-
-                <a href="/profilePage.html"><img class="searchbar-profile-pic" :src="pfplink"></a>
+                <div class="searchbar-pfp-container">
+                    <a href="/profilePage.html">
+                        <img class="searchbar-profile-pic" :src="pfplink">
+                    </a>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -141,6 +149,7 @@ p {
 
 .searchbar-profile-pic {
     max-height: 100%;
+    max-width: 100%;
     border: #133B5B 4px solid;
     border-radius: 100%;
     object-fit: cover;
@@ -200,6 +209,10 @@ p {
     border-radius: 10px;
     height: 100%;
 }
+.searchbar-pfp-container {
+    max-width: 72px;
+}
+
 @media screen and (max-width: 768px) {
 #create-forum-btn {
 font-size: 14px;
@@ -216,6 +229,32 @@ font-size: 14px;
 }
 .mobile-create-container > .material-symbols-outlined {
     display: block;
+}
+#searchbar-realname {
+    width: 10vw;
+}
+#search-input {
+    left: 31%;
+}
+.user-details {
+    margin-left: 20px !important;
+}
+#searchbar-right {
+    position: absolute;
+    right: 0;
+}
+.searchbar-profile-pic {
+    height: 48px;
+    width: 48px;
+}
+.searchbar-pfp-container {
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+.searchbar-pfp-container > a {
+    margin-right: 10px;
 }
 }
 </style>
@@ -256,7 +295,7 @@ export default {
     methods: {
         handleResize() {
         // Update the view when the window width changes
-        this.isMobile = window.innerWidth <= 768;
+            this.isMobile = window.innerWidth <= 768;
         },
         showForumForm() {
             this.$emit('show-forum-form');

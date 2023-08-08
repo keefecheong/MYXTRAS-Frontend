@@ -173,7 +173,7 @@ export default {
     methods: {
         handleResize() {
         // Update the view when the window width changes
-        this.isMobile = window.innerWidth <= 768;
+            this.isMobile = window.innerWidth <= 768;
         },
         // toggle forum form
         toggleForumForm(show) {

@@ -13,8 +13,8 @@
         <div id="main-content">
             <SearchBar />
 
-            <div class="explore-container">
-                <div class="col-md-2 sub-navigation-container">
+            <div class="explore-container row">
+                <div class="col-md-2 col-xs-12 sub-navigation-container">
                     <div class="sub-navigation-links">
                         <router-link to="/blogs">
                             <span class="sub-navigation">Blogs</span>
@@ -26,7 +26,7 @@
                     </div>                    
                 </div>
 
-                <div class="col-md-9">
+                <div class="col-md-9 col-xs-12">
                     <h1>Explore</h1>
                     <hr />
                     <router-view :blogs="blogs" />
@@ -49,6 +49,25 @@
     column-gap: 15px;
     position: relative;
 }
+@media screen and (max-width: 768px) {
+
+    .sub-navigation-links {
+        flex-direction: row;
+        margin: auto;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        margin: 4vh 0;
+        column-gap: 2vw;
+        min-width: 100vw;
+    }
+    .sub-navigation-links > a {
+        display: inline-block;
+        min-width: 10vw !important;
+    }
+    
+}
+
 </style>
 
 <script>
