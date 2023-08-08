@@ -42,7 +42,7 @@
                                 <button class="white-btn locked" v-if=mission.locked>
                                     <span class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</span>
                                 </button>
-                                <btn class="white-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>Claimed</p></btn>
+                                <btn class="white-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>{{mission.claimed ? "Claimed" : "Claim"}}</p></btn>
                             </div>
                         </div>
                     </div>
