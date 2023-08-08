@@ -180,6 +180,83 @@ export default {
             this.date = '';
             this.time = '';
         },
+        // submit forum form
+        async submitForm() {
+            this.submitting = true;
+
+            // if in edit mode, check if user changed any fields
+            if (this.editMode) {
+                // if user has not changed any fields then do nothing
+                if (!this.fieldsChanged && !this.bannerUpdated) {
+                    await this.alert('No changes made.');
+                    this.submitting = false;
+                    return;
+                }
+            }
+
+            // do nothing if required fields are not filled up
+            if (!this.requiredFields) {
+                await this.alert('Please fill up all required fields.');
+                this.submitting = false;
+                return;
+            }
+
+            const uploadData = new FormData();
+
+            // add picture and banner only if they are updated in edit mode or if not in edit mode
+            if ((this.editMode && this.bannerUpdated) || !this.editMode) {
+                uploadData.append('selectedImages', this.bannerObject);
+            }
+
+            // tell server picture or banner is unchanged if so
+            if (this.editMode && !this.bannerUpdated) {
+                uploadData.append('bannerUnchanged', true);
+            }
+            
+            try {
+                var eventObject = {
+                    'event_name': this.name.trim(),
+                    'event_desc': this.description.trim(),
+                    'event_location': this.location.trim(),
+                    'event_date': this.date,
+                    'event_color': this.color.trim(),
+                }
+                
+                uploadData.append('eventObject', JSON.stringify(eventObject));
+                
+                // send request to server with data
+                const baseURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/events`;
+                const targetURL = this.editMode ? `${baseURL}/${this.event._id}` : baseURL;
+                
+                const options = {
+                    mode: 'cors',
+                    method: this.editMode ? 'PATCH' : 'POST',
+                    body: uploadData,
+                    credentials: 'include'
+                };
+
+                const successMessage = this.editMode ? 'Event updated.' : 'Event created.';
+
+                await fetch(targetURL, options)
+                    .then(async response => {
+                        if (response.ok){
+                            await this.alert(successMessage);
+                        }
+                        else {
+                            const data = await response.json();
+                            await this.alert(data.message);
+                        }
+                        
+                        this.submitting = false
+                        return;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        },
         initColorPicker() {
             // Simple example, see optional options for more configuration.
             this.pickr = Pickr.create({

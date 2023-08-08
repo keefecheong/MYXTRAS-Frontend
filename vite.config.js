@@ -54,7 +54,7 @@ const redirectIndexPlugin = {
                 req.url = '/explore.html';
             }
             // set up redirection for profile page router
-            else if (req.url === '/profilePage.html/support') {
+            else if (req.url === '/profilePage.html/support' || req.url === '/profilePage.html/') {
                 req.url = '/profilePage.html';
             }
             // set up redirection for admin pages

@@ -71,7 +71,7 @@
                 }
             }
         </script>
- -->
+-->
 
 <template>
     <div id="alert-overlay">

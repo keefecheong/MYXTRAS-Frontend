@@ -18,9 +18,7 @@
                     </div>
                     <input ref="fileInput" type="file" @change="upload($event, 'profilePicture')" style="display: none"
                         accept=".jpg, .jpeg, .png" />
-                    <button v-if="!showBtn" class="profile-picture-button" @click="chooseFile('profilePicture')">Change Profile
-                        Picture</button>
-                    <button v-if="showBtn" class="confirm-button" @click="confirmCropping">Confirm Crop</button>
+                    <button v-if="!showBtn" class="profile-picture-button" @click="chooseFile('profilePicture')">Change Profile Picture</button>
                 </div>
             </div>
 
@@ -62,7 +60,7 @@
             <div class="mb-3 row" id="position">
                 <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
                 <div class="col-sm-4" v-if="dataRetrieved">
-                    <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests" />
+                    <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
                 </div>
             </div>
 
@@ -549,6 +547,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    z-index: 2;
 }
 
 #popup-container>div {

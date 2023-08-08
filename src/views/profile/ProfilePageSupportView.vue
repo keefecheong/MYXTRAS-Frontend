@@ -6,7 +6,7 @@
             <template v-slot:header>
                 <h1>Support</h1>
             </template>
-    
+
             <template v-slot:right-content>
                 <div class="banner-toggle-container">
                     <button class="use-primary-secondary-gradient details-button hover-contrast" :class="{ 'active': viewWarnings }" title="View warnings" @click="() => toggleWarnings(true)">Warnings</button>
@@ -14,28 +14,28 @@
                 </div>
             </template>
         </AdminBanner>
-    
+
         <!-- link to go back to profile page -->
         <router-link to="/" id="profile-page-support-back">
             <span class="material-symbols-outlined">arrow_back</span>
         </router-link>
     </div>
-    
+
         <div v-if="viewWarnings">
             <h1 class="profile-support-page-header">Warnings</h1>
-    
+
             <div v-if="user.warnings.length > 0">
                 <WarningLayout
                     v-for="warning in user.warnings"
                     :warning="warning"
                 />
             </div>
-    
+
             <div v-else>
                 <p class="no-items">You have not violated any of our guidelines. Keep it up!</p>
             </div>
         </div>
-    
+
         <div v-else>
             <div v-if="reportsLoaded && reports.length > 0">
                 <div v-if="!viewDetails">
@@ -59,7 +59,7 @@
                         @view-report-details="() => toggleReportDetails(true, true, index)"
                     />
                 </div>
-    
+
                 <div v-else>
                     <ReportDetailsLayout
                         :report="fromReviewed ? reviewedReports[viewDetailsIndex] : pendingReports[viewDetailsIndex]"
@@ -125,7 +125,7 @@ export default {
             if (!show && !this.reportsLoaded) {
                 await this.getReports();
             }
-            
+
             this.viewDetailedReport = false;
             this.viewWarnings = show;
         },

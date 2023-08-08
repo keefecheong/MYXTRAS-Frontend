@@ -1,7 +1,7 @@
 <!-- layout for normal profile page view -->
 
 <template>
-    
+    <button class="toggle-button" @click="toggleBetween()">{{ viewingProfile ? 'View Details' : "Profile Page" }}</button>
     <div id="profile-page-view-container">
         <div id="left-content">
             <img :src="user.banner_pic_link" alt="Banner" id="banner-picture" />
@@ -20,7 +20,7 @@
                             <span>From the</span>
                             <span id="user-school">School of {{ user.school }} - Diploma in {{ user.course }}</span>
                         </div>
-                        
+
                         <div id="header-user-biography" v-if="user.biography != ''">
                             <span>About me:</span>
                             <span id="user-biography">{{ user.biography }}</span>
@@ -31,7 +31,7 @@
                             <InterestBadgeList :selectedOption="user.interests" :selection="false" />
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div id="header-user-actions">
@@ -68,7 +68,7 @@
                     <span class="sub-navigation" :class="{ 'active': !viewingSaved }" @click="() => viewSaved(false)">Created</span>
                     <span class="sub-navigation" :class="{ 'active': viewingSaved }" @click="() => viewSaved(true)">Saved</span>
                 </div>
-                
+
                 <div v-if="blogsToDisplay.length > 0 && !blockedByUser && !blockingUser">
                     <BlogLayout
                         v-for="blog in blogsToDisplay"
@@ -187,6 +187,7 @@ export default {
             viewingSaved: false,
             postId: '',
             commentId: '',
+            viewingProfile: true,
 
             following: false,
             savedFollowing: false,
@@ -215,9 +216,9 @@ export default {
         // set block status
         this.blockedByUser = this.userData.blockedByUser;
         this.blockingUser = this.userData.blockingUser;
-        
+
         const query = location.search;
-        
+
         if (query) {
             // automatically open create blog form if href is /profilePage.html?create and requested user is self
             if (query == '?create' && this.isSelf) {
@@ -240,9 +241,14 @@ export default {
         this.debouncedFollowUpdate = debounce(this.updateFollowing, 3000);
 
         // set event listener to complete pending request when page is closed
-        window.addEventListener('beforeunload', this.completeFollowRequest);
+        window.addEventListener('beforeunload', this.handleWindowResize);
     },
     mounted() {
+        // Check if the current view is mobile or not
+        this.checkIsMobileView();
+        // Listen for window resize events to update the left/right-content classes
+        window.addEventListener('resize', this.handleWindowResize);
+
         if (!this.postId) return;
 
         // if postId is set then scroll to and highlight the post and remove highlight after 5 seconds
@@ -257,11 +263,47 @@ export default {
                 highlightElement(targetPost);
             }
         }, 100);
+
+        
     },
     beforeUnmount() {
         this.completeFollowRequest();
     },
+    beforeDestroy(){
+        // Remove the event listener to avoid memory leaks
+        window.removeEventListener('resize', this.checkIsMobileView());
+    },
     methods: {
+        checkIsMobileView() {
+            const left_content = document.getElementById("left-content");
+            const right_content = document.getElementById("right-content");
+            // Use the window innerWidth to determine if it's mobile or not
+            if (window.innerWidth <= 767){
+                right_content.classList.add("hide");
+                left_content.classList.remove("hide")
+            } else {
+                this.viewingProfile = true
+                left_content.classList.remove("hide");
+                right_content.classList.remove("hide")
+            }
+        },
+        handleWindowResize() {
+            // Update the isMobileView property whenever the window is resized
+            this.checkIsMobileView();
+        },
+        toggleBetween() {
+            const left_content = document.getElementById("left-content");
+            const right_content = document.getElementById("right-content");
+
+            this.viewingProfile = !this.viewingProfile; // Toggle
+            if (this.viewingProfile){
+                right_content.classList.add("hide");
+                left_content.classList.remove("hide")
+            } else {
+                right_content.classList.remove("hide");
+                left_content.classList.add("hide")
+            }
+        },
         // to get user's saved posts if user is viewing his own profile
         async getSavedPosts() {
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/saved`, {
@@ -280,7 +322,7 @@ export default {
         // to sign out and clear cookies
         async signOut() {
             const success = await signOut();
-            
+
             if (success) {
                 location.href = '/login.html';
             }
@@ -414,7 +456,7 @@ export default {
                 this.toggleChildLoading(true);
 
                 await this.getSavedPosts();
-                
+
                 this.toggleChildLoading(false);
             }
 
@@ -480,6 +522,11 @@ export default {
     display: flex;
     flex-direction: row;
 }
+.toggle-button {
+    display: none;
+    margin: 4vh;
+    border-radius: 5px;
+}
 
 #left-content {
     display: flex;
@@ -513,12 +560,6 @@ export default {
 
     #support-request-button:hover {
         color: var(--primary);
-    }
-}
-
-@media (max-width: 992px) {
-    #right-content {
-        display: none;
     }
 }
 
@@ -787,5 +828,64 @@ export default {
 
 #no-followers{
     margin-top: 30px;
+}
+
+.hide {
+    display: none !important;
+}
+
+/* Mobile port */
+@media screen and (max-width: 768px) {
+
+body {
+    text-align: center !important;
+    font-size: 14px !important;
+}
+p {
+    font-size: 14px;
+}
+#white-container {
+    max-width: 100vw;
+}
+.toggle-button {
+    display: block;
+    border: 5px solid var(--primary);
+    background-color: var(--primary);
+}
+.toggle-button:hover {
+    background-color: transparent;
+}
+#left-content, #right-content {
+    min-width: 100% ;
+}
+#main-content {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    min-height: 100vh;
+}
+#settings-options {
+    display: inline-block;
+    margin-left: 3vw;
+    margin-bottom: 10vh;
+}
+
+#user-edit-icon {
+    font-size: 2rem;
+    color: black;
+    float:left;
+    margin-left: -55px;
+}
+
+#user-sign-out-icon {
+    font-size: 2rem;
+    float: left;
+    margin-left: -55px;
+}
+
+#user-sign-out-text {
+    display: none;
+}
+
 }
 </style>

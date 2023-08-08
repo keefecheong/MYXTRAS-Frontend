@@ -76,9 +76,9 @@
                 }
             }
         </script>
- -->
+-->
 
- <template>
+<template>
     <div id="confirm-overlay">
         <div id="confirm-content">
             <div id="confirm-content-text">

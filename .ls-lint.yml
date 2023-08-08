@@ -1,12 +1,12 @@
 # .ls-lint.yml
  
 ls:
-  # .js: camelCase
-  # .vue: PascalCase
+  .js: camelCase
+  .vue: PascalCase
   .html: camelCase
  
 ignore:
   - node_modules
   - .git
-  - vite.config.js
   - src/pages
+  - vite.config.js
