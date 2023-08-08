@@ -13,7 +13,7 @@
         <div id="main-content">
             <SearchBar @show-forum-form="() => toggleForumForm(true)" />
             
-            <h1 id="forum-header">Latest Updates!</h1>
+            <h1 id="forum-header" v-if="!isMobile">Latest Updates!</h1>
 
             <div class="row" id="forum-view-container">
                 <div class="col-md-3">
@@ -21,6 +21,7 @@
                    <SubscribedForums />
                 </div>
                 <div class="col-md-3" v-if="isMobile">
+                    <h1 id="forum-header">Latest Updates!</h1>
                     <PopularThreads @show-thread="(thread) => toggleDetailedThread(true, null, thread)" @show-detailed-view="showForumDetails" />
                 </div>
                 <div class="col-md-6 forum-middle-content">
