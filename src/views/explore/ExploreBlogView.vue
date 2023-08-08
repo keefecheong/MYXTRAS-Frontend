@@ -1,8 +1,8 @@
 <template>
     <div id="explore-blog-container">
         <!-- layout for blog pictures -->
-        <div v-if="!showSingleBlog" id="gallery-container">
-            <div id="gallery-interest-selection" class="sticky-filter">
+        <div v-if="!showSingleBlog" id="gallery-container" class="row sticky-filter">
+            <div id="gallery-interest-container" >
                 <span>Filter by:</span>
 
                 <InterestBadgeList
@@ -165,14 +165,15 @@ figure {
     align-items: center;
 }
 
-#gallery-interest-selection {
+#gallery-interest-container {
     display: flex;
     flex-direction: row;
     column-gap: 15px;
     align-items: center;
+    justify-content: center;
     background-color: rgba(255, 255, 255, 0.5);
-    padding: 5px 5px;
     border-radius: 15px;
+    margin-bottom: 40px;
 }
 
 #explore-blog-gallery {
@@ -208,5 +209,10 @@ figure {
     border-radius: 10px;
     padding: 7px 7px;
     margin-right: 5px;
+}
+@media screen and (max-width: 768px) {
+    #gallery-interest-selection {
+        margin: 0;
+    }
 }
 </style>

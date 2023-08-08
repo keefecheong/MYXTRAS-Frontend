@@ -1,6 +1,7 @@
 <template v-if="tags && threads">
-    <div class="row sticky-filter" id="filterRow">
-    <div id="gallery-interest-selection" class="">
+    <div class="explore-threads-container">
+        <div id="gallery-container" class="row sticky-filter">
+        <div id="gallery-interest-selection" >
             <span>Filter by:</span>
 
             <InterestBadgeList
@@ -10,6 +11,23 @@
             />
 
             <button @click="clearSelection()" id="clearAll-btn">Clear All</button>
+        </div>
+    </div>
+    <div class="col-md-3 col-sx-12" v-if="isMobile">
+        <div class="sticky-div">
+            <div class="popular-community">
+                <h1 class="pop-header" v-if="tagsLoaded && tags.length !=0">Popular Communities</h1>
+                <div id="noForums" v-else>No forums created<span class="material-symbols-outlined" style="text-align: center; justify-content: center;">warning</span></div>
+                <div class="interestCommunity" v-for="(tag, index) in tags">
+                    <h4 class="category" @click="openForum(index)">{{ tag._id }}<span class="triangle-down" :id="`triangle-${index}`"></span></h4>
+                    <div class="dropdown-content" :id="'dc'+index" >
+                        <div v-for="forum in tag.forums" @click="viewForum(forum)" id="forumContainer">
+                            <p><img class="forum-pic" :src="forum.forum_pic_link">{{forum.forum_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-radius" v-if="tagsLoaded && tags.length !=0"></div>
+            </div>
         </div>
     </div>
     <div class="row" v-if="this.threads">
@@ -41,7 +59,7 @@
                 />
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sx-12" v-if="!isMobile">
             <div class="sticky-div">
                 <div class="popular-community">
                     <h1 class="pop-header" v-if="tagsLoaded && tags.length !=0">Popular Communities</h1>
@@ -66,6 +84,7 @@
             </p>
         </div>
     </div>
+    </div>
 </template>
 
 <script>
@@ -82,7 +101,8 @@ export default {
             threads: [],
             showDetailedThread: false,
             selectedIndex: null,
-            scrollBack: false
+            scrollBack: false,
+            isMobile: false,
         }
     },
     components: {
@@ -93,6 +113,14 @@ export default {
     mounted() {
         this.retrieveExploreThreads()
         this.retrieveForums()
+        // Check if the current view is mobile or not
+        this.handleResize();
+        // Listen for window resize events to update the left/right-content classes
+        window.addEventListener('resize', this.handleResize);
+    },
+    beforeDestroy() {
+        // Remove the event listener to avoid memory leaks
+        window.removeEventListener('resize', this.handleResize);
     },
     updated() {
         // if scrollBack is true then scroll to that thread
@@ -112,6 +140,10 @@ export default {
         }
     },
     methods: {
+        handleResize() {
+        // Update the view when the window width changes
+            this.isMobile = window.innerWidth <= 768;
+        },
         // show detailed view of popular thread
         toggleDetailedThread(show, index) {
             this.selectedIndex = index;
@@ -259,6 +291,9 @@ h1 {
     column-gap: 15px;
     align-items: center;
     justify-content: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    margin-bottom: 40px;
 }
 .sticky-div {
     position: sticky;
@@ -322,7 +357,11 @@ h1 {
     border-left: var(--primary) solid 2px;
     border-right: var(--primary) solid 2px;
 }
-
+.explore-threads-container {
+    max-width: 90%;
+    margin: 0 auto;
+    
+}
 .triangle-up {
     width: 0;
     height: 0;
@@ -375,5 +414,16 @@ h1 {
     border-radius: 10px;
     padding: 7px 7px;
     margin-right: 5px;
+}
+@media screen and (max-width: 768px) {
+    #gallery-interest-selection {
+        width: 100% !important;
+        margin-bottom: 40px;
+    }
+    .sticky-div {
+        width: 100% !important;
+        justify-content: center;
+        margin-bottom: 42px;
+    }
 }
 </style>

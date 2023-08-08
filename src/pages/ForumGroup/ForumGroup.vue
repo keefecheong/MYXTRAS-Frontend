@@ -177,6 +177,7 @@ export default {
         handleResize() {
             // Update the view when the window width changes
             this.isMobile = window.innerWidth <= 768;
+            console.log('test')
         },
         // handle toggling of detailed thread view
         toggleDetailedView(show, index, id) {

@@ -332,4 +332,35 @@ export default {
     color: black;
     text-decoration: none;
 }
+.report-button {
+    color: white !important;
+    background-color: white !important;
+    border-radius: 5px;
+    padding: 3px !important;
+}
+@media screen and (max-width: 768px) {
+#forum-header-below {
+    column-gap: 0;
+    padding-left: 0;
+}
+#forum-header-above {
+    top: -20% !important;
+}
+#normal-options {
+    display: flex;
+    flex-direction: column;
+}
+#forum-header-subscribers {
+    margin-right: 15px !important;
+}
+#normal-options button {
+    min-width: 20vw;
+    margin-right: 5vw;
+    font-size: 10px;
+}
+#forum-header-subscribers {
+    flex: none;
+    margin-right: 10vw;
+}
+}
 </style>

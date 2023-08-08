@@ -423,8 +423,7 @@ export default {
             }
         },
         handleWindowResize() {
-            // Update the isMobileView property whenever the window is resized
-            this.isMobileView = this.checkIsMobileView();
+            this.checkIsMobileView();
         },
         toggleBetween() {
             const left_content = document.getElementById("left-content");
