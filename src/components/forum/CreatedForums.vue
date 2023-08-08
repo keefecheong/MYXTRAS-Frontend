@@ -24,6 +24,7 @@
     row-gap: 10px;
     align-items: start;
     width: fit-content;
+    padding: 0 5vw;
     max-height: 30vh;
     margin: 0 auto;
     overflow-y: scroll;
