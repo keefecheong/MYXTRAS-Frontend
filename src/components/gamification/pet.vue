@@ -1,7 +1,7 @@
 <template>
     <div>
-      <div class="pet">
-          <div id="runner"></div>
+        <div class="pet">
+            <div id="runner"></div>
         </div>
     </div>
 </template>

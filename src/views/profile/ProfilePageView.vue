@@ -1,7 +1,7 @@
 <!-- layout for normal profile page view -->
 
 <template>
-    
+
     <div id="profile-page-view-container">
         <div id="left-content">
             <img :src="user.banner_pic_link" alt="Banner" id="banner-picture" />
@@ -20,7 +20,7 @@
                             <span>From the</span>
                             <span id="user-school">School of {{ user.school }} - Diploma in {{ user.course }}</span>
                         </div>
-                        
+
                         <div id="header-user-biography" v-if="user.biography != ''">
                             <span>About me:</span>
                             <span id="user-biography">{{ user.biography }}</span>
@@ -31,7 +31,7 @@
                             <InterestBadgeList :selectedOption="user.interests" :selection="false" />
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div id="header-user-actions">
@@ -68,7 +68,7 @@
                     <span class="sub-navigation" :class="{ 'active': !viewingSaved }" @click="() => viewSaved(false)">Created</span>
                     <span class="sub-navigation" :class="{ 'active': viewingSaved }" @click="() => viewSaved(true)">Saved</span>
                 </div>
-                
+
                 <div v-if="blogsToDisplay.length > 0 && !blockedByUser && !blockingUser">
                     <BlogLayout
                         v-for="blog in blogsToDisplay"
@@ -215,9 +215,9 @@ export default {
         // set block status
         this.blockedByUser = this.userData.blockedByUser;
         this.blockingUser = this.userData.blockingUser;
-        
+
         const query = location.search;
-        
+
         if (query) {
             // automatically open create blog form if href is /profilePage.html?create and requested user is self
             if (query == '?create' && this.isSelf) {
@@ -280,7 +280,7 @@ export default {
         // to sign out and clear cookies
         async signOut() {
             const success = await signOut();
-            
+
             if (success) {
                 location.href = '/login.html';
             }
@@ -414,7 +414,7 @@ export default {
                 this.toggleChildLoading(true);
 
                 await this.getSavedPosts();
-                
+
                 this.toggleChildLoading(false);
             }
 
