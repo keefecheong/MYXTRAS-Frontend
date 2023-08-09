@@ -2,6 +2,8 @@
     <div id="main-container">
         <NavSidebar />
         <div id="main-content">
+            <LoadingOverlay v-if="loading || childLoading" :center="true" :backgroundColor="'rgba(0, 0, 0, 0.5)'" />
+
             <div class="banner">
                 <img :src="banner" alt="Banner" id="banner-picture" />
                 <div class="content">
@@ -102,6 +104,8 @@ import ngeeann from '../../assets/NgeeAnnLogo.png'
 import banner from '../../assets/CustomBanner.png'
 import Cropper from 'cropperjs';
 import { debounce } from 'lodash';
+import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
+
 
 export default {
     components: {
@@ -109,6 +113,7 @@ export default {
         Cropper,
         ngeeann,
         banner,
+        LoadingOverlay
     },
 
     data() {
@@ -130,6 +135,8 @@ export default {
             debouncedVerifyUsername: null,
             verifiedUsername: true,
             previousUsername: null,
+            loading: false,
+
         }
     },
     created() {
@@ -392,6 +399,9 @@ export default {
             catch (error) {
                 console.log('Error:', error);
             }
+
+            this.loading = true;
+
         },
 
         handleSelectedInterests(selectedOption) {
@@ -400,6 +410,11 @@ export default {
 
         togglePopup(show) {
             this.showPopup = show;
+        },
+
+        // handle child loading
+        toggleChildLoading(loading) {
+            this.childLoading = loading;
         },
 
 
