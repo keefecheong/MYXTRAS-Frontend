@@ -28,9 +28,12 @@
     max-height: 30vh;
     margin: 0 auto;
     overflow-y: scroll;
+    scroll-snap-type: y mandatory;
 }
+
 .mini-forum-layout {
-    margin: 5px;
+    min-height: 10vh;
+    scroll-snap-align: center;
 }
 .card {
     padding: 1em 0 1em 0;
@@ -62,6 +65,7 @@ background: #c9c9c98d;
     flex-direction: row;    
     overflow-x: scroll;
     max-width: 100%;
+    padding: 0 !important;
 }
 .card {
     padding: 1em 0 1em 0;
