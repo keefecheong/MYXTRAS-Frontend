@@ -54,9 +54,7 @@ export default {
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/events`, {
                 mode: 'cors',
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                credentials: 'include'
             })
             .then(res => {
                 if (res.ok) {
