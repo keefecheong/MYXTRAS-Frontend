@@ -851,9 +851,12 @@ p {
     display: block;
     border: 5px solid var(--primary);
     background-color: var(--primary);
+    color: white;
 }
 .toggle-button:hover {
     background-color: transparent;
+    color: var(--primary);
+    font-weight: bold;
 }
 #left-content, #right-content {
     min-width: 100% ;
@@ -886,6 +889,14 @@ p {
 #user-sign-out-text {
     display: none;
 }
-
+#header-user-details {
+    max-width: 50vw;
+}
+#header-user-actions {
+    margin-left: 6vw;
+}
+#main-content {
+    padding: 0;
+}
 }
 </style>

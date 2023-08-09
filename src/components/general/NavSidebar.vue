@@ -155,7 +155,7 @@ export default {
         // handle resize logic
         handleResize() {
             // check if window is narrower than 640px (small device screen width) and changes sidebar to top navbar
-            if (window.innerWidth <= 640) {
+            if (window.innerWidth <= 768) {
                 this.narrow = true;
                 this.maximized = false;
                 document.getElementById('main-container').classList.add('narrow');
@@ -522,5 +522,11 @@ a.sidebar-link > p, a.navbar-link > p {
 
 .navbar-link > p {
     width: 100%;
+}
+@media screen and (max-width: 768px) {
+
+#collapsed-header, #expanded-header {
+        color: white !important;
+    }
 }
 </style>

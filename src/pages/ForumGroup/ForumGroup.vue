@@ -345,5 +345,12 @@ export default {
     margin: auto;
     margin-top: 10vh;
 }
+.row {
+    max-width: 100%;
+    margin: 0 !important;
+}
+.report-button {
+    margin-top: 16px !important;
+}
 }
 </style>

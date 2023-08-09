@@ -32,6 +32,7 @@
     max-height: 30vh;
     margin: 0 auto;
     overflow-y: scroll;
+    scroll-snap-type: y mandatory;
 }
 
 /* Track */
