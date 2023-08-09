@@ -49,11 +49,11 @@
   height: 100vh; /* Adjust this value based on your design */
 }
 #blog-layout-container::-webkit-scrollbar-track {
-  background-color: #f1f1f1; /* Color of the scrollbar track */
+  background-color: #ffffff; /* Color of the scrollbar track */
 }
 
 #blog-layout-container::-webkit-scrollbar-thumb {
-  background-color: #888; /* Color of the scrollbar thumb */
+  background-color: #c9c9c9c4; /* Color of the scrollbar thumb */
   border-radius: 6px; /* Rounded corners for the thumb */
 }
 .blog-container{
