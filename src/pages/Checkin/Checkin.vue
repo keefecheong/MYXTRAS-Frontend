@@ -222,7 +222,7 @@ body {
     flex-direction: column;
 }
 .dayBox {
-    width: 10vw !important;
+    width: 40vw !important;
 }
 h1 {
     width: 100%;
@@ -242,12 +242,13 @@ h1 {
     margin: auto;
 }
 #scroll-view {
-    overflow-x: auto;
-    width: 100%;
+    max-width: 90vw;
+    margin: auto;
 }
 .dayBox {
     margin: 10px;
-    min-width: 40vw;
+    min-width: 30vw;
+    overflow-x: scroll;
 }
 #mission-container {
     width: 100%;

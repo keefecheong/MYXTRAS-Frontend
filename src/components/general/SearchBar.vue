@@ -218,7 +218,7 @@ p {
 font-size: 14px;
 }
 #search-input {
-    min-width: 60vw !important;
+    min-width: 50vw !important;
 }
 .mobile-create-container {
     color: white;

@@ -21,8 +21,8 @@
                    <SubscribedForums />
                 </div>
                 <div class="col-md-3" v-if="isMobile">
-                    <h1 id="forum-header">Latest Updates!</h1>
                     <PopularThreads @show-thread="(thread) => toggleDetailedThread(true, null, thread)" @show-detailed-view="showForumDetails" />
+                    <h1 id="forum-header">Latest Updates!</h1>
                 </div>
                 <div class="col-md-6 forum-middle-content">
                     <div class="row" v-if="!showDetailedThread">
@@ -91,6 +91,10 @@
 @media screen and (max-width: 768px) {
 .whiteBox {
     margin: 5vh 0;
+}
+#forum-view-container, .col-md-3 {
+    max-width: 100vw;
+    margin: 0;
 }
 }
 </style>
