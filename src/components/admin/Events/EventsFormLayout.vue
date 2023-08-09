@@ -49,15 +49,14 @@
                     v-model="selectedDateTime" 
                     :format="'DD-MM-YYYY HH:mm'"
                     :firstDayOfWeek="1"
-                    
                     />
                 </div>
                 <div class="color-picker"></div>
-                <input class="color-result" type="text" placeholder="Color Hex Value" maxlength="7" readonly>
+                <input class="color-result" type="text" placeholder="Color Hex Value" maxlength="7" v-model="color" readonly>
             </div>
 
             <div id="event-form-controls">
-                <input class="form-overlay-control-button" type="reset" value="Clear All" @click="resetAll" />
+                <input class="form-overlay-control-button" type="reset" value="Clear All" @click="resetAll"/>
                 <!-- 
                     disable submit button if 
                     1. not in edit mode and no files are selected
@@ -66,7 +65,7 @@
                     4. submit in progress
                 -->
                 <input class="form-overlay-control-button" type="submit" :value="submitting ? 'Loading...' : 'Submit'" 
-                    :disabled="(!editMode)" />
+                    :disabled="submitting || !requiredFields" />
             </div>
         </form>
     </div>
@@ -91,15 +90,13 @@ export default {
             invalidFiles: '',
             description: '',
             location: '',
-            title: '',
-            date: '',
-            time: '',
+            name: '',
             color: '',
             submitting: false,
             alert: useAlertStore().alert,
             pickr: null,
             bannerUpdated: false,
-            selectedDateTime: '2023-08-07 00:05'
+            selectedDateTime: ''
         }
     },
     props: [
@@ -111,15 +108,12 @@ export default {
     ],
     mounted() {
         this.initColorPicker();
+        this.setDateTime();
     },
     methods: {
         // to close the form
         closeForm() {
             this.$emit('close-event-form');
-        },
-        // to handle form submission
-        async submitForm() {
-            return
         },
         // to handle change in selected files
         fileChanged(e) {
@@ -176,9 +170,10 @@ export default {
             this.invalidFiles = '';
             this.description = '';
             this.location = '';
-            this.title = '';
-            this.date = '';
+            this.name = '';
+            this.selectedDateTime = '';
             this.time = '';
+            this.color = '';
         },
         // submit forum form
         async submitForm() {
@@ -218,7 +213,7 @@ export default {
                     'event_name': this.name.trim(),
                     'event_desc': this.description.trim(),
                     'event_location': this.location.trim(),
-                    'event_date': this.date,
+                    'event_date': this.selectedDateTime.trim(),
                     'event_color': this.color.trim(),
                 }
                 
@@ -240,6 +235,7 @@ export default {
                 await fetch(targetURL, options)
                     .then(async response => {
                         if (response.ok){
+                            console.log('Success:', response);
                             await this.alert(successMessage);
                         }
                         else {
@@ -302,6 +298,47 @@ export default {
                 document.querySelector('.color-result').value = this.color;
             })
         },
+        setDateTime() {
+            const now = new Date();
+            const options = { 
+                timeZone: 'Asia/Singapore',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            };
+            this.selectedDateTime = now.toLocaleString('en-SG', options);
+        }
+    },
+    computed: {
+        // check if required fields are all filled up
+        requiredFields() {
+            let nameValid = this.name.trim().length > 0;
+            let bannerValid = this.selectedBanner && this.bannerObject;
+            let descValid = this.description.trim().length > 0;
+            let locationValid = this.location.trim().length > 0;
+            let colorValid = this.color.trim().length > 0;
+            let selectedDateTimeValid = this.selectedDateTime;
+
+            // if in edit mode, set picValid and bannerValid to true if no changes are made
+            if (this.editMode) {
+                bannerValid = bannerValid ? bannerValid : !this.bannerUpdated && this.selectedBanner;
+            }
+
+            return nameValid && bannerValid && descValid && locationValid && colorValid && selectedDateTimeValid;
+        },
+        // to check if any fields are changed
+        fieldsChanged() {
+            const nameSame = this.name == this.event.event_name;
+            const descSame = this.description == this.event.event_desc;
+            const locationSame = this.location == this.event.event_location;
+            const colorSame = this.color == this.event.event_color;
+            const dateSame = this.selectedDateTime == this.event.event_date;
+
+            return !(nameSame && descSame && locationSame && colorSame && dateSame);
+        }
     }
 }
 
