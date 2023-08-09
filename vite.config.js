@@ -8,13 +8,13 @@ const redirectPlugin = {
     name: 'redirect',
     configureServer(server) {
         server.middlewares.use(async (req, res, next) => {
-            // automatically give resource if not html page
-            if (!req.url.includes('.html')) {
-                return next();
-            }
             // set root path to feed.html and set up redirection for feed router
-            else if (req.url === '/') {
+            if (req.url === '/') {
                 req.url = '/feed.html';
+            }
+            // automatically give resource if not html page
+            else if (!req.url.includes('.html')) {
+                return next();
             }
             // set up redirection for explore router
             else if (req.url === '/explore.html/blogs' || req.url === '/explore.html/threads') {
