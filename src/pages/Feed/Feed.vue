@@ -42,7 +42,9 @@
 
 <style>
 @import url('../../styles/main.css');
-
+body::-webkit-scrollbar {
+    width: 0 !important;
+}
 #blog-layout-container {
   scroll-snap-type: y mandatory;
   overflow-y: scroll;

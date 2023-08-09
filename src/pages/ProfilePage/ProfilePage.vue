@@ -12,7 +12,6 @@
     
     <div id="main-container">
         <NavSidebar />
-
         <div id="main-content">
             <router-view
                 v-if="!loading"
@@ -143,7 +142,7 @@ export default {
         confirmMsg() {
             return this.confirmStore.confirmMsg;
         }
-    }
+    },
 }
 </script>
 

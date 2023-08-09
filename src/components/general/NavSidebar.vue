@@ -13,8 +13,8 @@
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo"/>
             </div>
 
-            <div v-for="(link, index) in links" :key="index">
-                <a :href="link.page" class="sidebar-link">
+            <div v-for="(link, index) in links" :key="index" >
+                <a :href="link.page" class="sidebar-link" >
                     <span class="material-symbols-outlined">{{ link.icon }}</span>
                     <p>{{ link.label }}</p>
                 </a>
@@ -31,9 +31,9 @@
                 <img src="../../assets/NgeeAnnLogo.png" alt="Ngee Ann Polytechnic Logo" class="ngee-ann-logo-mini"/>
             </div>
 
-            <div v-for="(link, index) in links" :key="index">
-                <a :href="link.page" class="sidebar-link">
-                    <span class="material-symbols-outlined" :title="link.label">{{ link.icon }}</span>
+            <div v-for="(link, index) in links" :key="index" >
+                <a :href="link.page" class="sidebar-link" :data-tooltip="link.label" data-tooltip-position="right">
+                    <span class="material-symbols-outlined" >{{ link.icon }}</span>
                 </a>
             </div>
         </div>
@@ -322,6 +322,10 @@ export default {
 </script>
 
 <style>
+@import url('../../styles/main.css');
+h1 {
+    color: white;
+}
 /* normal sidebar */
 #sidebar-wrapper {
     width: min-content;

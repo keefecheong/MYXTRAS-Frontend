@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="col-md-9 col-xs-12">
-                    <h1>Explore</h1>
+                    <h1 id="xplore-h1">Explore</h1>
                     <hr />
                     <router-view :blogs="blogs" />
                 </div>
@@ -41,7 +41,9 @@
 <style>
 @import url('../../styles/main.css');
 @import url('../../styles/sub-navigation.css');
-
+#xplore-h1 {
+    color: var(--primary);
+}
 .explore-container {
     margin-top: 20px;
     display: flex;
