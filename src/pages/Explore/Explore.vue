@@ -49,6 +49,9 @@
     column-gap: 15px;
     position: relative;
 }
+#maximized-header {
+    color: white;
+}
 @media screen and (max-width: 768px) {
 
     .sub-navigation-links {
