@@ -303,7 +303,7 @@ export default {
         async performSearch() {
             let searchObject;
             
-            if (this.currentPage.startsWith('/feed.html')) {
+            if (this.currentPage.startsWith('/feed.html') || this.currentPage == '/') {
                 searchObject = 'users';
             }
             else if(this.currentPage.startsWith('/forum.html')) {
