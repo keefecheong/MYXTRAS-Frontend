@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import { join } from 'path';
 
 // custom plugin to redirect request urls
@@ -31,9 +31,9 @@ const redirectPlugin = {
             // if not the above pages/routes then check if exists in file system
             else {
                 const path = join(__dirname, 'public/', req.url);
-    
+                
                 try {
-                    await fs.access(path, fs.constants.F_OK);
+                    await fs.access(path, fs.F_OK);
                 }
                 // redirect to error.html if the page does not exist
                 catch (error) {

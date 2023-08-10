@@ -77,7 +77,7 @@
     <div id="alert-overlay">
         <div id="alert-content">
             <div id="alert-content-text">
-                <h3 id="alert-message"><slot></slot></h3>
+                <h4 id="alert-message"><slot></slot></h4>
             </div>
             <button id="alert-close" type="button" @click="handleConfirm">OK</button>
         </div>
@@ -154,15 +154,15 @@ export default {
     border: none;
     padding: 1vh 2vw;
     user-select: none;
-    background-color: var(--green);
+    background-color: var(--blue);
     color: white;
 }
 
 #alert-close:focus, #alert-close:hover {
     background-color: white;
     outline: none;
-    color: var(--green);
+    color: var(--blue);
     font-weight: bold;
-    border: 2px solid var(--green);
+    border: 2px solid var(--blue);
 }
 </style>    

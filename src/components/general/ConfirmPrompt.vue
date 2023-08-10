@@ -82,8 +82,8 @@
     <div id="confirm-overlay">
         <div id="confirm-content">
             <div id="confirm-content-text">
-                <span id="confirm-header">Notice:</span>
-                <span id="confirm-message"><slot></slot></span>
+                <h3 id="confirm-header">Notice:</h3>    
+                <h5 id="confirm-message"><slot></slot></h5>
             </div>
 
             <div id="confirm-controls-container">
@@ -127,15 +127,15 @@ export default {
     min-height: 20%;
     max-height: 40%;
     min-width: 20%;
-    max-height: 40%;
-    background-color: var(--dark);
+    max-width: 30%;
+    background-color: white;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     padding: 20px;
     justify-content: space-between;
     row-gap: 50px;
-    color: white;
+    color: black;
 }
 
 #confirm-content-text {
@@ -167,14 +167,20 @@ export default {
 }
 
 #confirm-false {
-    background-color: var(--dark);
-    border: 1px solid white !important;
+    background-color: var(--red);
+    border: 2px solid var(--red) !important;
     color: white;
 }
-
-#confirm-controls-container button:focus, #confirm-controls-container button:hover {
-    background-color: var(--primary);
-    outline: none;
+#confirm-true {
+    background-color: var(--green);
+    border: 2px solid var(--green) !important;
     color: white;
+
+}
+#confirm-controls-container button:focus, #confirm-controls-container button:hover {
+    background-color: white;
+    outline: none;
+    color: black;
+    font-weight: bold;
 }
 </style>
