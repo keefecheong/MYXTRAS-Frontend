@@ -27,6 +27,9 @@ export default {
 .explore-blog-image-container {
     width: 100%;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .explore-blog-image {
