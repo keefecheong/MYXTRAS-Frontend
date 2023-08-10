@@ -146,6 +146,7 @@ export default {
 
 #confirm-header {
     font-size: 1.3em;
+    font-weight: bold;
 }
 
 #confirm-message {
@@ -160,10 +161,12 @@ export default {
 }
 
 #confirm-controls-container button {
-    border-radius: 15px;
+    width: fit-content;
+    border-radius: 5px;
     border: none;
-    padding: 2px 8px;
+    padding: 1vh 1vw;
     user-select: none;
+    color: white;
 }
 
 #confirm-false {
