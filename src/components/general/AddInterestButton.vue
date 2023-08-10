@@ -52,8 +52,8 @@
                 />
 
                 <div id="button-container">
-                    <button @click="clearSelection()" id="clear-all-btn">Clear All</button>
-                    <button @click="confirmSelection()" id="confirm-btn">Confirm</button>
+                    <button @click="clearSelection" type="button" id="clear-all-btn">Clear All</button>
+                    <button @click="confirmSelection" type="button" id="confirm-btn">Confirm</button>
                 </div>
             </div>
         </div>
