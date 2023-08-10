@@ -1,4 +1,6 @@
 <template>
+    <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="submitting || (editMode && !dataInitialized)" />
+
     <div class="form-overlay">
         <form class="form-overlay-content" @submit.prevent="submitForm">
             <button class="form-overlay-close" @click="closeForm" type="button">
@@ -74,12 +76,14 @@
 <script>
 import DynamicTextarea from '../../general/DynamicTextarea.vue';
 import { useAlertStore } from '../../../stores/AlertStore.js';
+import LoadingOverlay from '../../general/LoadingOverlay.vue';
 import Pickr from '@simonwep/pickr';
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
 
 export default {
     components: {
         DynamicTextarea,
+        LoadingOverlay,
         VueCtkDateTimePicker
     },
     data() {
@@ -96,7 +100,7 @@ export default {
             alert: useAlertStore().alert,
             pickr: null,
             bannerUpdated: false,
-            selectedDateTime: ''
+            selectedDateTime: new Date(),
         }
     },
     props: [
@@ -171,7 +175,7 @@ export default {
             this.description = '';
             this.location = '';
             this.name = '';
-            this.selectedDateTime = '';
+            this.selectedDateTime = new Date();
             this.time = '';
             this.color = '';
         },
@@ -213,7 +217,7 @@ export default {
                     'event_name': this.name.trim(),
                     'event_desc': this.description.trim(),
                     'event_location': this.location.trim(),
-                    'event_date': this.selectedDateTime.trim(),
+                    'event_date': Date(this.selectedDateTime),
                     'event_color': this.color.trim(),
                 }
                 
@@ -235,7 +239,6 @@ export default {
                 await fetch(targetURL, options)
                     .then(async response => {
                         if (response.ok){
-                            console.log('Success:', response);
                             await this.alert(successMessage);
                         }
                         else {
@@ -244,6 +247,7 @@ export default {
                         }
                         
                         this.submitting = false
+                        location.href = '/admin/events.html';
                         return;
                     })
                     .catch(error => {

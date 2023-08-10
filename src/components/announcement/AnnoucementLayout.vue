@@ -2,12 +2,12 @@
     <div class="a-container row" v-for="(event, index) in events">
         <div class="col-md-4 left">
             <span class="date-box" :style="{ backgroundColor: event.event_color }">
-                <p class="month">{{ event.event_date.toLocaleString('en-US', { month: 'short' }) }}</p>
-                <p class="day">{{ event.event_date.getDate() }}</p>
+                <p class="month">{{ new Date(event.event_date).toLocaleString('en-US', { month: 'short' }) }}</p>
+                <p class="day">{{ new Date(event.event_date).getDate() }}</p>
             </span>
             <div class="title-box">
                 <h1 class="a-header">{{  event.event_name }}</h1>
-                <p class="time">{{ event.event_date.toLocaleTimeString([], {hour12: true}) }}</p>
+                <p class="time">{{ new Date(event.event_date).toLocaleTimeString([], {hour12: true, hour: '2-digit', minute: '2-digit'}) }}</p>
             </div>
             <br>
         </div>
@@ -63,8 +63,7 @@ export default {
                 throw new Error('Response not OK');
             })
             .then(data => {
-                this.events = data;
-                console.log()
+                this.events = data.events;
             })
             .catch((error) => {
                 console.log("This page could not be loaded: ", error);
@@ -80,6 +79,7 @@ export default {
 .a-container {
     border-bottom: #133B5B 1px solid;
     padding-bottom: 10px;
+    padding-top: 10px;
 }
 
 .more-info {
@@ -138,7 +138,9 @@ export default {
 .title-box {
     text-align: center;
     place-self: center;
-    margin-left: 10%;
+    
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .month {
