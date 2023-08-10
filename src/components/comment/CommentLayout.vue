@@ -17,8 +17,12 @@
 
                 <!-- only if the comment is posted by the current user -->
                 <div class="comment-actions">
-                    <span v-if="comment.isOwner" class="material-symbols-outlined" @click="deleteComment" title="Delete this comment">delete</span>
-                    <span v-else class="report-button material-symbols-outlined" @click="reportComment" title="Report this comment">flag</span>
+                    <div v-if="comment.isOwner" data-tooltip="Delete comment" data-tooltip-position="top">
+                        <span  class="material-symbols-outlined" @click="deleteComment" title="Delete this comment">delete</span>
+                    </div>
+                    <div v-else data-tooltip="Report comment" data-tooltip-position="top">
+                        <span class="report-button material-symbols-outlined" @click="reportComment" title="Report this comment">flag</span>
+                    </div>
                 </div>
             </div>
 
@@ -101,6 +105,8 @@ export default {
 </script>
 
 <style>
+@import url('../../styles/main.css');
+
 .comment-container {
     --comment-profile-pic-size: clamp(35px, 5dvw, 48px);
     display: flex;
