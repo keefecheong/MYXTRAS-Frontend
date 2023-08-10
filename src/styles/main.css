@@ -145,7 +145,7 @@ h1 {
 [data-tooltip] {
     display: inline-block;
     position: relative;
-    cursor: help;
+    cursor: pointer;
     padding: 4px;
 }
 
@@ -156,7 +156,7 @@ h1 {
     position: absolute;
     background: #000;
     color: #fff;
-    padding: 4px 8px;
+    padding: 4px 1px;
     font-size: 14px;
     line-height: 1.4;
     min-width: 100px;

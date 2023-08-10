@@ -32,11 +32,11 @@
 
             <div id="forum-options">
                 <div id="privileged-options" v-if="forum.isCreator">
-                    <button @click="showForumForm">
+                    <button @click="showForumForm" data-tooltip="Edit Forum" data-tooltip-position="top">
                         <span class="material-symbols-outlined" title="Edit this forum">Edit</span>
                     </button>
 
-                    <button @click="deleteForum()">
+                    <button @click="deleteForum()" data-tooltip="Delete Forum" data-tooltip-position="top">
                         <span class="material-symbols-outlined" title="Delete this forum">delete</span>
                     </button>
                 </div>
@@ -44,13 +44,14 @@
                 
 
                 <div id="normal-options">
-                    <button v-if="!forum.isCreator" :class="{ 'subscribed': workingSubscribe, 'white-btn': !workingSubscribe  }" @click="toggleSubscribe">
+                    <button v-if="!forum.isCreator" :class="{ 'subscribed': workingSubscribe, 'white-btn': !workingSubscribe  }" @click="toggleSubscribe" data-tooltip="Report" data-tooltip-position="top">
                         {{ workingSubscribe ? 'Unsubscribe' : 'Subscribe' }}
                     </button>
 
                     <button v-if="showCreateThreadButton" @click="showCreateThread" class="white-btn">Create Thread!</button>
-
-                    <span v-if="!forum.isCreator" class="material-symbols-outlined report-button contrast" @click="toggleReportForm" title="Report this forum">flag</span>
+                    <div data-tooltip="Report" data-tooltip-position="top">
+                        <span v-if="!forum.isCreator" class="material-symbols-outlined report-button contrast" @click="toggleReportForm" title="Report this forum">flag</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -192,6 +193,7 @@ export default {
 </script>
 
 <style>
+@import url('../../styles/main.css');
 .white-btn {
     font-weight: bold;
     background-color: white;

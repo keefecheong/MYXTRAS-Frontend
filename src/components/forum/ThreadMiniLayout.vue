@@ -28,8 +28,12 @@
                     </div>
 
                     <div class="thread-privileged-options" v-if="thread.isOwner">
-                        <span class="material-symbols-outlined" @click.stop="() => toggleThreadForm(true)" title="Edit this thread">edit</span>
-                        <span class="material-symbols-outlined" @click.stop="deleteThread" title="Delete this thread">delete</span>
+                        <div data-tooltip="Edit thread" data-tooltip-position="top">
+                            <span class="material-symbols-outlined" @click.stop="() => toggleThreadForm(true)" >edit</span>
+                        </div>
+                        <div data-tooltip="Delete thread" data-tooltip-position="top"> 
+                            <span class="material-symbols-outlined" @click.stop="deleteThread" >delete</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -121,6 +125,7 @@ export default {
 </script>
 
 <style>
+@import url('../../styles/main.css');
 @import url('../../styles/forums/similar-thread-layout-styles.css');
 
 .thread-layout-forum-name {

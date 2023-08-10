@@ -90,8 +90,8 @@
                 </div>
 
                 <!-- show thread comments -->
-                <div id="thread-detailed-layout-comments-container">
-                    <div v-if="comments.length > 0">
+                <div id="thread-detailed-layout-comments-container" >
+                    <div v-if="comments.length > 0" >
                         <h4>Comments ({{ comments.length }})</h4>
                         
                         <CommentLayout
