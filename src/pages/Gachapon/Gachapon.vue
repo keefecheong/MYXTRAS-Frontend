@@ -334,6 +334,9 @@ ul {
     margin: 4vh;
     border-radius: 5px;
 }
+#petsList {
+    margin: 2vh 0;
+}
 /* Mobile port */
 @media screen and (max-width: 768px) {
 body {

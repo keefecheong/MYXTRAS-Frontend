@@ -109,7 +109,7 @@ export default {
     height: 100%;
     position: fixed;
     z-index: var(--prompt-z-index);
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--grey-overlay);
 }
 
 #alert-content {
@@ -155,11 +155,14 @@ export default {
     border: none;
     padding: 2px 8px;
     user-select: none;
+    background-color: var(--green);
+    color: white;
 }
 
 #alert-close:focus, #alert-close:hover {
-    background-color: var(--primary);
+    background-color: white;
     outline: none;
-    color: white;
+    color: var(--green);
+    font-weight: bold;
 }
 </style>

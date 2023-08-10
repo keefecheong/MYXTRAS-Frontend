@@ -13,7 +13,7 @@
     --dark: #133B5B;
     --green: #00ce1f;
     --red: #dc0000;
-    --grey-overlay: #5d5d5d81;
+    --grey-overlay: #00000080;
     --blue: #425af5;
     --orange: #ff841f;
     /* important z-index values */
@@ -113,7 +113,6 @@ a:hover {
 }
 
 .imageContainer img {
-    max-height: 100%;
     max-width: 100%;
 }
 img {
@@ -125,7 +124,6 @@ img {
 }
 /* hide overflow text with ... */
 .hide-overflow-text {
-    display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     word-break: break-all;

@@ -6,7 +6,7 @@
         <div class="blog-header">
             <div>
                 <!-- creator profile pic -->
-                <img class="blog-profile-pic" :src="blog.creator_id.profile_pic_link" @click="viewUser()" title="View user"/>
+                <img class="blog-profile-pic" :src="blog.creator_id.profile_pic_link" @click="viewUser()" title="View user" :draggable="false"/>
 
                 <!-- creator username -->
                 <span 

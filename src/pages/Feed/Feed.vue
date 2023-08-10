@@ -23,7 +23,7 @@
                     <p>Follow more people? <a href="/explore.html">Explore!</a></p>
                 </div>
 
-                <div v-else id="blog-layout-container">
+                <div v-else id="blog-layout-container" >
                     <BlogLayout v-for="blog in blogs" :key="blog._id" :blog="blog" />
 
                     <hr />
@@ -48,7 +48,7 @@ body::-webkit-scrollbar {
 #blog-layout-container {
   scroll-snap-type: y mandatory;
   overflow-y: scroll;
-  height: 100vh; /* Adjust this value based on your design */
+  max-height: 100vh; /* Adjust this value based on your design */
 }
 #blog-layout-container::-webkit-scrollbar-track {
   background-color: #ffffff; /* Color of the scrollbar track */
@@ -69,7 +69,7 @@ body::-webkit-scrollbar {
     align-items: center;
 }
 .blog-image {
-    width: 60%;
+    width: 80%;
     margin: auto;
 }
 #feed-container {
