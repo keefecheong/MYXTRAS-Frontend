@@ -2,6 +2,8 @@
     <div class="card shadow">
         <div class="card-body card-position">
             <h5 class="card-title">Popular Threads</h5>
+            
+            <p></p>
             <p v-if="popularThreads.length === 0">No popular threads found!</p>
 
             <div v-else id="popular-thread-container">
@@ -21,6 +23,8 @@
     padding: 1em 0 1em 0;
     min-height: 50vh;
     border-radius: 15px;
+    text-align: center;
+
 }
 
 #popular-thread-container {
