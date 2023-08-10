@@ -1,7 +1,17 @@
 <template>
     <div id="main-container">
         <NavSidebar :forAdmin="true" />
+
         
+        <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+            {{ alertMsg }}
+        </AlertPrompt>
+
+        <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+            {{ confirmMsg }}
+        </ConfirmPrompt>
+
+
         <div id="main-content">
             <div id="header">
                 <h1 id="title">Xtra EVENTS! 🔊</h1>
@@ -24,17 +34,25 @@
 import NavSidebar from '../../../components/general/NavSidebar.vue';
 import AnnoucementLayout from '../../../components/announcement/AnnoucementLayout.vue';
 import EventsFormLayout from '../../../components/admin/Events/EventsFormLayout.vue';
+import { useAlertStore } from '../../../stores/AlertStore.js';
+import AlertPrompt from '../../../components/general/AlertPrompt.vue';
+import { useConfirmStore } from '../../../stores/ConfirmStore.js';
+import ConfirmPrompt from '../../../components/general/ConfirmPrompt.vue';
 
 export default {
     components: {
         NavSidebar,
         AnnoucementLayout,
-        EventsFormLayout
+        EventsFormLayout,
+        AlertPrompt,
+        ConfirmPrompt
     },
     data() {
         return {
             hover: false,
-            showForm: false
+            showForm: false,
+            alertStore: useAlertStore(),
+            confirmStore: useConfirmStore()
         }
     },
     methods: {
@@ -47,8 +65,34 @@ export default {
             } else {
                 document.getElementById("expanded-btn").className = "minimized-btn";
             }
+        },
+        // to close alert prompt
+        closeAlert() {
+            this.alertStore.closeAlert();
+        },
+        // to close confirm prompt
+        closeConfirm(decision){
+            this.confirmStore.closeConfirm(decision);
         }
-    }
+    },
+    computed: {
+        // to get showAlert value
+        showAlert() {
+            return this.alertStore.showAlert;
+        },
+        // to get alertMsg value
+        alertMsg() {
+            return this.alertStore.alertMsg;
+        },
+        // to get showConfirm value
+        showConfirm() {
+            return this.confirmStore.showConfirm;
+        },
+        // to get confirmMsg value
+        confirmMsg() {
+            return this.confirmStore.confirmMsg;
+        }
+    },
 }
 </script>
 
