@@ -77,8 +77,7 @@
     <div id="alert-overlay">
         <div id="alert-content">
             <div id="alert-content-text">
-                <span id="alert-header">Notice:</span>
-                <span id="alert-message"><slot></slot></span>
+                <h3 id="alert-message"><slot></slot></h3>
             </div>
             <button id="alert-close" type="button" @click="handleConfirm">OK</button>
         </div>
@@ -117,24 +116,28 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    min-height: 20%;
+    min-height: 30%;
     max-height: 40%;
-    min-width: 20%;
+    min-width: 30%;
     max-height: 40%;
-    background-color: var(--dark);
-    border-radius: 20px;
+    background-color: white;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     padding: 20px;
     justify-content: space-between;
     row-gap: 50px;
-    color: white;
+    color: black;
+    font-weight: bold;
+    
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 #alert-content-text {
     display: flex;
     flex-direction: column;
-    align-items: start;
 }
 
 #alert-header {
@@ -143,17 +146,13 @@ export default {
 
 #alert-message {
     margin: 0 auto;
-    font-style: italic;
 }
 
 #alert-close {
-    position: relative;
-    left: 100%;
-    transform: translateX(-100%);
     width: fit-content;
-    border-radius: 15px;
+    border-radius: 5px;
     border: none;
-    padding: 2px 8px;
+    padding: 1vh 2vw;
     user-select: none;
     background-color: var(--green);
     color: white;
@@ -164,5 +163,6 @@ export default {
     outline: none;
     color: var(--green);
     font-weight: bold;
+    border: 2px solid var(--green);
 }
-</style>
+</style>    
