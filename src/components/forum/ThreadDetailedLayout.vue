@@ -38,13 +38,19 @@
                         </div>
 
                         <div class="thread-privileged-options" v-if="thread.isOwner">
-                            <span class="material-symbols-outlined" @click="() => toggleThreadForm(true)" title="Edit this thread">edit</span>
-                            <span class="material-symbols-outlined" @click="deleteThread" title="Delete this thread">delete</span>
+                            <div data-tooltip="Edit thread" data-tooltip-position="top">
+                                <span class="material-symbols-outlined" @click="() => toggleThreadForm(true)" >edit</span>
+                            </div>
+                            <div data-tooltip="Delete thread" data-tooltip-position="top">
+                                <span class="material-symbols-outlined" @click="deleteThread">delete</span>
+                            </div>
                         </div>
 
                         <!-- report button -->
                         <div v-else>
-                            <span class="material-symbols-outlined report-button" @click="() => toggleReportForm(true)" title="Report this thread">flag</span>
+                            <div data-tooltip="Report thread" data-tooltip-position="top">
+                                <span class="material-symbols-outlined report-button" @click="() => toggleReportForm(true)">flag</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -60,12 +66,16 @@
                 <div id="thread-layout-right-actions">
                     <div id="thread-reaction-container">
                         <div id="like-thread-container">
-                            <span class="material-symbols-outlined thread-reaction-button" :class="{liked: liked}" @click="toggleLike" title="Like this thread">sentiment_very_satisfied</span>
+                            <div data-tooltip="Like thread" data-tooltip-position="top">
+                                <span class="material-symbols-outlined thread-reaction-button" :class="{liked: liked}" @click="toggleLike">sentiment_very_satisfied</span>
+                            </div>
                             <span title="Number of likes">({{ likeCount }})</span>
                         </div>
 
                         <div id="dislike-thread-container">
-                            <span class="material-symbols-outlined thread-reaction-button" :class="{disliked: disliked}" @click="toggleDisike" title="Dislike this thread">sentiment_very_dissatisfied</span>
+                            <div data-tooltip="Dislike thread" data-tooltip-position="top">
+                                <span class="material-symbols-outlined thread-reaction-button" :class="{disliked: disliked}" @click="toggleDisike">sentiment_very_dissatisfied</span>
+                            </div>
                             <span title="Number of dislikes">({{ dislikeCount }})</span>
                         </div>
                     </div>
@@ -463,6 +473,8 @@ export default {
 
 <style>
 @import url('../../styles/forums/similar-thread-layout-styles.css');
+@import url('../../styles/main.css');
+
 
 #thread-detailed-layout-container {
     transition: background-color 1s ease-out;

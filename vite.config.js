@@ -12,6 +12,10 @@ const redirectPlugin = {
             if (req.url === '/') {
                 req.url = '/feed.html';
             }
+            // set up redirection for admin pages
+            else if (req.url === '/admin' || req.url === '/admin/') {
+                req.url = '/admin/reports.html';
+            }
             // automatically give resource if not html page
             else if (!req.url.includes('.html')) {
                 return next();
@@ -23,10 +27,6 @@ const redirectPlugin = {
             // set up redirection for profile page router
             else if (req.url === '/profilePage.html/support' || req.url === '/profilePage.html/') {
                 req.url = '/profilePage.html';
-            }
-            // set up redirection for admin pages
-            else if (req.url === '/admin' || req.url === '/admin/') {
-                req.url = '/admin/reports.html';
             }
             // if not the above pages/routes then check if exists in file system
             else {

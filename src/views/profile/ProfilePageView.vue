@@ -35,8 +35,8 @@
                 </div>
 
                 <div id="header-user-actions">
-                    <div id="header-user-privileged-actions" v-if="isSelf">
-                        <a href="/profileManagement.html" title="Edit profile">
+                    <div id="header-user-privileged-actions" v-if="isSelf" >
+                        <a href="/profileManagement.html" data-tooltip="Edit Profile" data-tooltip-position="top">
                             <span id="user-edit-icon" class="material-symbols-outlined">edit</span>
                         </a>
                     </div>
@@ -85,7 +85,10 @@
 
             <div class="floating-button-wrapper" v-if="isSelf">
                 <div class="floating-button" @click="() => { toggleCreateBlog(true) }">
-                    <i class="bi bi-plus plus-icon"></i>
+                    <div data-tooltip="Create Post" data-tooltip-position="top">
+                        <i class="bi bi-plus plus-icon"></i>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -508,6 +511,7 @@ export default {
 
 </script>
 
+
 <style scoped>
 .card {
     padding: 40px 0;
@@ -683,6 +687,7 @@ export default {
 
     #user-sign-out-text {
         white-space: nowrap;
+        margin-top: -2px;
     }
 
     @media (max-width: 576px) {
@@ -899,4 +904,8 @@ p {
     padding: 0;
 }
 }
+</style>
+
+<style>
+@import url('../../styles/main.css');
 </style>
