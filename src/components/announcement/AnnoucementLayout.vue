@@ -1,7 +1,7 @@
 <template>
     <div class="event-container" v-for="(event, index) in events" :key="index">
         <div class="event-brief">
-            <div class="event-header">
+            <div class="event-header col-md-4">
                 <span class="date-box" :style="{ backgroundColor: event.event_color }">
                     <p class="month">{{ new Date(event.event_date).toLocaleString('en-US', { month: 'short' }) }}</p>
                     <p class="day">{{ new Date(event.event_date).getDate() }}</p>
@@ -39,7 +39,7 @@
         
         <div v-if="showDetails" class="more-info">
             <img class="a-image col-md-5" :src="event.banner_link" alt="event banner">
-            <p class="location col-md-6">Location: {{ event.event_location }}</p>
+            <p class="location">Location: {{ event.event_location }}</p>
         </div>
     </div>
 </template>
@@ -174,6 +174,7 @@ export default {
 
     .title-box {
         margin: 0 auto;
+        text-align: center;
     }
 }
 
@@ -205,6 +206,7 @@ export default {
     font-size: large;
     color: #000;
     height: fit-content;
+    margin-left: 15px;
 }
 
 .date-box {
