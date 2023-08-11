@@ -11,7 +11,7 @@
 
             <!-- Upload banner -->     
             <div id="event-banner-container">
-                <label for="event-banner-input" v-if="!bannerObject && !selectedBanner" id="event-banner-none">No image selected</label>
+                <label for="event-banner-input" v-if="!editMode && !bannerObject && !selectedBanner" id="event-banner-none">No image selected</label>
                 <span v-if="bannerObject && bannerErrors.length > 0" class="errMsg">Invalid file</span>
                 <img v-if="selectedBanner" :src="selectedBanner" alt="Banner"  id="event-banner-picture" />
                 <input id="event-banner-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
@@ -95,21 +95,33 @@ export default {
             description: '',
             location: '',
             name: '',
-            color: '',
+            color: '#FF6363',
             submitting: false,
             alert: useAlertStore().alert,
             pickr: null,
             bannerUpdated: false,
             selectedDateTime: new Date(),
+            dataInitialized: false
         }
     },
     props: [
-        'editMode',
         'event'
     ],
     emits: [
         'close-event-form'
     ],
+    created() {
+        if (this.editMode) {
+            this.selectedBanner = this.event.banner_link;
+            this.description = this.event.event_desc;
+            this.location = this.event.event_location;
+            this.name = this.event.event_name;
+            this.color = this.event.event_color;
+            this.selectedDateTime = this.event.event_date;
+
+            this.dataInitialized = true;
+        }
+    },
     mounted() {
         this.initColorPicker();
         this.setDateTime();
@@ -262,7 +274,7 @@ export default {
             this.pickr = Pickr.create({
                 el: '.color-picker',
                 theme: 'monolith', // 'classic' or 'monolith', or 'nano'
-                default: '#FF6363',
+                default: this.color,
                 padding: 10,
                 lockOpacity: false,
 
@@ -342,6 +354,10 @@ export default {
             const dateSame = this.selectedDateTime == this.event.event_date;
 
             return !(nameSame && descSame && locationSame && colorSame && dateSame);
+        },
+        // check if in edit mode
+        editMode() {
+            return this.event != null;
         }
     }
 }

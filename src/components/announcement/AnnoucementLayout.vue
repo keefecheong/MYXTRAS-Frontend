@@ -1,34 +1,67 @@
 <template>
-    <div class="a-container row" v-for="(event, index) in events">
-        <div class="col-md-4 left">
-            <span class="date-box" :style="{ backgroundColor: event.event_color }">
-                <p class="month">{{ new Date(event.event_date).toLocaleString('en-US', { month: 'short' }) }}</p>
-                <p class="day">{{ new Date(event.event_date).getDate() }}</p>
-            </span>
-            <div class="title-box">
-                <h1 class="a-header">{{  event.event_name }}</h1>
-                <p class="time">{{ new Date(event.event_date).toLocaleTimeString([], {hour12: true, hour: '2-digit', minute: '2-digit'}) }}</p>
+    <div class="event-container" v-for="(event, index) in events" :key="index">
+        <div class="event-brief">
+            <div class="event-header">
+                <span class="date-box" :style="{ backgroundColor: event.event_color }">
+                    <p class="month">{{ new Date(event.event_date).toLocaleString('en-US', { month: 'short' }) }}</p>
+                    <p class="day">{{ new Date(event.event_date).getDate() }}</p>
+                </span>
+                
+                <div class="title-box">
+                    <h1 class="event-name">{{  event.event_name }}</h1>
+                    <p class="time">{{ new Date(event.event_date).toLocaleTimeString([], { timeStyle: 'short' }) }}</p>
+                </div>
             </div>
-            <br>
+            
+            <p class="event-desc">
+                {{ event.event_desc }}
+            </p>
+            
+            <div class="toggle-event-details">
+                <span 
+                    class="material-symbols-outlined"
+                    :class="{ 
+                        'triangle-down': !showDetails, 
+                        'triangle-up': showDetails 
+                    }" 
+                    :title="`${ showDetails ? 'Hide' : 'View' } event details`"
+                    @click="toggleEventDetails()"
+                >
+                    {{ showDetails ? 'expand_less' : 'expand_more' }}
+                </span>
+            </div>
+
+            <div v-if="showPrivilegedActions" class="privilege-event-actions">
+                <span class="material-symbols-outlined" title="Edit this event" @click="() => editEvent(index)">edit</span>
+                <span class="material-symbols-outlined" title="Delete this event" @click="() => deleteEvent(index)">delete</span>
+            </div>
         </div>
-        <p class="a-caption col-md-6">
-            {{ event.event_desc }}
-        </p>
-        <div class="col-md-1 expand">
-            <span class="triangle-down" :id="`triangle-${index}`" @click="toggleMore(index)"></span>
-        </div>
-        <div class="more-info" :id="`more-${index}`">
+        
+        <div v-if="showDetails" class="more-info">
             <img class="a-image col-md-5" :src="event.banner_link" alt="event banner">
             <p class="location col-md-6">Location: {{ event.event_location }}</p>
         </div>
     </div>
 </template>
+
 <script>
+import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import { useAlertStore } from '../../stores/AlertStore.js';
+
 export default { 
     data() {
         return {
             events: [],
-            index: 0
+            showDetails: false
+        }
+    },
+    emits: [
+        'edit-event',
+        'show-loading'
+    ],
+    computed: {
+        showPrivilegedActions() {
+            return location.pathname.startsWith('/admin/events');
         }
     },
     mounted() {
@@ -39,35 +72,61 @@ export default {
         this.getEvents();
     },
     methods: {
-        toggleMore(indexValue) {
-            const status = document.getElementById(`triangle-${indexValue}`).className;
-            
-            if (status == "triangle-down") {
-                document.getElementById(`triangle-${indexValue}`).className = "triangle-up";
-                document.getElementById(`more-${indexValue}`).className = "more-info show";
-            } else {
-                document.getElementById(`triangle-${indexValue}`).className = "triangle-down";
-                document.getElementById(`more-${indexValue}`).className = "more-info";
-            }
+        // to toggle loading wheel
+        toggleLoading(show) {
+            this.$emit('show-loading', show);
         },
+        // to toggle event details
+        toggleEventDetails() {
+            this.showDetails = !this.showDetails;
+        },
+        // get events
         async getEvents() {
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/events`, {
                 mode: 'cors',
                 method: 'GET',
                 credentials: 'include'
-            })
-            .then(res => {
+            }).then(async res => {
                 if (res.ok) {
-                    return res.json();
+                    await res.json().then(data => {
+                        this.events = data.events;
+                    });
                 }
-                throw new Error('Response not OK');
-            })
-            .then(data => {
-                this.events = data.events;
-            })
-            .catch((error) => {
-                console.log("This page could not be loaded: ", error);
-            });
+                else {
+                    throw new Error('Response not OK');
+                }
+            }).catch(error => console.log('Could not retrieve events.'));
+        },
+        // to edit events
+        editEvent(index) {
+            this.$emit('edit-event', this.events[index]);
+        },
+        // to delete events
+        async deleteEvent(index) {
+            const confirmDelete = await useConfirmStore().confirm('Are you sure you want to delete this event?');
+
+            if (!confirmDelete) {
+                return;
+            }
+
+            this.toggleLoading(true);
+
+            // delete event
+            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/events/${this.events[index]._id}`, {
+                method: 'DELETE',
+                mode: 'cors',
+                credentials: 'include'
+            }).then(async res => {
+                await res.json().then(async data => {
+                    await useAlertStore().alert(data.message);
+
+                    if (res.ok) {
+                        this.events.splice(index, 1);
+                    }
+                });
+            }).catch(error => console.log('Could not delete event.'));
+
+            this.toggleLoading(false);
         }
     }
 }
@@ -76,34 +135,60 @@ export default {
 <style>
 @import url('../../styles/main.css');
 
-.a-container {
+.event-container {
     border-bottom: #133B5B 1px solid;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    padding: 10px 7%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.event-brief {
+    display: flex;
+    flex-direction: row;
+    column-gap: 30px;
+    align-items: center;
 }
 
 .more-info {
-    display: none;
-    position: relative;
-}
-
-.left {
     display: flex;
-    margin-left: 7%;
+    flex-direction: row;
+    column-gap: 20px;
+    align-items: baseline;
 }
 
-.a-header {
-    font-size: 30px;
+.event-header {
+    flex: 0 0 25%;
+    display: flex;
+    flex-direction: row;
+
+    > * {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        > * {
+            margin: 0;
+        }
+    }
+
+    .title-box {
+        margin: 0 auto;
+    }
+}
+
+.event-name {
+    font-size: 2em;
     color: var(--dark);
 }
 
-.a-caption {
-    font-size: 15px;
+.event-desc {
+    flex-grow: 1;
     padding: 30px;
-    padding-left: 50px !important;
     text-align: justify;
     word-wrap: break-word;
     white-space: pre-wrap;
+    margin-bottom: 0;
 }
 
 .a-image {
@@ -112,17 +197,13 @@ export default {
     width: 35% !important;
     object-fit: cover;
     border: var(--dark) 1px solid;
-    margin: 10px;
-    margin-left: 7%;
+    margin: 10px 0;
 }
 
 .location {
-    position: absolute;
     font-weight: bold;
     font-size: large;
     color: #000;
-    bottom: 0;
-    right: 6%;
     height: fit-content;
 }
 
@@ -132,15 +213,6 @@ export default {
     text-align: center;
     place-self: center;
     background-color: #133B5B;
-    padding-top: 1rem;
-}
-
-.title-box {
-    text-align: center;
-    place-self: center;
-    
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .month {
@@ -155,59 +227,25 @@ export default {
     margin: 0;
 }
 
+.toggle-event-details {
+    width: fit-content !important;
 
-.triangle-up {
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 15px solid #000;
-    cursor: pointer;
+    .material-symbols-outlined {
+        font-size: 50px !important;
+    }
 }
 
-.triangle-down {
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 15px solid #000;
-    cursor: pointer;
+.privilege-event-actions {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
 }
+</style>
 
-.expand {
-    text-align: center;
-    place-self: center;
-}
-
-.show {
-    display: flex !important;
-}
-
-.pink {
-    background-color: #FF7BE2;
-}
-
-.blue {
-    background-color: #6FE5FF;
-}
-
-.green {
-    background-color: #6FFFA8;
-}
-
-.yellow {
-    background-color: #FFE27B;
-}
-
-.dark-blue {
-    background-color: #7B88FF;
-}
-
-.orange {
-    background-color: #FFAB6F;
-}
-
-.red {
-    background-color: #FC5454;
+<style scoped>
+.material-symbols-outlined {
+    color: black;
+    font-size: 2em;
 }
 </style>
