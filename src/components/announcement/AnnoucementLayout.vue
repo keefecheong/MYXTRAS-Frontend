@@ -20,14 +20,10 @@
             <div class="toggle-event-details">
                 <span 
                     class="material-symbols-outlined"
-                    :class="{ 
-                        'triangle-down': !showDetails, 
-                        'triangle-up': showDetails 
-                    }" 
                     :title="`${ showDetails ? 'Hide' : 'View' } event details`"
-                    @click="toggleEventDetails()"
+                    @click="() => toggleEventDetails(index)"
                 >
-                    {{ showDetails ? 'expand_less' : 'expand_more' }}
+                    {{ showDetails.includes(index) ? 'expand_less' : 'expand_more' }}
                 </span>
             </div>
 
@@ -37,7 +33,7 @@
             </div>
         </div>
         
-        <div v-if="showDetails" class="more-info">
+        <div v-if="showDetails.includes(index)" class="more-info">
             <img class="a-image col-md-5" :src="event.banner_link" alt="event banner">
             <p class="location">Location: {{ event.event_location }}</p>
         </div>
@@ -52,7 +48,7 @@ export default {
     data() {
         return {
             events: [],
-            showDetails: false
+            showDetails: []
         }
     },
     emits: [
@@ -77,8 +73,15 @@ export default {
             this.$emit('show-loading', show);
         },
         // to toggle event details
-        toggleEventDetails() {
-            this.showDetails = !this.showDetails;
+        toggleEventDetails(index) {
+            const existingIndex = this.showDetails.findIndex(entry => entry == index);
+
+            if (existingIndex != -1) {
+                this.showDetails.splice(existingIndex, 1);
+            }
+            else {
+                this.showDetails.push(index);
+            }
         },
         // get events
         async getEvents() {
