@@ -129,7 +129,6 @@ export default {
     row-gap: 50px;
     color: black;
     font-weight: bold;
-    
     align-items: center;
     justify-content: center;
     text-align: center;
