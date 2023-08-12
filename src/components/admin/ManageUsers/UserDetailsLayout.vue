@@ -132,7 +132,7 @@
                 <!-- to promote/demote user -->
                 <button
                     v-if="showPromote.show"
-                    class="use-primary-secondary-gradient details-button"
+                    class="promote-btn"
                     :title="`${showPromote.title} User`"
                     @click="() => performAction(showPromote)"
                 >
@@ -142,7 +142,7 @@
                 <!-- to suspend/unsuspend user -->
                 <button 
                     v-if="showSuspend.show" 
-                    class="use-primary-secondary-gradient details-button" 
+                    class="suspend-btn" 
                     :title="`${showSuspend.title} User`" 
                     @click="() => { showSuspend.suspended ? performAction(showSuspend) : toggleSuspendForm(true) }"
                 >
@@ -151,7 +151,7 @@
 
                 <!-- to terminate/unterminate user -->
                 <button 
-                    class="use-primary-secondary-gradient details-button" 
+                    class="terminate-btn" 
                     :title="`${showTerminate.title} User`" 
                     @click="() => performAction(showTerminate)"
                 >
@@ -347,5 +347,40 @@ export default {
     flex-direction: row;
     column-gap: 10px;
     align-items: center;
+}
+
+.promote-btn {
+    background-color: var(--green);
+    border: 2px solid var(--green);
+    color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.promote-btn:hover {
+    background-color: white;
+    color: black;
+}
+
+.suspend-btn {
+    background-color: orange;
+    border: 2px solid orange;
+    color: white;
+}
+
+.suspend-btn:hover {
+    background-color: white;
+    color: black;
+}
+
+.terminate-btn {
+    background-color: var(--red);
+    border: 2px solid var(--red);
+    color: white;
+}
+
+.terminate-btn:hover {
+    background-color: white;
+    color: black;
 }
 </style>
