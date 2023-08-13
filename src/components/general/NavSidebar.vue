@@ -399,11 +399,14 @@ export default {
 };
 </script>
 
-<style>
-@import url("../../styles/main.css");
+<style scoped>
 h1 {
     color: white;
 }
+</style>
+
+<style>
+@import url("../../styles/main.css");
 /* normal sidebar */
 #sidebar-wrapper {
     width: min-content;
