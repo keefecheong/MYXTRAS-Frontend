@@ -44,7 +44,7 @@
                 
 
                 <div id="normal-options">
-                    <button v-if="!forum.isCreator" :class="{ 'subscribed': workingSubscribe, 'white-btn': !workingSubscribe  }" @click="toggleSubscribe" data-tooltip="Report" data-tooltip-position="top">
+                    <button v-if="!forum.isCreator" :class="{ 'subscribed': workingSubscribe, 'white-btn': !workingSubscribe  }" @click="toggleSubscribe" >
                         {{ workingSubscribe ? 'Unsubscribe' : 'Subscribe' }}
                     </button>
 
