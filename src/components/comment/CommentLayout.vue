@@ -140,7 +140,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import url("../../styles/main.css");
 
 .comment-container {
@@ -166,12 +166,16 @@ export default {
     user-select: none;
 }
 
+.bottom-content {
+    word-wrap: break-word;
+}
+
 .right-content {
-    width: 100%;
     display: flex;
     flex-direction: column;
     row-gap: 15px;
     padding-top: 10px;
+    width: 89%;
 }
 
 .top-content {
@@ -179,12 +183,14 @@ export default {
     flex-direction: row;
     align-items: center;
     column-gap: 20px;
+    width: 100%;
 }
+
 
 .comment-username-container {
     flex-grow: 1;
     cursor: pointer;
-
+    
     .username-text {
         text-decoration: underline;
     }
@@ -209,4 +215,5 @@ export default {
     user-select: none;
     display: inline;
 }
+
 </style>
