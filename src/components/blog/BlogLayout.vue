@@ -342,6 +342,8 @@
 .blog-caption {
     border-bottom: 1px solid lightgray;
     font-style: italic;
+    word-wrap: break-word;
+    max-width: 50rem;
 }
 
 /* blog content styles */

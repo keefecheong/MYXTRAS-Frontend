@@ -112,6 +112,7 @@
                     name="image-location"
                     placeholder="Location (Optional)"
                     v-model="location"
+                    maxlength="50"
                 />
             </div>
 
