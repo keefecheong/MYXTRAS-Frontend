@@ -221,6 +221,7 @@
                         :disabled="
                             commentText.trim().length <= 0 || submittingComment
                         "
+                        maxlength="200"
                     />
                 </div>
             </form>
