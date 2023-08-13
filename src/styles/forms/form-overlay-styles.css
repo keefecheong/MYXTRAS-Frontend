@@ -1,84 +1,84 @@
 /* for form overlays */
 .form-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0, 0, 0, 0.5);
-    z-index: var(--above-banner-z-index);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0.5);
+  z-index: var(--above-banner-z-index);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* for form overlay content (actual form) */
 .form-overlay-content {
-    text-align: center;
-    color: white;
-    overflow: auto;
-    row-gap: 20px;
-    padding: 40px;
-    border-radius: 20px;
-    background-color: #133B5B;
-    width: 60%;
-    max-width: 80%;
-    max-height: 90%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+  text-align: center;
+  color: white;
+  overflow: auto;
+  row-gap: 20px;
+  padding: 40px;
+  border-radius: 20px;
+  background-color: #133b5b;
+  width: 60%;
+  max-width: 80%;
+  max-height: 90%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 /* for form overlay close button */
 .form-overlay-close {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    position: absolute;
-    right: 20px;
-    top: 20px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  position: absolute;
+  right: 20px;
+  top: 20px;
 }
 
 /* for form overlay control buttons */
 .form-overlay-control-button {
-    background-color: #E53A73;
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    color: white;
-    font-weight: bold;
-    font-size: 1em;
-    cursor: pointer;
+  background-color: #e53a73;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 1em;
+  cursor: pointer;
 }
 
-.errMsg{
-    color: red;
-    font-weight: bold;
-    margin-bottom: 0;
+.errMsg {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 0;
 }
 
 @media screen and (max-width: 768px) {
-/* for form overlay content (actual form) */
-.form-overlay-content {
+  /* for form overlay content (actual form) */
+  .form-overlay-content {
     text-align: center;
     color: white;
     overflow: auto;
     row-gap: 20px;
     padding: 40px;
     border-radius: 20px;
-    background-color: #133B5B;
+    background-color: #133b5b;
     min-width: 90%;
     min-height: 90%;
     position: relative;
     display: flex;
     align-items: center;
     flex-direction: column;
-}
-#forum-banner-container > img{
+  }
+  #forum-banner-container > img {
     min-width: 70vw;
-}
-.forum-field-container {
+  }
+  .forum-field-container {
     min-width: 100%;
-}
+  }
 }

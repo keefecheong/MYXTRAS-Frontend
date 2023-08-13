@@ -2,11 +2,10 @@
 
 export default function viewForum(forumId, openNewTab, threadId, commentId) {
     if (!openNewTab) {
-        sessionStorage.setItem('forum_id', forumId);
-        location.href = '/forumGroup.html';
-    }
-    else {
-        let targetURL = `${import.meta.env.VITE_BASE_URL}/forumGroup.html`;
+        sessionStorage.setItem("forum_id", forumId);
+        location.href = "/forumGroup.html";
+    } else {
+        let targetURL = `/forumGroup.html`;
 
         if (threadId) {
             targetURL += `?thread=${threadId}`;
@@ -16,15 +15,14 @@ export default function viewForum(forumId, openNewTab, threadId, commentId) {
             }
         }
 
-        const newTab = window.open(targetURL, '_blank');
+        const newTab = window.open(targetURL, "_blank");
 
         if (newTab) {
-            newTab.addEventListener('load', () => {
-                newTab.sessionStorage.setItem('forum_id', forumId);
+            newTab.addEventListener("load", () => {
+                newTab.sessionStorage.setItem("forum_id", forumId);
             });
-        }
-        else {
-            console.log('Could not open resource in new tab.');
+        } else {
+            console.log("Could not open resource in new tab.");
         }
     }
 }

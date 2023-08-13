@@ -1,14 +1,14 @@
 .banner-container {
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: var(--banner-z-index);
-    padding: 10px 0;
-    background-color: var(--primary);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: nowrap;
-    column-gap: 20px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: var(--banner-z-index);
+  padding: 10px 0;
+  background-color: var(--primary);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  column-gap: 20px;
 }

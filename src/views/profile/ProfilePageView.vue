@@ -1,62 +1,123 @@
 <!-- layout for normal profile page view -->
 
 <template>
-    <button class="toggle-button" @click="toggleBetween()">{{ viewingProfile ? 'View Details' : "Profile Page" }}</button>
+    <button class="toggle-button" @click="toggleBetween()">
+        {{ viewingProfile ? "View Details" : "Profile Page" }}
+    </button>
     <div id="profile-page-view-container">
         <div id="left-content">
             <img :src="user.banner_pic_link" alt="Banner" id="banner-picture" />
 
             <div id="header-content">
                 <div id="header-user-details-container">
-                    <img :src="user.profile_pic_link" alt="Profile Picture" id="profile-picture" />
+                    <img
+                        :src="user.profile_pic_link"
+                        alt="Profile Picture"
+                        id="profile-picture"
+                    />
 
                     <div id="header-user-details">
                         <div id="header-user-name">
                             <span id="user-realname">{{ user.real_name }}</span>
-                            <span id="user-username" class="hide-overflow-text">@{{ user.username }}</span>
+                            <span id="user-username" class="hide-overflow-text"
+                                >@{{ user.username }}</span
+                            >
                         </div>
 
                         <div id="header-user-school">
                             <span>From the</span>
-                            <span id="user-school">School of {{ user.school }} - Diploma in {{ user.course }}</span>
+                            <span id="user-school"
+                                >School of {{ user.school }} - Diploma in
+                                {{ user.course }}</span
+                            >
                         </div>
 
-                        <div id="header-user-biography" v-if="user.biography != ''">
+                        <div
+                            id="header-user-biography"
+                            v-if="user.biography != ''"
+                        >
                             <span>About me:</span>
-                            <span id="user-biography">{{ user.biography }}</span>
+                            <span id="user-biography">{{
+                                user.biography
+                            }}</span>
                         </div>
 
-                        <div id="header-user-interests" v-if="user.interests.length > 0">
+                        <div
+                            id="header-user-interests"
+                            v-if="user.interests.length > 0"
+                        >
                             <span>Interested in: </span>
-                            <InterestBadgeList :selectedOption="user.interests" :selection="false" />
+                            <InterestBadgeList
+                                :selectedOption="user.interests"
+                                :selection="false"
+                            />
                         </div>
                     </div>
-
                 </div>
 
                 <div id="header-user-actions">
-                    <div id="header-user-privileged-actions" v-if="isSelf" >
-                        <a href="/profileManagement.html" data-tooltip="Edit Profile" data-tooltip-position="top">
-                            <span id="user-edit-icon" class="material-symbols-outlined">edit</span>
+                    <div id="header-user-privileged-actions" v-if="isSelf">
+                        <a
+                            href="/profileManagement.html"
+                            data-tooltip="Edit Profile"
+                            data-tooltip-position="top"
+                        >
+                            <span
+                                id="user-edit-icon"
+                                class="material-symbols-outlined"
+                                >edit</span
+                            >
                         </a>
                     </div>
 
-                    <div id="sign-out-container" @click="signOut" v-if="isSelf" title="Sign out">
-                        <span id="user-sign-out-icon" class="material-symbols-outlined">logout</span>
+                    <div
+                        id="sign-out-container"
+                        @click="signOut"
+                        v-if="isSelf"
+                        title="Sign out"
+                    >
+                        <span
+                            id="user-sign-out-icon"
+                            class="material-symbols-outlined"
+                            >logout</span
+                        >
                         <span id="user-sign-out-text">Sign out</span>
                     </div>
 
                     <div v-if="!isSelf" id="user-actions-container">
-                        <div v-if="!blockedByUser && !blockingUser" id="user-interact-actions">
-                            <button @click="toggleFollow" id="follow-btn" :class="{ 'followed': following }">{{ following ? 'Followed' : 'Follow' }}</button>
+                        <div
+                            v-if="!blockedByUser && !blockingUser"
+                            id="user-interact-actions"
+                        >
+                            <button
+                                @click="toggleFollow"
+                                id="follow-btn"
+                                :class="{ followed: following }"
+                            >
+                                {{ following ? "Followed" : "Follow" }}
+                            </button>
 
-                            <button id="msg-btn" @click="createChat">Message</button>
+                            <button id="msg-btn" @click="createChat">
+                                Message
+                            </button>
                         </div>
 
                         <div id="user-report-actions" v-if="!isSelf">
-                            <span @click="blockUser" :title="blockingUser ? 'Unblock this user' : 'Block this user'">{{ blockingUser ? 'Unblock' : 'Block' }}</span>
+                            <span
+                                @click="blockUser"
+                                :title="
+                                    blockingUser
+                                        ? 'Unblock this user'
+                                        : 'Block this user'
+                                "
+                                >{{ blockingUser ? "Unblock" : "Block" }}</span
+                            >
 
-                            <span @click="() => toggleReportForm(true)" :title="'Report this user'">Report</span>
+                            <span
+                                @click="() => toggleReportForm(true)"
+                                :title="'Report this user'"
+                                >Report</span
+                            >
                         </div>
                     </div>
                 </div>
@@ -65,30 +126,61 @@
             <div id="profile-page-content">
                 <div v-if="isSelf" id="profile-post-toggle-container">
                     <span>Posts:</span>
-                    <span class="sub-navigation" :class="{ 'active': !viewingSaved }" @click="() => viewSaved(false)">Created</span>
-                    <span class="sub-navigation" :class="{ 'active': viewingSaved }" @click="() => viewSaved(true)">Saved</span>
+                    <span
+                        class="sub-navigation"
+                        :class="{ active: !viewingSaved }"
+                        @click="() => viewSaved(false)"
+                        >Created</span
+                    >
+                    <span
+                        class="sub-navigation"
+                        :class="{ active: viewingSaved }"
+                        @click="() => viewSaved(true)"
+                        >Saved</span
+                    >
                 </div>
 
-                <div v-if="blogsToDisplay.length > 0 && !blockedByUser && !blockingUser">
+                <div
+                    v-if="
+                        blogsToDisplay.length > 0 &&
+                        !blockedByUser &&
+                        !blockingUser
+                    "
+                >
                     <BlogLayout
                         v-for="blog in blogsToDisplay"
                         :blog="blog"
-                        :highlightComment="(blog._id == postId && commentId) ? commentId : null"
+                        :highlightComment="
+                            blog._id == postId && commentId ? commentId : null
+                        "
                         :key="blog._id"
                     />
                 </div>
 
-                <div v-if="blogsToDisplay.length <= 0 || blockedByUser || blockingUser" id="profile-no-posts">
-                    <p>No posts {{ viewingSaved ? 'saved' : 'created' }}.</p>
+                <div
+                    v-if="
+                        blogsToDisplay.length <= 0 ||
+                        blockedByUser ||
+                        blockingUser
+                    "
+                    id="profile-no-posts"
+                >
+                    <p>No posts {{ viewingSaved ? "saved" : "created" }}.</p>
                 </div>
             </div>
 
             <div class="floating-button-wrapper" v-if="isSelf">
-                <div class="floating-button" @click="() => { toggleCreateBlog(true) }">
+                <div
+                    class="floating-button"
+                    @click="
+                        () => {
+                            toggleCreateBlog(true);
+                        }
+                    "
+                >
                     <div data-tooltip="Create Post" data-tooltip-position="top">
                         <i class="bi bi-plus plus-icon"></i>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -96,15 +188,28 @@
         <div id="right-content">
             <!-- view warnings and submitted reports -->
             <router-link to="/support">
-                <button type="button" title="View Support Requests" id="support-request-button">Support Requests</button>
+                <button
+                    type="button"
+                    title="View Support Requests"
+                    id="support-request-button"
+                >
+                    Support Requests
+                </button>
             </router-link>
 
             <div class="card card-body card-position">
-                <h5 class="card-title">Followers: {{ user.followers.length }}</h5>
+                <h5 class="card-title">
+                    Followers: {{ user.followers.length }}
+                </h5>
 
-                <div v-if="user.followers.length === 0" class="row center-align">
+                <div
+                    v-if="user.followers.length === 0"
+                    class="row center-align"
+                >
                     <p id="no-followers">No followers ☹</p>
-                    <p id="no-followers">Head to the <a href="/explore.html">Xplore</a> page!</p>
+                    <p id="no-followers">
+                        Head to the <a href="/explore.html">Xplore</a> page!
+                    </p>
                 </div>
 
                 <div
@@ -115,8 +220,10 @@
                     :key="follower.username"
                     @click="viewFollower(follower._id)"
                 >
-                    <img class="profilepic" :src="follower.profile_pic_link">
-                    <span class="follower-username">{{ follower.username }}</span>
+                    <img class="profilepic" :src="follower.profile_pic_link" />
+                    <span class="follower-username">{{
+                        follower.username
+                    }}</span>
                 </div>
             </div>
 
@@ -125,7 +232,14 @@
         </div>
     </div>
 
-    <BlogFormLayout v-if="showCreateBlog" @close-blog-form="() => { toggleCreateBlog(false) }" />
+    <BlogFormLayout
+        v-if="showCreateBlog"
+        @close-blog-form="
+            () => {
+                toggleCreateBlog(false);
+            }
+        "
+    />
 
     <ReportFormLayout
         v-if="!isSelf && showReportForm"
@@ -136,27 +250,27 @@
 </template>
 
 <script>
-import SubscribedForums from '../../components/forum/SubscribedForums.vue';
-import CreatedForums from '../../components/forum/CreatedForums.vue';
+import SubscribedForums from "../../components/forum/SubscribedForums.vue";
+import CreatedForums from "../../components/forum/CreatedForums.vue";
 
-import banner from '../../assets/CustomBanner.png';
+import banner from "../../assets/CustomBanner.png";
 
-import BlogLayout from '../../components/blog/BlogLayout.vue';
-import BlogFormLayout from '../../components/blog/BlogFormLayout.vue';
+import BlogLayout from "../../components/blog/BlogLayout.vue";
+import BlogFormLayout from "../../components/blog/BlogFormLayout.vue";
 
-import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
+import InterestBadgeList from "../../components/general/InterestBadgeList.vue";
 
-import ReportFormLayout from '../../components/report/ReportFormLayout.vue';
+import ReportFormLayout from "../../components/report/ReportFormLayout.vue";
 
-import ObjectID from 'bson-objectid';
-import { debounce } from 'lodash';
-import viewUser from '../../utils/general/viewUser.js';
-import signOut from '../../utils/authentication/signOut';
+import ObjectID from "bson-objectid";
+import { debounce } from "lodash";
+import viewUser from "../../utils/general/viewUser.js";
+import signOut from "../../utils/authentication/signOut";
 
-import highlightElement from '../../utils/general/highlightElement.js';
+import highlightElement from "../../utils/general/highlightElement.js";
 
-import { useConfirmStore } from '../../stores/ConfirmStore';
-import { useAlertStore } from '../../stores/AlertStore';
+import { useConfirmStore } from "../../stores/ConfirmStore";
+import { useAlertStore } from "../../stores/AlertStore";
 
 export default {
     components: {
@@ -165,16 +279,10 @@ export default {
         BlogLayout,
         BlogFormLayout,
         InterestBadgeList,
-        ReportFormLayout
+        ReportFormLayout,
     },
-    props: [
-        'userData',
-        'blogs'
-    ],
-    emits: [
-        'start-loading',
-        'stop-loading',
-    ],
+    props: ["userData", "blogs"],
+    emits: ["start-loading", "stop-loading"],
     data() {
         return {
             user: null,
@@ -188,8 +296,8 @@ export default {
             savedBlogs: [],
             savedLoaded: false,
             viewingSaved: false,
-            postId: '',
-            commentId: '',
+            postId: "",
+            commentId: "",
             viewingProfile: true,
 
             following: false,
@@ -200,8 +308,8 @@ export default {
             showCreateBlog: false,
             showReportForm: false,
 
-            alert: useAlertStore().alert
-        }
+            alert: useAlertStore().alert,
+        };
     },
     created() {
         // save user data
@@ -224,18 +332,18 @@ export default {
 
         if (query) {
             // automatically open create blog form if href is /profilePage.html?create and requested user is self
-            if (query == '?create' && this.isSelf) {
+            if (query == "?create" && this.isSelf) {
                 this.showCreateBlog = true;
             }
 
             const params = new URLSearchParams(query);
 
             // set postId and commentId to highlight item (coming from admin reports page)
-            if (params.has('post')) {
-                this.postId = params.get('post');
+            if (params.has("post")) {
+                this.postId = params.get("post");
 
-                if (params.has('comment')) {
-                    this.commentId = params.get('comment');
+                if (params.has("comment")) {
+                    this.commentId = params.get("comment");
                 }
             }
         }
@@ -244,13 +352,13 @@ export default {
         this.debouncedFollowUpdate = debounce(this.updateFollowing, 3000);
 
         // set event listener to complete pending request when page is closed
-        window.addEventListener('beforeunload', this.handleWindowResize);
+        window.addEventListener("beforeunload", this.handleWindowResize);
     },
     mounted() {
         // Check if the current view is mobile or not
         this.checkIsMobileView();
         // Listen for window resize events to update the left/right-content classes
-        window.addEventListener('resize', this.handleWindowResize);
+        window.addEventListener("resize", this.handleWindowResize);
 
         if (!this.postId) return;
 
@@ -260,34 +368,32 @@ export default {
 
             if (targetPost) {
                 targetPost.scrollIntoView({
-                    block: 'center'
+                    block: "center",
                 });
 
                 highlightElement(targetPost);
             }
         }, 100);
-
-        
     },
     beforeUnmount() {
         this.completeFollowRequest();
     },
-    beforeDestroy(){
+    beforeDestroy() {
         // Remove the event listener to avoid memory leaks
-        window.removeEventListener('resize', this.checkIsMobileView());
+        window.removeEventListener("resize", this.checkIsMobileView());
     },
     methods: {
         checkIsMobileView() {
             const left_content = document.getElementById("left-content");
             const right_content = document.getElementById("right-content");
             // Use the window innerWidth to determine if it's mobile or not
-            if (window.innerWidth <= 767){
+            if (window.innerWidth <= 767) {
                 right_content.classList.add("hide");
-                left_content.classList.remove("hide")
-            } else {
-                this.viewingProfile = true
                 left_content.classList.remove("hide");
-                right_content.classList.remove("hide")
+            } else {
+                this.viewingProfile = true;
+                left_content.classList.remove("hide");
+                right_content.classList.remove("hide");
             }
         },
         handleWindowResize() {
@@ -299,38 +405,42 @@ export default {
             const right_content = document.getElementById("right-content");
 
             this.viewingProfile = !this.viewingProfile; // Toggle
-            if (this.viewingProfile){
+            if (this.viewingProfile) {
                 right_content.classList.add("hide");
-                left_content.classList.remove("hide")
+                left_content.classList.remove("hide");
             } else {
                 right_content.classList.remove("hide");
-                left_content.classList.add("hide")
+                left_content.classList.add("hide");
             }
         },
         // to get user's saved posts if user is viewing his own profile
         async getSavedPosts() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/saved`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(async res => {
-                await res.json().then(data => {
-                    this.savedBlogs = data;
-                    this.savedLoaded = true;
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/saved`,
+                {
+                    mode: "cors",
+                    method: "GET",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then((data) => {
+                        this.savedBlogs = data;
+                        this.savedLoaded = true;
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch(error => {
-                console.log(error);
-            });
         },
         // to sign out and clear cookies
         async signOut() {
             const success = await signOut();
 
             if (success) {
-                location.href = '/login.html';
-            }
-            else {
-                console.log('Failed to log out.');
+                location.href = "/login.html";
+            } else {
+                console.log("Failed to log out.");
             }
         },
         // toggle following user
@@ -343,11 +453,12 @@ export default {
             if (this.following) {
                 this.followerCount += 1;
                 this.user.followers.push(this.self);
-            }
-            else {
+            } else {
                 this.followerCount -= 1;
 
-                const index = this.user.followers.findIndex(follower => follower._id == this.self._id);
+                const index = this.user.followers.findIndex(
+                    (follower) => follower._id == this.self._id,
+                );
                 this.user.followers.splice(index, 1);
             }
 
@@ -359,42 +470,46 @@ export default {
                 return;
             }
 
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/users/${this.user._id}/follow`;
+            const targetURL = `${
+                import.meta.env.VITE_APP_SERVER_URL
+            }/api/users/${this.user._id}/follow`;
             const options = {
-                mode: 'cors',
-                credentials: 'include'
-            }
+                mode: "cors",
+                credentials: "include",
+            };
 
             // send request to update follow status
             // only send request to follow user if new following value is true and currently saved following value is false
             if (this.following && !this.savedFollowing) {
-                options.method = 'POST';
+                options.method = "POST";
 
-                await fetch(targetURL, options).then(async (res) => {
-                    if (res.status == 201) {
-                        this.savedFollowing = true;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch(error => {
-                    console.log(error);
-                });
+                await fetch(targetURL, options)
+                    .then(async (res) => {
+                        if (res.status == 201) {
+                            this.savedFollowing = true;
+                        } else {
+                            await res.json().then((data) => console.log(data));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
             // only send request to unfollow user if new following value is false and currently saved following value is true
             else if (!this.following && this.savedFollowing) {
-                options.method = 'DELETE';
+                options.method = "DELETE";
 
-                await fetch(targetURL, options).then(async (res) => {
-                    if (res.status == 204) {
-                        this.savedFollowing = false;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch(error => {
-                    console.log(error);
-                });
+                await fetch(targetURL, options)
+                    .then(async (res) => {
+                        if (res.status == 204) {
+                            this.savedFollowing = false;
+                        } else {
+                            await res.json().then((data) => console.log(data));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
         },
         // complete updateFollowing request if pending
@@ -407,7 +522,7 @@ export default {
         },
         // to view follower user profile
         viewFollower(userId) {
-            console.log('view follower')
+            console.log("view follower");
             viewUser(userId);
         },
         // to create chat with the user and go to chat.html
@@ -417,23 +532,26 @@ export default {
             // otherwise: target = null
             let target = null;
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats/check/${this.user._id}`, {
-                mode: 'cors',
-                methods: 'GET',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(async data => {
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/chats/check/${
+                    this.user._id
+                }`,
+                {
+                    mode: "cors",
+                    methods: "GET",
+                    credentials: "include",
+                },
+            ).then(async (res) => {
+                await res.json().then(async (data) => {
                     if (res.ok) {
                         target = data.existingChat;
-                    }
-                    else {
+                    } else {
                         // if response is not ok either an error occurred on backend/user is requesting to chat with himself
                         // display error and do nothing
                         await this.alert(data.message);
                         return;
                     }
                 });
-
             });
 
             // if chat does not exist then create new chat
@@ -444,13 +562,13 @@ export default {
                     targetUserId: this.user._id,
                     name: this.user.username,
                     pic: this.user.profile_pic_link,
-                    last_message_timestamp: Date.now()
-                }
+                    last_message_timestamp: Date.now(),
+                };
             }
 
             // set selectedChat and go to chat page
-            sessionStorage.setItem('selectedChat', JSON.stringify(target));
-            location.href = '/chat.html';
+            sessionStorage.setItem("selectedChat", JSON.stringify(target));
+            location.href = "/chat.html";
         },
         // to toggle between created and saved blogs
         async viewSaved(viewSaved) {
@@ -467,7 +585,11 @@ export default {
         },
         // to block/unblock a user
         async blockUser() {
-            const confirmBlock = await useConfirmStore().confirm(`Are you sure you want to ${this.blockingUser ? 'unblock' : 'block'} this user?`);
+            const confirmBlock = await useConfirmStore().confirm(
+                `Are you sure you want to ${
+                    this.blockingUser ? "unblock" : "block"
+                } this user?`,
+            );
 
             if (!confirmBlock) {
                 return;
@@ -475,12 +597,17 @@ export default {
 
             this.toggleChildLoading(true);
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/${this.user._id}/block`, {
-                method: this.blockingUser ? 'DELETE' : 'POST',
-                mode: 'cors',
-                credentials: 'include'
-            }).then(async res => {
-                await res.json().then(async data => {
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/users/${
+                    this.user._id
+                }/block`,
+                {
+                    method: this.blockingUser ? "DELETE" : "POST",
+                    mode: "cors",
+                    credentials: "include",
+                },
+            ).then(async (res) => {
+                await res.json().then(async (data) => {
                     await this.alert(data.message);
 
                     // only update blockingUser if response is ok (block/unblock succeeded)
@@ -498,19 +625,17 @@ export default {
         },
         // to toggle loading wheel on profile page
         toggleChildLoading(loading) {
-            loading ? this.$emit('start-loading') : this.$emit('stop-loading');
-        }
+            loading ? this.$emit("start-loading") : this.$emit("stop-loading");
+        },
     },
     computed: {
         // to get the correct set of blogs to display
         blogsToDisplay() {
             return this.viewingSaved ? this.savedBlogs : this.blogs;
-        }
-    }
-}
-
+        },
+    },
+};
 </script>
-
 
 <style scoped>
 .card {
@@ -526,6 +651,7 @@ export default {
     display: flex;
     flex-direction: row;
 }
+
 .toggle-button {
     display: none;
     margin: 4vh;
@@ -537,13 +663,13 @@ export default {
     flex-direction: column;
     position: relative;
     padding: 0px;
-    flex: 1 0 70%;
+    flex-grow: 1;
 }
 
 #right-content {
     background-color: var(--primary);
     padding: 25px;
-    flex: 0 0 30%;
+    flex: 0 0 20%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -610,7 +736,7 @@ export default {
 }
 
 #header-content::before {
-    content: '';
+    content: "";
     height: 1px;
     position: absolute;
     width: 80%;
@@ -635,14 +761,17 @@ export default {
     row-gap: 10px;
 }
 
-#header-user-school, #header-user-biography, #header-user-interests {
+#header-user-school,
+#header-user-biography,
+#header-user-interests {
     display: flex;
     flex-direction: row;
     column-gap: 10px;
     align-items: center;
 }
 
-#user-school, #user-biography {
+#user-school,
+#user-biography {
     font-style: italic;
 }
 
@@ -709,7 +838,8 @@ export default {
     transform: translateX(-100%);
 }
 
-#sign-out-container:hover, #user-report-actions > span:hover {
+#sign-out-container:hover,
+#user-report-actions > span:hover {
     opacity: 0.7;
 }
 
@@ -796,7 +926,8 @@ export default {
     font-size: 24px;
 }
 
-#follow-btn, #msg-btn {
+#follow-btn,
+#msg-btn {
     background-color: transparent;
     border: var(--primary) solid 3px;
     color: var(--primary);
@@ -831,7 +962,7 @@ export default {
     color: white;
 }
 
-#no-followers{
+#no-followers {
     margin-top: 30px;
 }
 
@@ -839,73 +970,83 @@ export default {
     display: none !important;
 }
 
-/* Mobile port */
-@media screen and (max-width: 768px) {
+/* medium screens and smaller */
+@media screen and (max-width: 992px) {
+    body {
+        text-align: center !important;
+        font-size: 14px !important;
+    }
 
-body {
-    text-align: center !important;
-    font-size: 14px !important;
-}
-p {
-    font-size: 14px;
-}
-#white-container {
-    max-width: 100vw;
-}
-.toggle-button {
-    display: block;
-    border: 5px solid var(--primary);
-    background-color: var(--primary);
-    color: white;
-}
-.toggle-button:hover {
-    background-color: transparent;
-    color: var(--primary);
-    font-weight: bold;
-}
-#left-content, #right-content {
-    min-width: 100% ;
-}
-#main-content {
-    display: flex;
-    flex-direction: column;
-    padding: 0 10px;
-    min-height: 100vh;
-}
-#settings-options {
-    display: inline-block;
-    margin-left: 3vw;
-    margin-bottom: 10vh;
-}
+    p {
+        font-size: 14px;
+    }
 
-#user-edit-icon {
-    font-size: 2rem;
-    color: black;
-    float:left;
-    margin-left: -55px;
-}
+    #white-container {
+        max-width: 100vw;
+    }
 
-#user-sign-out-icon {
-    font-size: 2rem;
-    float: left;
-    margin-left: -55px;
-}
+    .toggle-button {
+        display: block;
+        border: 5px solid var(--primary);
+        background-color: var(--primary);
+        color: white;
+    }
 
-#user-sign-out-text {
-    display: none;
-}
-#header-user-details {
-    max-width: 50vw;
-}
-#header-user-actions {
-    margin-left: 6vw;
-}
-#main-content {
-    padding: 0;
-}
+    .toggle-button:hover {
+        background-color: transparent;
+        color: var(--primary);
+        font-weight: bold;
+    }
+
+    #left-content,
+    #right-content {
+        min-width: 100%;
+    }
+
+    #main-content {
+        display: flex;
+        flex-direction: column;
+        padding: 0 10px;
+        min-height: 100vh;
+    }
+
+    #settings-options {
+        display: inline-block;
+        margin-left: 3vw;
+        margin-bottom: 10vh;
+    }
+
+    #user-edit-icon {
+        font-size: 2rem;
+        color: black;
+        float: left;
+        margin-left: -55px;
+    }
+
+    #user-sign-out-icon {
+        font-size: 2rem;
+        float: left;
+        margin-left: -55px;
+    }
+
+    #user-sign-out-text {
+        display: none;
+    }
+
+    #header-user-details {
+        max-width: 50vw;
+    }
+
+    #header-user-actions {
+        margin-left: 6vw;
+    }
+
+    #main-content {
+        padding: 0;
+    }
 }
 </style>
 
 <style>
-@import url('../../styles/main.css');
+@import url("../../styles/main.css");
 </style>

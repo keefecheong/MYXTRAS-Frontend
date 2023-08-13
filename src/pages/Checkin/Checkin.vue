@@ -1,36 +1,75 @@
 <template>
-
     <div id="main-container">
-        <NavSidebar/>
+        <NavSidebar />
         <div id="main-content">
             <div id="dailyLogInDiv">
                 <div class="left-content">
                     <h1>Daily Log-in!</h1>
                     <p>Resets every week</p>
                     <div class="imageContainer">
-                        <img src="../../assets/gemsPile.png">
+                        <img src="../../assets/gemsPile.png" />
                     </div>
                 </div>
                 <div class="right-content">
                     <div id="scroll-view" v-dragscroll>
-                        <div v-for="day in 7" :key="day" class="dayBox" :id="'day' + day">
+                        <div
+                            v-for="day in 7"
+                            :key="day"
+                            class="dayBox"
+                            :id="'day' + day"
+                        >
                             <div class="">
                                 <h3>Day {{ day }}</h3>
-                                <p class="daily-points-text" style="display: inline;">{{ rewards[day - 1] }} <span class="material-symbols-outlined symbols" style="color: aqua; ">diamond</span></p>
+                                <p
+                                    class="daily-points-text"
+                                    style="display: inline"
+                                >
+                                    {{ rewards[day - 1] }}
+                                    <span
+                                        class="material-symbols-outlined symbols"
+                                        style="color: aqua"
+                                        >diamond</span
+                                    >
+                                </p>
                             </div>
-                            <br>
-                            <button class="pink-btn symbols locked" v-if="day > this.day">
-                                <p class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</p>
+                            <br />
+                            <button
+                                class="pink-btn symbols locked"
+                                v-if="day > this.day"
+                            >
+                                <p
+                                    class="material-symbols-outlined"
+                                    style="
+                                        text-align: center;
+                                        justify-content: center;
+                                    "
+                                >
+                                    lock
+                                </p>
                             </button>
-                            <button class="pink-btn locked" v-if="day < this.day" disabled><p>Claimed</p></button>
-                            <button class="pink-btn" v-if="day == this.day " @click="checkIn" :class="{ claimed: claimed }" :disabled="claimed"><p>{{claimed ? "Claimed" : "Claim"}}</p></button>
+                            <button
+                                class="pink-btn locked"
+                                v-if="day < this.day"
+                                disabled
+                            >
+                                <p>Claimed</p>
+                            </button>
+                            <button
+                                class="pink-btn"
+                                v-if="day == this.day"
+                                @click="checkIn"
+                                :class="{ claimed: claimed }"
+                                :disabled="claimed"
+                            >
+                                <p>{{ claimed ? "Claimed" : "Claim" }}</p>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="dailyTasksDiv">
                 <h1>Daily Tasks</h1>
-                <div id="missions-container" >
+                <div id="missions-container">
                     <div id="mission-container" v-for="mission in missions">
                         <div class="left-content">
                             <p>{{ mission.title }}</p>
@@ -38,16 +77,46 @@
                         <div class="right-content d-flex justify-content-end">
                             <div class="d-flex mission-container">
                                 <p>{{ mission.gem_count }}</p>
-                                <span class="material-symbols-outlined symbols" style="color: aqua; transform: translateY(-20%) translateX(25%) !important;">diamond</span>
-                                <button class="white-btn locked" v-if=mission.locked>
-                                    <span class="material-symbols-outlined" style="text-align: center; justify-content: center;">lock</span>
+                                <span
+                                    class="material-symbols-outlined symbols"
+                                    style="
+                                        color: aqua;
+                                        transform: translateY(-20%)
+                                            translateX(25%) !important;
+                                    "
+                                    >diamond</span
+                                >
+                                <button
+                                    class="white-btn locked"
+                                    v-if="mission.locked"
+                                >
+                                    <span
+                                        class="material-symbols-outlined"
+                                        style="
+                                            text-align: center;
+                                            justify-content: center;
+                                        "
+                                        >lock</span
+                                    >
                                 </button>
-                                <btn class="white-btn" :class="{claimed : mission.claimed}" v-else="!missions.locked" @click="claimMission(mission.title)"><p>{{mission.claimed ? "Claimed" : "Claim"}}</p></btn>
+                                <btn
+                                    class="white-btn"
+                                    :class="{ claimed: mission.claimed }"
+                                    v-else="!missions.locked"
+                                    @click="claimMission(mission.title)"
+                                    ><p>
+                                        {{
+                                            mission.claimed
+                                                ? "Claimed"
+                                                : "Claim"
+                                        }}
+                                    </p></btn
+                                >
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="missions-container" >
+                <div id="missions-container">
                     <div id="mission-container">
                         <div class="left-content">
                             <p>Complete all dailies</p>
@@ -55,25 +124,45 @@
                         <div class="right-content d-flex justify-content-end">
                             <div class="d-flex mission-container">
                                 <p>500</p>
-                                <span class="material-symbols-outlined symbols" style="color: aqua; transform: translateY(-20%) translateX(25%) !important;">diamond</span>
-                                <button class="white-btn locked" v-if="allClaimed.locked">
-                                    <span class="material-symbols-outlined">lock</span>
+                                <span
+                                    class="material-symbols-outlined symbols"
+                                    style="
+                                        color: aqua;
+                                        transform: translateY(-20%)
+                                            translateX(25%) !important;
+                                    "
+                                    >diamond</span
+                                >
+                                <button
+                                    class="white-btn locked"
+                                    v-if="allClaimed.locked"
+                                >
+                                    <span class="material-symbols-outlined"
+                                        >lock</span
+                                    >
                                 </button>
-                                <btn class="white-btn" :class="{claimed : allClaimed.claimed}" v-else="!allClaimed.locked" @click="claimMission('allClaim')"><p>Claim</p></btn>                            
+                                <btn
+                                    class="white-btn"
+                                    :class="{ claimed: allClaimed.claimed }"
+                                    v-else="!allClaimed.locked"
+                                    @click="claimMission('allClaim')"
+                                    ><p>Claim</p></btn
+                                >
                             </div>
                         </div>
                     </div>
                 </div>
                 <Pets />
-                <button id="bottom-right-button" @click="gachapon"><span class="material-symbols-outlined" >shopping_cart</span></button>
+                <button id="bottom-right-button" @click="gachapon">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                </button>
             </div>
         </div>
     </div>
-
 </template>
 
 <style>
-@import url('../../styles/main.css');
+@import url("../../styles/main.css");
 body {
     color: white !important;
 }
@@ -85,13 +174,13 @@ h1 {
 h3 {
     margin: 1em 0 !important;
 }
-.symbols{
+.symbols {
     display: inline !important;
 }
 #dailyLogInDiv {
     display: flex;
     flex-direction: row;
-    background-color: #0D283D;
+    background-color: #0d283d;
     padding: 50px 80px;
     min-height: 40dvh;
 }
@@ -101,7 +190,7 @@ h3 {
     justify-content: center;
 }
 #dailyTasksDiv {
-    background-color: #1C1B25;
+    background-color: #1c1b25;
     padding: 50px 80px;
     min-height: 60dvh;
 }
@@ -121,7 +210,7 @@ h3 {
 .dayBox {
     display: flex;
     flex-direction: column;
-    background-color: #133B5B;
+    background-color: #133b5b;
     border-radius: 5px;
     margin: 0 2vw;
     text-align: center;
@@ -130,7 +219,7 @@ h3 {
 .pink-btn {
     font-weight: bold;
     background-color: var(--primary);
-    color:white;
+    color: white;
     border-radius: 5px;
     margin: 0 2vw;
     white-space: normal;
@@ -147,15 +236,15 @@ h3 {
     background-color: transparent;
     border: 3px solid var(--primary);
     cursor: pointer;
-    color:var(--primary);
+    color: var(--primary);
 }
 .pink-btn:hover > .material-symbols-outlined {
-    color:var(--primary);
+    color: var(--primary);
 }
 .white-btn {
     font-weight: bold;
     background-color: white;
-    color:black;
+    color: black;
     border-radius: 5px;
     margin: 0 2vw;
     white-space: normal;
@@ -172,7 +261,8 @@ h3 {
 .imageContainer {
     width: 60% !important;
 }
-.locked, .claimed {
+.locked,
+.claimed {
     opacity: 0.5;
 }
 #missions-container {
@@ -187,7 +277,7 @@ h3 {
     margin: 5vh auto;
     padding: 2vh;
     border-radius: 10px;
-    background-color: #133B5B;
+    background-color: #133b5b;
 }
 #bottom-right-button {
     position: fixed;
@@ -198,79 +288,91 @@ h3 {
     border-radius: 50%;
     border: none;
     animation: neonGlow 2s ease-in-out infinite alternate;
-
 }
 @keyframes neonGlow {
-  0% {
-    box-shadow: 0 0 5px #d81515, 0 0 10px #ff0000, 0 0 30px #fefffb, 0 0 60px var(--primary), 0 0 80px var(--primary);
-  }
-  50% {
-    box-shadow: 0 0 5px #d81515, 0 0 10px #ff0000, 0 0 30px var(--primary), 0 0 60px var(--primary), 0 0 80px var(--primary);
-  }
-  100% {
-    box-shadow: 0 0 5px #d81515, 0 0 10px var(--primary), 0 0 30px var(--primary), 0 0 60px var(--primary), 0 0 80px var(--primary);
-  }
+    0% {
+        box-shadow:
+            0 0 5px #d81515,
+            0 0 10px #ff0000,
+            0 0 30px #fefffb,
+            0 0 60px var(--primary),
+            0 0 80px var(--primary);
+    }
+    50% {
+        box-shadow:
+            0 0 5px #d81515,
+            0 0 10px #ff0000,
+            0 0 30px var(--primary),
+            0 0 60px var(--primary),
+            0 0 80px var(--primary);
+    }
+    100% {
+        box-shadow:
+            0 0 5px #d81515,
+            0 0 10px var(--primary),
+            0 0 30px var(--primary),
+            0 0 60px var(--primary),
+            0 0 80px var(--primary);
+    }
 }
 
 /* Responsive styles */
 @media screen and (max-width: 768px) {
-body {
-    font-size: 14px !important;
-}
-#main-content {
-    display: flex;
-    flex-direction: column;
-}
-.dayBox {
-    width: 40vw !important;
-}
-h1 {
-    width: 100%;
-    text-align: center !important;
-}
-#dailyLogInDiv {
-    display: flex;
-    flex-direction: column;
-}
+    body {
+        font-size: 14px !important;
+    }
+    #main-content {
+        display: flex;
+        flex-direction: column;
+    }
+    .dayBox {
+        width: 40vw !important;
+    }
+    h1 {
+        width: 100%;
+        text-align: center !important;
+    }
+    #dailyLogInDiv {
+        display: flex;
+        flex-direction: column;
+    }
 
-.left-content,
-.right-content {
-    width: 100%;
-    text-align: center;
+    .left-content,
+    .right-content {
+        width: 100%;
+        text-align: center;
+    }
+    .imageContainer {
+        margin: auto;
+    }
+    #scroll-view {
+        max-width: 90vw;
+        margin: auto;
+    }
+    .dayBox {
+        margin: 10px;
+        min-width: 30vw;
+        overflow-x: scroll;
+    }
+    #mission-container {
+        width: 100%;
+        align-items: center;
+    }
+    #dailyLogInDiv,
+    #dailyTasksDiv {
+        padding: 20px;
+    }
+    .pink-btn > p {
+        font-size: 14px;
+    }
+    .white-btn {
+        width: 25vw !important;
+        font-size: 14px;
+    }
 }
-.imageContainer {
-    margin: auto;
-}
-#scroll-view {
-    max-width: 90vw;
-    margin: auto;
-}
-.dayBox {
-    margin: 10px;
-    min-width: 30vw;
-    overflow-x: scroll;
-}
-#mission-container {
-    width: 100%;
-    align-items: center;
-}
-#dailyLogInDiv,
-#dailyTasksDiv {
-    padding: 20px;
-}
-.pink-btn > p {
-    font-size: 14px;
-}
-.white-btn {
-    width: 25vw !important;
-    font-size: 14px;
-}
-}
-
 </style>
 
 <script>
-
 export default {
     data() {
         return {
@@ -278,91 +380,120 @@ export default {
             rewards: [50, 100, 100, 100, 150, 200, 500],
             day: null,
             claimed: false,
-            allClaimed: {'claimed': false, 'locked': true},
-        }
+            allClaimed: { claimed: false, locked: true },
+        };
     },
-    created(){
+    created() {
         this.initData();
     },
     methods: {
-        async initData(){
+        async initData() {
             // get user profile and follow status
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/missions`, {
-                methods: 'GET',
-                credentials: 'include',
-                mode: 'cors'
-            }).then(async (res) => {
-                await res.json().then(data => {
-                    // save user data
-                    this.missions = data.daily_missions;
-                    this.allClaimed = data.allClaimed;
-                    this.checkAllClaimed();
+            await fetch(
+                `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/gamification/missions`,
+                {
+                    methods: "GET",
+                    credentials: "include",
+                    mode: "cors",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then((data) => {
+                        // save user data
+                        this.missions = data.daily_missions;
+                        this.allClaimed = data.allClaimed;
+                        this.checkAllClaimed();
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch(error => {
-                console.log(error);
-            });
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/daily-checkin`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then((data) => {
-                    this.day = data.checkin_count;
-                    this.claimed = data.claimed;
+            await fetch(
+                `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/gamification/daily-checkin`,
+                {
+                    mode: "cors",
+                    method: "GET",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then((data) => {
+                        this.day = data.checkin_count;
+                        this.claimed = data.claimed;
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
-            
         },
-        async checkIn(){
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/daily-checkin`, {
-                mode: 'cors',
-                method: 'POST',
-                credentials: 'include',
-            }).then(async (res) => {
-                await res.json().then((data) => {
-                    this.claimed = true;    
+        async checkIn() {
+            await fetch(
+                `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/gamification/daily-checkin`,
+                {
+                    mode: "cors",
+                    method: "POST",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then((data) => {
+                        this.claimed = true;
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
         },
 
-        async claimMission(targetTitle){
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/missions/${targetTitle}`, {
-                mode: 'cors',
-                method: 'POST',
-                credentials: 'include',
-            }).then(async (res) => {
-                await res.json().then((data) => {
-                    if (targetTitle == 'allClaim'){
-                        this.allClaimed.claimed = true;
-                    }
-                    else{
-                        const targetMission = this.missions.find(mission => mission.title === targetTitle);
-                        if (targetMission) {
-                            // Update the claimed property to true
-                            targetMission.claimed = true;
+        async claimMission(targetTitle) {
+            await fetch(
+                `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/gamification/missions/${targetTitle}`,
+                {
+                    mode: "cors",
+                    method: "POST",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then((data) => {
+                        if (targetTitle == "allClaim") {
+                            this.allClaimed.claimed = true;
+                        } else {
+                            const targetMission = this.missions.find(
+                                (mission) => mission.title === targetTitle,
+                            );
+                            if (targetMission) {
+                                // Update the claimed property to true
+                                targetMission.claimed = true;
+                            }
                         }
-                    }
-                    
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
         },
-        gachapon(){
-            window.location.href = "/gachapon.html"
+        gachapon() {
+            window.location.href = "/gachapon.html";
         },
 
-        checkAllClaimed(){
-            const allLockedAreFalse = this.missions.every(item => item.locked === false);
-            console.log(allLockedAreFalse)
-            if (allLockedAreFalse){
+        checkAllClaimed() {
+            const allLockedAreFalse = this.missions.every(
+                (item) => item.locked === false,
+            );
+            console.log(allLockedAreFalse);
+            if (allLockedAreFalse) {
                 this.allClaimed.locked = false;
             }
         },
-    }
-}
+    },
+};
 </script>

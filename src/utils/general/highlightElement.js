@@ -4,6 +4,6 @@ export default function highlightElement(element) {
     element.style.backgroundColor = `rgba(226, 34, 98, 0.1)`;
 
     setTimeout(() => {
-        element.style.backgroundColor = '';
+        element.style.backgroundColor = "";
     }, 5000);
 }

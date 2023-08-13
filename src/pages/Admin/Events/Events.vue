@@ -1,43 +1,72 @@
 <template>
+    <LoadingOverlay
+        v-if="showLoading"
+        :center="true"
+        :backgroundColor="'rgba(0, 0, 0, 0.5)'"
+    />
+
+    <AlertPrompt
+        v-if="showAlert && alertMsg.length > 0"
+        @close-alert="closeAlert"
+    >
+        {{ alertMsg }}
+    </AlertPrompt>
+
+    <ConfirmPrompt
+        v-if="showConfirm && confirmMsg.length > 0"
+        @close-confirm="closeConfirm"
+    >
+        {{ confirmMsg }}
+    </ConfirmPrompt>
+
     <div id="main-container">
         <NavSidebar :forAdmin="true" />
 
-        
-        <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
-            {{ alertMsg }}
-        </AlertPrompt>
-
-        <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
-            {{ confirmMsg }}
-        </ConfirmPrompt>
-
-
         <div id="main-content">
-            <div id="header">
-                <h1 id="title">Xtra EVENTS! 🔊</h1>
+            <AdminBanner>
+                <template v-slot:header>
+                    <h1>Xtra EVENTS! 🔊</h1>
+                </template>
+            </AdminBanner>
+
+            <AnnoucementLayout
+                @edit-event="handleEditEvent"
+                @show-loading="(show) => toggleLoading(show)"
+            />
+
+            <div
+                class="create-event"
+                @click="togglePopup(true)"
+                @mouseover="expandBtn(true)"
+                @mouseleave="expandBtn(false)"
+            >
+                <div class="minimized-btn" id="expanded-btn">Create Event</div>
+                <div class="plus-btn">+</div>
             </div>
-            <AnnoucementLayout/>
-            <div class="create-event" @click="togglePopup(true)" @mouseover="expandBtn(true)" @mouseleave="expandBtn(false)">
-                <div class="minimized-btn" id="expanded-btn">
-                    Create Event
-                </div>
-                <div class="plus-btn">
-                    +
-                </div>
-            </div>
-            <EventsFormLayout v-if="showForm" @close-event-form="() => { togglePopup(false) }"/>
+
+            <EventsFormLayout
+                v-if="showForm"
+                @close-event-form="
+                    () => {
+                        togglePopup(false);
+                    }
+                "
+                :event="eventToEdit"
+            />
         </div>
     </div>
 </template>
 
 <script>
-import NavSidebar from '../../../components/general/NavSidebar.vue';
-import AnnoucementLayout from '../../../components/announcement/AnnoucementLayout.vue';
-import EventsFormLayout from '../../../components/admin/Events/EventsFormLayout.vue';
-import { useAlertStore } from '../../../stores/AlertStore.js';
-import AlertPrompt from '../../../components/general/AlertPrompt.vue';
-import { useConfirmStore } from '../../../stores/ConfirmStore.js';
-import ConfirmPrompt from '../../../components/general/ConfirmPrompt.vue';
+import NavSidebar from "../../../components/general/NavSidebar.vue";
+import AnnoucementLayout from "../../../components/announcement/AnnoucementLayout.vue";
+import EventsFormLayout from "../../../components/admin/Events/EventsFormLayout.vue";
+import { useAlertStore } from "../../../stores/AlertStore.js";
+import AlertPrompt from "../../../components/general/AlertPrompt.vue";
+import { useConfirmStore } from "../../../stores/ConfirmStore.js";
+import ConfirmPrompt from "../../../components/general/ConfirmPrompt.vue";
+import LoadingOverlay from "../../../components/general/LoadingOverlay.vue";
+import AdminBanner from "../../../components/admin/AdminBanner.vue";
 
 export default {
     components: {
@@ -45,25 +74,40 @@ export default {
         AnnoucementLayout,
         EventsFormLayout,
         AlertPrompt,
-        ConfirmPrompt
+        ConfirmPrompt,
+        LoadingOverlay,
+        AdminBanner,
     },
     data() {
         return {
             hover: false,
             showForm: false,
             alertStore: useAlertStore(),
-            confirmStore: useConfirmStore()
-        }
+            confirmStore: useConfirmStore(),
+            showLoading: false,
+            eventToEdit: null,
+        };
     },
     methods: {
+        // to toggle loading wheel
+        toggleLoading(show) {
+            this.showLoading = show;
+        },
+        // to toggle event form
         togglePopup(showForm) {
             this.showForm = showForm;
+
+            if (!showForm) {
+                this.eventToEdit = null;
+            }
         },
         expandBtn(bool) {
             if (bool) {
-                document.getElementById("expanded-btn").className = "expanded-btn";
+                document.getElementById("expanded-btn").className =
+                    "expanded-btn";
             } else {
-                document.getElementById("expanded-btn").className = "minimized-btn";
+                document.getElementById("expanded-btn").className =
+                    "minimized-btn";
             }
         },
         // to close alert prompt
@@ -71,9 +115,14 @@ export default {
             this.alertStore.closeAlert();
         },
         // to close confirm prompt
-        closeConfirm(decision){
+        closeConfirm(decision) {
             this.confirmStore.closeConfirm(decision);
-        }
+        },
+        // to handle edit event
+        handleEditEvent(event) {
+            this.eventToEdit = event;
+            this.togglePopup(true);
+        },
     },
     computed: {
         // to get showAlert value
@@ -91,30 +140,13 @@ export default {
         // to get confirmMsg value
         confirmMsg() {
             return this.confirmStore.confirmMsg;
-        }
+        },
     },
-}
+};
 </script>
 
 <style>
-@import url('../../../styles/main.css');
-
-#header{
-    display: flex;
-    flex-direction: row;
-    background-color: #133B5B;
-    padding: 30px 0 30px 0;
-    min-height: 17vh;
-    margin-left: -20px;
-    justify-content: center;
-}
-
-#title{
-    color: white;
-    text-align: center;
-    border-bottom: #EDEDED 1px solid;
-    width: 45%;
-}
+@import url("../../../styles/main.css");
 
 .create-event {
     cursor: pointer;
@@ -187,6 +219,4 @@ export default {
         width: 50px;
     }
 }
-
-
 </style>

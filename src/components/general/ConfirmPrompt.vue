@@ -82,13 +82,25 @@
     <div id="confirm-overlay">
         <div id="confirm-content">
             <div id="confirm-content-text">
-                <h3 id="confirm-header">Notice:</h3>    
+                <h3 id="confirm-header">Notice:</h3>
                 <h5 id="confirm-message"><slot></slot></h5>
             </div>
 
             <div id="confirm-controls-container">
-                <button id="confirm-true" type="button" @click="() => handleConfirm(true)">OK</button>
-                <button id="confirm-false" type="button" @click="() => handleConfirm(false)">Cancel</button>
+                <button
+                    id="confirm-true"
+                    type="button"
+                    @click="() => handleConfirm(true)"
+                >
+                    OK
+                </button>
+                <button
+                    id="confirm-false"
+                    type="button"
+                    @click="() => handleConfirm(false)"
+                >
+                    Cancel
+                </button>
             </div>
         </div>
     </div>
@@ -96,18 +108,16 @@
 
 <script>
 export default {
-    emits: [
-        'close-confirm'
-    ],
+    emits: ["close-confirm"],
     mounted() {
-        document.getElementById('confirm-true').focus();
+        document.getElementById("confirm-true").focus();
     },
     methods: {
         handleConfirm(decision) {
-            this.$emit('close-confirm', decision);
-        }
-    }
-}
+            this.$emit("close-confirm", decision);
+        },
+    },
+};
 </script>
 
 <style>
@@ -178,9 +188,9 @@ export default {
     background-color: var(--green);
     border: 2px solid var(--green) !important;
     color: white;
-
 }
-#confirm-controls-container button:focus, #confirm-controls-container button:hover {
+#confirm-controls-container button:focus,
+#confirm-controls-container button:hover {
     background-color: white;
     outline: none;
     color: black;

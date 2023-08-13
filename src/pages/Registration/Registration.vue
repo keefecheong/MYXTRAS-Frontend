@@ -1,76 +1,158 @@
 <template>
-    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+    <AlertPrompt
+        v-if="showAlert && alertMsg.length > 0"
+        @close-alert="closeAlert"
+    >
         {{ alertMsg }}
     </AlertPrompt>
 
-    <LoadingOverlay v-if="showLoading" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
+    <LoadingOverlay
+        v-if="showLoading"
+        :backgroundColor="'rgba(0, 0, 0, 0.5)'"
+        :center="true"
+    />
 
     <div id="main-container" class="center-main-container">
-        <img src="../../assets/ngeeannxtras.jpg" :draggable="false" id="ngee-ann-banner">
+        <img
+            src="../../assets/ngeeannxtras.jpg"
+            :draggable="false"
+            id="ngee-ann-banner"
+        />
 
         <div class="form-container">
             <form @submit.prevent="registerUser">
                 <h1>Register Now!</h1>
 
-                <input title="Please enter your email" v-model="emailAddress" type="email" placeholder="Email Address"
-                    required @input="verifyEmail">
+                <input
+                    title="Please enter your email"
+                    v-model="emailAddress"
+                    type="email"
+                    placeholder="Email Address"
+                    required
+                    @input="verifyEmail"
+                />
 
-                <p class="registration-error" v-if="showEmailErr">Invalid email address</p>
+                <p class="registration-error" v-if="showEmailErr">
+                    Invalid email address
+                </p>
 
                 <!-- Password Field -->
                 <div class="password-field-container">
                     <input
                         title="Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters"
-                        :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password"
-                        class="registration-password-field" :maxlength="20" required>
+                        :type="showPassword ? 'text' : 'password'"
+                        v-model="password"
+                        placeholder="Password"
+                        class="registration-password-field"
+                        :maxlength="20"
+                        required
+                    />
 
-                    <button type="button" class="material-symbols-outlined" id="show-password-button" :class="{ 'show-password': showPassword }"
-                        @click="hidePassword(1)">
+                    <button
+                        type="button"
+                        class="material-symbols-outlined"
+                        id="show-password-button"
+                        :class="{ 'show-password': showPassword }"
+                        @click="hidePassword(1)"
+                    >
                         visibility_off
                     </button>
 
                     <div v-if="password != ''" id="password-strength-info">
-                        <span class="material-symbols-outlined" :class="passwordRequirements">info</span>
-                        <p :class="passwordRequirements" class="registration-error">{{ passwordStrengthMessage }}</p>
+                        <span
+                            class="material-symbols-outlined"
+                            :class="passwordRequirements"
+                            >info</span
+                        >
+                        <p
+                            :class="passwordRequirements"
+                            class="registration-error"
+                        >
+                            {{ passwordStrengthMessage }}
+                        </p>
                     </div>
                 </div>
 
                 <div class="password-field-container">
-                    <input title="Confirm your password" :type="showRepeatPassword ? 'text' : 'password'"
-                        v-model="repeatedPassword" placeholder="Confirm Password" class="registration-password-field"
-                        :maxlength="20" required>
+                    <input
+                        title="Confirm your password"
+                        :type="showRepeatPassword ? 'text' : 'password'"
+                        v-model="repeatedPassword"
+                        placeholder="Confirm Password"
+                        class="registration-password-field"
+                        :maxlength="20"
+                        required
+                    />
 
-                    <button type="button" class="material-symbols-outlined" id="show-password-button" :class="{ 'show-password': showRepeatPassword }"
-                        @click="hidePassword(2)">
+                    <button
+                        type="button"
+                        class="material-symbols-outlined"
+                        id="show-password-button"
+                        :class="{ 'show-password': showRepeatPassword }"
+                        @click="hidePassword(2)"
+                    >
                         visibility_off
                     </button>
                 </div>
 
                 <!-- Phone Number Field -->
                 <div class="phone-number-field-container">
-                    <input title="Please enter your phone number" v-model="phoneNumber" type="text"
-                        placeholder="Phone Number (+65)" id="numberField" @input="() => {
-                            filterNumber();
-                            verifyPhone();
-                        }" required :disabled="otpSent">
+                    <input
+                        title="Please enter your phone number"
+                        v-model="phoneNumber"
+                        type="text"
+                        placeholder="Phone Number (+65)"
+                        id="numberField"
+                        @input="
+                            () => {
+                                filterNumber();
+                                verifyPhone();
+                            }
+                        "
+                        required
+                        :disabled="otpSent"
+                    />
 
-                    <button type="button" @click="sendOTP" class="registration-otp-button use-primary-secondary-gradient"
-                        :class="{ 'disabled': disableOTP }" :disabled="disableOTP || otpSent">
+                    <button
+                        type="button"
+                        @click="sendOTP"
+                        class="registration-otp-button use-primary-secondary-gradient"
+                        :class="{ disabled: disableOTP }"
+                        :disabled="disableOTP || otpSent"
+                    >
                         Send OTP
                     </button>
 
-                    <p v-if="showPhoneErr" class="registration-error">Invalid phone number</p>
+                    <p v-if="showPhoneErr" class="registration-error">
+                        Invalid phone number
+                    </p>
                 </div>
 
                 <!-- Reveals after OTP is sent -->
                 <div class="phone-number-field-container">
-                    <input v-if="otpSent" v-model="otp" type="text" placeholder="OTP" @input="() => {
-                        filterNumber();
-                        verifyPhone();
-                    }" :maxlength="6" required :disabled="otpVerified">
+                    <input
+                        v-if="otpSent"
+                        v-model="otp"
+                        type="text"
+                        placeholder="OTP"
+                        @input="
+                            () => {
+                                filterNumber();
+                                verifyPhone();
+                            }
+                        "
+                        :maxlength="6"
+                        required
+                        :disabled="otpVerified"
+                    />
 
-                    <button type="button" v-if="otpSent" @click="verifyOTP"
-                        class="registration-otp-button use-primary-secondary-gradient" :disabled="otpVerified">
+                    <button
+                        type="button"
+                        v-if="otpSent"
+                        @click="verifyOTP"
+                        class="registration-otp-button use-primary-secondary-gradient"
+                        :disabled="otpVerified"
+                    >
                         Verify OTP
                     </button>
 
@@ -79,9 +161,15 @@
 
                 <div id="recaptcha-container"></div>
 
-                <p v-if="registerFail" class="registration-error"> {{ generalErrMsg }}</p>
+                <p v-if="registerFail" class="registration-error">
+                    {{ generalErrMsg }}
+                </p>
 
-                <button type="submit" class="submit-button use-primary-secondary-gradient" :disabled="invalidFields">
+                <button
+                    type="submit"
+                    class="submit-button use-primary-secondary-gradient"
+                    :disabled="invalidFields"
+                >
                     Register
                 </button>
             </form>
@@ -92,10 +180,10 @@
         </div>
     </div>
 </template>
-  
+
 <style>
-@import url('../../styles/main.css');
-@import url('../../styles/login-register-styles.css');
+@import url("../../styles/main.css");
+@import url("../../styles/login-register-styles.css");
 
 .registration-error {
     color: red;
@@ -148,34 +236,34 @@
     color: rgb(30, 196, 30);
 }
 @media screen and (max-width: 768px) {
-#ngee-ann-banner {
-    display: none;
-}
-#main-container > * {
-    width: 100vw !important;
-}
-#form-container {
-    display: block;
-}
-#show-password-button {
-    transform: translateY(-50%);
-}
-.registration-otp-button {
-    padding-bottom: 3vh;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-}
+    #ngee-ann-banner {
+        display: none;
+    }
+    #main-container > * {
+        width: 100vw !important;
+    }
+    #form-container {
+        display: block;
+    }
+    #show-password-button {
+        transform: translateY(-50%);
+    }
+    .registration-otp-button {
+        padding-bottom: 3vh;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
 }
 </style>
 
 <script>
-import firebase from 'firebase';
-import { debounce } from 'lodash';
-import { useAlertStore } from '../../stores/AlertStore.js';
-import AlertPrompt from '../../components/general/AlertPrompt.vue';
-import redirectUser from '../../utils/authentication/redirectAuthenticatedUser.js';
-import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
+import firebase from "firebase";
+import { debounce } from "lodash";
+import { useAlertStore } from "../../stores/AlertStore.js";
+import AlertPrompt from "../../components/general/AlertPrompt.vue";
+import redirectUser from "../../utils/authentication/redirectAuthenticatedUser.js";
+import LoadingOverlay from "../../components/general/LoadingOverlay.vue";
 
 export default {
     data() {
@@ -184,14 +272,14 @@ export default {
             alertStore: useAlertStore(),
 
             // Inputs
-            emailAddress: '',
-            phoneNumber: '',
-            password: '',
-            repeatedPassword: '',
-            generalErrMsg: '',
-            passwordStrengthMessage: '',
+            emailAddress: "",
+            phoneNumber: "",
+            password: "",
+            repeatedPassword: "",
+            generalErrMsg: "",
+            passwordStrengthMessage: "",
             passwordStrength: 0,
-            otp: '',
+            otp: "",
             recaptchaVerifier: null,
             confirmResult: null,
 
@@ -203,19 +291,19 @@ export default {
             otpVerified: false,
             disableOTP: true,
             showLoading: false,
-            
+
             // Error
             showPhoneErr: false,
             showEmailErr: false,
 
             // debounce
             debouncedVerifyEmail: null,
-            debouncedVerifyPhone: null
-        }
+            debouncedVerifyPhone: null,
+        };
     },
     components: {
         AlertPrompt,
-        LoadingOverlay
+        LoadingOverlay,
     },
     computed: {
         passwordRequirements() {
@@ -224,8 +312,8 @@ export default {
 
             // Minimum password length of 4 chars
             if (password.length < 8 || this.isPasswordSingleType(password)) {
-                this.passwordStrengthMessage = "Password is very weak"
-                return 'very-weak';
+                this.passwordStrengthMessage = "Password is very weak";
+                return "very-weak";
             }
             this.passwordStrength = 0;
             // Upper case char
@@ -261,17 +349,20 @@ export default {
                 }
             }
             if (this.passwordStrength === 0) {
-                this.passwordStrengthMessage = "Password is very weak"
-                return 'very-weak';
+                this.passwordStrengthMessage = "Password is very weak";
+                return "very-weak";
             } else if (this.passwordStrength === 1) {
-                this.passwordStrengthMessage = "Password is weak"
-                return 'weak';
-            } else if (this.passwordStrength === 2 || this.passwordStrength === 3) {
-                this.passwordStrengthMessage = "Password is strong"
-                return 'strong';
+                this.passwordStrengthMessage = "Password is weak";
+                return "weak";
+            } else if (
+                this.passwordStrength === 2 ||
+                this.passwordStrength === 3
+            ) {
+                this.passwordStrengthMessage = "Password is strong";
+                return "strong";
             } else {
-                this.passwordStrengthMessage = "Password is very strong"
-                return 'very-strong';
+                this.passwordStrengthMessage = "Password is very strong";
+                return "very-strong";
             }
         },
         // to get showAlert value
@@ -284,53 +375,66 @@ export default {
         },
         // check for empty or invalid fields
         invalidFields() {
-            let userDetailsList = [this.emailAddress, this.phoneNumber, this.password];
+            let userDetailsList = [
+                this.emailAddress,
+                this.phoneNumber,
+                this.password,
+            ];
 
             // Check for empty fields
-            if (userDetailsList.some(item => item === '')) {
-                return this.generalErrMsg = "Please enter all fields";
+            if (userDetailsList.some((item) => item === "")) {
+                return (this.generalErrMsg = "Please enter all fields");
             }
-            
+
             if (this.showEmailErr) {
-                return this.generalErrMsg = 'Invalid email address';
+                return (this.generalErrMsg = "Invalid email address");
             }
 
             if (this.phoneNumber.length != 8) {
-                return this.generalErrMsg = "Invalid phone number";
+                return (this.generalErrMsg = "Invalid phone number");
             }
 
             if (!this.otpVerified) {
-                return this.generalErrMsg = "Please verify your phone number";
+                return (this.generalErrMsg = "Please verify your phone number");
             }
 
             // Password complexity check
             if (this.passwordStrength < 2) {
-                return this.generalErrMsg = "Password is weak";
+                return (this.generalErrMsg = "Password is weak");
             }
 
             // Password confirm
             if (this.password !== this.repeatedPassword) {
-                return this.generalErrMsg = "Passwords do not match";
+                return (this.generalErrMsg = "Passwords do not match");
             }
 
             return null;
-        }
+        },
     },
     created() {
         redirectUser();
 
         // set debounce functions
-        this.debouncedVerifyEmail = debounce(this.debounceVerifyEmailFunction, 1000);
-        this.debouncedVerifyPhone = debounce(this.debounceVerifyPhoneFunction, 1000);
+        this.debouncedVerifyEmail = debounce(
+            this.debounceVerifyEmailFunction,
+            1000,
+        );
+        this.debouncedVerifyPhone = debounce(
+            this.debounceVerifyPhoneFunction,
+            1000,
+        );
     },
     mounted() {
-        this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('register-button', {
-            'size': 'invisible',
-            'callback': (response) => {
-                // reCAPTCHA solved, allow signInWithPhoneNumber.
-                console.log(response)
-            }
-        })
+        this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+            "register-button",
+            {
+                size: "invisible",
+                callback: (response) => {
+                    // reCAPTCHA solved, allow signInWithPhoneNumber.
+                    console.log(response);
+                },
+            },
+        );
     },
     methods: {
         isPasswordSingleType(password) {
@@ -351,21 +455,30 @@ export default {
         },
 
         async sendOTP() {
-            if (this.phoneNumber.length != 8 || this.phoneNumber === '') {
-                return this.showPhoneErr = true;
+            if (this.phoneNumber.length != 8 || this.phoneNumber === "") {
+                return (this.showPhoneErr = true);
             } else {
                 this.showLoading = true;
-                
+
                 this.showPhoneErr = false;
-                
+
                 // Send otp using Firebase
-                this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-                await this.recaptchaVerifier.render().then(() => {
-                    this.showLoading = false;
-                }).catch(error => console.log('Could not render recaptcha'));
+                this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+                    "recaptcha-container",
+                );
+                await this.recaptchaVerifier
+                    .render()
+                    .then(() => {
+                        this.showLoading = false;
+                    })
+                    .catch((error) =>
+                        console.log("Could not render recaptcha"),
+                    );
 
                 let phoneNum = "+65" + this.phoneNumber;
-                firebase.auth().signInWithPhoneNumber(phoneNum, this.recaptchaVerifier)
+                firebase
+                    .auth()
+                    .signInWithPhoneNumber(phoneNum, this.recaptchaVerifier)
                     .then(async (confirmationResult) => {
                         // SMS sent. Prompt user to type the code from the message, then sign the
                         // user in with confirmationResult.confirm(code).
@@ -374,68 +487,75 @@ export default {
 
                         await this.alert("OTP Sent!");
                         this.recaptchaVerifier.clear();
-                    }).catch((error) => {
+                    })
+                    .catch((error) => {
                         // Error; SMS not sent
-                        console.log('Could not send OTP')
+                        console.log("Could not send OTP");
                     });
             }
-
         },
         async verifyOTP() {
             if (!this.otp) {
                 return;
             }
-            
+
             this.showLoading = true;
 
-            await this.confirmResult.confirm(this.otp)
+            await this.confirmResult
+                .confirm(this.otp)
                 .then(async (result) => {
                     this.showLoading = false;
-                    await this.alert("OTP verified", result)
-                    this.otpVerified = true
+                    await this.alert("OTP verified", result);
+                    this.otpVerified = true;
                     this.disableOTP = true;
                 })
                 .catch(async (error) => {
                     this.showLoading = false;
-                    await this.alert('Could not verify OTP');
+                    await this.alert("Could not verify OTP");
                 });
         },
         hidePassword(num) {
             if (num == 1) {
                 this.showPassword = !this.showPassword;
-            }
-            else {
+            } else {
                 this.showRepeatPassword = !this.showRepeatPassword;
             }
         },
         filterNumber() {
             // Remove any non-numeric characters except the minus sign at the beginning
-            this.phoneNumber = this.phoneNumber.replace(/[^0-9]/g, '').slice(0, 8);
+            this.phoneNumber = this.phoneNumber
+                .replace(/[^0-9]/g, "")
+                .slice(0, 8);
         },
         async debounceVerifyEmailFunction() {
             try {
-                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/email`, {
-                    mode: 'cors',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json; charset=UTF-8',
+                const response = await fetch(
+                    `${
+                        import.meta.env.VITE_APP_SERVER_URL
+                    }/api/users/verify/email`,
+                    {
+                        mode: "cors",
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8",
+                        },
+                        body: JSON.stringify({ email: this.emailAddress }),
                     },
-                    body: JSON.stringify({ email: this.emailAddress })
-                });
+                );
 
                 if (response.ok) {
                     this.showEmailErr = false;
                 } else if (response.status === 400) {
                     const data = await response.json();
 
-                    if (data.message === 'Email already exists') {
+                    if (data.message === "Email already exists") {
                         this.showEmailErr = true;
                     } else {
-                        throw new Error('Error: ' + response.status);
+                        throw new Error("Error: " + response.status);
                     }
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error("Error:", error);
             }
         },
         verifyEmail() {
@@ -449,32 +569,36 @@ export default {
         },
         async debounceVerifyPhoneFunction() {
             try {
-                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/phone`, {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json; charset=UTF-8',
+                const response = await fetch(
+                    `${
+                        import.meta.env.VITE_APP_SERVER_URL
+                    }/api/users/verify/phone`,
+                    {
+                        method: "POST",
+                        mode: "cors",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8",
+                        },
+                        body: JSON.stringify({ phoneNumber: this.phoneNumber }),
                     },
-                    body: JSON.stringify({ phoneNumber: this.phoneNumber })
-                });
+                );
 
                 if (response.ok) {
                     this.showPhoneErr = false;
                     this.disableOTP = false;
-                }
-                else {
+                } else {
                     const data = await response.json();
 
-                    if (data.message === 'Phone number already exists') {
+                    if (data.message === "Phone number already exists") {
                         this.showPhoneErr = true;
                         this.disableOTP = true;
                         return;
                     } else {
-                        throw new Error('Error: ' + response.status);
+                        throw new Error("Error: " + response.status);
                     }
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error("Error:", error);
             }
         },
         verifyPhone() {
@@ -495,40 +619,43 @@ export default {
             this.showLoading = true;
 
             const user = {
-                'emailAddress': this.emailAddress,
-                'phoneNumber': this.phoneNumber,
-                'password': this.password
-            }
+                emailAddress: this.emailAddress,
+                phoneNumber: this.phoneNumber,
+                password: this.password,
+            };
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/users/register`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8",
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(user),
                 },
-                credentials: "include",
-                body: JSON.stringify(user)
-            }).then((response) => {
-                if (response.ok) {
-                    sessionStorage.setItem('to_setup_profile', true);
-                    location.href = '/setupProfile.html';
-                }
-                else {
-                    response.json().then(async (data) => {
-                        await this.alert(data.message);
-                        throw new Error(data.message)
-                    });
-                }
-            }).catch(error => {
-                    console.error('Error:', error);
-            });
+            )
+                .then((response) => {
+                    if (response.ok) {
+                        sessionStorage.setItem("to_setup_profile", true);
+                        location.href = "/setupProfile.html";
+                    } else {
+                        response.json().then(async (data) => {
+                            await this.alert(data.message);
+                            throw new Error(data.message);
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
 
             this.showLoading = false;
         },
         // to close alert prompt
         closeAlert() {
             this.alertStore.closeAlert();
-        }
-    }
-}
+        },
+    },
+};
 </script>
-

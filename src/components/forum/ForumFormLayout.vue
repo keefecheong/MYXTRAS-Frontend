@@ -1,6 +1,10 @@
 <template>
     <div class="form-overlay">
-        <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="submitting || (editMode && !dataInitialized)" />
+        <LoadingOverlay
+            :backgroundColor="'rgba(0, 0, 0, 0.5)'"
+            :center="true"
+            v-if="submitting || (editMode && !dataInitialized)"
+        />
 
         <!-- form -->
         <form class="form-overlay-content" @submit.prevent="submitForm">
@@ -8,90 +12,174 @@
             <button class="form-overlay-close" @click="closeForm" type="button">
                 <span class="material-symbols-outlined">Close</span>
             </button>
-    
-            <h1>{{ editMode ? 'Edit Forum' : 'Create New Forum' }}</h1>
-    
+
+            <h1>{{ editMode ? "Edit Forum" : "Create New Forum" }}</h1>
+
             <!-- Upload forum pic -->
             <div id="forum-pic-container">
-                <label for="forum-pic-input" id="forum-pic-label"><u>Click</u> to Select Forum Picture:</label>
-                
-                <label for="forum-pic-input" v-if="!groupPicObject && !selectedGroupPic" id="forum-pic-none">No image selected</label>
-                <span v-if="groupPicObject && groupPicErrors.length > 0" class="errMsg">Invalid file</span>
-                <img v-if="selectedGroupPic" :src="selectedGroupPic" alt="Group Picture"  id="forum-pic-picture" />
-                <input id="forum-pic-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
-    
+                <label for="forum-pic-input" id="forum-pic-label"
+                    ><u>Click</u> to Select Forum Picture:</label
+                >
+
+                <label
+                    for="forum-pic-input"
+                    v-if="!groupPicObject && !selectedGroupPic"
+                    id="forum-pic-none"
+                    >No image selected</label
+                >
+                <span
+                    v-if="groupPicObject && groupPicErrors.length > 0"
+                    class="errMsg"
+                    >Invalid file</span
+                >
+                <img
+                    v-if="selectedGroupPic"
+                    :src="selectedGroupPic"
+                    alt="Group Picture"
+                    id="forum-pic-picture"
+                />
+                <input
+                    id="forum-pic-input"
+                    type="file"
+                    @change="fileChanged"
+                    accept=".jpg, .jpeg, .png"
+                />
+
                 <!-- inform user about invalid file -->
                 <div v-if="groupPicErrors.length > 0">
                     <span>Error:</span>
                     <br />
-                    <p v-for="error in groupPicErrors" class="errMsg">{{ error }}</p>
+                    <p v-for="error in groupPicErrors" class="errMsg">
+                        {{ error }}
+                    </p>
                 </div>
             </div>
-            
-            
-            <!-- Upload banner -->     
+
+            <!-- Upload banner -->
             <div id="forum-banner-container">
-                <label for="forum-banner-input" id="forum-banner-label"><u>Click</u> to Select Forum Banner:</label>
-    
-                <label for="forum-banner-input" v-if="!bannerObject && !selectedBanner" id="forum-banner-none">No image selected</label>
-                <span v-if="bannerObject && bannerErrors.length > 0" class="errMsg">Invalid file</span>
-                <img v-if="selectedBanner" :src="selectedBanner" alt="Banner"  id="forum-banner-picture" />
-                <input id="forum-banner-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
-                
+                <label for="forum-banner-input" id="forum-banner-label"
+                    ><u>Click</u> to Select Forum Banner:</label
+                >
+
+                <label
+                    for="forum-banner-input"
+                    v-if="!bannerObject && !selectedBanner"
+                    id="forum-banner-none"
+                    >No image selected</label
+                >
+                <span
+                    v-if="bannerObject && bannerErrors.length > 0"
+                    class="errMsg"
+                    >Invalid file</span
+                >
+                <img
+                    v-if="selectedBanner"
+                    :src="selectedBanner"
+                    alt="Banner"
+                    id="forum-banner-picture"
+                />
+                <input
+                    id="forum-banner-input"
+                    type="file"
+                    @change="fileChanged"
+                    accept=".jpg, .jpeg, .png"
+                />
+
                 <!-- inform user about invalid file -->
                 <div v-if="bannerErrors.length > 0">
                     <span>Error:</span>
                     <br />
-                    <p v-for="error in bannerErrors" class="errMsg">{{ error }}</p>
+                    <p v-for="error in bannerErrors" class="errMsg">
+                        {{ error }}
+                    </p>
                 </div>
             </div>
-            
+
             <!-- forum id input -->
             <div id="forum-id-container">
                 <div class="forum-field-container">
                     <label for="forum-id-input" class="forum-label">ID: </label>
-                    <input type="text" id="forum-id-input" v-model="forumID" placeholder="NP-ICT" @input="debounceVerifyForumID" :maxlength="25"/>
+                    <input
+                        type="text"
+                        id="forum-id-input"
+                        v-model="forumID"
+                        placeholder="NP-ICT"
+                        @input="debounceVerifyForumID"
+                        :maxlength="25"
+                    />
                 </div>
-    
-                <span id="forum-id-available" v-if="!idErr && forumIDVerified && !illegalChar">Forum ID available.</span>
-                <span class="errMsg" v-if="idErr && !forumIDVerified && !illegalChar">Forum ID already taken.</span>
-                <span class="errMsg" v-if="illegalChar" >Illegal chararcter detected</span>
+
+                <span
+                    id="forum-id-available"
+                    v-if="!idErr && forumIDVerified && !illegalChar"
+                    >Forum ID available.</span
+                >
+                <span
+                    class="errMsg"
+                    v-if="idErr && !forumIDVerified && !illegalChar"
+                    >Forum ID already taken.</span
+                >
+                <span class="errMsg" v-if="illegalChar"
+                    >Illegal chararcter detected</span
+                >
             </div>
-    
+
             <!-- forum name input -->
             <div class="forum-field-container">
                 <label for="forum-name-input" class="forum-label">Name:</label>
-                <input type="text" id="forum-name-input" v-model="forumName" placeholder="NP InfoComm Technology" :maxlength="25"/>
+                <input
+                    type="text"
+                    id="forum-name-input"
+                    v-model="forumName"
+                    placeholder="NP InfoComm Technology"
+                    :maxlength="25"
+                />
             </div>
-            
+
             <!-- forum description input -->
             <div class="forum-field-container">
-                <label for="forum-desc-input" class="forum-label">Description:</label>
-                <DynamicTextarea :id="'forum-desc-input'" :maxRows="5" v-model="forumDesc" :maxlength="100" :placeholder="'Forum Description (optional)'" />
+                <label for="forum-desc-input" class="forum-label"
+                    >Description:</label
+                >
+                <DynamicTextarea
+                    :id="'forum-desc-input'"
+                    :maxRows="5"
+                    v-model="forumDesc"
+                    :maxlength="100"
+                    :placeholder="'Forum Description (optional)'"
+                />
             </div>
-            
+
             <!-- forum tags input -->
             <div class="forum-field-container">
                 <label for="forum-tags-input" class="forum-label">Tags:</label>
                 <div id="forum-tags-container">
-                    <AddInterestButton :selectedOption="tags" @selectedInterests="handleForumTags">
+                    <AddInterestButton
+                        :selectedOption="tags"
+                        @selectedInterests="handleForumTags"
+                    >
                         Select Tags For Your Forum (Optional):
                     </AddInterestButton>
                 </div>
             </div>
-                
-            <button class="form-overlay-control-button" :disabled="submitting || !requiredFields">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
+
+            <button
+                class="form-overlay-control-button"
+                :disabled="submitting || !requiredFields"
+            >
+                {{ submitting ? "Submitting..." : "Submit" }}
+            </button>
         </form>
     </div>
 </template>
 
 <script>
-import { useAlertStore } from '../../stores/AlertStore.js';
-import LoadingOverlay from '../general/LoadingOverlay.vue';
-import AddInterestButton from '../general/AddInterestButton.vue';
-import { debounce } from 'lodash';
-import DynamicTextarea from '../general/DynamicTextarea.vue';
-import viewForum from '../../utils/general/viewForum.js';
+import { useAlertStore } from "../../stores/AlertStore.js";
+import LoadingOverlay from "../general/LoadingOverlay.vue";
+import AddInterestButton from "../general/AddInterestButton.vue";
+import { debounce } from "lodash";
+import DynamicTextarea from "../general/DynamicTextarea.vue";
+import viewForum from "../../utils/general/viewForum.js";
 
 export default {
     data() {
@@ -102,12 +190,12 @@ export default {
             bannerObject: null,
             selectedGroupPic: null,
             groupPicObject: null,
-            forumID: '',
-            forumName: '',
-            forumDesc: '',
+            forumID: "",
+            forumName: "",
+            forumDesc: "",
             tags: [],
             submitting: false,
-            
+
             //Error handling
             idErr: false,
             forumIDVerified: false,
@@ -118,21 +206,16 @@ export default {
             // for edit mode
             dataInitialized: false,
             pictureUpdated: false,
-            bannerUpdated: false
-        }
+            bannerUpdated: false,
+        };
     },
     components: {
         LoadingOverlay,
         AddInterestButton,
-        DynamicTextarea
+        DynamicTextarea,
     },
-    props: [
-        'editMode',
-        'forum'
-    ],
-    emits: [
-        'close-forum-form'
-    ],
+    props: ["editMode", "forum"],
+    emits: ["close-forum-form"],
     created() {
         // initialize data during edit mode
         if (this.editMode) {
@@ -149,60 +232,62 @@ export default {
         },
         // close forum form
         closeForm() {
-            this.$emit('close-forum-form');
+            this.$emit("close-forum-form");
         },
         // verify if forum ID exists
-        async verifyForumID(){
-            if (this.forumID.trim() == '') {
+        async verifyForumID() {
+            if (this.forumID.trim() == "") {
                 return;
             }
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/verify-forumID`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
+            await fetch(
+                `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/forums/verify-forumID`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8",
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({ forum_id: this.forumID.trim() }),
                 },
-                credentials: "include",
-                body: JSON.stringify({ forum_id: this.forumID.trim() })
-            }).then((res) => {
+            ).then((res) => {
                 if (res.ok) {
                     this.idErr = false;
                     this.forumIDVerified = true;
-                }
-                else if (res.status == 400) {
-                    res.json().then(data => {
-                        if (data.message == 'ForumID already exists') {
+                } else if (res.status == 400) {
+                    res.json().then((data) => {
+                        if (data.message == "ForumID already exists") {
                             this.forumIDVerified = false;
                             this.idErr = true;
                         }
-                    })
+                    });
                 }
-
             });
         },
         // debounce verifyForumID
         debounceVerifyForumID() {
             this.forumIDVerified = false;
-            if (this.checkForIllegalChar()){
-                return this.illegalChar = true;
+            if (this.checkForIllegalChar()) {
+                return (this.illegalChar = true);
             }
-            if (this.prevID == this.forumID){
+            if (this.prevID == this.forumID) {
                 return;
             }
-            this.illegalChar = false
-            this.debouncedVerifyForumID()
+            this.illegalChar = false;
+            this.debouncedVerifyForumID();
         },
         // to handle change in selected files
         fileChanged(e) {
             // check if event is triggered by picture input
-            const forPicture = e.target.id == 'forum-pic-input';
+            const forPicture = e.target.id == "forum-pic-input";
             // if no files selected then clear relevant fields and return
             if (e.target.files.length <= 0) {
                 if (forPicture) {
                     this.groupPicObject = null;
                     this.selectedGroupPic = null;
                     this.groupPicErrors = [];
-                }
-                else {
+                } else {
                     this.bannerObject = null;
                     this.selectedBanner = null;
                     this.bannerErrors = [];
@@ -214,19 +299,22 @@ export default {
             if (this.editMode) {
                 if (forPicture) {
                     this.pictureUpdated = true;
-                }
-                else {
+                } else {
                     this.bannerUpdated = true;
                 }
             }
 
             // valid conditions
-            const acceptedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            const acceptedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
             const maxImageSize = 2 * 1024 * 1024;
 
             // error messages
-            const illegalFileType = `Illegal file type, allowed file types: ${acceptedFileTypes.join(', ')}`;
-            const largeFile = `File is too large, maximum file size is ${maxImageSize / 1024 / 1024}MB.`;
+            const illegalFileType = `Illegal file type, allowed file types: ${acceptedFileTypes.join(
+                ", ",
+            )}`;
+            const largeFile = `File is too large, maximum file size is ${
+                maxImageSize / 1024 / 1024
+            }MB.`;
 
             // check for errors
             const errors = [];
@@ -244,8 +332,7 @@ export default {
                 this.groupPicObject = e.target.files[0];
                 this.groupPicErrors = errors;
                 this.selectedGroupPic = null;
-            }
-            else {
+            } else {
                 this.bannerObject = e.target.files[0];
                 this.bannerErrors = errors;
                 this.selectedBanner = null;
@@ -258,19 +345,20 @@ export default {
 
             // otherwise preview images
             if (forPicture) {
-                this.selectedGroupPic = URL.createObjectURL(this.groupPicObject);
-            }
-            else {
+                this.selectedGroupPic = URL.createObjectURL(
+                    this.groupPicObject,
+                );
+            } else {
                 this.selectedBanner = URL.createObjectURL(this.bannerObject);
             }
         },
-        checkForIllegalChar(){
-            if (this.forumID.includes('#')){
+        checkForIllegalChar() {
+            if (this.forumID.includes("#")) {
                 return true;
             }
-            
-            return false
-        }, 
+
+            return false;
+        },
         // submit forum form
         async submitForm() {
             this.submitting = true;
@@ -278,8 +366,12 @@ export default {
             // if in edit mode, check if user changed any fields
             if (this.editMode) {
                 // if user has not changed any fields then do nothing
-                if (!this.fieldsChanged && !this.pictureUpdated && !this.bannerUpdated) {
-                    await this.alert('No changes made.');
+                if (
+                    !this.fieldsChanged &&
+                    !this.pictureUpdated &&
+                    !this.bannerUpdated
+                ) {
+                    await this.alert("No changes made.");
                     this.submitting = false;
                     return;
                 }
@@ -287,7 +379,7 @@ export default {
 
             // do nothing if required fields are not filled up
             if (!this.requiredFields) {
-                await this.alert('Please fill up all required fields.');
+                await this.alert("Please fill up all required fields.");
 
                 this.submitting = false;
                 return;
@@ -297,51 +389,57 @@ export default {
 
             // add picture and banner only if they are updated in edit mode or if not in edit mode
             if ((this.editMode && this.pictureUpdated) || !this.editMode) {
-                uploadData.append('selectedImages', this.groupPicObject);
+                uploadData.append("selectedImages", this.groupPicObject);
             }
 
             if ((this.editMode && this.bannerUpdated) || !this.editMode) {
-                uploadData.append('selectedImages', this.bannerObject);
+                uploadData.append("selectedImages", this.bannerObject);
             }
 
             // tell server picture or banner is unchanged if so
             if (this.editMode && !this.pictureUpdated) {
-                uploadData.append('pictureUnchanged', true);
+                uploadData.append("pictureUnchanged", true);
             }
 
             if (this.editMode && !this.bannerUpdated) {
-                uploadData.append('bannerUnchanged', true);
+                uploadData.append("bannerUnchanged", true);
             }
-            
+
             try {
-                if (this.forumID.includes("#")){
+                if (this.forumID.includes("#")) {
                     return;
                 }
                 var forumObject = {
-                    'forum_name': this.forumName.trim(),
-                    'forum_id': this.forumID.trim(),
-                    'forum_desc': this.forumDesc.trim(),
-                    'tags': this.tags
-                }
-                
-                uploadData.append('forumObject', JSON.stringify(forumObject));
-                
-                // send request to server with data
-                const baseURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/forums`;
-                const targetURL = this.editMode ? `${baseURL}/${this.forum._id}` : baseURL;
-                
-                const options = {
-                    mode: 'cors',
-                    method: this.editMode ? 'PATCH' : 'POST',
-                    body: uploadData,
-                    credentials: 'include'
+                    forum_name: this.forumName.trim(),
+                    forum_id: this.forumID.trim(),
+                    forum_desc: this.forumDesc.trim(),
+                    tags: this.tags,
                 };
 
-                const successMessage = this.editMode ? 'Forum updated.' : 'Forum created.';
+                uploadData.append("forumObject", JSON.stringify(forumObject));
+
+                // send request to server with data
+                const baseURL = `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/forums`;
+                const targetURL = this.editMode
+                    ? `${baseURL}/${this.forum._id}`
+                    : baseURL;
+
+                const options = {
+                    mode: "cors",
+                    method: this.editMode ? "PATCH" : "POST",
+                    body: uploadData,
+                    credentials: "include",
+                };
+
+                const successMessage = this.editMode
+                    ? "Forum updated."
+                    : "Forum created.";
 
                 await fetch(targetURL, options)
-                    .then(async response => {
-                        if (response.ok){
+                    .then(async (response) => {
+                        if (response.ok) {
                             await this.alert(successMessage);
 
                             // if have forum object (from edit mode) immediately set forumID with current id
@@ -350,24 +448,23 @@ export default {
                             }
                             // otherwise parse server response and set forum id
                             else {
-                                await response.json().then(data => {
+                                await response.json().then((data) => {
                                     viewForum(data.forum_id);
                                 });
                             }
-                        }
-                        else {
+                        } else {
                             const data = await response.json();
                             await this.alert(data.message);
                         }
-                        
-                        this.submitting = false
+
+                        this.submitting = false;
                         return;
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
+                    .catch((error) => {
+                        console.error("Error:", error);
                     });
             } catch (error) {
-                console.error('Error:', error);
+                console.error("Error:", error);
             }
         },
         // initialize data
@@ -378,27 +475,40 @@ export default {
             this.forumID = this.forum.forum_id;
             this.forumIDVerified = true;
             this.forumName = this.forum.forum_name;
-            this.forumDesc = this.forum.forum_desc || '';
+            this.forumDesc = this.forum.forum_desc || "";
             this.tags = [...this.forum.tags];
 
             this.dataInitialized = true;
-        }
+        },
     },
     computed: {
         // check if required fields are all filled up
         requiredFields() {
             const nameValid = this.forumName.trim().length > 0;
-            const idValid = this.forumID.trim().length > 0 && this.forumIDVerified && !this.idErr;
+            const idValid =
+                this.forumID.trim().length > 0 &&
+                this.forumIDVerified &&
+                !this.idErr;
             let picValid = this.selectedGroupPic && this.groupPicObject;
             let bannerValid = this.selectedBanner && this.bannerObject;
 
             // if in edit mode, set picValid and bannerValid to true if no changes are made
             if (this.editMode) {
-                picValid = picValid ? picValid : !this.pictureUpdated && this.selectedGroupPic;
-                bannerValid = bannerValid ? bannerValid : !this.bannerUpdated && this.selectedBanner;
+                picValid = picValid
+                    ? picValid
+                    : !this.pictureUpdated && this.selectedGroupPic;
+                bannerValid = bannerValid
+                    ? bannerValid
+                    : !this.bannerUpdated && this.selectedBanner;
             }
 
-            return nameValid && idValid && picValid && bannerValid && !this.illegalChar;
+            return (
+                nameValid &&
+                idValid &&
+                picValid &&
+                bannerValid &&
+                !this.illegalChar
+            );
         },
         // to check if any fields are changed
         fieldsChanged() {
@@ -408,15 +518,16 @@ export default {
             const descSame = this.forumDesc == this.forum.forum_desc;
 
             return !(nameSame && idSame && tagSame && descSame);
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style scoped>
-@import url('../../styles/forms/form-overlay-styles.css');
+@import url("../../styles/forms/form-overlay-styles.css");
 
-#forum-pic-container, #forum-banner-container {
+#forum-pic-container,
+#forum-banner-container {
     display: flex;
     row-gap: 20px;
     flex-direction: column;
@@ -425,12 +536,14 @@ export default {
     width: 100%;
 }
 
-#forum-pic-label, #forum-banner-label {
+#forum-pic-label,
+#forum-banner-label {
     font-size: 1.2em;
     cursor: pointer;
 }
 
-#forum-pic-none, #forum-pic-picture {
+#forum-pic-none,
+#forum-pic-picture {
     height: 150px;
     width: 150px;
     background-color: white;
@@ -442,7 +555,8 @@ export default {
     text-align: center;
 }
 
-#forum-banner-none, #forum-banner-picture {
+#forum-banner-none,
+#forum-banner-picture {
     width: 60%;
     height: 300px;
     background-color: white;
@@ -452,16 +566,19 @@ export default {
     align-items: center;
     justify-content: center;
 }
-#forum-pic-none:hover,#forum-banner-none:hover {
+#forum-pic-none:hover,
+#forum-banner-none:hover {
     cursor: pointer;
     color: var(--primary);
 }
-#forum-pic-picture, #forum-banner-picture {
+#forum-pic-picture,
+#forum-banner-picture {
     object-fit: cover;
     object-position: center;
 }
 
-#forum-pic-input, #forum-banner-input {
+#forum-pic-input,
+#forum-banner-input {
     opacity: 0;
     width: 1px;
     height: 1px;
@@ -497,16 +614,20 @@ export default {
     text-align: start;
 }
 
-#forum-id-input, #forum-name-input, #forum-desc-input, #forum-tags-container {
+#forum-id-input,
+#forum-name-input,
+#forum-desc-input,
+#forum-tags-container {
     width: 100%;
 }
 
-#forum-id-input, #forum-name-input, #forum-desc-input {
+#forum-id-input,
+#forum-name-input,
+#forum-desc-input {
     padding: 10px;
     border-radius: 10px;
     resize: none;
     outline: none;
     border: none;
 }
-
 </style>

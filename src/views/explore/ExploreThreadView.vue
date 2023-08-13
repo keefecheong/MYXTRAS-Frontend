@@ -1,97 +1,167 @@
 <template v-if="tags && threads">
     <div class="explore-threads-container">
         <div id="gallery-container" class="row sticky-filter">
-        <div id="gallery-interest-selection" >
-            <span>Filter by:</span>
+            <div id="gallery-interest-selection">
+                <span>Filter by:</span>
 
-            <InterestBadgeList
-                :selectedOption="selectedOption"
-                :selection="true"
-                @interest-selected="handleInterestSelected"
-            />
-
-            <button @click="clearSelection()" id="clearAll-btn">Clear All</button>
-        </div>
-    </div>
-    <div class="col-md-3 col-sx-12" v-if="isMobile">
-        <div class="sticky-div">
-            <div class="popular-community">
-                <h1 class="pop-header" v-if="tagsLoaded && tags.length !=0">Popular Communities</h1>
-                <div id="noForums" v-else>No forums created<span class="material-symbols-outlined" style="text-align: center; justify-content: center;">warning</span></div>
-                <div class="interestCommunity" v-for="(tag, index) in tags">
-                    <h4 class="category" @click="openForum(index)">{{ tag._id }}<span class="triangle-down" :id="`triangle-${index}`"></span></h4>
-                    <div class="dropdown-content" :id="'dc'+index" >
-                        <div v-for="forum in tag.forums" @click="viewForum(forum)" id="forumContainer">
-                            <p><img class="forum-pic" :src="forum.forum_pic_link">{{forum.forum_name}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bottom-radius" v-if="tagsLoaded && tags.length !=0"></div>
-            </div>
-        </div>
-    </div>
-    <div class="row" v-if="this.threads">
-        <div class="col-md-9" style="position: relative;">
-            <div class="card shadow" v-if="filteredThreads.length == 0">
-                <div id="no-filtered-threads">
-                    <p>No threads found.</p>
-                    <p>Select another filter?</p>
-                </div>
-            </div>
-            <div v-if="!showDetailedThread">
-                <ThreadMiniLayout
-                    v-for="(thread, index) in filteredThreads"
-                    :key="index"
-                    :thread="thread"
-                    :index="index"
-                    :showForumDetails="true"
-                    @show-detailed-view="() => toggleDetailedThread(true, index)"
-                    @deleted-thread="() => handleDeletedThread(index)"
+                <InterestBadgeList
+                    :selectedOption="selectedOption"
+                    :selection="true"
+                    @interest-selected="handleInterestSelected"
                 />
-            </div>
 
-            <div v-else>
-                <ThreadDetailedLayout
-                    :thread="filteredThreads[selectedIndex]"
-                    :key="filteredThreads[selectedIndex]._id"
-                    :showBackArrow="false"
-                    @close-detailed-view="() => toggleDetailedThread(false, selectedIndex)"
-                />
+                <button @click="clearSelection()" id="clearAll-btn">
+                    Clear All
+                </button>
             </div>
         </div>
-        <div class="col-md-3 col-sx-12" v-if="!isMobile">
+        <div class="col-md-3 col-sx-12" v-if="isMobile">
             <div class="sticky-div">
                 <div class="popular-community">
-                    <h1 class="pop-header" v-if="tagsLoaded && tags.length !=0">Popular Communities</h1>
-                    <div id="noForums" v-else>No forums created<span class="material-symbols-outlined" style="text-align: center; justify-content: center;">warning</span></div>
+                    <h1
+                        class="pop-header"
+                        v-if="tagsLoaded && tags.length != 0"
+                    >
+                        Popular Communities
+                    </h1>
+                    <div id="noForums" v-else>
+                        No forums created<span
+                            class="material-symbols-outlined"
+                            style="text-align: center; justify-content: center"
+                            >warning</span
+                        >
+                    </div>
                     <div class="interestCommunity" v-for="(tag, index) in tags">
-                        <h4 class="category" @click="openForum(index)">{{ tag._id }}<span class="triangle-down" :id="`triangle-${index}`"></span></h4>
-                        <div class="dropdown-content" :id="'dc'+index" >
-                            <div v-for="forum in tag.forums" @click="viewForum(forum)" id="forumContainer">
-                                <p><img class="forum-pic" :src="forum.forum_pic_link">{{forum.forum_name}}</p>
+                        <h4 class="category" @click="openForum(index)">
+                            {{ tag._id
+                            }}<span
+                                class="triangle-down"
+                                :id="`triangle-${index}`"
+                            ></span>
+                        </h4>
+                        <div class="dropdown-content" :id="'dc' + index">
+                            <div
+                                v-for="forum in tag.forums"
+                                @click="viewForum(forum)"
+                                id="forumContainer"
+                            >
+                                <p>
+                                    <img
+                                        class="forum-pic"
+                                        :src="forum.forum_pic_link"
+                                    />{{ forum.forum_name }}
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div class="bottom-radius" v-if="tagsLoaded && tags.length !=0"></div>
+                    <div
+                        class="bottom-radius"
+                        v-if="tagsLoaded && tags.length != 0"
+                    ></div>
                 </div>
             </div>
         </div>
-        <hr>
-        <div id="no-more-blogs">
-            <p>That's the end. Check again later for more content!</p>
-            <p>
-                <a href="/profilePage.html?create">Create your own?</a>
-            </p>
+        <div class="row" v-if="this.threads">
+            <div class="col-md-9" style="position: relative">
+                <div class="card shadow" v-if="filteredThreads.length == 0">
+                    <div id="no-filtered-threads">
+                        <p>No threads found.</p>
+                        <p>Select another filter?</p>
+                    </div>
+                </div>
+                <div v-if="!showDetailedThread">
+                    <ThreadMiniLayout
+                        v-for="(thread, index) in filteredThreads"
+                        :key="index"
+                        :thread="thread"
+                        :index="index"
+                        :showForumDetails="true"
+                        @show-detailed-view="
+                            () => toggleDetailedThread(true, index)
+                        "
+                        @deleted-thread="() => handleDeletedThread(index)"
+                    />
+                </div>
+
+                <div v-else>
+                    <ThreadDetailedLayout
+                        :thread="filteredThreads[selectedIndex]"
+                        :key="filteredThreads[selectedIndex]._id"
+                        :showBackArrow="false"
+                        @close-detailed-view="
+                            () => toggleDetailedThread(false, selectedIndex)
+                        "
+                    />
+                </div>
+            </div>
+            <div class="col-md-3 col-sx-12" v-if="!isMobile">
+                <div class="sticky-div">
+                    <div class="popular-community">
+                        <h1
+                            class="pop-header"
+                            v-if="tagsLoaded && tags.length != 0"
+                        >
+                            Popular Communities
+                        </h1>
+                        <div id="noForums" v-else>
+                            No forums created<span
+                                class="material-symbols-outlined"
+                                style="
+                                    text-align: center;
+                                    justify-content: center;
+                                "
+                                >warning</span
+                            >
+                        </div>
+                        <div
+                            class="interestCommunity"
+                            v-for="(tag, index) in tags"
+                        >
+                            <h4 class="category" @click="openForum(index)">
+                                {{ tag._id
+                                }}<span
+                                    class="triangle-down"
+                                    :id="`triangle-${index}`"
+                                ></span>
+                            </h4>
+                            <div class="dropdown-content" :id="'dc' + index">
+                                <div
+                                    v-for="forum in tag.forums"
+                                    @click="viewForum(forum)"
+                                    id="forumContainer"
+                                >
+                                    <p>
+                                        <img
+                                            class="forum-pic"
+                                            :src="forum.forum_pic_link"
+                                        />{{ forum.forum_name }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="bottom-radius"
+                            v-if="tagsLoaded && tags.length != 0"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div id="no-more-blogs">
+                <p>That's the end. Check again later for more content!</p>
+                <p>
+                    <a href="/profilePage.html?create">Create your own?</a>
+                </p>
+            </div>
         </div>
-    </div>
     </div>
 </template>
 
 <script>
-import ThreadMiniLayout from '../../components/forum/ThreadMiniLayout.vue';
-import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
-import ThreadDetailedLayout from '../../components/forum/ThreadDetailedLayout.vue';
-import viewForum from '../../utils/general/viewForum.js';
+import ThreadMiniLayout from "../../components/forum/ThreadMiniLayout.vue";
+import InterestBadgeList from "../../components/general/InterestBadgeList.vue";
+import ThreadDetailedLayout from "../../components/forum/ThreadDetailedLayout.vue";
+import viewForum from "../../utils/general/viewForum.js";
 
 export default {
     data() {
@@ -103,24 +173,24 @@ export default {
             selectedIndex: null,
             scrollBack: false,
             isMobile: false,
-        }
+        };
     },
     components: {
         ThreadMiniLayout,
         InterestBadgeList,
-        ThreadDetailedLayout
+        ThreadDetailedLayout,
     },
     mounted() {
-        this.retrieveExploreThreads()
-        this.retrieveForums()
+        this.retrieveExploreThreads();
+        this.retrieveForums();
         // Check if the current view is mobile or not
         this.handleResize();
         // Listen for window resize events to update the left/right-content classes
-        window.addEventListener('resize', this.handleResize);
+        window.addEventListener("resize", this.handleResize);
     },
     beforeDestroy() {
         // Remove the event listener to avoid memory leaks
-        window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener("resize", this.handleResize);
     },
     updated() {
         // if scrollBack is true then scroll to that thread
@@ -130,7 +200,7 @@ export default {
             }
 
             document.getElementById(this.selectedIndex).scrollIntoView({
-                block: 'center'
+                block: "center",
             });
 
             // set timeout to clear scrollBack
@@ -141,7 +211,7 @@ export default {
     },
     methods: {
         handleResize() {
-        // Update the view when the window width changes
+            // Update the view when the window width changes
             this.isMobile = window.innerWidth <= 768;
         },
         // show detailed view of popular thread
@@ -156,38 +226,42 @@ export default {
         },
         openForum(id) {
             const status = document.getElementById(`triangle-${id}`).className;
-            
+
             if (status == "triangle-down") {
-                document.getElementById("dc"+id).className += " open-forum";
-                document.getElementById(`triangle-${id}`).className = "triangle-up";
+                document.getElementById("dc" + id).className += " open-forum";
+                document.getElementById(`triangle-${id}`).className =
+                    "triangle-up";
             } else {
-                document.getElementById("dc"+id).className = "dropdown-content";
-                document.getElementById(`triangle-${id}`).className = "triangle-down";
+                document.getElementById("dc" + id).className =
+                    "dropdown-content";
+                document.getElementById(`triangle-${id}`).className =
+                    "triangle-down";
             }
         },
         retrieveExploreThreads() {
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/explore`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(res => {
-                if (res.ok) {
-                return res.json();
-                }
-                throw new Error('Response not OK');
-            })
-            .then(data => {
-                this.threads = data;
-
-            })
-            .catch((error) => {
-                console.log("This page could not be loaded: ", error);
-            });
-            
+            fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/explore`,
+                {
+                    mode: "cors",
+                    method: "GET",
+                    credentials: "include",
+                },
+            )
+                .then((res) => {
+                    if (res.ok) {
+                        return res.json();
+                    }
+                    throw new Error("Response not OK");
+                })
+                .then((data) => {
+                    this.threads = data;
+                })
+                .catch((error) => {
+                    console.log("This page could not be loaded: ", error);
+                });
         },
         handleInterestSelected(option) {
-
-            const index = this.selectedOption.indexOf(option)
+            const index = this.selectedOption.indexOf(option);
             if (index !== -1) {
                 this.selectedOption.splice(index, 1);
             } else {
@@ -195,24 +269,27 @@ export default {
             }
         },
         retrieveForums() {
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/categorized`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(res => {
-                if (res.ok) {
-                return res.json();
-                }
-                throw new Error('Response not OK');
-            })
-            .then(data => {
-                this.tags = data;
-                this.tagsLoaded = true
-            })
-            .catch((error) => {
-                console.log("This page could not be loaded: ", error);
-            });
-            
+            fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/categorized`,
+                {
+                    mode: "cors",
+                    method: "GET",
+                    credentials: "include",
+                },
+            )
+                .then((res) => {
+                    if (res.ok) {
+                        return res.json();
+                    }
+                    throw new Error("Response not OK");
+                })
+                .then((data) => {
+                    this.tags = data;
+                    this.tagsLoaded = true;
+                })
+                .catch((error) => {
+                    console.log("This page could not be loaded: ", error);
+                });
         },
         viewForum(forum) {
             viewForum(forum._id);
@@ -222,9 +299,9 @@ export default {
             this.recentThreads.splice(index, 1);
         },
 
-        clearSelection(){
+        clearSelection() {
             this.selectedOption = [];
-        }
+        },
     },
     computed: {
         // get filtered threads
@@ -232,14 +309,19 @@ export default {
             if (this.selectedOption.length <= 0) {
                 this.tagsLoaded = true;
                 return this.threads;
-            }
-            else {
+            } else {
                 this.tagsLoaded = true;
-                return this.threads.filter(thread => thread.tags && thread.tags.some(tag => this.selectedOption.includes(tag)));
+                return this.threads.filter(
+                    (thread) =>
+                        thread.tags &&
+                        thread.tags.some((tag) =>
+                            this.selectedOption.includes(tag),
+                        ),
+                );
             }
         },
-    }
-}
+    },
+};
 </script>
 
 <style scoped>
@@ -270,7 +352,7 @@ h1 {
     padding: 10px;
     border-radius: 10px;
 }
-.interestCommunity{
+.interestCommunity {
     font-size: 1.2rem;
     width: 100%;
     border-bottom: 1px solid #443b3b;
@@ -360,7 +442,6 @@ h1 {
 .explore-threads-container {
     max-width: 90%;
     margin: 0 auto;
-    
 }
 .triangle-up {
     width: 0;
@@ -398,15 +479,16 @@ h1 {
     height: 30px;
     width: 30px;
     border-radius: 100%;
-    margin-right: 20px; 
+    margin-right: 20px;
 }
 
-.last, .last.dropdown-content {
+.last,
+.last.dropdown-content {
     border-bottom-right-radius: 15px;
     border-bottom-left-radius: 15px;
 }
 
-#clearAll-btn{
+#clearAll-btn {
     width: 6em;
     color: white;
     border: none;

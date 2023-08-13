@@ -1,6 +1,6 @@
 <template>
     <div id="main-container">
-        <NavSidebar/>
+        <NavSidebar />
         <div id="main-content">
             <SearchBar />
             <div id="notfound">
@@ -8,9 +8,12 @@
                     <div class="notfound-404">
                         <h1>Oops!</h1>
                     </div>
-                    <br>
+                    <br />
                     <h2>404 - Page not found</h2>
-                    <p>The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
+                    <p>
+                        The page you are looking for might have been removed had
+                        its name changed or is temporarily unavailable.
+                    </p>
                     <a href="http://127.0.0.1:5173/">Go To Homepage</a>
                 </div>
             </div>
@@ -18,9 +21,8 @@
     </div>
 </template>
 <style>
-@import url('../../styles/main.css');
-@import url('../../styles/sub-navigation.css');
-
+@import url("../../styles/main.css");
+@import url("../../styles/sub-navigation.css");
 
 #notfound .notfound {
     position: absolute;
@@ -104,13 +106,13 @@
 </style>
 
 <script>
-import NavSidebar from '../../components/general/NavSidebar.vue';
-import SearchBar from '../../components/general/SearchBar.vue';
+import NavSidebar from "../../components/general/NavSidebar.vue";
+import SearchBar from "../../components/general/SearchBar.vue";
 
 export default {
     components: {
         NavSidebar,
-        SearchBar
+        SearchBar,
     },
-}
+};
 </script>

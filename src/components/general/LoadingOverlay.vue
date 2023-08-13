@@ -16,9 +16,21 @@
  -->
 
 <template>
-    <div class="loader-overlay" :style="`background-color: ${backgroundColor};`">
-        <div class="loader-container" :class="{'horizontal-center': horizontalCenter || center, 'vertical-center': verticalCenter || center}">
-            <div class="loader" :style="`width: ${loaderSize}; height: ${loaderSize}; border-width: ${loaderBorderWidth};`"></div>
+    <div
+        class="loader-overlay"
+        :style="`background-color: ${backgroundColor};`"
+    >
+        <div
+            class="loader-container"
+            :class="{
+                'horizontal-center': horizontalCenter || center,
+                'vertical-center': verticalCenter || center,
+            }"
+        >
+            <div
+                class="loader"
+                :style="`width: ${loaderSize}; height: ${loaderSize}; border-width: ${loaderBorderWidth};`"
+            ></div>
         </div>
     </div>
 </template>
@@ -26,14 +38,14 @@
 <script>
 export default {
     props: [
-        'loaderSize',
-        'loaderBorderWidth',
-        'backgroundColor',
-        'horizontalCenter',
-        'verticalCenter',
-        'center'
-    ]
-}
+        "loaderSize",
+        "loaderBorderWidth",
+        "backgroundColor",
+        "horizontalCenter",
+        "verticalCenter",
+        "center",
+    ],
+};
 </script>
 
 <style>
@@ -76,7 +88,11 @@ export default {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

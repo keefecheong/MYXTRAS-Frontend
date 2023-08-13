@@ -15,7 +15,7 @@
  -->
 
 <template>
-    <textarea 
+    <textarea
         class="dynamic-textarea"
         v-model="parentText"
         :placeholder="placeholder"
@@ -26,23 +26,23 @@
 </template>
 
 <script>
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
 
 export default {
     data() {
         return {
-            uuid: 'a' + uuid(),
-            singleLineHeight: null
-        }
+            uuid: "a" + uuid(),
+            singleLineHeight: null,
+        };
     },
     props: [
-        'modelValue',
-        'placeholder',
-        'border',
-        'padding',
-        'maxRows',
-        'maxlength',
-        'id'
+        "modelValue",
+        "placeholder",
+        "border",
+        "padding",
+        "maxRows",
+        "maxlength",
+        "id",
     ],
     mounted() {
         const textarea = document.getElementById(this.workingID);
@@ -57,20 +57,30 @@ export default {
         }
 
         // get values to determine initial height
-        const paddingTop = this.getIntDimension(textarea, 'padding-top');
-        const paddingBottom = this.getIntDimension(textarea, 'padding-bottom');
-        const borderWidthTop = this.getIntDimension(textarea, 'border-top-width');
-        const borderWidthBottom = this.getIntDimension(textarea, 'border-bottom-width');
-        const lineHeight = this.getIntDimension(textarea, 'line-height');
+        const paddingTop = this.getIntDimension(textarea, "padding-top");
+        const paddingBottom = this.getIntDimension(textarea, "padding-bottom");
+        const borderWidthTop = this.getIntDimension(
+            textarea,
+            "border-top-width",
+        );
+        const borderWidthBottom = this.getIntDimension(
+            textarea,
+            "border-bottom-width",
+        );
+        const lineHeight = this.getIntDimension(textarea, "line-height");
 
         // sum of padding and border height
-        const totalAdditionalHeight = paddingTop + paddingBottom + borderWidthTop + borderWidthBottom;
-        
+        const totalAdditionalHeight =
+            paddingTop + paddingBottom + borderWidthTop + borderWidthBottom;
+
         // set initial height, minHeight and maxHeight
         this.singleLineHeight = `${totalAdditionalHeight + lineHeight}px`;
-        
+
         textarea.style.minHeight = this.singleLineHeight;
-        textarea.style.maxHeight = `${totalAdditionalHeight + lineHeight * ((this.maxRows ? this.maxRows : 5) - 1)}px`;
+        textarea.style.maxHeight = `${
+            totalAdditionalHeight +
+            lineHeight * ((this.maxRows ? this.maxRows : 5) - 1)
+        }px`;
 
         textarea.style.height = this.singleLineHeight;
         textarea.style.height = `${textarea.scrollHeight}px`;
@@ -84,8 +94,12 @@ export default {
         },
         // get integer dimension of passed property
         getIntDimension(textarea, styleProperty) {
-            return parseInt(window.getComputedStyle(textarea)[styleProperty].replace('px', ''));
-        }
+            return parseInt(
+                window
+                    .getComputedStyle(textarea)
+                    [styleProperty].replace("px", ""),
+            );
+        },
     },
     computed: {
         // to update parent variable value when input changes
@@ -94,14 +108,14 @@ export default {
                 return this.modelValue;
             },
             set(value) {
-                this.$emit('update:modelValue', value);
-            }
+                this.$emit("update:modelValue", value);
+            },
         },
         workingID() {
             return this.id ? this.id : this.uuid;
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>

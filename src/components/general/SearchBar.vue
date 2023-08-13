@@ -1,65 +1,98 @@
 <template>
     <div id="searchbar-container" class="banner-container">
-        <div class="user-details" v-if="isMobile" >
-            <p class="hide-overflow-text" id="searchbar-realname" :title="realname">{{ realname }}</p>
-            <p class="hide-overflow-text" id="searchbar-school">{{ school + '/' + course }}</p>
-        </div>  
+        <div class="user-details" v-if="isMobile">
+            <p
+                class="hide-overflow-text"
+                id="searchbar-realname"
+                :title="realname"
+            >
+                {{ realname }}
+            </p>
+            <p class="hide-overflow-text" id="searchbar-school">
+                {{ school + "/" + course }}
+            </p>
+        </div>
         <div id="search-input">
-            <span class="material-symbols-outlined" id="search-icon" @click="performSearch" title="Click to search">search</span>
+            <span
+                class="material-symbols-outlined"
+                id="search-icon"
+                @click="performSearch"
+                title="Click to search"
+                >search</span
+            >
             <input
                 id="searchbar-input"
                 type="text"
                 placeholder="Search"
-                v-model='searchTerm'
-                @keyup.enter="performSearch" 
-                @focus.capture="() => toggleResults(true)" 
+                v-model="searchTerm"
+                @keyup.enter="performSearch"
+                @focus.capture="() => toggleResults(true)"
                 @blur.capture="(e) => toggleResults(false, e)"
                 title="Search for a user or forum"
-            >
+            />
 
-            <SearchResults v-if="showResults && searchResults != null" :results="searchResults" />
+            <SearchResults
+                v-if="showResults && searchResults != null"
+                :results="searchResults"
+            />
         </div>
 
         <div id="searchbar-right">
             <div v-if="currentPage.startsWith('/forum.html')">
-                <button v-if="!isMobile" id="create-forum-btn" class="white-btn" @click="showForumForm">
+                <button
+                    v-if="!isMobile"
+                    id="create-forum-btn"
+                    class="white-btn"
+                    @click="showForumForm"
+                >
                     Create Forum
                 </button>
                 <div v-if="isMobile" class="mobile-create-container">
                     <p>Create Forum</p>
-                    <span class="material-symbols-outlined" @click="showForumForm">add_circle</span>
+                    <span
+                        class="material-symbols-outlined"
+                        @click="showForumForm"
+                        >add_circle</span
+                    >
                 </div>
             </div>
-            
+
             <div v-else-if="login">
                 <div v-if="!isMobile" class="user-details">
-                    <p class="hide-overflow-text" id="searchbar-realname" :title="realname">{{ realname }}</p>
-                    <p class="hide-overflow-text" id="searchbar-school">{{ school + '/' + course }}</p>
+                    <p
+                        class="hide-overflow-text"
+                        id="searchbar-realname"
+                        :title="realname"
+                    >
+                        {{ realname }}
+                    </p>
+                    <p class="hide-overflow-text" id="searchbar-school">
+                        {{ school + "/" + course }}
+                    </p>
                 </div>
                 <div class="searchbar-pfp-container">
                     <a href="/profilePage.html">
-                        <img class="searchbar-profile-pic" :src="pfplink">
+                        <img class="searchbar-profile-pic" :src="pfplink" />
                     </a>
                 </div>
-                
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-p { 
+p {
     margin-bottom: 0;
 }
 </style>
 
 <style>
-@import url('../../styles/main.css');
-@import url('../../styles/banner-styles.css');
+@import url("../../styles/main.css");
+@import url("../../styles/banner-styles.css");
 .white-btn {
     font-weight: bold;
     background-color: white;
-    color:black;
+    color: black;
     border-radius: 5px;
     margin: 0 2vw;
     white-space: normal;
@@ -129,7 +162,11 @@ p {
 
 #searchbar-right > div {
     max-width: 45%;
-    height: clamp(var(--min-right-content-height), var(--ideal-right-content-height), var(--max-right-content-height));
+    height: clamp(
+        var(--min-right-content-height),
+        var(--ideal-right-content-height),
+        var(--max-right-content-height)
+    );
     position: relative;
     left: 100%;
     transform: translateX(-100%);
@@ -139,7 +176,8 @@ p {
     column-gap: 20px;
 }
 
-#searchbar-realname, #searchbar-school {
+#searchbar-realname,
+#searchbar-school {
     color: white;
 }
 
@@ -150,7 +188,7 @@ p {
 .searchbar-profile-pic {
     max-height: 100%;
     max-width: 100%;
-    border: #133B5B 4px solid;
+    border: #133b5b 4px solid;
     border-radius: 100%;
     object-fit: cover;
     object-position: center;
@@ -171,7 +209,7 @@ p {
     padding: 3px;
     isolation: isolate;
 }
-  
+
 .codepen-button::before {
     content: "";
     position: absolute;
@@ -180,26 +218,31 @@ p {
     right: 0;
     width: 400%;
     height: 100%;
-    background: linear-gradient(115deg, #bf1950, var(--primary), var(--secondary));
+    background: linear-gradient(
+        115deg,
+        #bf1950,
+        var(--primary),
+        var(--secondary)
+    );
     background-size: 25% 100%;
-    animation: login-border-animation .75s linear infinite;
+    animation: login-border-animation 0.75s linear infinite;
     animation-play-state: paused;
     translate: -5% 0%;
     transition: translate 0.25s ease-out;
 }
-  
+
 .codepen-button:hover::before {
     animation-play-state: running;
     transition-duration: 0.75s;
     translate: 0% 0%;
 }
-  
+
 @keyframes login-border-animation {
     to {
         transform: translateX(-25%);
     }
 }
-  
+
 .codepen-button span {
     position: relative;
     display: block;
@@ -214,70 +257,70 @@ p {
 }
 
 @media screen and (max-width: 768px) {
-#create-forum-btn {
-font-size: 14px;
-}
-#search-input {
-    min-width: 50vw !important;
-}
-.mobile-create-container {
-    color: white;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-}
-.mobile-create-container > .material-symbols-outlined {
-    display: block;
-}
-#searchbar-realname {
-    width: 10vw;
-}
-#search-input {
-    left: 31%;
-}
-.user-details {
-    margin-left: 20px !important;
-}
-#searchbar-right {
-    position: absolute;
-    right: 0;
-}
-.searchbar-profile-pic {
-    height: 48px;
-    width: 48px;
-}
-.searchbar-pfp-container {
-    width: 100%;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-}
-.searchbar-pfp-container > a {
-    margin-right: 10px;
-}
+    #create-forum-btn {
+        font-size: 14px;
+    }
+    #search-input {
+        min-width: 50vw !important;
+    }
+    .mobile-create-container {
+        color: white;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+    }
+    .mobile-create-container > .material-symbols-outlined {
+        display: block;
+    }
+    #searchbar-realname {
+        width: 10vw;
+    }
+    #search-input {
+        left: 31%;
+    }
+    .user-details {
+        margin-left: 20px !important;
+    }
+    #searchbar-right {
+        position: absolute;
+        right: 0;
+    }
+    .searchbar-profile-pic {
+        height: 48px;
+        width: 48px;
+    }
+    .searchbar-pfp-container {
+        width: 100%;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+    .searchbar-pfp-container > a {
+        margin-right: 10px;
+    }
 }
 </style>
 
 <script>
-import SearchResults from '../../components/general/SearchResults.vue';
+import SearchResults from "../../components/general/SearchResults.vue";
 
 export default {
     components: {
-        SearchResults
+        SearchResults,
     },
     data() {
         return {
             login: false,
-            realname: '',
-            school: '',
-            course: '',
+            realname: "",
+            school: "",
+            course: "",
             searchResults: null,
-            searchTerm: '',
+            searchTerm: "",
             showResults: false,
             currentPage: location.pathname,
             isMobile: false,
-        }
+        };
     },
     mounted() {
         this.checkAuth();
@@ -289,85 +332,98 @@ export default {
         // Clean up the event listener
         window.removeEventListener("resize", this.handleResize);
     },
-    emits: [
-        'show-forum-form'
-    ],
+    emits: ["show-forum-form"],
     methods: {
         handleResize() {
-        // Update the view when the window width changes
+            // Update the view when the window width changes
             this.isMobile = window.innerWidth <= 768;
         },
         showForumForm() {
-            this.$emit('show-forum-form');
+            this.$emit("show-forum-form");
         },
         async performSearch() {
             let searchObject;
-            
-            if (this.currentPage.startsWith('/feed.html') || this.currentPage == '/') {
-                searchObject = 'users';
+
+            if (
+                this.currentPage.startsWith("/feed.html") ||
+                this.currentPage == "/"
+            ) {
+                searchObject = "users";
+            } else if (this.currentPage.startsWith("/forum.html")) {
+                searchObject = "forums";
+            } else if (this.currentPage.startsWith("/explore.html")) {
+                searchObject = "users-forums";
             }
-            else if(this.currentPage.startsWith('/forum.html')) {
-                searchObject = 'forums';
-            }
-            else if (this.currentPage.startsWith('/explore.html')) {
-                searchObject = 'users-forums';
-            }
-            
+
             try {
-                await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/search/${searchObject}?term=${this.searchTerm.trim()}`, {
-                method: 'GET',
-                credentials: "include",
-                }).then(async response => {
-                    await response.json().then(data => {
+                await fetch(
+                    `${
+                        import.meta.env.VITE_APP_SERVER_URL
+                    }/api/search/${searchObject}?term=${this.searchTerm.trim()}`,
+                    {
+                        method: "GET",
+                        credentials: "include",
+                    },
+                ).then(async (response) => {
+                    await response.json().then((data) => {
                         this.searchResults = data.topSixResults;
 
                         this.showResults = true;
                     });
-                })
+                });
             } catch (error) {
-                console.error('Error performing search:', error);
+                console.error("Error performing search:", error);
             }
         },
         async checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`, {
-                method: "GET",
-                credentials: "include",
-            }).then(async response => {
-                if (response.ok) {
-                    await response.json().then(data => {
-                        // Checks if user has setup their profile, if not:
-                        if (data.is_profile_setup === false){
-                            location.href = '/setupProfile.html';
-                            return;
-                        }
-                        else {
-                            this.realname = data.real_name;
-                            this.school = data.school;
-                            this.course = data.course;
-                            this.pfplink = data.profile_pic_link;
-                            this.login = true;
-                        }
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
+            await fetch(
+                `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/users/cookie/verify`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                },
+            )
+                .then(async (response) => {
+                    if (response.ok) {
+                        await response.json().then((data) => {
+                            // Checks if user has setup their profile, if not:
+                            if (data.is_profile_setup === false) {
+                                location.href = "/setupProfile.html";
+                                return;
+                            } else {
+                                this.realname = data.real_name;
+                                this.school = data.school;
+                                this.course = data.course;
+                                this.pfplink = data.profile_pic_link;
+                                this.login = true;
+                            }
+                        });
+                    } else {
+                        console.log("Error:", response);
+                    }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
+                .catch((error) => {
+                    console.error("Error:", error);
                 });
         },
         // to show/hide results
         toggleResults(show, e) {
             // dont hide results if the new focused element is the search results container
-            const searchResultsContainer = document.querySelector('.resultsContainer');
-            
-            if (searchResultsContainer && searchResultsContainer == e?.relatedTarget) {
+            const searchResultsContainer =
+                document.querySelector(".resultsContainer");
+
+            if (
+                searchResultsContainer &&
+                searchResultsContainer == e?.relatedTarget
+            ) {
                 return;
             }
 
             this.showResults = show;
-        }
-    }
-}
+        },
+    },
+};
 </script>

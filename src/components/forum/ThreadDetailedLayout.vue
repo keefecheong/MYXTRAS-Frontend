@@ -1,16 +1,43 @@
 <template>
-    <LoadingOverlay v-if="submittingComment || !dataInitialized" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
+    <LoadingOverlay
+        v-if="submittingComment || !dataInitialized"
+        :backgroundColor="'rgba(0, 0, 0, 0.5)'"
+        :center="true"
+    />
 
     <div class="card shadow" id="thread-detailed-layout-container">
-        <span v-if="showBackArrow" class="material-symbols-outlined" id="close-detailed-thread-container-arrow" title="Go back" @click="closeDetailedView">arrow_back</span>
-        <span v-else class="material-symbols-outlined" id="close-detailed-thread-container-cross" title="Go back" @click="closeDetailedView">close</span>
+        <span
+            v-if="showBackArrow"
+            class="material-symbols-outlined"
+            id="close-detailed-thread-container-arrow"
+            title="Go back"
+            @click="closeDetailedView"
+            >arrow_back</span
+        >
+        <span
+            v-else
+            class="material-symbols-outlined"
+            id="close-detailed-thread-container-cross"
+            title="Go back"
+            @click="closeDetailedView"
+            >close</span
+        >
 
-        <div class="thread-layout-container" id="thread-detailed-layout-content">
+        <div
+            class="thread-layout-container"
+            id="thread-detailed-layout-content"
+        >
             <!-- thread creator's profile pic -->
             <div class="thread-layout-left">
-                <img class="thread-creator-profile-pic"
-                    :src="showForumDetails ? thread.parent_id.forum_pic_link : thread.creator_id.profile_pic_link"
-                     @click="viewUser" title="View user"
+                <img
+                    class="thread-creator-profile-pic"
+                    :src="
+                        showForumDetails
+                            ? thread.parent_id.forum_pic_link
+                            : thread.creator_id.profile_pic_link
+                    "
+                    @click="viewUser"
+                    title="View user"
                 />
             </div>
 
@@ -20,36 +47,82 @@
                     <div class="thread-layout-header-top">
                         <div>
                             <div class="thread-creator">
-                                <span v-if="showForumDetails" @click="viewForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
-                                <span class="thread-layout-creator-name" @click="viewUser" title="View user">Posted by: @{{ thread.creator_id.username }}</span>
+                                <span
+                                    v-if="showForumDetails"
+                                    @click="viewForum"
+                                    class="thread-layout-forum-name"
+                                    title="View forum"
+                                    >x/{{ thread.parent_id.forum_id }} ~
+                                </span>
+                                <span
+                                    class="thread-layout-creator-name"
+                                    @click="viewUser"
+                                    title="View user"
+                                    >Posted by: @{{
+                                        thread.creator_id.username
+                                    }}</span
+                                >
                             </div>
                             <span class="thread-title">{{ thread.title }}</span>
                         </div>
 
                         <div>
-                            <span class="thread-datetime" :title="new Date(thread.creation_time)">{{ dateCreated }}</span>
+                            <span
+                                class="thread-datetime"
+                                :title="new Date(thread.creation_time)"
+                                >{{ dateCreated }}</span
+                            >
                         </div>
                     </div>
 
                     <!-- thread tags and privileged options if user is creator -->
                     <div class="thread-layout-header-bottom">
                         <div>
-                            <InterestBadgeList v-if="thread.tags.length > 0" :selectedOption="thread.tags" :selection="false" title="Tags" />
+                            <InterestBadgeList
+                                v-if="thread.tags.length > 0"
+                                :selectedOption="thread.tags"
+                                :selection="false"
+                                title="Tags"
+                            />
                         </div>
 
-                        <div class="thread-privileged-options" v-if="thread.isOwner">
-                            <div data-tooltip="Edit thread" data-tooltip-position="top">
-                                <span class="material-symbols-outlined" @click="() => toggleThreadForm(true)" >edit</span>
+                        <div
+                            class="thread-privileged-options"
+                            v-if="thread.isOwner"
+                        >
+                            <div
+                                data-tooltip="Edit thread"
+                                data-tooltip-position="top"
+                            >
+                                <span
+                                    class="material-symbols-outlined"
+                                    @click="() => toggleThreadForm(true)"
+                                    >edit</span
+                                >
                             </div>
-                            <div data-tooltip="Delete thread" data-tooltip-position="top">
-                                <span class="material-symbols-outlined" @click="deleteThread">delete</span>
+                            <div
+                                data-tooltip="Delete thread"
+                                data-tooltip-position="top"
+                            >
+                                <span
+                                    class="material-symbols-outlined"
+                                    @click="deleteThread"
+                                    >delete</span
+                                >
                             </div>
                         </div>
 
                         <!-- report button -->
                         <div v-else>
-                            <div data-tooltip="Report thread" data-tooltip-position="top">
-                                <span class="material-symbols-outlined report-button" @click="() => toggleReportForm(true)">flag</span>
+                            <div
+                                data-tooltip="Report thread"
+                                data-tooltip-position="top"
+                            >
+                                <span
+                                    class="material-symbols-outlined report-button"
+                                    @click="() => toggleReportForm(true)"
+                                    >flag</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -59,41 +132,73 @@
                 <div class="thread-layout-right-content">
                     <p id="thread-content">{{ thread.content }}</p>
 
-                    <img id="thread-image" v-if="thread.content_link" :src="thread.content_link" alt="Thread Image" />
+                    <img
+                        id="thread-image"
+                        v-if="thread.content_link"
+                        :src="thread.content_link"
+                        alt="Thread Image"
+                    />
                 </div>
 
                 <!-- thread actions - like, dislike, comment -->
                 <div id="thread-layout-right-actions">
                     <div id="thread-reaction-container">
                         <div id="like-thread-container">
-                            <div data-tooltip="Like thread" data-tooltip-position="top">
-                                <span class="material-symbols-outlined thread-reaction-button" :class="{liked: liked}" @click="toggleLike">sentiment_very_satisfied</span>
+                            <div
+                                data-tooltip="Like thread"
+                                data-tooltip-position="top"
+                            >
+                                <span
+                                    class="material-symbols-outlined thread-reaction-button"
+                                    :class="{ liked: liked }"
+                                    @click="toggleLike"
+                                    >sentiment_very_satisfied</span
+                                >
                             </div>
-                            <span title="Number of likes">({{ likeCount }})</span>
+                            <span title="Number of likes"
+                                >({{ likeCount }})</span
+                            >
                         </div>
 
                         <div id="dislike-thread-container">
-                            <div data-tooltip="Dislike thread" data-tooltip-position="top">
-                                <span class="material-symbols-outlined thread-reaction-button" :class="{disliked: disliked}" @click="toggleDisike">sentiment_very_dissatisfied</span>
+                            <div
+                                data-tooltip="Dislike thread"
+                                data-tooltip-position="top"
+                            >
+                                <span
+                                    class="material-symbols-outlined thread-reaction-button"
+                                    :class="{ disliked: disliked }"
+                                    @click="toggleDisike"
+                                    >sentiment_very_dissatisfied</span
+                                >
                             </div>
-                            <span title="Number of dislikes">({{ dislikeCount }})</span>
+                            <span title="Number of dislikes"
+                                >({{ dislikeCount }})</span
+                            >
                         </div>
                     </div>
 
                     <div id="thread-comment-creation-container">
                         <form @submit.prevent="createComment">
-                            <DynamicTextarea :id="'thread-comment-input'" :maxRows="4" :placeholder="'Add a comment...'" v-model="commentText" />
+                            <DynamicTextarea
+                                :id="'thread-comment-input'"
+                                :maxRows="4"
+                                :placeholder="'Add a comment...'"
+                                v-model="commentText"
+                            />
 
-                            <button type="submit" id="thread-comment-submit">Comment</button>
+                            <button type="submit" id="thread-comment-submit">
+                                Comment
+                            </button>
                         </form>
                     </div>
                 </div>
 
                 <!-- show thread comments -->
-                <div id="thread-detailed-layout-comments-container" >
-                    <div v-if="comments.length > 0" >
+                <div id="thread-detailed-layout-comments-container">
+                    <div v-if="comments.length > 0">
                         <h4>Comments ({{ comments.length }})</h4>
-                        
+
                         <CommentLayout
                             v-for="(comment, index) in comments"
                             :key="index"
@@ -102,10 +207,12 @@
                             :forumId="thread.parent_id._id"
                             :forPost="false"
                             @comment-deleted="() => handleDeletedComment(index)"
-                            @report-comment="() => handleReportComment(comment._id)"
+                            @report-comment="
+                                () => handleReportComment(comment._id)
+                            "
                         />
                     </div>
-                    
+
                     <div v-else>
                         <p>No comments yet, be the first!</p>
                     </div>
@@ -113,8 +220,13 @@
             </div>
         </div>
     </div>
-    
-    <ThreadFormLayout v-if="showThreadForm" :thread="thread" :editMode="true" @close-thread-form="() => toggleThreadForm(false)" />
+
+    <ThreadFormLayout
+        v-if="showThreadForm"
+        :thread="thread"
+        :editMode="true"
+        @close-thread-form="() => toggleThreadForm(false)"
+    />
 
     <ReportFormLayout
         v-if="showReportForm"
@@ -127,36 +239,36 @@
 </template>
 
 <script>
-import InterestBadgeList from '../general/InterestBadgeList.vue';
+import InterestBadgeList from "../general/InterestBadgeList.vue";
 
-import { useAlertStore } from '../../stores/AlertStore';
-import { useConfirmStore } from '../../stores/ConfirmStore.js';
+import { useAlertStore } from "../../stores/AlertStore";
+import { useConfirmStore } from "../../stores/ConfirmStore.js";
 
-import LoadingOverlay from '../general/LoadingOverlay.vue';
-import DynamicTextarea from '../general/DynamicTextarea.vue';
-import viewUser from '../../utils/general/viewUser.js';
-import viewForum from '../../utils/general/viewForum.js';
-import highlightElement from '../../utils/general/highlightElement.js';
-import calcDateDifference from '../../utils/general/calcDateDifference.js';
+import LoadingOverlay from "../general/LoadingOverlay.vue";
+import DynamicTextarea from "../general/DynamicTextarea.vue";
+import viewUser from "../../utils/general/viewUser.js";
+import viewForum from "../../utils/general/viewForum.js";
+import highlightElement from "../../utils/general/highlightElement.js";
+import calcDateDifference from "../../utils/general/calcDateDifference.js";
 
-import CommentLayout from '../comment/CommentLayout.vue';
-import ThreadFormLayout from './ThreadFormLayout.vue';
+import CommentLayout from "../comment/CommentLayout.vue";
+import ThreadFormLayout from "./ThreadFormLayout.vue";
 
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 
-import ReportFormLayout from '../report/ReportFormLayout.vue';
+import ReportFormLayout from "../report/ReportFormLayout.vue";
 
 export default {
     data() {
         return {
             comments: [],
-            dateCreated: '',
+            dateCreated: "",
             dataInitialized: false,
             alert: useAlertStore().alert,
             confirm: useConfirmStore().confirm,
 
             submittingComment: false,
-            commentText: '',
+            commentText: "",
             liked: false,
             savedLike: false,
             likeCount: 0,
@@ -170,25 +282,18 @@ export default {
 
             showReportForm: false,
             reportType: null,
-            reportCommentId: null
-        }
+            reportCommentId: null,
+        };
     },
-    props: [
-        'thread',
-        'showBackArrow',
-        'showForumDetails',
-        'highlightComment'
-    ],
-    emits: [
-        'close-detailed-view'
-    ],
+    props: ["thread", "showBackArrow", "showForumDetails", "highlightComment"],
+    emits: ["close-detailed-view"],
     components: {
         InterestBadgeList,
         CommentLayout,
         LoadingOverlay,
         DynamicTextarea,
         ThreadFormLayout,
-        ReportFormLayout
+        ReportFormLayout,
     },
     created() {
         // set like/dislike fields
@@ -203,10 +308,12 @@ export default {
         this.initData().then(() => {
             if (this.highlightComment) {
                 setTimeout(() => {
-                    const targetComment = document.getElementById(this.highlightComment);
+                    const targetComment = document.getElementById(
+                        this.highlightComment,
+                    );
 
                     targetComment.scrollIntoView({
-                        block: 'center'
+                        block: "center",
                     });
 
                     highlightElement(targetComment);
@@ -222,7 +329,7 @@ export default {
         this.debouncedDislikeUpdate = debounce(this.updateDislike, 1000);
 
         // set event listener to complete pending like/dislike requests when the page is closed
-        window.addEventListener('beforeunload', this.completeRequests);
+        window.addEventListener("beforeunload", this.completeRequests);
     },
     mounted() {
         // scroll to top
@@ -234,27 +341,33 @@ export default {
     methods: {
         // to get comment data
         async initData() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}/comments`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-                throw new Error('Response not OK');
-            })
-            .then(data => {
-                this.comments = data;
-                this.dataInitialized = true;
-            })
-            .catch((error) => {
-                console.log("This page could not be loaded: ", error);
-            });
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                    this.thread.parent_id._id
+                }/thread/${this.thread._id}/comments`,
+                {
+                    mode: "cors",
+                    method: "GET",
+                    credentials: "include",
+                },
+            )
+                .then((res) => {
+                    if (res.ok) {
+                        return res.json();
+                    }
+                    throw new Error("Response not OK");
+                })
+                .then((data) => {
+                    this.comments = data;
+                    this.dataInitialized = true;
+                })
+                .catch((error) => {
+                    console.log("This page could not be loaded: ", error);
+                });
         },
         // to close detailed view
         closeDetailedView() {
-            this.$emit('close-detailed-view');
+            this.$emit("close-detailed-view");
         },
         // to create comment
         async createComment() {
@@ -267,38 +380,45 @@ export default {
             }
 
             // upload comment
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}/comments`, {
-                mode: 'cors',
-                method: 'POST',
-                body: JSON.stringify({
-                    content: this.commentText.trim()
-                }),
-                headers: {
-                    "Content-Type": "application/json"
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                    this.thread.parent_id._id
+                }/thread/${this.thread._id}/comments`,
+                {
+                    mode: "cors",
+                    method: "POST",
+                    body: JSON.stringify({
+                        content: this.commentText.trim(),
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
                 },
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(async (data) => {
-                    this.submittingComment = false;
-                    await this.alert(data.message);
+            )
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        this.submittingComment = false;
+                        await this.alert(data.message);
 
-                    // update comments list to update dom immediately
-                    if (res.status == 200) {
-                        this.comments.unshift(data.comment);
-                    }
+                        // update comments list to update dom immediately
+                        if (res.status == 200) {
+                            this.comments.unshift(data.comment);
+                        }
 
-                    this.commentText = '';
+                        this.commentText = "";
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
         },
         // toggle like status of thread
         toggleLike() {
             // check if user currently dislikes the thread
             // if user dislikes the thread do nothing
             if (this.disliked) {
-                this.alert('Remove dislike first.');
+                this.alert("Remove dislike first.");
                 return;
             }
 
@@ -308,11 +428,10 @@ export default {
             // update likeCount
             if (this.liked) {
                 this.likeCount += 1;
-            }
-            else {
+            } else {
                 this.likeCount -= 1;
             }
-            
+
             this.debouncedLikeUpdate();
         },
         // toggle dislike status of thread
@@ -320,18 +439,17 @@ export default {
             // check if user currently likes the thread
             // if user likes the thread do nothing
             if (this.liked) {
-                this.alert('Remove like first.');
+                this.alert("Remove like first.");
                 return;
             }
 
             // toggle like on frontend only
             this.disliked = !this.disliked;
-            
+
             // update dislikeCount
             if (this.disliked) {
                 this.dislikeCount += 1;
-            }
-            else {
+            } else {
                 this.dislikeCount -= 1;
             }
 
@@ -339,78 +457,88 @@ export default {
         },
         // handle updating of like status to backend
         async updateLike() {
-            const url = `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}/like`;
+            const url = `${
+                import.meta.env.VITE_APP_SERVER_URL
+            }/api/threads/forum/${this.thread.parent_id._id}/thread/${
+                this.thread._id
+            }/like`;
             const options = {
-                mode: 'cors',
-                credentials: 'include'
-            }
+                mode: "cors",
+                credentials: "include",
+            };
 
             // send request to update liked status
             if (this.liked && !this.savedLike) {
-                options.method = 'POST';
+                options.method = "POST";
 
-                await fetch(url, options).then(async (res) => {
-                    if (res.status == 201) {
-                        this.savedLike = true;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
-            }
-            else if (!this.liked && this.savedLike) {
-                options.method = 'DELETE';
+                await fetch(url, options)
+                    .then(async (res) => {
+                        if (res.status == 201) {
+                            this.savedLike = true;
+                        } else {
+                            await res.json().then((data) => console.log(data));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            } else if (!this.liked && this.savedLike) {
+                options.method = "DELETE";
 
-                await fetch(url, options).then(async (res) => {
-                    if (res.status == 204) {
-                        this.savedLike = false;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
+                await fetch(url, options)
+                    .then(async (res) => {
+                        if (res.status == 204) {
+                            this.savedLike = false;
+                        } else {
+                            await res.json().then((data) => console.log(data));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
         },
         // handle updating of dislike status to backend
         async updateDislike() {
-            const url = `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}/dislike`;
+            const url = `${
+                import.meta.env.VITE_APP_SERVER_URL
+            }/api/threads/forum/${this.thread.parent_id._id}/thread/${
+                this.thread._id
+            }/dislike`;
             const options = {
-                mode: 'cors',
-                credentials: 'include'
-            }
+                mode: "cors",
+                credentials: "include",
+            };
 
             // send request to update liked status
             if (this.disliked && !this.savedDislike) {
-                options.method = 'POST';
+                options.method = "POST";
 
-                await fetch(url, options).then(async (res) => {
-                    if (res.status == 201) {
-                        this.savedDislike = true;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
-            }
-            else if (!this.disliked && this.savedDislike) {
-                options.method = 'DELETE';
+                await fetch(url, options)
+                    .then(async (res) => {
+                        if (res.status == 201) {
+                            this.savedDislike = true;
+                        } else {
+                            await res.json().then((data) => console.log(data));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            } else if (!this.disliked && this.savedDislike) {
+                options.method = "DELETE";
 
-                await fetch(url, options).then(async (res) => {
-                    if (res.status == 204) {
-                        this.savedDislike = false;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
+                await fetch(url, options)
+                    .then(async (res) => {
+                        if (res.status == 204) {
+                            this.savedDislike = false;
+                        } else {
+                            await res.json().then((data) => console.log(data));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
         },
         // complete updateLike/updateDislike request if pending
@@ -427,37 +555,46 @@ export default {
             viewUser(this.thread.creator_id._id);
         },
         // to update comments on deletion
-        handleDeletedComment(index){
+        handleDeletedComment(index) {
             this.comments.splice(index, 1);
         },
         // to delete thread
-        async deleteThread(){
-            const confirmDelete = await this.confirm('Are you sure you want to delete this thread? This action is irreversible!');
+        async deleteThread() {
+            const confirmDelete = await this.confirm(
+                "Are you sure you want to delete this thread? This action is irreversible!",
+            );
 
             if (!confirmDelete) {
                 return;
             }
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}`, {
-                mode: 'cors',
-                method: 'DELETE',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(async (data) => {
-                    await this.alert(data.message);
-                    
-                    location.reload();
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                    this.thread.parent_id._id
+                }/thread/${this.thread._id}`,
+                {
+                    mode: "cors",
+                    method: "DELETE",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        await this.alert(data.message);
+
+                        location.reload();
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
         },
         // to toggle thread form
         toggleThreadForm(show) {
             this.showThreadForm = show;
         },
         // to show/hide report form
-        toggleReportForm(show, type='thread') {
+        toggleReportForm(show, type = "thread") {
             this.reportType = type;
             this.showReportForm = show;
         },
@@ -465,16 +602,15 @@ export default {
         handleReportComment(commentId) {
             this.reportCommentId = commentId;
 
-            this.toggleReportForm(true, 'threadComment');
-        }
-    }
-}
+            this.toggleReportForm(true, "threadComment");
+        },
+    },
+};
 </script>
 
 <style>
-@import url('../../styles/forums/similar-thread-layout-styles.css');
-@import url('../../styles/main.css');
-
+@import url("../../styles/forums/similar-thread-layout-styles.css");
+@import url("../../styles/main.css");
 
 #thread-detailed-layout-container {
     transition: background-color 1s ease-out;
@@ -541,12 +677,12 @@ export default {
 
 .thread-reaction-button.liked {
     color: var(--primary);
-    font-variation-settings: 'FILL' 1;
+    font-variation-settings: "FILL" 1;
 }
 
 .thread-reaction-button.disliked {
     color: var(--dark);
-    font-variation-settings: 'FILL' 1;
+    font-variation-settings: "FILL" 1;
 }
 
 #thread-comment-creation-container form {
@@ -581,5 +717,4 @@ export default {
     border: none;
     background-color: var(--secondary);
 }
-
 </style>

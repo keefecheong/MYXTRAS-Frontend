@@ -5,63 +5,64 @@
 </template>
 
 <style>
-#pet{
+#pet {
     position: fixed;
-    pointer-events: none; 
+    pointer-events: none;
     bottom: 0;
 }
-
 </style>
 
 <script>
-
-export default{
-    props:[
-        'enabled',
-        'selectedPet'
-    ],
-    data(){
-        return{
+export default {
+    props: ["enabled", "selectedPet"],
+    data() {
+        return {
             selectedChoice: null,
-            selectedPet: null
-
-        }
+            selectedPet: null,
+        };
     },
     created() {
         this.initData();
     },
 
-    updated(){
+    updated() {
         this.updatePet();
     },
 
     methods: {
-        async initData(){
+        async initData() {
             // get user profile and follow status
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/gachapon`, {
-                methods: 'GET',
-                credentials: 'include',
-                mode: 'cors'
-            }).then(async (res) => {
-                await res.json().then(data => {
-                    this.selectedChoice = data.pets.enabled;
-                    this.selectedPet = data.chosenPetData;
-                    this.changeRunner();
+            await fetch(
+                `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/gamification/gachapon`,
+                {
+                    methods: "GET",
+                    credentials: "include",
+                    mode: "cors",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then((data) => {
+                        this.selectedChoice = data.pets.enabled;
+                        this.selectedPet = data.chosenPetData;
+                        this.changeRunner();
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch(error => {
-                console.log(error);
-            });
         },
 
-        checkPage(){
-            const currentPage = import.meta.env.VITE_BASE_URL + ":" + import.meta.env.VITE_PORT + '/gachapon.html'
-            if(window.location.href == currentPage){
+        checkPage() {
+            const currentPage = "/gachapon.html";
+            if (window.location.href == currentPage) {
                 return this.enabled;
             }
-            return (this.enabled || this.selectedChoice);
+            return this.enabled || this.selectedChoice;
         },
 
-        changeRunner(){
+        changeRunner() {
             // create a new style element
             const styleElement = document.createElement("style");
             // assign it an id
@@ -77,10 +78,16 @@ export default{
 
                 #runner{
                     background: url("${this.selectedPet.sprite_sheet_link}");
-                    width: ${this.selectedPet.width/this.selectedPet.number/3}px;
-                    height: ${this.selectedPet.height/3}px;
-                    animation: walk 10s steps(${this.selectedPet.number}) infinite;
-                    background-size: ${this.selectedPet.width/3}px ${this.selectedPet.height/3}px;
+                    width: ${
+                        this.selectedPet.width / this.selectedPet.number / 3
+                    }px;
+                    height: ${this.selectedPet.height / 3}px;
+                    animation: walk 10s steps(${
+                        this.selectedPet.number
+                    }) infinite;
+                    background-size: ${this.selectedPet.width / 3}px ${
+                        this.selectedPet.height / 3
+                    }px;
                 } 
 
                 @keyframes walk {
@@ -104,24 +111,30 @@ export default{
             `;
             // append the runnerCSS string to the style element
             styleElement.appendChild(document.createTextNode(runnerCSS));
-
         },
 
-        async updatePet(){
+        async updatePet() {
             // get user profile and follow status
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/gachapon`, {
-                methods: 'GET',
-                credentials: 'include',
-                mode: 'cors'
-            }).then(async (res) => {
-                await res.json().then(data => {
-                    this.selectedPet = data.chosenPetData;
-                    this.changeRunner();
+            await fetch(
+                `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/gamification/gachapon`,
+                {
+                    methods: "GET",
+                    credentials: "include",
+                    mode: "cors",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then((data) => {
+                        this.selectedPet = data.chosenPetData;
+                        this.changeRunner();
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch(error => {
-                console.log(error);
-            });
-        }
-    }
-}
+        },
+    },
+};
 </script>

@@ -1,8 +1,18 @@
 <template>
-    <div class="card shadow thread-layout-container pinkHover" @click="showDetailedView" title="Click to view this thread" :id="index">
+    <div
+        class="card shadow thread-layout-container pinkHover"
+        @click="showDetailedView"
+        title="Click to view this thread"
+        :id="index"
+    >
         <div class="thread-layout-left">
-            <img class="thread-creator-profile-pic"
-                :src="showForumDetails ? thread.parent_id.forum_pic_link : thread.creator_id.profile_pic_link"
+            <img
+                class="thread-creator-profile-pic"
+                :src="
+                    showForumDetails
+                        ? thread.parent_id.forum_pic_link
+                        : thread.creator_id.profile_pic_link
+                "
             />
         </div>
 
@@ -11,80 +21,119 @@
                 <div class="thread-layout-header-top">
                     <div>
                         <div class="thread-creator">
-                            <span v-if="showForumDetails" @click.stop="viewForum" class="thread-layout-forum-name" title="View forum">x/{{ thread.parent_id.forum_id }} ~ </span>
-                            <span class="thread-layout-creator-name" @click.stop="viewUser" title="View user">Posted by: @{{ thread.creator_id.username }}</span>
+                            <span
+                                v-if="showForumDetails"
+                                @click.stop="viewForum"
+                                class="thread-layout-forum-name"
+                                title="View forum"
+                                >x/{{ thread.parent_id.forum_id }} ~
+                            </span>
+                            <span
+                                class="thread-layout-creator-name"
+                                @click.stop="viewUser"
+                                title="View user"
+                                >Posted by: @{{
+                                    thread.creator_id.username
+                                }}</span
+                            >
                         </div>
                         <span class="thread-title">{{ thread.title }}</span>
                     </div>
 
                     <div>
-                        <span class="thread-datetime" :title="new Date(thread.creation_time)">{{ dateCreated }}</span>
+                        <span
+                            class="thread-datetime"
+                            :title="new Date(thread.creation_time)"
+                            >{{ dateCreated }}</span
+                        >
                     </div>
                 </div>
 
                 <div class="thread-layout-header-bottom">
                     <div>
-                        <InterestBadgeList v-if="thread.tags.length > 0" :selectedOption="thread.tags" :selection="false" title="Tags" />
+                        <InterestBadgeList
+                            v-if="thread.tags.length > 0"
+                            :selectedOption="thread.tags"
+                            :selection="false"
+                            title="Tags"
+                        />
                     </div>
 
-                    <div class="thread-privileged-options" v-if="thread.isOwner">
-                        <div data-tooltip="Edit thread" data-tooltip-position="top">
-                            <span class="material-symbols-outlined" @click.stop="() => toggleThreadForm(true)" >edit</span>
+                    <div
+                        class="thread-privileged-options"
+                        v-if="thread.isOwner"
+                    >
+                        <div
+                            data-tooltip="Edit thread"
+                            data-tooltip-position="top"
+                        >
+                            <span
+                                class="material-symbols-outlined"
+                                @click.stop="() => toggleThreadForm(true)"
+                                >edit</span
+                            >
                         </div>
-                        <div data-tooltip="Delete thread" data-tooltip-position="top"> 
-                            <span class="material-symbols-outlined" @click.stop="deleteThread" >delete</span>
+                        <div
+                            data-tooltip="Delete thread"
+                            data-tooltip-position="top"
+                        >
+                            <span
+                                class="material-symbols-outlined"
+                                @click.stop="deleteThread"
+                                >delete</span
+                            >
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="thread-layout-right-content">
-                <p class="thread-content hide-overflow-text">{{ thread.content }}</p>
+                <p class="thread-content hide-overflow-text">
+                    {{ thread.content }}
+                </p>
             </div>
         </div>
     </div>
 
-    <ThreadFormLayout v-if="showThreadForm" :thread="thread" :editMode="true" @close-thread-form="() => toggleThreadForm(false)" />
+    <ThreadFormLayout
+        v-if="showThreadForm"
+        :thread="thread"
+        :editMode="true"
+        @close-thread-form="() => toggleThreadForm(false)"
+    />
 </template>
 
 <script>
-import InterestBadgeList from '../../components/general/InterestBadgeList.vue';
-import ThreadFormLayout from './ThreadFormLayout.vue';
-import calcDateDifference from '../../utils/general/calcDateDifference';
-import viewUser from '../../utils/general/viewUser.js';
-import viewForum from '../../utils/general/viewForum.js';
-import { useAlertStore } from '../../stores/AlertStore';
-import { useConfirmStore } from '../../stores/ConfirmStore';
+import InterestBadgeList from "../../components/general/InterestBadgeList.vue";
+import ThreadFormLayout from "./ThreadFormLayout.vue";
+import calcDateDifference from "../../utils/general/calcDateDifference";
+import viewUser from "../../utils/general/viewUser.js";
+import viewForum from "../../utils/general/viewForum.js";
+import { useAlertStore } from "../../stores/AlertStore";
+import { useConfirmStore } from "../../stores/ConfirmStore";
 
 export default {
     data() {
         return {
             showThreadForm: false,
-            dateCreated: '',
+            dateCreated: "",
             alert: useAlertStore().alert,
-            confirm: useConfirmStore().confirm
-        }
+            confirm: useConfirmStore().confirm,
+        };
     },
     components: {
         InterestBadgeList,
-        ThreadFormLayout
+        ThreadFormLayout,
     },
-    props: [
-        'thread',
-        'showForumDetails',
-        'index'
-    ],
-    emits: [
-        'show-detailed-view',
-        'deleted-thread'
-    ],
+    props: ["thread", "showForumDetails", "index"],
+    emits: ["show-detailed-view", "deleted-thread"],
     created() {
         this.dateCreated = calcDateDifference(this.thread.creation_time);
     },
     methods: {
         // to show detailed view of thread
         showDetailedView() {
-            this.$emit('show-detailed-view');
+            this.$emit("show-detailed-view");
         },
         // to toggle thread form
         toggleThreadForm(show) {
@@ -99,34 +148,43 @@ export default {
             viewUser(this.thread.creator_id._id);
         },
         // to delete thread
-        async deleteThread(){
-            const confirmDelete = await this.confirm('Are you sure you want to delete this thread? This action is irreversible!');
+        async deleteThread() {
+            const confirmDelete = await this.confirm(
+                "Are you sure you want to delete this thread? This action is irreversible!",
+            );
 
             if (!confirmDelete) {
                 return;
             }
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}`, {
-                mode: 'cors',
-                method: 'DELETE',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(async (data) => {
-                    this.alert(data.message);
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                    this.thread.parent_id._id
+                }/thread/${this.thread._id}`,
+                {
+                    mode: "cors",
+                    method: "DELETE",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        this.alert(data.message);
 
-                    this.$emit('deleted-thread');
+                        this.$emit("deleted-thread");
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>
-@import url('../../styles/main.css');
-@import url('../../styles/forums/similar-thread-layout-styles.css');
+@import url("../../styles/main.css");
+@import url("../../styles/forums/similar-thread-layout-styles.css");
 
 .thread-layout-forum-name {
     color: rgb(0, 102, 204);
@@ -139,5 +197,4 @@ export default {
 .thread-content {
     -webkit-line-clamp: 2 !important;
 }
-
 </style>

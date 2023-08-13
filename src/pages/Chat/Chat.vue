@@ -1,14 +1,20 @@
 <template>
-    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+    <AlertPrompt
+        v-if="showAlert && alertMsg.length > 0"
+        @close-alert="closeAlert"
+    >
         {{ alertMsg }}
     </AlertPrompt>
 
-    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+    <ConfirmPrompt
+        v-if="showConfirm && confirmMsg.length > 0"
+        @close-confirm="closeConfirm"
+    >
         {{ confirmMsg }}
     </ConfirmPrompt>
 
     <div id="main-container">
-        <NavSidebar/>
+        <NavSidebar />
         <div id="main-content">
             <!-- chat list (shows list of chats) -->
             <div class="col-3" id="chatlist-container">
@@ -18,28 +24,34 @@
                     <p>Loading...</p>
                 </div>
 
-                <div class="chatlist-placeholder" v-if="dataInitialized && orderedChats.length <= 0">
+                <div
+                    class="chatlist-placeholder"
+                    v-if="dataInitialized && orderedChats.length <= 0"
+                >
                     <p>No chats found</p>
                 </div>
 
                 <div v-if="dataInitialized && orderedChats.length > 0">
-                    <ChatListLayout 
-                        v-for="chat in orderedChats" 
-                        :chat="chat" 
-                        :selected="chatSelected && (chat._id == selectedChat._id)" 
+                    <ChatListLayout
+                        v-for="chat in orderedChats"
+                        :chat="chat"
+                        :selected="chatSelected && chat._id == selectedChat._id"
                     />
                 </div>
             </div>
 
             <!-- chat interface (shows messages)-->
             <div class="col-9" id="chat-interface-container">
-                <div id="no-chat-selected" v-if="!chatSelected || !dataInitialized">
+                <div
+                    id="no-chat-selected"
+                    v-if="!chatSelected || !dataInitialized"
+                >
                     <h1>Select a chat on the left</h1>
                 </div>
 
                 <div v-else style="height: 100%">
                     <keep-alive>
-                        <ChatInterfaceLayout 
+                        <ChatInterfaceLayout
                             :key="selectedChat._id"
                             :chat="selectedChat"
                             :messages="selectedChatMessages"
@@ -49,24 +61,23 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
-import ChatListLayout from '../../components/chat/ChatListLayout.vue';
-import ChatInterfaceLayout from '../../components/chat/ChatInterfaceLayout.vue';
-import { useChatStore } from '../../stores/ChatStore.js';
-import { useAlertStore } from '../../stores/AlertStore.js';
-import { useConfirmStore } from '../../stores/ConfirmStore';
-import AlertPrompt from '../../components/general/AlertPrompt.vue';
-import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
+import ChatListLayout from "../../components/chat/ChatListLayout.vue";
+import ChatInterfaceLayout from "../../components/chat/ChatInterfaceLayout.vue";
+import { useChatStore } from "../../stores/ChatStore.js";
+import { useAlertStore } from "../../stores/AlertStore.js";
+import { useConfirmStore } from "../../stores/ConfirmStore";
+import AlertPrompt from "../../components/general/AlertPrompt.vue";
+import ConfirmPrompt from "../../components/general/ConfirmPrompt.vue";
 
 export default {
     components: {
         ChatListLayout,
         ChatInterfaceLayout,
         AlertPrompt,
-        ConfirmPrompt
+        ConfirmPrompt,
     },
     data() {
         return {
@@ -76,26 +87,26 @@ export default {
             dataInitialized: false,
             retrievedChatIds: [],
             alertStore: useAlertStore(),
-            confirmStore: useConfirmStore()
-        }
+            confirmStore: useConfirmStore(),
+        };
     },
     async created() {
         // get history data from database
         await this.initData();
-        
+
         // initialize values from ChatStore
         this.updateValues();
 
         // subscribe to ChatStore
         this.subscribeChatStore();
-        
+
         // check for new store/selected store
         this.initChat();
     },
     methods: {
         // check for new chat/selected chat set from profile page
         initChat() {
-            var selectedChat = sessionStorage.getItem('selectedChat');
+            var selectedChat = sessionStorage.getItem("selectedChat");
 
             if (!selectedChat) {
                 return;
@@ -104,11 +115,11 @@ export default {
             selectedChat = JSON.parse(selectedChat);
 
             this.store.newChat(selectedChat);
-            
+
             // set currentChat to selectedChat
             this.store.currentChat = selectedChat;
 
-            sessionStorage.removeItem('selectedChat');
+            sessionStorage.removeItem("selectedChat");
         },
         // subscribe to changes in ChatStore
         subscribeChatStore() {
@@ -119,11 +130,16 @@ export default {
         // used to initialize/update values on load/store value changes
         updateValues(state = this.store) {
             // update chatSelected based on whether currentChat is empty
-            this.chatSelected = JSON.stringify(state.currentChat) != JSON.stringify({});
+            this.chatSelected =
+                JSON.stringify(state.currentChat) != JSON.stringify({});
 
             if (this.chatSelected) {
                 // if messages of currentChat have not been retrieved yet then query stored messages for the chat
-                if (!this.retrievedChatIds.some(chatId => chatId == state.currentChat._id)) {
+                if (
+                    !this.retrievedChatIds.some(
+                        (chatId) => chatId == state.currentChat._id,
+                    )
+                ) {
                     this.retrieveMessages(state.currentChat._id);
                 }
             }
@@ -131,27 +147,34 @@ export default {
         // used to get existing chats and latest messages from top 5 recently used chats
         async initData() {
             // request to get user's chats
-            const chatRequest = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats`, {
-                mode: 'cors',
-                credentials: 'include',
-                method: 'GET'
-            }).then(async (res) => {
+            const chatRequest = fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/chats`,
+                {
+                    mode: "cors",
+                    credentials: "include",
+                    method: "GET",
+                },
+            ).then(async (res) => {
                 await res.json().then((data) => {
                     if (data.chats) {
                         this.store.newChatBulk(data.chats);
-                    }
-                    else {
-                        console.log('Could not retrieve chats.');
+                    } else {
+                        console.log("Could not retrieve chats.");
                     }
                 });
             });
 
             // request to get latest 50 messages from user's last 5 used chats
-            const messageRequest = fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats/latestMessages`, {
-                mode: 'cors',
-                credentials: 'include',
-                method: 'GET'
-            }).then(async (res) => {
+            const messageRequest = fetch(
+                `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/chats/latestMessages`,
+                {
+                    mode: "cors",
+                    credentials: "include",
+                    method: "GET",
+                },
+            ).then(async (res) => {
                 await res.json().then((data) => {
                     if (data.data) {
                         for (const key in data.data) {
@@ -163,46 +186,48 @@ export default {
                                 this.retrievedChatIds.push(key);
                             }
                         }
-                    }
-                    else {
-                        console.log('Could not retrieve messages.');
+                    } else {
+                        console.log("Could not retrieve messages.");
                     }
                 });
             });
 
             // send both requests together
-            await Promise.all([
-                chatRequest,
-                messageRequest
-            ]).then((res) => {
-                this.dataInitialized = true;
-            }).catch((error) => {
-                console.log(error);
-            });
+            await Promise.all([chatRequest, messageRequest])
+                .then((res) => {
+                    this.dataInitialized = true;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         },
         // send request to retrieve up to 50 stored messages for specified chat
         async retrieveMessages(chatId) {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats/${chatId}/50`, {
-                mode: 'cors',
-                credentials: 'include',
-                method: 'GET'
-            }).then(async (res) => {
-                await res.json().then((data) => {
-                    if (data.messages) {
-                        // update messages with the retrieved messages
-                        // check if any of the messages retrieved already exist locally
-                        this.store.newMessageBulk(data.messages, chatId);
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/chats/${chatId}/50`,
+                {
+                    mode: "cors",
+                    credentials: "include",
+                    method: "GET",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then((data) => {
+                        if (data.messages) {
+                            // update messages with the retrieved messages
+                            // check if any of the messages retrieved already exist locally
+                            this.store.newMessageBulk(data.messages, chatId);
 
-                        // update retrievedChatIds with the chat id requested
-                        this.retrievedChatIds.push(chatId);
-                    }
-                    else {
-                        console.log('Could not retrieve messages.');
-                    }
+                            // update retrievedChatIds with the chat id requested
+                            this.retrievedChatIds.push(chatId);
+                        } else {
+                            console.log("Could not retrieve messages.");
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
         },
         // to close alert prompt
         closeAlert() {
@@ -211,7 +236,7 @@ export default {
         // to close confirm prompt
         closeConfirm(decision) {
             this.confirmStore.closeConfirm(decision);
-        }
+        },
     },
     computed: {
         // get currentChat from store
@@ -246,13 +271,13 @@ export default {
         // to get confirmMsg value
         confirmMsg() {
             return this.confirmStore.confirmMsg;
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>
-@import url('../../styles/main.css');
+@import url("../../styles/main.css");
 
 /* chat list styles */
 #chatlist-container {

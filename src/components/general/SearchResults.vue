@@ -1,18 +1,20 @@
 <template>
     <div class="resultsContainer" tabindex="0">
         <ul>
-            <li v-if="results.length > 0" v-for="result in results" @click="handleClick(result)">
+            <li
+                v-if="results.length > 0"
+                v-for="result in results"
+                @click="handleClick(result)"
+            >
                 {{ displayText(result) }}
             </li>
-            <li v-else>
-                No results found
-            </li>
+            <li v-else>No results found</li>
         </ul>
     </div>
 </template>
 
 <style>
-.resultsContainer{
+.resultsContainer {
     top: 77%;
     width: 100%;
     position: absolute;
@@ -41,8 +43,8 @@ li:hover {
 </style>
 
 <script>
-import viewForum from '../../utils/general/viewForum.js';
-import viewUser from '../../utils/general/viewUser';
+import viewForum from "../../utils/general/viewForum.js";
+import viewUser from "../../utils/general/viewUser";
 
 export default {
     data() {
@@ -50,33 +52,33 @@ export default {
             forum: null,
             contentLoaded: false,
             isCreator: false,
-            threads: []
-        }
+            threads: [],
+        };
     },
-    props: ['results'],
+    props: ["results"],
     methods: {
         handleClick(result) {
-            if (result.hasOwnProperty('forum_id')) {
+            if (result.hasOwnProperty("forum_id")) {
                 this.viewForum(result);
-            } else if (result.hasOwnProperty('real_name')) {
+            } else if (result.hasOwnProperty("real_name")) {
                 this.viewUser(result._id);
             }
         },
         // Taken from ForumGroup.vue
-        viewForum(forum){
+        viewForum(forum) {
             viewForum(forum._id);
         },
         // to view user
-        viewUser(userId){
+        viewUser(userId) {
             viewUser(userId);
         },
-        displayText(result) {  
-            if (result.hasOwnProperty('forum_id')) {
+        displayText(result) {
+            if (result.hasOwnProperty("forum_id")) {
                 return `x/${result.forum_id} ~ ${result.forum_name}`;
-            } else if (result.hasOwnProperty('real_name')) {
+            } else if (result.hasOwnProperty("real_name")) {
                 return `${result.real_name} ~ ${result.username}`;
-            } 
+            }
         },
-    }
+    },
 };
 </script>

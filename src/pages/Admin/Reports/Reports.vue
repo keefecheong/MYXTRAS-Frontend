@@ -1,9 +1,15 @@
 <template>
-    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+    <AlertPrompt
+        v-if="showAlert && alertMsg.length > 0"
+        @close-alert="closeAlert"
+    >
         {{ alertMsg }}
     </AlertPrompt>
 
-    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+    <ConfirmPrompt
+        v-if="showConfirm && confirmMsg.length > 0"
+        @close-confirm="closeConfirm"
+    >
         {{ confirmMsg }}
     </ConfirmPrompt>
 
@@ -18,8 +24,22 @@
 
                 <template v-slot:right-content>
                     <div class="banner-toggle-container">
-                        <button class="use-primary-secondary-gradient details-button hover-contrast" :class="{ 'active': !viewReviewed }" title="View pending reports" @click="() => toggleReviewed(false)">Pending</button>
-                        <button class="use-primary-secondary-gradient details-button hover-contrast" :class="{ 'active': viewReviewed }" title="View reviewed reports" @click="() => toggleReviewed(true)">Reviewed</button>
+                        <button
+                            class="use-primary-secondary-gradient details-button hover-contrast"
+                            :class="{ active: !viewReviewed }"
+                            title="View pending reports"
+                            @click="() => toggleReviewed(false)"
+                        >
+                            Pending
+                        </button>
+                        <button
+                            class="use-primary-secondary-gradient details-button hover-contrast"
+                            :class="{ active: viewReviewed }"
+                            title="View reviewed reports"
+                            @click="() => toggleReviewed(true)"
+                        >
+                            Reviewed
+                        </button>
                     </div>
                 </template>
             </AdminBanner>
@@ -32,7 +52,9 @@
                         :aggregated="true"
                         :index="index"
                         :key="`${report._id}_${report.status}`"
-                        @view-report-details="() => toggleReportDetails(true, index)"
+                        @view-report-details="
+                            () => toggleReportDetails(true, index)
+                        "
                     />
                 </div>
 
@@ -54,14 +76,14 @@
 </template>
 
 <script>
-import NavSidebar from '../../../components/general/NavSidebar.vue';
-import AdminBanner from '../../../components/admin/AdminBanner.vue';
-import ReportLayout from '../../../components/admin/Reports/ReportLayout.vue';
-import ReportDetailsLayout from '../../../components/admin/Reports/ReportDetailsLayout.vue';
-import AlertPrompt from '../../../components/general/AlertPrompt.vue';
-import ConfirmPrompt from '../../../components/general/ConfirmPrompt.vue';
-import { useAlertStore } from '../../../stores/AlertStore.js';
-import { useConfirmStore } from '../../../stores/ConfirmStore.js';
+import NavSidebar from "../../../components/general/NavSidebar.vue";
+import AdminBanner from "../../../components/admin/AdminBanner.vue";
+import ReportLayout from "../../../components/admin/Reports/ReportLayout.vue";
+import ReportDetailsLayout from "../../../components/admin/Reports/ReportDetailsLayout.vue";
+import AlertPrompt from "../../../components/general/AlertPrompt.vue";
+import ConfirmPrompt from "../../../components/general/ConfirmPrompt.vue";
+import { useAlertStore } from "../../../stores/AlertStore.js";
+import { useConfirmStore } from "../../../stores/ConfirmStore.js";
 
 export default {
     data() {
@@ -72,10 +94,10 @@ export default {
             viewDetails: false,
             viewDetailsIndex: null,
             viewReviewed: false,
-            
+
             alertStore: useAlertStore(),
-            confirmStore: useConfirmStore()
-        }
+            confirmStore: useConfirmStore(),
+        };
     },
     components: {
         NavSidebar,
@@ -83,7 +105,7 @@ export default {
         ReportLayout,
         ReportDetailsLayout,
         AlertPrompt,
-        ConfirmPrompt
+        ConfirmPrompt,
     },
     created() {
         this.getReports();
@@ -91,26 +113,34 @@ export default {
     methods: {
         // to get reports
         async getReports() {
-            const baseURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/admin/report`;
+            const baseURL = `${
+                import.meta.env.VITE_APP_SERVER_URL
+            }/api/admin/report`;
             const options = {
-                method: 'GET',
-                mode: 'cors',
-                credentials: 'include'
+                method: "GET",
+                mode: "cors",
+                credentials: "include",
             };
 
-            const getPending = fetch(`${baseURL}/pending`, options).then(async res => {
-                await res.json().then(data => {
-                    this.pendingReports = data;
-                });
-            });
+            const getPending = fetch(`${baseURL}/pending`, options).then(
+                async (res) => {
+                    await res.json().then((data) => {
+                        this.pendingReports = data;
+                    });
+                },
+            );
 
-            const getReviewed = fetch(`${baseURL}/reviewed`, options).then(async res => {
-                await res.json().then(data => {
-                    this.reviewedReports = data;
-                });
-            });
+            const getReviewed = fetch(`${baseURL}/reviewed`, options).then(
+                async (res) => {
+                    await res.json().then((data) => {
+                        this.reviewedReports = data;
+                    });
+                },
+            );
 
-            await Promise.all([getPending, getReviewed]).catch(error => console.log('Could not retrieve reports.'));
+            await Promise.all([getPending, getReviewed]).catch((error) =>
+                console.log("Could not retrieve reports."),
+            );
         },
         // to view report details
         toggleReportDetails(show, index) {
@@ -120,8 +150,12 @@ export default {
         // close report details, and if the report is resolved update it and put in pendingReports
         handleCloseReportDetails(resolved, resolveDetails) {
             if (resolved) {
-                const resolvedReport = this.pendingReports[this.viewDetailsIndex];
-                resolvedReport.reviewer_id = { _id: resolveDetails.reviewerId, username: resolveDetails.reviewerUsername };
+                const resolvedReport =
+                    this.pendingReports[this.viewDetailsIndex];
+                resolvedReport.reviewer_id = {
+                    _id: resolveDetails.reviewerId,
+                    username: resolveDetails.reviewerUsername,
+                };
                 resolvedReport.status = resolveDetails.status;
                 resolvedReport.review_reason = resolveDetails.reviewReason;
                 resolvedReport.review_time = resolveDetails.reviewTime;
@@ -129,7 +163,7 @@ export default {
                 this.reviewedReports.push(resolvedReport);
                 this.pendingReports.splice(this.viewDetailsIndex, 1);
             }
-            
+
             this.toggleReportDetails(false);
         },
         // to toggle between pending and reviewed reports
@@ -144,12 +178,14 @@ export default {
         // to close confirm prompt
         closeConfirm(decision) {
             this.confirmStore.closeConfirm(decision);
-        }
+        },
     },
     computed: {
         // to get list of reports to display
         reportsToDisplay() {
-            return this.viewReviewed ? this.reviewedReports : this.pendingReports;
+            return this.viewReviewed
+                ? this.reviewedReports
+                : this.pendingReports;
         },
         // to get showAlert value
         showAlert() {
@@ -166,12 +202,12 @@ export default {
         // to get confirmMsg value
         confirmMsg() {
             return this.confirmStore.confirmMsg;
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>
-@import url('../../../styles/main.css');
-@import url('../../../styles/admin/common-admin-entry-styles.css');
+@import url("../../../styles/main.css");
+@import url("../../../styles/admin/common-admin-entry-styles.css");
 </style>

@@ -1,23 +1,34 @@
 <template>
-    <LoadingOverlay v-if="(showComments && !commentsLoaded) || submittingComment" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
+    <LoadingOverlay
+        v-if="(showComments && !commentsLoaded) || submittingComment"
+        :backgroundColor="'rgba(0, 0, 0, 0.5)'"
+        :center="true"
+    />
 
     <div class="blog-container" :id="blog._id" v-if="!deleted">
         <!-- heading - contains creator's profile pic, username, time posted, and location -->
         <div class="blog-header">
             <div>
                 <!-- creator profile pic -->
-                <img class="blog-profile-pic" :src="blog.creator_id.profile_pic_link" @click="viewUser()" title="View user" :draggable="false"/>
+                <img
+                    class="blog-profile-pic"
+                    :src="blog.creator_id.profile_pic_link"
+                    @click="viewUser()"
+                    title="View user"
+                    :draggable="false"
+                />
 
                 <!-- creator username -->
-                <span 
+                <span
                     class="blog-username hide-overflow-text"
-                    title="View user" @click="viewUser()"
+                    title="View user"
+                    @click="viewUser()"
                 >
                     {{ blog.creator_id.username }}
                 </span>
 
                 <!-- creation time (time difference) -->
-                <span 
+                <span
                     class="blog-creation-time"
                     :title="new Date(blog.creation_time)"
                 >
@@ -25,7 +36,7 @@
                 </span>
 
                 <!-- show if post is modified -->
-                <span 
+                <span
                     v-if="modified"
                     class="blog-modified-label"
                     :title="new Date(blog.last_modified_time)"
@@ -35,16 +46,16 @@
             </div>
 
             <!-- tags and location -->
-            <div 
-                class="blog-tags-and-location" 
+            <div
+                class="blog-tags-and-location"
                 :class="{
                     'location-only': !hasTags,
                     'tag-only': !blog.location,
-                    'tag-and-location': hasTags && blog.location
+                    'tag-and-location': hasTags && blog.location,
                 }"
                 v-if="showHeaderSecondRow"
             >
-                <InterestBadgeList 
+                <InterestBadgeList
                     v-if="hasTags"
                     :selectedOption="blog.tags"
                     :selection="false"
@@ -52,8 +63,12 @@
                     class="blog-tags"
                     title="Tags"
                 />
-                <span v-if="blog.location" class="blog-location hide-overflow-text" :title="blog.location">At {{
-                    blog.location }}</span>
+                <span
+                    v-if="blog.location"
+                    class="blog-location hide-overflow-text"
+                    :title="blog.location"
+                    >At {{ blog.location }}</span
+                >
             </div>
         </div>
 
@@ -61,21 +76,28 @@
         <div class="row blog-content">
             <div class="blog-image-container">
                 <!-- one blog-item per image -->
-                <div 
-                    class="blog-item" 
+                <div
+                    class="blog-item"
                     v-for="(link, index) in blog.content_links"
                     :class="{ active: currentId == index + 1 }"
                 >
                     <img class="blog-image" :src="link" />
                 </div>
-                
+
                 <!-- show controls only if more than one image and the active image is not the first/last -->
-                <a class="blog-prev" @click="prevSlide" v-if="showPrev">&#10094;</a>
-                <a class="blog-next" @click="nextSlide" v-if="showNext">&#10095;</a>
+                <a class="blog-prev" @click="prevSlide" v-if="showPrev"
+                    >&#10094;</a
+                >
+                <a class="blog-next" @click="nextSlide" v-if="showNext"
+                    >&#10095;</a
+                >
             </div>
 
             <!-- show indicators only if more than one image, one indicator per image -->
-            <div class="blog-indicator-container" v-if="blog.content_links.length > 1">
+            <div
+                class="blog-indicator-container"
+                v-if="blog.content_links.length > 1"
+            >
                 <span
                     class="blog-indicator"
                     v-for="(value, index) in blog.content_links"
@@ -97,8 +119,10 @@
             <!-- actions for all users -->
             <div class="blog-normal-actions row">
                 <!-- like button -->
-                <div class="like-blog col align-items-center justify-content-center">
-                    <span 
+                <div
+                    class="like-blog col align-items-center justify-content-center"
+                >
+                    <span
                         class="material-symbols-outlined"
                         :class="{ liked: liked }"
                         @click="toggleLike"
@@ -113,22 +137,28 @@
                 <div class="col align-items-center justify-content-center">
                     <span
                         class="material-symbols-outlined"
-                        :class="{ 'disabled': !blog.comments_enabled }"
+                        :class="{ disabled: !blog.comments_enabled }"
                         @click="toggleComments"
                         :title="commentTitle"
                     >
                         comment
                     </span>
-                    <span title="Number of comments" v-if="blog.comments_enabled">({{ blog.comment_count }})</span>
+                    <span
+                        title="Number of comments"
+                        v-if="blog.comments_enabled"
+                        >({{ blog.comment_count }})</span
+                    >
                 </div>
 
                 <!-- save button -->
                 <div class="col align-items-center justify-content-center">
                     <span
                         class="material-symbols-outlined"
-                        :class="{ 'saved': saved }"
+                        :class="{ saved: saved }"
                         @click="toggleSave"
-                        :title="saved ? 'Remove from saved posts' : 'Save this post'"
+                        :title="
+                            saved ? 'Remove from saved posts' : 'Save this post'
+                        "
                     >
                         bookmark
                     </span>
@@ -140,35 +170,57 @@
                 <div v-if="blog.isOwner">
                     <!-- edit button -->
                     <div class="blog-edit" title="Edit this post">
-                        <span class="material-symbols-outlined" @click="() => editPost(true)">edit</span>
+                        <span
+                            class="material-symbols-outlined"
+                            @click="() => editPost(true)"
+                            >edit</span
+                        >
                     </div>
-    
+
                     <!-- delete button -->
                     <div class="blog-delete" title="Delete this post">
-                        <span class="material-symbols-outlined" @click="deletePost">delete</span>
+                        <span
+                            class="material-symbols-outlined"
+                            @click="deletePost"
+                            >delete</span
+                        >
                     </div>
                 </div>
 
                 <!-- report button shown otherwise -->
                 <div v-else>
                     <!-- report button -->
-                    <span class="report-button material-symbols-outlined" @click="() => toggleReportForm(true)" title="Report this post">flag</span>
+                    <span
+                        class="report-button material-symbols-outlined"
+                        @click="() => toggleReportForm(true)"
+                        title="Report this post"
+                        >flag</span
+                    >
                 </div>
             </div>
         </div>
 
         <!-- comments - contains the comments posted -->
-        <div v-if="!blog.blocked && showComments && blog.comments_enabled" class="row blog-comments-container">
+        <div
+            v-if="!blog.blocked && showComments && blog.comments_enabled"
+            class="row blog-comments-container"
+        >
             <!-- form to create new comment -->
             <form class="create-comment-form" @submit.prevent="createComment">
-                <DynamicTextarea v-model="commentText" :placeholder="'Add a comment...'" :maxRows="5" />
+                <DynamicTextarea
+                    v-model="commentText"
+                    :placeholder="'Add a comment...'"
+                    :maxRows="5"
+                />
                 <hr />
                 <div class="create-comment-submit-container">
-                    <input 
+                    <input
                         class="create-comment-button"
                         type="submit"
                         :value="submittingComment ? 'Creating...' : 'Create!'"
-                        :disabled="commentText.trim().length <= 0 || submittingComment"
+                        :disabled="
+                            commentText.trim().length <= 0 || submittingComment
+                        "
                     />
                 </div>
             </form>
@@ -198,14 +250,19 @@
         <p>Post deleted.</p>
     </div>
 
-    <BlogFormLayout v-if="blog.isOwner && editMode" :editMode="true" :blog="blog" @close-blog-form="() => editPost(false)" />
+    <BlogFormLayout
+        v-if="blog.isOwner && editMode"
+        :editMode="true"
+        :blog="blog"
+        @close-blog-form="() => editPost(false)"
+    />
 
-    <ReportFormLayout 
+    <ReportFormLayout
         v-if="(!blog.isOwner || !reportComment?.isOwner) && showReportForm"
         :userId="blog.creator_id._id"
-        :postId="blog._id" 
-        :commentId="reportComment?._id" 
-        :type="reportType" 
+        :postId="blog._id"
+        :commentId="reportComment?._id"
+        :type="reportType"
         @close-report-form="() => toggleReportForm(false)"
     />
 </template>
@@ -233,7 +290,7 @@
     row-gap: 10px;
 }
 
-.blog-header>div {
+.blog-header > div {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -241,7 +298,8 @@
     align-items: center;
 }
 
-.blog-profile-pic, .blog-username {
+.blog-profile-pic,
+.blog-username {
     cursor: pointer;
 }
 
@@ -256,7 +314,8 @@
     flex: 1 0 auto;
 }
 
-.blog-profile-pic:hover~.blog-username, .blog-username:hover {
+.blog-profile-pic:hover ~ .blog-username,
+.blog-username:hover {
     color: var(--primary);
 }
 
@@ -370,11 +429,13 @@
     }
 }
 
-.blog-other-actions, .blog-normal-actions {
+.blog-other-actions,
+.blog-normal-actions {
     width: fit-content !important;
 }
 
-.blog-other-actions > div, .blog-normal-actions {
+.blog-other-actions > div,
+.blog-normal-actions {
     display: flex;
     flex-direction: row;
     column-gap: 10px;
@@ -390,7 +451,7 @@
 
 .blog-actions .material-symbols-outlined {
     color: black;
-    font-variation-settings: 'FILL' 0;
+    font-variation-settings: "FILL" 0;
     user-select: none;
     display: inline;
     margin-right: 2px;
@@ -400,13 +461,13 @@
 /* set liked favorite icon to filled red */
 .liked.material-symbols-outlined {
     color: red;
-    font-variation-settings: 'FILL' 1;
+    font-variation-settings: "FILL" 1;
 }
 
 /* set saved bookmark icon to filled black */
 .saved.material-symbols-outlined {
     color: black;
-    font-variation-settings: 'FILL' 1;
+    font-variation-settings: "FILL" 1;
 }
 
 /* style disabled comments button */
@@ -459,19 +520,19 @@
 </style>
 
 <script>
-import { RouterLink } from 'vue-router';
-import CommentLayout from '../comment/CommentLayout.vue';
-import calcDateDifference from '../../utils/general/calcDateDifference.js';
-import BlogFormLayout from './BlogFormLayout.vue';
-import LoadingOverlay from '../general/LoadingOverlay.vue';
-import InterestBadgeList from '../general/InterestBadgeList.vue';
-import { useAlertStore } from '../../stores/AlertStore.js';
-import { useConfirmStore } from '../../stores/ConfirmStore.js';
-import DynamicTextarea from '../general/DynamicTextarea.vue';
-import viewUser from '../../utils/general/viewUser.js';
-import { debounce } from 'lodash';
-import ReportFormLayout from '../report/ReportFormLayout.vue';
-import highlightElement from '../../utils/general/highlightElement.js';
+import { RouterLink } from "vue-router";
+import CommentLayout from "../comment/CommentLayout.vue";
+import calcDateDifference from "../../utils/general/calcDateDifference.js";
+import BlogFormLayout from "./BlogFormLayout.vue";
+import LoadingOverlay from "../general/LoadingOverlay.vue";
+import InterestBadgeList from "../general/InterestBadgeList.vue";
+import { useAlertStore } from "../../stores/AlertStore.js";
+import { useConfirmStore } from "../../stores/ConfirmStore.js";
+import DynamicTextarea from "../general/DynamicTextarea.vue";
+import viewUser from "../../utils/general/viewUser.js";
+import { debounce } from "lodash";
+import ReportFormLayout from "../report/ReportFormLayout.vue";
+import highlightElement from "../../utils/general/highlightElement.js";
 
 export default {
     data() {
@@ -480,34 +541,34 @@ export default {
             showPrev: false,
             showNext: false,
 
-            dateCreated: '',
+            dateCreated: "",
             modified: false,
-            caption: '',
+            caption: "",
             deleted: false,
 
             showComments: false,
             commentsLoaded: false,
-            commentText: '',
+            commentText: "",
             commentData: [],
             submittingComment: false,
-            
+
             likeCount: 0,
             savedLike: false,
             liked: false,
             debouncedLikeUpdate: null,
-            
+
             savedSaved: false,
             saved: false,
             debouncedSaveUpdate: null,
-            
+
             editMode: false,
 
             showReportForm: false,
             reportType: null,
             reportComment: null,
-            
+
             alert: useAlertStore().alert,
-            confirm: useConfirmStore().confirm
+            confirm: useConfirmStore().confirm,
         };
     },
     components: {
@@ -517,12 +578,9 @@ export default {
         LoadingOverlay,
         InterestBadgeList,
         DynamicTextarea,
-        ReportFormLayout
+        ReportFormLayout,
     },
-    props: [
-        'blog',
-        'highlightComment'
-    ],
+    props: ["blog", "highlightComment"],
     created() {
         // if to highlight comment then start loading comments first
         if (this.highlightComment) {
@@ -555,24 +613,26 @@ export default {
         // if to highlight comment then scroll to and highlight comment
         if (this.highlightComment) {
             setTimeout(() => {
-                const targetComment = document.getElementById(this.highlightComment);
+                const targetComment = document.getElementById(
+                    this.highlightComment,
+                );
 
                 if (targetComment) {
                     targetComment.scrollIntoView({
-                        block: 'center'
+                        block: "center",
                     });
                 }
 
                 highlightElement(targetComment);
             }, 300);
         }
-        
+
         // debounce function to only send request to update backend if user has not clicked the like/save button for 3 seconds
         this.debouncedLikeUpdate = debounce(this.updateLike, 3000);
         this.debouncedSaveUpdate = debounce(this.updateSave, 3000);
 
         // set event listener to complete pending requests when the page is closed
-        window.addEventListener('beforeunload', () => {
+        window.addEventListener("beforeunload", () => {
             this.completeLikeRequest();
             this.completeSaveRequest();
         });
@@ -603,7 +663,7 @@ export default {
         // show the previous slide
         prevSlide() {
             // do nothing if the active image is the first image
-            if (this.currentId == '1') {
+            if (this.currentId == "1") {
                 return;
             }
 
@@ -623,17 +683,14 @@ export default {
             // hide next control if the active image is the last image and show otherwise
             if (this.currentId == this.blog.content_links.length) {
                 this.showNext = false;
-            }
-            else {
+            } else {
                 this.showNext = true;
             }
-
 
             // hide previous control if the active image is the first image and show otherwise
             if (this.currentId == 1) {
                 this.showPrev = false;
-            }
-            else {
+            } else {
                 this.showPrev = true;
             }
         },
@@ -645,8 +702,7 @@ export default {
             // update likeCount
             if (this.liked) {
                 this.likeCount += 1;
-            }
-            else {
+            } else {
                 this.likeCount -= 1;
             }
 
@@ -654,42 +710,48 @@ export default {
         },
         // handle updating of like status to backend
         async updateLike() {
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/likes`;
+            const targetURL = `${
+                import.meta.env.VITE_APP_SERVER_URL
+            }/api/posts/user/${this.blog.creator_id._id}/post/${
+                this.blog._id
+            }/likes`;
             const options = {
-                mode: 'cors',
-                credentials: 'include'
-            }
+                mode: "cors",
+                credentials: "include",
+            };
 
             // send request to update liked status
             // only send to add like if new like value is true and currently saved like value is false
             if (this.liked && !this.savedLike) {
-                options.method = 'POST';
+                options.method = "POST";
 
-                await fetch(targetURL, options).then(async (res) => {
-                    if (res.status == 201) {
-                        this.savedLike = true;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
+                await fetch(targetURL, options)
+                    .then(async (res) => {
+                        if (res.status == 201) {
+                            this.savedLike = true;
+                        } else {
+                            await res.json().then((data) => console.log(data));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
             // only send to remove like if new like value is false and currently saved like value is true
             else if (!this.liked && this.savedLike) {
-                options.method = 'DELETE';
+                options.method = "DELETE";
 
-                await fetch(targetURL, options).then(async (res) => {
-                    if (res.status == 204) {
-                        this.savedLike = false;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
+                await fetch(targetURL, options)
+                    .then(async (res) => {
+                        if (res.status == 204) {
+                            this.savedLike = false;
+                        } else {
+                            await res.json().then((data) => console.log(data));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
         },
         // complete updateLike request if pending
@@ -704,39 +766,45 @@ export default {
         },
         // handle updating of save status to backend
         async updateSave() {
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/save`;
+            const targetURL = `${
+                import.meta.env.VITE_APP_SERVER_URL
+            }/api/posts/user/${this.blog.creator_id._id}/post/${
+                this.blog._id
+            }/save`;
             const options = {
-                mode: 'cors',
-                credentials: 'include'
-            }
+                mode: "cors",
+                credentials: "include",
+            };
             // send request to update save status
             // only send to save post if new saved value is true and currently saved saved value is false
             if (this.saved && !this.savedSaved) {
-                options.method = 'POST';
-                await fetch(targetURL, options).then(async (res) => {
-                    if (res.status == 201) {
-                        this.savedSaved = true;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
+                options.method = "POST";
+                await fetch(targetURL, options)
+                    .then(async (res) => {
+                        if (res.status == 201) {
+                            this.savedSaved = true;
+                        } else {
+                            await res.json().then((data) => console.log(data));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
             // only send to remove post from saved if new saved value is false and currently saved saved value is true
             else if (!this.saved && this.savedSaved) {
-                options.method = 'DELETE';
-                await fetch(targetURL, options).then(async (res) => {
-                    if (res.status == 204) {
-                        this.savedSaved = false;
-                    }
-                    else {
-                        await res.json().then(data => console.log(data));
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
+                options.method = "DELETE";
+                await fetch(targetURL, options)
+                    .then(async (res) => {
+                        if (res.status == 204) {
+                            this.savedSaved = false;
+                        } else {
+                            await res.json().then((data) => console.log(data));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
         },
         // complete updateSave request if pending
@@ -746,27 +814,36 @@ export default {
         // handle deleting post
         async deletePost() {
             // ask for confirmation
-            const confirmDelete = await this.confirm('Are you sure you want to delete this post? This action is irreversible!');
+            const confirmDelete = await this.confirm(
+                "Are you sure you want to delete this post? This action is irreversible!",
+            );
 
             if (!confirmDelete) {
                 return;
             }
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}`, {
-                mode: 'cors',
-                method: 'DELETE',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(async (data) => {
-                    if (res.status == 200) {
-                        this.deleted = true;
-                    }
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${
+                    this.blog.creator_id._id
+                }/post/${this.blog._id}`,
+                {
+                    mode: "cors",
+                    method: "DELETE",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        if (res.status == 200) {
+                            this.deleted = true;
+                        }
 
-                    await this.alert(data.message);
+                        await this.alert(data.message);
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
         },
         // toggle edit post
         editPost(show) {
@@ -774,19 +851,26 @@ export default {
         },
         // retrieve comments for the post
         async getComments() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/comments`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then((data) => {
-                    this.commentData = data;
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${
+                    this.blog.creator_id._id
+                }/post/${this.blog._id}/comments`,
+                {
+                    mode: "cors",
+                    method: "GET",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then((data) => {
+                        this.commentData = data;
 
-                    this.commentsLoaded = true;
+                        this.commentsLoaded = true;
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
         },
         // toggle comments for the post if comments are enabled
         toggleComments() {
@@ -805,48 +889,55 @@ export default {
             }
 
             // upload comment
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/comments`, {
-                mode: 'cors',
-                method: 'POST',
-                body: JSON.stringify({
-                    content: this.commentText.trim()
-                }),
-                headers: {
-                    "Content-Type": "application/json"
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${
+                    this.blog.creator_id._id
+                }/post/${this.blog._id}/comments`,
+                {
+                    mode: "cors",
+                    method: "POST",
+                    body: JSON.stringify({
+                        content: this.commentText.trim(),
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
                 },
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(async (data) => {
-                    this.submittingComment = false;
-                    await this.alert(data.message);
+            )
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        this.submittingComment = false;
+                        await this.alert(data.message);
 
-                    // update comments list to update dom immediately
-                    if (res.status == 200) {
-                        this.blog.comment_count += 1;
-                        this.commentData.unshift(data.comment);
-                    }
+                        // update comments list to update dom immediately
+                        if (res.status == 200) {
+                            this.blog.comment_count += 1;
+                            this.commentData.unshift(data.comment);
+                        }
 
-                    this.commentText = '';
+                        this.commentText = "";
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            })
         },
         // remove deleted comment's id from the comments list to update the dom immediately
         deleteComment(index) {
             this.blog.comment_count -= 1;
-            
+
             this.commentData.splice(index, 1);
         },
         // go to profile page to view the creator's profile
-        viewUser(){
+        viewUser() {
             // only redirect if not already at profile page
-            if (location.pathname != '/profilePage.html') {
+            if (location.pathname != "/profilePage.html") {
                 viewUser(this.blog.creator_id._id);
             }
         },
         // toggle report form
-        toggleReportForm(show, type = 'post') {
+        toggleReportForm(show, type = "post") {
             this.showReportForm = show;
             this.reportType = type;
         },
@@ -854,17 +945,16 @@ export default {
         handleReportComment(index) {
             this.reportComment = this.commentData[index];
 
-            this.toggleReportForm(true, 'postComment');
-        }
+            this.toggleReportForm(true, "postComment");
+        },
     },
     computed: {
         // generate tooltip text for comment button
         commentTitle() {
             if (this.blog.comments_enabled) {
-                return this.showComments ? 'Hide comments' : 'Show comments';
-            }
-            else {
-                return 'Comments disabled for this post';
+                return this.showComments ? "Hide comments" : "Show comments";
+            } else {
+                return "Comments disabled for this post";
             }
         },
         // check if the blog has tags
@@ -874,7 +964,7 @@ export default {
         // check if the blog has tags or location to decide whether to show this part of the header
         showHeaderSecondRow() {
             return this.hasTags || this.blog.location;
-        }
-    }
-}
+        },
+    },
+};
 </script>

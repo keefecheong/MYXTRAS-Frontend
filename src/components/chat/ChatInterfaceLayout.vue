@@ -4,7 +4,7 @@
         <div id="chat-interface-header" @click="viewUser" title="View user">
             <!-- other user's profile pic -->
             <div class="profile-pic-container">
-                <img class="profile-pic" :src="chat.pic"/>
+                <img class="profile-pic" :src="chat.pic" />
             </div>
 
             <!-- other user's username and status -->
@@ -25,19 +25,28 @@
             <div id="loading-previous" v-if="loadingPrevious">
                 <span>Loading...</span>
             </div>
-            
-            <div id="chat-interface-messages" :class="{loading: loadingPrevious}">
-                <button id="load-previous-messages" @click="loadPreviousMessages" :disabled="loadingPrevious">Load Previous</button>
+
+            <div
+                id="chat-interface-messages"
+                :class="{ loading: loadingPrevious }"
+            >
+                <button
+                    id="load-previous-messages"
+                    @click="loadPreviousMessages"
+                    :disabled="loadingPrevious"
+                >
+                    Load Previous
+                </button>
 
                 <div class="no-messages-found" v-if="messages.length <= 0">
                     <p>No messages found.</p>
                 </div>
 
                 <div v-else>
-                    <ChatMessageLayout 
-                        v-for="(message, index) in messages" 
-                        :message="message" 
-                        :previous_creation_time="previous_creation_time(index)" 
+                    <ChatMessageLayout
+                        v-for="(message, index) in messages"
+                        :message="message"
+                        :previous_creation_time="previous_creation_time(index)"
                         :previous_is_sender="previous_is_sender(index)"
                         :name="chat.name"
                         :blocked="chat.blocked"
@@ -66,7 +75,7 @@
         <div id="chat-interface-input">
             <div v-if="!chat.blocked">
                 <form @submit.prevent="sendMessage">
-                    <DynamicTextarea 
+                    <DynamicTextarea
                         title="Enter your message"
                         :id="'chat-message-input'"
                         :maxRows="5"
@@ -75,13 +84,23 @@
                         @input="updateTypingStatus"
                         @keydown.enter.exact.prevent="sendMessage"
                     />
-    
-                    <button title="Add a file" type="button" @click="() => toggleFileInput(true)">
-                        <span class="material-symbols-outlined">Attach_file</span>
+
+                    <button
+                        title="Add a file"
+                        type="button"
+                        @click="() => toggleFileInput(true)"
+                    >
+                        <span class="material-symbols-outlined"
+                            >Attach_file</span
+                        >
                     </button>
-    
+
                     <button title="Send message" type="submit">
-                        <span class="material-symbols-outlined" id="chat-message-send">Send</span>
+                        <span
+                            class="material-symbols-outlined"
+                            id="chat-message-send"
+                            >Send</span
+                        >
                     </button>
                 </form>
             </div>
@@ -93,17 +112,28 @@
 
         <div id="chat-file-upload-container" v-if="!chat.blocked && fileInput">
             <div id="chat-file-upload">
-                <span id="close-file-input" class="material-symbols-outlined" @click="() => toggleFileInput(false)">Close</span>
+                <span
+                    id="close-file-input"
+                    class="material-symbols-outlined"
+                    @click="() => toggleFileInput(false)"
+                    >Close</span
+                >
 
                 <form @submit.prevent="sendMessage">
                     <div id="upload-file-container">
                         <!-- input to select file -->
-                        <input id="chat-add-file" type="file" title="Add a file" @change="handleFileInput" />
+                        <input
+                            id="chat-add-file"
+                            type="file"
+                            title="Add a file"
+                            @change="handleFileInput"
+                        />
                         <label for="chat-add-file" id="chat-add-file-label">
-                            <p>Drag and drop 
-                                <br>
+                            <p>
+                                Drag and drop
+                                <br />
                                 or
-                                <br> 
+                                <br />
                                 click <u>here</u> to upload.
                             </p>
                         </label>
@@ -114,24 +144,38 @@
                             <br />
                             <span>{{ error }}</span>
                         </div>
-                        
+
                         <!-- preview file -->
                         <div id="preview-file-container" v-if="fileSelected">
                             <span>Selected File:</span>
-                            
+
                             <div>
                                 <img
-                                    :class="{'image-preview': isFileImageType, 'unknown-preview': !isFileImageType}"
-                                    :src="isFileImageType ? selectedLink : '../../assets/unknown-file-icon.png'"
-                                    />
-                                    
-                                <span>{{ file.name }} ({{ calculateSize(file.size) }})</span>
+                                    :class="{
+                                        'image-preview': isFileImageType,
+                                        'unknown-preview': !isFileImageType,
+                                    }"
+                                    :src="
+                                        isFileImageType
+                                            ? selectedLink
+                                            : '../../assets/unknown-file-icon.png'
+                                    "
+                                />
+
+                                <span
+                                    >{{ file.name }} ({{
+                                        calculateSize(file.size)
+                                    }})</span
+                                >
                             </div>
                         </div>
                     </div>
 
-                    <div id="chat-file-interface-input" v-if="fileSelected && !invalidFile">
-                        <DynamicTextarea 
+                    <div
+                        id="chat-file-interface-input"
+                        v-if="fileSelected && !invalidFile"
+                    >
+                        <DynamicTextarea
                             title="Enter your message (Optional)"
                             :id="'chat-file-message-input'"
                             :maxRows="5"
@@ -140,16 +184,23 @@
                             @input="updateTypingStatus"
                             @keydown.enter.exact.prevent="sendMessage"
                         />
-                        
+
                         <button title="Send file" type="submit">
-                            <span class="material-symbols-outlined" id="chat-message-send">Send</span>
+                            <span
+                                class="material-symbols-outlined"
+                                id="chat-message-send"
+                                >Send</span
+                            >
                         </button>
                     </div>
                 </form>
-                
             </div>
 
-            <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="isUploadingFile" />
+            <LoadingOverlay
+                :backgroundColor="'rgba(0, 0, 0, 0.5)'"
+                :center="true"
+                v-if="isUploadingFile"
+            />
         </div>
     </div>
 
@@ -162,59 +213,56 @@
 </template>
 
 <script>
-import ChatMessageLayout from './ChatMessageLayout.vue';
-import { useChatStore } from '../../stores/ChatStore.js';
-import { socket } from '../../utils/chat/chatSocket.js';
-import ObjectID from 'bson-objectid';
-import calculateSize from '../../utils/general/formatFileSize.js';
-import LoadingOverlay from '../general/LoadingOverlay.vue';
-import { useAlertStore } from '../../stores/AlertStore.js';
-import DynamicTextarea from '../general/DynamicTextarea.vue';
-import viewUser from '../../utils/general/viewUser.js';
-import { debounce } from 'lodash';
-import ChatReplyMessageLayout from './ChatReplyMessageLayout.vue';
-import ReportFormLayout from '../../components/report/ReportFormLayout.vue';
+import ChatMessageLayout from "./ChatMessageLayout.vue";
+import { useChatStore } from "../../stores/ChatStore.js";
+import { socket } from "../../utils/chat/chatSocket.js";
+import ObjectID from "bson-objectid";
+import calculateSize from "../../utils/general/formatFileSize.js";
+import LoadingOverlay from "../general/LoadingOverlay.vue";
+import { useAlertStore } from "../../stores/AlertStore.js";
+import DynamicTextarea from "../general/DynamicTextarea.vue";
+import viewUser from "../../utils/general/viewUser.js";
+import { debounce } from "lodash";
+import ChatReplyMessageLayout from "./ChatReplyMessageLayout.vue";
+import ReportFormLayout from "../../components/report/ReportFormLayout.vue";
 
 export default {
     data() {
         return {
             status: {
-                online: 'Online',
-                offline: 'Offline',
-                typing: 'Typing...'
+                online: "Online",
+                offline: "Offline",
+                typing: "Typing...",
             },
             debouncedTypingStatusUpdate: null,
             currentStatus: null,
 
-            messageText: '',
+            messageText: "",
             previousMessageLength: 0,
             loadingPrevious: false,
-            
+
             fileInput: false,
             file: {},
-            error: '',
-            selectedLink: '',
+            error: "",
+            selectedLink: "",
             uploadingFile: false,
-            
+
             replyToMessage: null,
-            
+
             store: useChatStore(),
             alert: useAlertStore().alert,
 
             showReportForm: false,
-            reportMessageId: null
-        }
+            reportMessageId: null,
+        };
     },
-    props: [
-        'chat',
-        'messages'
-    ],
+    props: ["chat", "messages"],
     components: {
         ChatMessageLayout,
         LoadingOverlay,
         DynamicTextarea,
         ChatReplyMessageLayout,
-        ReportFormLayout
+        ReportFormLayout,
     },
     // when mounted/restored from cache
     activated() {
@@ -228,7 +276,9 @@ export default {
         this.scrollMessagesBottom();
 
         // set debounce function to tell other user that current user is not typing after 1s from the last input
-        this.debouncedTypingStatusUpdate = debounce(() => { this.sendTypingStatus(false) }, 1000);
+        this.debouncedTypingStatusUpdate = debounce(() => {
+            this.sendTypingStatus(false);
+        }, 1000);
     },
     updated() {
         // sroll to bottom of messages when new messages are added
@@ -237,13 +287,13 @@ export default {
     // when cached
     deactivated() {
         // clean up socket listeners
-        socket.off('update-user-presence', this.updateUserPresence);
-        socket.off('receive-user-typing', this.updateUserTyping);
+        socket.off("update-user-presence", this.updateUserPresence);
+        socket.off("receive-user-typing", this.updateUserTyping);
     },
     methods: {
         // to focus on message input field
         inputFocus() {
-            const messageInput = document.getElementById('chat-message-input');
+            const messageInput = document.getElementById("chat-message-input");
             if (messageInput) {
                 messageInput.focus();
             }
@@ -254,7 +304,7 @@ export default {
             if (this.chat.blocked) {
                 return;
             }
-            
+
             // if file input mode is inactive,
             // if no message is entered then do nothing
             if (!this.fileInput) {
@@ -266,14 +316,14 @@ export default {
             else {
                 // if no file is selected do nothing
                 if (!this.fileSelected) {
-                    await this.alert('No file selected.');
+                    await this.alert("No file selected.");
 
                     return;
                 }
 
                 // if there are any errors do nothing
                 if (this.invalidFile) {
-                    await this.alert('Invalid file selected.');
+                    await this.alert("Invalid file selected.");
 
                     return;
                 }
@@ -284,8 +334,8 @@ export default {
                 _id: new ObjectID().toString(),
                 content: this.messageText,
                 is_sender: true,
-                creation_time: new Date().toISOString()
-            }
+                creation_time: new Date().toISOString(),
+            };
 
             // set reply_message property if replyToMessage is not null
             if (this.replyToMessage) {
@@ -297,27 +347,28 @@ export default {
                 this.sendFile(newMessage);
 
                 // wait for file upload results
-                const uploadResults = await this.receiveFileUploadResults(newMessage._id);
-                
+                const uploadResults = await this.receiveFileUploadResults(
+                    newMessage._id,
+                );
+
                 // if file upload is successful then update file attributes and continue
                 if (uploadResults.successful) {
                     newMessage.file_link = uploadResults.fileLink;
                     newMessage.original_name = this.file.name;
                     newMessage.file_type = this.file.type;
 
-                    await this.alert('File upload successful');
+                    await this.alert("File upload successful");
                 }
                 // otherwise tell user file upload failed and return
                 else {
-                    await this.alert('File upload failed.');
+                    await this.alert("File upload failed.");
 
                     return;
                 }
-            }
-            else {
-                socket.emit('send-message', {
+            } else {
+                socket.emit("send-message", {
                     message: newMessage,
-                    chat: this.chat
+                    chat: this.chat,
                 });
             }
 
@@ -326,10 +377,13 @@ export default {
             this.store.newMessage(newMessage);
 
             // update last_message_timestamp
-            this.store.updateChatTimestamp(this.chat._id, newMessage.creation_time);
+            this.store.updateChatTimestamp(
+                this.chat._id,
+                newMessage.creation_time,
+            );
 
             // reset fields to default
-            this.messageText = '';
+            this.messageText = "";
             this.replyToMessage = null;
 
             // toggle file input mode off
@@ -349,37 +403,40 @@ export default {
             const chunkSize = 4 * 1024;
 
             // process obtained array buffer and send message and file to server
-            reader.onload = function() {
+            reader.onload = function () {
                 const buffer = reader.result;
                 const totalChunks = Math.ceil(buffer.byteLength / chunkSize);
 
                 const file = {
                     name: context.file.name,
                     type: context.file.type,
-                    totalChunks: totalChunks
-                }
+                    totalChunks: totalChunks,
+                };
 
-                socket.emit('send-message', {
+                socket.emit("send-message", {
                     message: message,
                     chat: context.chat,
-                    file: file
+                    file: file,
                 });
 
                 // send chunks to server
                 for (let i = 0; i < totalChunks; i++) {
                     const startByte = i * chunkSize;
                     // set endByte to accommodate files that are not exactly 'n' chunks long
-                    const endByte = Math.min(startByte + chunkSize, buffer.byteLength);
+                    const endByte = Math.min(
+                        startByte + chunkSize,
+                        buffer.byteLength,
+                    );
                     const chunk = buffer.slice(startByte, endByte);
 
                     const chunkData = {
                         message_id: message._id,
-                        chunk: chunk
+                        chunk: chunk,
                     };
 
-                    socket.emit('file-chunk', chunkData);
+                    socket.emit("file-chunk", chunkData);
                 }
-            }
+            };
 
             // read file as array buffer to process and send to server
             reader.readAsArrayBuffer(this.file);
@@ -388,14 +445,14 @@ export default {
         receiveFileUploadResults(messageId) {
             return new Promise((resolve) => {
                 // set up event listener to receive file upload results
-                socket.on('file-upload-result', data => {
+                socket.on("file-upload-result", (data) => {
                     if (data.messageId == messageId) {
                         // resolve promise with file upload results if received results is for the correct message id
                         this.uploadingFile = false;
                         resolve(data.uploadResult);
                     }
                 });
-            })
+            });
         },
         // to edit message and update backend
         editMessage(data) {
@@ -403,19 +460,24 @@ export default {
             if (this.chat.blocked) {
                 return;
             }
-            
-            socket.emit('edit-message', {
+
+            socket.emit("edit-message", {
                 message: {
                     _id: data.messageId,
                     content: data.editedMessage,
                     chat_id: this.chat._id,
-                    last_modified_time: data.lastModifiedTime
+                    last_modified_time: data.lastModifiedTime,
                 },
-                targetUserId: this.chat.targetUserId
+                targetUserId: this.chat.targetUserId,
             });
 
             // update edited message's content
-            this.store.editMessage(this.chat._id, data.messageId, data.editedMessage, data.lastModifiedTime);
+            this.store.editMessage(
+                this.chat._id,
+                data.messageId,
+                data.editedMessage,
+                data.lastModifiedTime,
+            );
         },
         // to delete message and update backend
         deleteMessage(data) {
@@ -423,7 +485,7 @@ export default {
             if (this.chat.blocked) {
                 return;
             }
-            
+
             const message = {
                 _id: data.messageId,
                 chat_id: this.chat._id,
@@ -433,9 +495,9 @@ export default {
                 message.fileLink = data.fileLink;
             }
 
-            socket.emit('delete-message', {
+            socket.emit("delete-message", {
                 message: message,
-                targetUserId: this.chat.targetUserId
+                targetUserId: this.chat.targetUserId,
             });
 
             // remove deleted message from existing messages
@@ -449,10 +511,13 @@ export default {
             if (this.chat.blocked) {
                 return;
             }
-            
+
             // only update typing status if other user is online
             // if currentStatus is offline or null then do nothing
-            if ((this.currentStatus == this.status.offline) || (!this.currentStatus)) {
+            if (
+                this.currentStatus == this.status.offline ||
+                !this.currentStatus
+            ) {
                 return;
             }
 
@@ -463,9 +528,9 @@ export default {
         },
         // update the other user that current user is typing/not typing
         sendTypingStatus(typing) {
-            socket.emit('user-typing', {
+            socket.emit("user-typing", {
                 typing: typing,
-                targetUserId: this.chat.targetUserId
+                targetUserId: this.chat.targetUserId,
             });
         },
         // get/react to other user's status and set up socket listeners (online/offline/typing)
@@ -474,26 +539,29 @@ export default {
             this.getUserPresence();
 
             // set listener for update of user's status
-            socket.on('update-user-presence', this.updateUserPresence);
+            socket.on("update-user-presence", this.updateUserPresence);
 
             // set listener for update of user's typing status
-            socket.on('receive-user-typing', this.updateUserTyping);
+            socket.on("receive-user-typing", this.updateUserTyping);
         },
         // query server whether user is online or not
         getUserPresence() {
-            socket.emit('query-user-presence', {
-                targetUserId: this.chat.targetUserId
-            }, (res) => {
-                // update user status based on server response
-                this.updateOnlineStatus(res.online);
-            });
+            socket.emit(
+                "query-user-presence",
+                {
+                    targetUserId: this.chat.targetUserId,
+                },
+                (res) => {
+                    // update user status based on server response
+                    this.updateOnlineStatus(res.online);
+                },
+            );
         },
         // set currentStatus based on online parameter value
         updateOnlineStatus(online) {
             if (online) {
                 this.currentStatus = this.status.online;
-            }
-            else {
+            } else {
                 this.currentStatus = this.status.offline;
             }
         },
@@ -532,46 +600,58 @@ export default {
         },
         // scroll to bottom of chat messages
         scrollMessagesBottom() {
-            const messageContainer = document.getElementById('chat-interface-messages-container');
+            const messageContainer = document.getElementById(
+                "chat-interface-messages-container",
+            );
             messageContainer.scrollBy(0, messageContainer.scrollHeight);
         },
         // load more messages stored in database
         async loadPreviousMessages() {
             this.loadingPrevious = true;
-            const encodedTimestamp = encodeURIComponent(this.messages[0].creation_time);
+            const encodedTimestamp = encodeURIComponent(
+                this.messages[0].creation_time,
+            );
 
             // send request to backend to get previous messages
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/chats/${this.chat._id}/${encodedTimestamp}/100`, {
-                method: 'GET',
-                credentials: 'include',
-                mode: 'cors'
-            }).then(async (res) => {
-                await res.json().then(async (data) => {
-                    if (data.messages) {
-                        if (data.messages.length > 0) {
-                            // if there are more history messages
-                            // update message list with previous messages
-                            this.store.newMessageBulk(data.messages, this.chat._id);
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/chats/${
+                    this.chat._id
+                }/${encodedTimestamp}/100`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                    mode: "cors",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        if (data.messages) {
+                            if (data.messages.length > 0) {
+                                // if there are more history messages
+                                // update message list with previous messages
+                                this.store.newMessageBulk(
+                                    data.messages,
+                                    this.chat._id,
+                                );
+                            } else {
+                                // if there are no more history messages then tell user no more messages found
+                                // TODO: update UI (set up dialog box component and display messages)
+                                await this.alert("No more messages found.");
+                            }
+                        } else {
+                            console.log("Could not retrieve messages.");
                         }
-                        else {
-                            // if there are no more history messages then tell user no more messages found
-                            // TODO: update UI (set up dialog box component and display messages)
-                            await this.alert('No more messages found.');
-                        }
-                    }
-                    else {
-                        console.log('Could not retrieve messages.');
-                    }
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
 
             this.loadingPrevious = false;
         },
         // get creation_time of previous message or '' if it is the first message
         previous_creation_time(index) {
-            return index == 0 ? '' : this.messages[index - 1].creation_time;
+            return index == 0 ? "" : this.messages[index - 1].creation_time;
         },
         // get is_sender of previous message or null if it is the first message
         previous_is_sender(index) {
@@ -584,20 +664,22 @@ export default {
                 this.file = {};
                 return;
             }
-            
+
             // set file
             this.file = e.target.files[0];
 
             // clear error
-            this.error = '';
-            this.selectedLink = '';
+            this.error = "";
+            this.selectedLink = "";
 
             // valid conditions
             const maxFileSize = 2 * 1024 * 1024;
 
             // error messages
-            const largeFileError = `File is too large, maximum file size is ${maxFileSize / 1024 / 1024}MB.`;
-            
+            const largeFileError = `File is too large, maximum file size is ${
+                maxFileSize / 1024 / 1024
+            }MB.`;
+
             // check for large file
             if (this.file.size > maxFileSize) {
                 this.error = largeFileError;
@@ -611,7 +693,7 @@ export default {
             //add link to preview file
             // for images create object URL for preview
             // for non-images use default unknown file icon
-            if (this.file.type.startsWith('image/')) {
+            if (this.file.type.startsWith("image/")) {
                 this.selectedLink = URL.createObjectURL(this.file);
             }
         },
@@ -619,8 +701,8 @@ export default {
         toggleFileInput(show) {
             // set file related fields to default
             this.file = {};
-            this.selectedLink = '';
-            this.error = '';
+            this.selectedLink = "";
+            this.error = "";
 
             this.fileInput = show;
         },
@@ -650,7 +732,7 @@ export default {
             this.reportMessageId = messageId;
 
             this.toggleReportForm(true);
-        }
+        },
     },
     computed: {
         // check if a file is selected
@@ -659,18 +741,18 @@ export default {
         },
         // check if selected file is invalid
         invalidFile() {
-            return this.error != '';
+            return this.error != "";
         },
         // check if selected file is image type
         isFileImageType() {
-            return this.file.type.startsWith('image/');
+            return this.file.type.startsWith("image/");
         },
         // check if file upload is in progress
         isUploadingFile() {
             return this.uploadingFile;
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>
@@ -784,7 +866,8 @@ export default {
     text-align: center;
 }
 
-#chat-interface-input form, #chat-file-interface-input {
+#chat-interface-input form,
+#chat-file-interface-input {
     display: flex;
     column-gap: 5px;
     border: 1px solid black;
@@ -796,28 +879,33 @@ export default {
     flex-direction: row;
 }
 
-#chat-interface-input form textarea, #chat-file-interface-input textarea {
+#chat-interface-input form textarea,
+#chat-file-interface-input textarea {
     padding: 0px 5px;
 }
 
-#chat-message-input, #chat-file-message-input {
+#chat-message-input,
+#chat-file-message-input {
     outline: none;
     border: none;
     width: 100%;
     background-color: transparent;
 }
 
-#chat-interface-input button, #chat-file-upload-container button {
+#chat-interface-input button,
+#chat-file-upload-container button {
     border: none;
     background-color: transparent;
 }
 
-#chat-interface-input button:focus, #chat-file-upload-container button:focus {
+#chat-interface-input button:focus,
+#chat-file-upload-container button:focus {
     border-radius: 20px;
     outline: 1px solid black;
 }
 
-#chat-interface-input .material-symbols-outlined, #chat-file-upload-container .material-symbols-outlined {
+#chat-interface-input .material-symbols-outlined,
+#chat-file-upload-container .material-symbols-outlined {
     color: black;
     font-size: 2em;
 }
@@ -849,7 +937,8 @@ export default {
     overflow: auto;
 }
 
-#chat-file-upload .container-fluid, #chat-file-upload .row {
+#chat-file-upload .container-fluid,
+#chat-file-upload .row {
     padding: 0;
     margin: 0;
 }

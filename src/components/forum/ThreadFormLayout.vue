@@ -1,6 +1,10 @@
 <template>
     <div class="form-overlay">
-        <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" v-if="submitting || (editMode && !dataInitialized)" />
+        <LoadingOverlay
+            :backgroundColor="'rgba(0, 0, 0, 0.5)'"
+            :center="true"
+            v-if="submitting || (editMode && !dataInitialized)"
+        />
 
         <!-- form -->
         <form class="form-overlay-content" @submit.prevent="submitForm">
@@ -8,28 +12,40 @@
             <button class="form-overlay-close" @click="closeForm" type="button">
                 <span class="material-symbols-outlined">Close</span>
             </button>
-    
-            <h1>{{ editMode ? 'Edit Thread' : 'Create New Thread' }}</h1>
-            
+
+            <h1>{{ editMode ? "Edit Thread" : "Create New Thread" }}</h1>
+
             <!-- thread title input -->
             <div id="thread-title-container">
                 <div class="thread-field-container">
                     <label for="thread-title-input" class="thread-label">Title:</label>
-                    <input type="text" id="thread-title-input" v-model="threadTitle" :maxlength="50" placeholder="Thread title" />
+                    <input type="text" id="thread-title-input" v-model="threadTitle" placeholder="Thread title" />
                 </div>
             </div>
-    
+
             <!-- thread description (content) input -->
             <div class="thread-field-container">
-                <label for="thread-content-input" class="thread-label">Content:</label>
-                <DynamicTextarea :id="'thread-content-input'" v-model="threadContent" :maxlength="500" :placeholder="'Thread content'" />
+                <label for="thread-content-input" class="thread-label"
+                    >Content:</label
+                >
+                <DynamicTextarea
+                    :id="'thread-content-input'"
+                    v-model="threadContent"
+                    :maxlength="500"
+                    :placeholder="'Thread content'"
+                />
             </div>
-            
+
             <!-- thread tags input -->
             <div class="thread-field-container">
-                <label for="thread-tags-input" class="thread-label">Tags:</label>
+                <label for="thread-tags-input" class="thread-label"
+                    >Tags:</label
+                >
                 <div id="thread-tags-container">
-                    <AddInterestButton :selectedOption="tags" @selectedInterests="handleThreadTags">
+                    <AddInterestButton
+                        :selectedOption="tags"
+                        @selectedInterests="handleThreadTags"
+                    >
                         Select Tags For Your Thread (Optional):
                     </AddInterestButton>
                 </div>
@@ -37,32 +53,55 @@
 
             <!-- Upload picture -->
             <div id="thread-picture-container">
-                <label for="thread-picture-input" id="thread-picture-label"><u>Click</u> to Select Picture (Optional)</label>
-    
-                <span v-if="selectedImageObject && pictureErrors.length > 0" class="errMsg">Invalid file</span>
+                <label for="thread-picture-input" id="thread-picture-label"
+                    ><u>Click</u> to Select Picture (Optional)</label
+                >
 
-                <img v-if="selectedImageLink" :src="selectedImageLink" alt="Banner"  id="thread-picture" />
-                <input id="thread-picture-input" type="file" @change="fileChanged" accept=".jpg, .jpeg, .png" />
-                
+                <span
+                    v-if="selectedImageObject && pictureErrors.length > 0"
+                    class="errMsg"
+                    >Invalid file</span
+                >
+
+                <img
+                    v-if="selectedImageLink"
+                    :src="selectedImageLink"
+                    alt="Banner"
+                    id="thread-picture"
+                />
+                <input
+                    id="thread-picture-input"
+                    type="file"
+                    @change="fileChanged"
+                    accept=".jpg, .jpeg, .png"
+                />
+
                 <!-- inform user about invalid file -->
                 <div v-if="pictureErrors.length > 0">
                     <span>Error:</span>
                     <br />
-                    <p v-for="error in pictureErrors" class="errMsg">{{ error }}</p>
+                    <p v-for="error in pictureErrors" class="errMsg">
+                        {{ error }}
+                    </p>
                 </div>
             </div>
-                
-            <button class="form-overlay-control-button" :disabled="submitting || !requiredFields">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
+
+            <button
+                class="form-overlay-control-button"
+                :disabled="submitting || !requiredFields"
+            >
+                {{ submitting ? "Submitting..." : "Submit" }}
+            </button>
         </form>
     </div>
 </template>
 
 <script>
-import { useAlertStore } from '../../stores/AlertStore.js';
-import LoadingOverlay from '../general/LoadingOverlay.vue';
-import AddInterestButton from '../general/AddInterestButton.vue';
-import DynamicTextarea from '../general/DynamicTextarea.vue';
-import viewForum from '../../utils/general/viewForum.js';
+import { useAlertStore } from "../../stores/AlertStore.js";
+import LoadingOverlay from "../general/LoadingOverlay.vue";
+import AddInterestButton from "../general/AddInterestButton.vue";
+import DynamicTextarea from "../general/DynamicTextarea.vue";
+import viewForum from "../../utils/general/viewForum.js";
 
 export default {
     data() {
@@ -71,32 +110,26 @@ export default {
 
             selectedImageLink: null,
             selectedImageObject: null,
-            threadTitle: '',
-            threadContent: '',
+            threadTitle: "",
+            threadContent: "",
             tags: [],
             submitting: false,
-            
+
             //Error handling
             pictureErrors: [],
 
             // for edit mode
             dataInitialized: false,
-            pictureUpdated: false
-        }
+            pictureUpdated: false,
+        };
     },
     components: {
         LoadingOverlay,
         AddInterestButton,
-        DynamicTextarea
+        DynamicTextarea,
     },
-    props: [
-        'editMode',
-        'thread',
-        'forumID'
-    ],
-    emits: [
-        'close-thread-form'
-    ],
+    props: ["editMode", "thread", "forumID"],
+    emits: ["close-thread-form"],
     created() {
         // initialize data during edit mode
         if (this.editMode) {
@@ -110,7 +143,7 @@ export default {
         },
         // close thread form
         closeForm() {
-            this.$emit('close-thread-form');
+            this.$emit("close-thread-form");
         },
         // to handle change in selected files
         fileChanged(e) {
@@ -129,12 +162,16 @@ export default {
             }
 
             // valid conditions
-            const acceptedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            const acceptedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
             const maxImageSize = 2 * 1024 * 1024;
 
             // error messages
-            const illegalFileType = `Illegal file type, allowed file types: ${acceptedFileTypes.join(', ')}`;
-            const largeFile = `File is too large, maximum file size is ${maxImageSize / 1024 / 1024}MB.`;
+            const illegalFileType = `Illegal file type, allowed file types: ${acceptedFileTypes.join(
+                ", ",
+            )}`;
+            const largeFile = `File is too large, maximum file size is ${
+                maxImageSize / 1024 / 1024
+            }MB.`;
 
             // set relevant fields
             this.selectedImageObject = e.target.files[0];
@@ -155,7 +192,9 @@ export default {
             }
 
             // otherwise preview images
-            this.selectedImageLink = URL.createObjectURL(this.selectedImageObject);
+            this.selectedImageLink = URL.createObjectURL(
+                this.selectedImageObject,
+            );
         },
         // submit forum form
         async submitForm() {
@@ -165,7 +204,7 @@ export default {
             if (this.editMode) {
                 // if user has not changed any fields then do nothing
                 if (!this.fieldsChanged && !this.pictureUpdated) {
-                    await this.alert('No changes made.');
+                    await this.alert("No changes made.");
                     this.submitting = false;
                     return;
                 }
@@ -173,7 +212,7 @@ export default {
 
             // do nothing if required fields are not filled up
             if (!this.requiredFields) {
-                await this.alert('Please fill up all required fields.');
+                await this.alert("Please fill up all required fields.");
 
                 this.submitting = false;
                 return;
@@ -182,55 +221,66 @@ export default {
             const uploadData = new FormData();
 
             // add picture only if they are updated in edit mode or if not in edit mode and user uploaded a picture
-            if ((this.editMode && this.pictureUpdated) || (!this.editMode && this.selectedImageLink != null)) {
-                uploadData.append('picture', this.selectedImageObject);
+            if (
+                (this.editMode && this.pictureUpdated) ||
+                (!this.editMode && this.selectedImageLink != null)
+            ) {
+                uploadData.append("picture", this.selectedImageObject);
             }
 
             // if in edit mode, tell server picture is unchanged if so
             if (this.editMode && !this.pictureUpdated) {
-                uploadData.append('pictureUnchanged', true);
+                uploadData.append("pictureUnchanged", true);
             }
-            
+
             try {
                 let threadObject = {
-                    'title': this.threadTitle,
-                    'content': this.threadContent,
-                    'tags': this.tags
-                }
-                
-                uploadData.append('threadObject', JSON.stringify(threadObject));
-                
-                // send request to server with data
-                const baseURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/threads`;
-                const targetURL = this.editMode ? `${baseURL}/forum/${this.thread.parent_id._id}/thread/${this.thread._id}` : `${baseURL}/${this.forumID}`;
-                
-                const options = {
-                    mode: 'cors',
-                    method: this.editMode ? 'PATCH' : 'POST',
-                    body: uploadData,
-                    credentials: 'include'
+                    title: this.threadTitle,
+                    content: this.threadContent,
+                    tags: this.tags,
                 };
 
-                const successMessage = this.editMode ? 'Thread updated.' : 'Thread created.';
+                uploadData.append("threadObject", JSON.stringify(threadObject));
+
+                // send request to server with data
+                const baseURL = `${
+                    import.meta.env.VITE_APP_SERVER_URL
+                }/api/threads`;
+                const targetURL = this.editMode
+                    ? `${baseURL}/forum/${this.thread.parent_id._id}/thread/${this.thread._id}`
+                    : `${baseURL}/${this.forumID}`;
+
+                const options = {
+                    mode: "cors",
+                    method: this.editMode ? "PATCH" : "POST",
+                    body: uploadData,
+                    credentials: "include",
+                };
+
+                const successMessage = this.editMode
+                    ? "Thread updated."
+                    : "Thread created.";
 
                 await fetch(targetURL, options)
-                    .then(async response => {
-                        if (response.ok){
+                    .then(async (response) => {
+                        if (response.ok) {
                             await this.alert(successMessage);
 
-                            viewForum(this.forumID || this.thread.parent_id._id);
+                            viewForum(
+                                this.forumID || this.thread.parent_id._id,
+                            );
                         } else {
-                            console.log('An error occurred.');
-                        };
-                        
+                            console.log("An error occurred.");
+                        }
+
                         this.submitting = false;
                         return;
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
+                    .catch((error) => {
+                        console.error("Error:", error);
                     });
             } catch (error) {
-                console.error('Error:', error);
+                console.error("Error:", error);
             }
         },
         // initialize data
@@ -241,7 +291,7 @@ export default {
             this.tags = [...this.thread.tags];
 
             this.dataInitialized = true;
-        }
+        },
     },
     computed: {
         // check if required fields are all filled up
@@ -258,13 +308,13 @@ export default {
             const tagSame = this.tags == this.thread.tags;
 
             return !(titleSame && descSame && tagSame);
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style scoped>
-@import url('../../styles/forms/form-overlay-styles.css');
+@import url("../../styles/forms/form-overlay-styles.css");
 
 #thread-picture-container {
     display: flex;
@@ -316,11 +366,14 @@ export default {
     text-align: start;
 }
 
-#thread-title-input, #thread-content-input, #thread-tags-container {
+#thread-title-input,
+#thread-content-input,
+#thread-tags-container {
     width: 100%;
 }
 
-#thread-title-input, #thread-content-input {
+#thread-title-input,
+#thread-content-input {
     padding: 10px;
     border-radius: 10px;
     resize: none;
