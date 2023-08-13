@@ -31,17 +31,18 @@
     position: relative;
     row-gap: 10px;
     align-items: start;
-    width: fit-content;
-    padding: 0 5vw;
+    padding: 0 1vw;
+    max-width: 15vw;
     max-height: 30vh;
     margin: 0 auto;
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
+    word-wrap: break-word;
 }
 
 .mini-forum-layout {
-    min-height: 10vh;
     scroll-snap-align: center;
+    word-wrap: break-word;
 }
 .card {
     padding: 1em 0 1em 0;

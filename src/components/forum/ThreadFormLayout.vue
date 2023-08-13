@@ -19,7 +19,7 @@
             <div id="thread-title-container">
                 <div class="thread-field-container">
                     <label for="thread-title-input" class="thread-label">Title:</label>
-                    <input type="text" id="thread-title-input" v-model="threadTitle" placeholder="Thread title" />
+                    <input type="text" id="thread-title-input" v-model="threadTitle" placeholder="Thread title" maxlength="100"/>
                 </div>
             </div>
 

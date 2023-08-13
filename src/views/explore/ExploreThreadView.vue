@@ -128,14 +128,12 @@
                                 <div
                                     v-for="forum in tag.forums"
                                     @click="viewForum(forum)"
-                                    id="forumContainer"
-                                >
-                                    <p>
-                                        <img
-                                            class="forum-pic"
-                                            :src="forum.forum_pic_link"
-                                        />{{ forum.forum_name }}
-                                    </p>
+                                    id="forumContainer">
+                                    <img
+                                        class="forum-pic"
+                                        :src="forum.forum_pic_link"
+                                    />
+                                    <p>{{ forum.forum_name }}</p>
                                 </div>
                             </div>
                         </div>
@@ -330,16 +328,24 @@ h1 {
 }
 </style>
 
-<style>
+<style scoped>
 #filterRow {
-    margin-bottom: 5dvh;
+    margin-bottom: 5vh;
 }
 #no-filtered-threads {
     text-align: center;
     margin: 5vh;
 }
 #forumContainer {
-    padding-top: 10px;
+    display: flex;
+    position: relative;
+    row-gap: 10px;
+    align-items: start;
+    padding: 0 1vw;
+    word-wrap: break-word;
+    font-size: 11px;
+    margin: 1vh 1vw;
+    overflow: hidden;
 }
 #forumContainer:hover {
     border: 1px solid var(--primary);
@@ -395,7 +401,7 @@ h1 {
 .popular-community {
     border-radius: 13px;
     height: 100%;
-    width: 20rem;
+    width: 100%;
     padding-top: 20px;
     display: flex;
     align-items: center;
@@ -470,16 +476,16 @@ h1 {
 .open-forum {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
+    max-width: 100%;
 }
-
+p {
+    margin-top: 0.5em !important;
+    margin-left: 1em !important;
+}
 .forum-pic {
-    height: 30px;
-    width: 30px;
+    height: 32px;
+    width: 32px;
     border-radius: 100%;
-    margin-right: 20px;
 }
 
 .last,

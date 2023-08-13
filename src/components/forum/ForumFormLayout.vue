@@ -379,7 +379,7 @@ export default {
 
             // do nothing if required fields are not filled up
             if (!this.requiredFields) {
-                await this.alert("Please fill up all required fields.");
+                await this.alert("Please fill up all required fields");
 
                 this.submitting = false;
                 return;
@@ -407,7 +407,16 @@ export default {
 
             try {
                 if (this.forumID.includes("#")) {
-                    return;
+                    return this.alert("Illegal character detected");;
+                }
+                if (this.forumID.length > 25) {
+                    return this.alert("Forum ID too long");
+                }
+                if (this.forumDesc.length > 100) {
+                    return this.alert("Forum name too long");
+                }
+                if (this.forumName.length > 25) {
+                    return this.alert("Forum name too long");
                 }
                 var forumObject = {
                     forum_name: this.forumName.trim(),
