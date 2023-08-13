@@ -319,8 +319,7 @@ export default {
                 const link = links[i];
 
                 const href = link
-                    .getAttribute("href")
-                    .replace(import.meta.env.VITE_BASE_URL, "");
+                    .getAttribute("href");
                 const pathname = window.location.pathname;
 
                 if (pathname.startsWith(href)) {

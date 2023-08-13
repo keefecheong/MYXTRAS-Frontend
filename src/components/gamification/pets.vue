@@ -55,11 +55,7 @@ export default {
         },
 
         checkPage() {
-            const currentPage =
-                import.meta.env.VITE_BASE_URL +
-                ":" +
-                import.meta.env.VITE_PORT +
-                "/gachapon.html";
+            const currentPage = "/gachapon.html";
             if (window.location.href == currentPage) {
                 return this.enabled;
             }

@@ -5,7 +5,7 @@ export default function viewForum(forumId, openNewTab, threadId, commentId) {
         sessionStorage.setItem("forum_id", forumId);
         location.href = "/forumGroup.html";
     } else {
-        let targetURL = `${import.meta.env.VITE_BASE_URL}/forumGroup.html`;
+        let targetURL = `/forumGroup.html`;
 
         if (threadId) {
             targetURL += `?thread=${threadId}`;
