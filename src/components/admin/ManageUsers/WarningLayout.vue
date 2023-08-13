@@ -25,13 +25,17 @@
 
             <div>
                 <span>Content Creation Time:</span>
-                <span>{{ getTimeToDisplay(warning.object_creation_time) }}</span>
+                <span>{{
+                    getTimeToDisplay(warning.object_creation_time)
+                }}</span>
             </div>
         </div>
 
         <div v-else>
             <div>
-                <span style="flex: 100%; text-align: center;">You have been reported</span>
+                <span style="flex: 100%; text-align: center"
+                    >You have been reported</span
+                >
             </div>
         </div>
 
@@ -60,19 +64,16 @@
 </template>
 
 <script>
-import getFormattedTime from '../../../utils/general/getFormattedTime.js';
+import getFormattedTime from "../../../utils/general/getFormattedTime.js";
 
 export default {
-    props: [
-        'warning',
-        'admin'
-    ],
+    props: ["warning", "admin"],
     methods: {
         getTimeToDisplay(timeString) {
             return getFormattedTime(timeString);
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style scoped>

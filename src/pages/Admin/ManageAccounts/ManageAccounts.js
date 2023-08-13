@@ -1,9 +1,9 @@
-import App from './ManageAccounts.vue';
-import 'bootstrap/dist/js/bootstrap.js';
-import 'bootstrap/dist/css/bootstrap.css';
-import dynamicMount from '../../../utils/authentication/authAccessControl.js';
-import { createPinia } from 'pinia';
+import App from "./ManageAccounts.vue";
+import "bootstrap/dist/js/bootstrap.js";
+import "bootstrap/dist/css/bootstrap.css";
+import dynamicMount from "../../../utils/authentication/authAccessControl.js";
+import { createPinia } from "pinia";
 
 const app = await dynamicMount(App, false, true);
 
-app.use(createPinia()).mount('#app');
+app.use(createPinia()).mount("#app");

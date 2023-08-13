@@ -2,27 +2,55 @@
     <div class="thread-comment-container" :id="comment._id">
         <div class="thread-comment-header">
             <!-- creator profile pic -->
-            <img class="thread-comment-profile-pic" :src="comment.creator_id.profile_pic_link" @click="viewUser" title="View user" />
+            <img
+                class="thread-comment-profile-pic"
+                :src="comment.creator_id.profile_pic_link"
+                @click="viewUser"
+                title="View user"
+            />
             <div class="right-content">
                 <!-- creator real name/username -->
-                <div class="thread-comment-name-container" @click="viewUser" title="View user">
-                    <span class="thread-comment-realname">{{ comment.creator_id.real_name }}</span>
-                    <span class="thread-comment-username">@{{ comment.creator_id.username }}</span>
+                <div
+                    class="thread-comment-name-container"
+                    @click="viewUser"
+                    title="View user"
+                >
+                    <span class="thread-comment-realname">{{
+                        comment.creator_id.real_name
+                    }}</span>
+                    <span class="thread-comment-username"
+                        >@{{ comment.creator_id.username }}</span
+                    >
                 </div>
 
                 <!-- creation time -->
                 <div class="thread-comment-creation-time-container">
-                    <span :title="new Date(comment.creation_time)">{{ dateCreated }}</span>
+                    <span :title="new Date(comment.creation_time)">{{
+                        dateCreated
+                    }}</span>
                 </div>
 
                 <!-- privileged operations -->
-                <div v-if="comment.isOwner" class="privileged-thread-comment-actions">
-                    <span class="material-symbols-outlined" @click="deleteComment" title="Delete this comment">delete</span>
+                <div
+                    v-if="comment.isOwner"
+                    class="privileged-thread-comment-actions"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        @click="deleteComment"
+                        title="Delete this comment"
+                        >delete</span
+                    >
                 </div>
 
                 <!-- report button  -->
                 <div v-else>
-                    <span class="material-symbols-outlined report-button" @click="reportComment" title="Report this comment">flag</span>
+                    <span
+                        class="material-symbols-outlined report-button"
+                        @click="reportComment"
+                        title="Report this comment"
+                        >flag</span
+                    >
                 </div>
             </div>
         </div>
@@ -35,27 +63,21 @@
 </template>
 
 <script>
-import calcDateDifference from '../../utils/general/calcDateDifference';
-import viewUser from '../../utils/general/viewUser.js';
-import { useConfirmStore } from '../../stores/ConfirmStore.js';
-import { useAlertStore } from '../../stores/AlertStore';
+import calcDateDifference from "../../utils/general/calcDateDifference";
+import viewUser from "../../utils/general/viewUser.js";
+import { useConfirmStore } from "../../stores/ConfirmStore.js";
+import { useAlertStore } from "../../stores/AlertStore";
 
 export default {
     data() {
         return {
-            dateCreated: '',
+            dateCreated: "",
             alert: useAlertStore().alert,
             confirm: useConfirmStore().confirm,
-        }
+        };
     },
-    emits: [
-        'deleted-comment',
-        'report-comment'
-    ],
-    props: [
-        'comment',
-        'thread'
-    ],
+    emits: ["deleted-comment", "report-comment"],
+    props: ["comment", "thread"],
     created() {
         this.dateCreated = calcDateDifference(this.comment.creation_time);
     },
@@ -65,32 +87,41 @@ export default {
             viewUser(this.comment.creator_id._id);
         },
         // to delete comment
-        async deleteComment(){
-            const confirmDelete = await this.confirm('Are you sure you want to delete this comment? This action is irreversible!');
+        async deleteComment() {
+            const confirmDelete = await this.confirm(
+                "Are you sure you want to delete this comment? This action is irreversible!",
+            );
 
             if (!confirmDelete) {
                 return;
             }
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.thread.parent_id._id}/thread/${this.thread._id}/comments/${this.comment._id}`, {
-                mode: 'cors',
-                method: 'DELETE',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(async (data) => {
-                    this.alert(data.message);
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                    this.thread.parent_id._id
+                }/thread/${this.thread._id}/comments/${this.comment._id}`,
+                {
+                    mode: "cors",
+                    method: "DELETE",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        this.alert(data.message);
 
-                    this.$emit('deleted-comment')
+                        this.$emit("deleted-comment");
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
         },
         // to report comment
         reportComment() {
-            this.$emit('report-comment', this.comment._id);
-        }
-    }
-}
+            this.$emit("report-comment", this.comment._id);
+        },
+    },
+};
 </script>
 
 <style scoped>
@@ -138,7 +169,7 @@ export default {
     object-fit: cover;
     object-position: center;
     border: 1px solid gray;
-    position:absolute;
+    position: absolute;
     top: 0px;
     left: -40px;
     user-select: none;
@@ -152,11 +183,12 @@ export default {
     cursor: pointer;
 }
 
-.thread-comment-profile-pic:hover~div .thread-comment-name-container, .thread-comment-name-container:hover {
+.thread-comment-profile-pic:hover ~ div .thread-comment-name-container,
+.thread-comment-name-container:hover {
     color: var(--primary);
 }
 
-.thread-comment-creation-time-container{
+.thread-comment-creation-time-container {
     flex: 0 0 25%;
     text-align: right;
 }
@@ -171,6 +203,6 @@ export default {
 
 hr {
     margin-top: 5px !important;
-    margin-bottom: 5px !important
+    margin-bottom: 5px !important;
 }
 </style>

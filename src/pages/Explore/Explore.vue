@@ -1,14 +1,20 @@
 <template>
-    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+    <AlertPrompt
+        v-if="showAlert && alertMsg.length > 0"
+        @close-alert="closeAlert"
+    >
         {{ alertMsg }}
     </AlertPrompt>
 
-    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+    <ConfirmPrompt
+        v-if="showConfirm && confirmMsg.length > 0"
+        @close-confirm="closeConfirm"
+    >
         {{ confirmMsg }}
     </ConfirmPrompt>
-    
+
     <div id="main-container">
-        <NavSidebar/>
+        <NavSidebar />
 
         <div id="main-content">
             <SearchBar />
@@ -19,11 +25,11 @@
                         <router-link to="/blogs">
                             <span class="sub-navigation">Blogs</span>
                         </router-link>
-                        
+
                         <router-link to="/threads">
                             <span class="sub-navigation">Threads</span>
                         </router-link>
-                    </div>                    
+                    </div>
                 </div>
 
                 <div class="col-md-9 col-xs-12">
@@ -32,15 +38,14 @@
                     <router-view :blogs="blogs" />
                 </div>
             </div>
-            <Pets/>
+            <Pets />
         </div>
     </div>
-
 </template>
 
 <style>
-@import url('../../styles/main.css');
-@import url('../../styles/sub-navigation.css');
+@import url("../../styles/main.css");
+@import url("../../styles/sub-navigation.css");
 #xplore-h1 {
     color: var(--primary);
 }
@@ -55,7 +60,6 @@
     color: white;
 }
 @media screen and (max-width: 768px) {
-
     .sub-navigation-links {
         flex-direction: row;
         margin: auto;
@@ -70,30 +74,28 @@
         display: inline-block;
         min-width: 10vw !important;
     }
-    
 }
-
 </style>
 
 <script>
-import SearchBar from '../../components/general/SearchBar.vue';
-import { useAlertStore } from '../../stores/AlertStore';
-import AlertPrompt from '../../components/general/AlertPrompt.vue';
-import { useConfirmStore } from '../../stores/ConfirmStore.js';
-import ConfirmPrompt from '../../components/general/ConfirmPrompt.vue';
+import SearchBar from "../../components/general/SearchBar.vue";
+import { useAlertStore } from "../../stores/AlertStore";
+import AlertPrompt from "../../components/general/AlertPrompt.vue";
+import { useConfirmStore } from "../../stores/ConfirmStore.js";
+import ConfirmPrompt from "../../components/general/ConfirmPrompt.vue";
 
 export default {
     data() {
         return {
             blogs: [],
             alertStore: useAlertStore(),
-            confirmStore: useConfirmStore()
-        }
+            confirmStore: useConfirmStore(),
+        };
     },
     components: {
         SearchBar,
         AlertPrompt,
-        ConfirmPrompt
+        ConfirmPrompt,
     },
     created() {
         this.getPosts();
@@ -101,17 +103,22 @@ export default {
     methods: {
         // method to get blog data
         async getPosts() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/posts/explore`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then((data) => {
-                    this.blogs = data;
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/explore`,
+                {
+                    mode: "cors",
+                    method: "GET",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then((data) => {
+                        this.blogs = data;
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
         },
         // to close alert prompt
         closeAlert() {
@@ -120,7 +127,7 @@ export default {
         // to close confirm prompt
         closeConfirm(decision) {
             this.confirmStore.closeConfirm(decision);
-        }
+        },
     },
     computed: {
         // to get showAlert value
@@ -138,7 +145,7 @@ export default {
         // to get confirmMsg value
         confirmMsg() {
             return this.confirmStore.confirmMsg;
-        }
-    }
-}
+        },
+    },
+};
 </script>

@@ -1,12 +1,12 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useConfirmStore = defineStore('confirmStore', {
+export const useConfirmStore = defineStore("confirmStore", {
     state: () => {
         return {
             showConfirm: false,
-            confirmMsg: '',
-            resolveConfirm: null
-        }
+            confirmMsg: "",
+            resolveConfirm: null,
+        };
     },
     actions: {
         // to show confirm and make tasks wait for user to use confirm
@@ -22,7 +22,7 @@ export const useConfirmStore = defineStore('confirmStore', {
         closeConfirm(decision) {
             this.resolveConfirm(decision);
             this.showConfirm = false;
-            this.confirmMsg = '';
-        }
-    }
-})
+            this.confirmMsg = "";
+        },
+    },
+});

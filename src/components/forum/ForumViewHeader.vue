@@ -1,56 +1,96 @@
 <!-- standardized forum header (includes banner and header with forum details and edit forum, subscribe, and create thread buttons) -->
 
 <template>
-    <img :src="forum.banner_link" alt="Banner" id="banner-picture"/>
+    <img :src="forum.banner_link" alt="Banner" id="banner-picture" />
 
     <div id="forum-header-container">
         <div id="forum-header-above">
-            <img id="group-icon" :src="forum.forum_pic_link">
-            
+            <img id="group-icon" :src="forum.forum_pic_link" />
+
             <div id="forum-header-above-name">
-                <span id="group-name">{{forum.forum_name}}</span>
-                <span id="group-id">x/{{forum.forum_id}}</span>
+                <span id="group-name">{{ forum.forum_name }}</span>
+                <span id="group-id">x/{{ forum.forum_id }}</span>
             </div>
         </div>
-            
+
         <div id="forum-header-below">
             <div id="forum-header-below-info">
                 <div v-if="forum.forum_desc">
                     <span>Description: </span>
-                    <span class="hide-overflow-text">{{forum.forum_desc}}</span>
+                    <span class="hide-overflow-text">{{
+                        forum.forum_desc
+                    }}</span>
                 </div>
 
                 <div id="forum-header-below-tags" v-if="forum.tags.length > 0">
                     <span>Tags: </span>
-                    <InterestBadgeList :selectedOption="forum.tags" :selection="false" />
+                    <InterestBadgeList
+                        :selectedOption="forum.tags"
+                        :selection="false"
+                    />
                 </div>
             </div>
 
             <div id="forum-header-subscribers">
-                <span>{{"Subscribers: " + numOfSubs}}</span>
+                <span>{{ "Subscribers: " + numOfSubs }}</span>
             </div>
 
             <div id="forum-options">
                 <div id="privileged-options" v-if="forum.isCreator">
-                    <button @click="showForumForm" data-tooltip="Edit Forum" data-tooltip-position="top">
-                        <span class="material-symbols-outlined" title="Edit this forum">Edit</span>
+                    <button
+                        @click="showForumForm"
+                        data-tooltip="Edit Forum"
+                        data-tooltip-position="top"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            title="Edit this forum"
+                            >Edit</span
+                        >
                     </button>
 
-                    <button @click="deleteForum()" data-tooltip="Delete Forum" data-tooltip-position="top">
-                        <span class="material-symbols-outlined" title="Delete this forum">delete</span>
+                    <button
+                        @click="deleteForum()"
+                        data-tooltip="Delete Forum"
+                        data-tooltip-position="top"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            title="Delete this forum"
+                            >delete</span
+                        >
                     </button>
                 </div>
 
-                
-
                 <div id="normal-options">
-                    <button v-if="!forum.isCreator" :class="{ 'subscribed': workingSubscribe, 'white-btn': !workingSubscribe  }" @click="toggleSubscribe" data-tooltip="Report" data-tooltip-position="top">
-                        {{ workingSubscribe ? 'Unsubscribe' : 'Subscribe' }}
+                    <button
+                        v-if="!forum.isCreator"
+                        :class="{
+                            subscribed: workingSubscribe,
+                            'white-btn': !workingSubscribe,
+                        }"
+                        @click="toggleSubscribe"
+                        data-tooltip="Report"
+                        data-tooltip-position="top"
+                    >
+                        {{ workingSubscribe ? "Unsubscribe" : "Subscribe" }}
                     </button>
 
-                    <button v-if="showCreateThreadButton" @click="showCreateThread" class="white-btn">Create Thread!</button>
+                    <button
+                        v-if="showCreateThreadButton"
+                        @click="showCreateThread"
+                        class="white-btn"
+                    >
+                        Create Thread!
+                    </button>
                     <div data-tooltip="Report" data-tooltip-position="top">
-                        <span v-if="!forum.isCreator" class="material-symbols-outlined report-button contrast" @click="toggleReportForm" title="Report this forum">flag</span>
+                        <span
+                            v-if="!forum.isCreator"
+                            class="material-symbols-outlined report-button contrast"
+                            @click="toggleReportForm"
+                            title="Report this forum"
+                            >flag</span
+                        >
                     </div>
                 </div>
             </div>
@@ -59,9 +99,9 @@
 </template>
 
 <script>
-import InterestBadgeList from '../general/InterestBadgeList.vue';
-import { useConfirmStore } from '../../stores/ConfirmStore.js';
-import { debounce } from 'lodash';
+import InterestBadgeList from "../general/InterestBadgeList.vue";
+import { useConfirmStore } from "../../stores/ConfirmStore.js";
+import { debounce } from "lodash";
 
 export default {
     data() {
@@ -71,20 +111,12 @@ export default {
             debouncedSubscribeUpdate: null,
             numOfSubs: 0,
             confirm: useConfirmStore().confirm,
-        }
+        };
     },
-    props: [
-        'forum',
-        'showCreateThreadButton'
-    ],
-    emits: [
-        'show-forum-form',
-        'show-thread-form',
-        'subscribe',
-        'report-forum'
-    ],
+    props: ["forum", "showCreateThreadButton"],
+    emits: ["show-forum-form", "show-thread-form", "subscribe", "report-forum"],
     components: {
-        InterestBadgeList
+        InterestBadgeList,
     },
     created() {
         this.workingSubscribe = this.forum.isSubscribed;
@@ -94,7 +126,7 @@ export default {
         // set debounce function to only send request to update backend if user has not toggled subscribe button for 3 seconds
         this.debouncedSubscribeUpdate = debounce(this.updateSubscribe, 3000);
 
-        window.addEventListener('beforeunload', this.completeSubscribeRequest);
+        window.addEventListener("beforeunload", this.completeSubscribeRequest);
     },
     beforeUnmount() {
         this.completeSubscribeRequest();
@@ -102,14 +134,14 @@ export default {
     methods: {
         // to show edit forum form
         showForumForm() {
-            this.$emit('show-forum-form');
+            this.$emit("show-forum-form");
         },
         // to show create thread form
         showCreateThread() {
-            this.$emit('show-thread-form');
+            this.$emit("show-thread-form");
         },
         toggleReportForm() {
-            this.$emit('report-forum');
+            this.$emit("report-forum");
         },
         // to toggle subscribe status
         toggleSubscribe() {
@@ -119,50 +151,53 @@ export default {
             // update subscriber count
             if (this.workingSubscribe) {
                 this.numOfSubs += 1;
-            }
-            else {
+            } else {
                 this.numOfSubs -= 1;
             }
 
             this.debouncedSubscribeUpdate();
         },
         // to send request to subscribe/unsubscribe
-        async updateSubscribe(){
-            const targetURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forum._id}/subscribe`;
+        async updateSubscribe() {
+            const targetURL = `${
+                import.meta.env.VITE_APP_SERVER_URL
+            }/api/forums/${this.forum._id}/subscribe`;
             const options = {
-                mode: 'cors',
-                credentials: 'include'
-            }
+                mode: "cors",
+                credentials: "include",
+            };
 
             // only send request to subscribe if saved value is false and new value is true
             if (this.workingSubscribe && !this.savedSubscribe) {
-                options.method = 'POST';
+                options.method = "POST";
 
-                await fetch(targetURL, options).then(res => {
-                    if (res.ok) {
-                        this.savedSubscribe = true;
-                    }
-                    else {
-                        console.log('An error occurred.');
-                    }
-                }).catch(error => {
-                    console.log('Unable to subscribe to forum.');
-                });
+                await fetch(targetURL, options)
+                    .then((res) => {
+                        if (res.ok) {
+                            this.savedSubscribe = true;
+                        } else {
+                            console.log("An error occurred.");
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("Unable to subscribe to forum.");
+                    });
             }
             // only send request to unsubscribe if saved value is true and new value is false
             else if (!this.workingSubscribe && this.savedSubscribe) {
-                options.method = 'DELETE';
+                options.method = "DELETE";
 
-                await fetch(targetURL, options).then(res => {
-                    if (res.ok) {
-                        this.savedSubscribe = false;
-                    }
-                    else {
-                        console.log('An error occurred.');
-                    }
-                }).catch(error => {
-                    console.log('Unable to unsubscribe from forum.');
-                });
+                await fetch(targetURL, options)
+                    .then((res) => {
+                        if (res.ok) {
+                            this.savedSubscribe = false;
+                        } else {
+                            console.log("An error occurred.");
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("Unable to unsubscribe from forum.");
+                    });
             }
         },
         // handle updating of subscribe status if pending
@@ -170,34 +205,43 @@ export default {
             this.debouncedSubscribeUpdate.flush();
         },
 
-        async deleteForum(){
-            const confirmDelete = await this.confirm('Are you sure you want to delete this forum? This action is irreversible!');
+        async deleteForum() {
+            const confirmDelete = await this.confirm(
+                "Are you sure you want to delete this forum? This action is irreversible!",
+            );
 
             if (!confirmDelete) {
                 return;
             }
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${this.forum._id}`, {
-                mode: 'cors',
-                method: 'DELETE',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(async (data) => {
-                    window.location.href = '/forum.html';
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${
+                    this.forum._id
+                }`,
+                {
+                    mode: "cors",
+                    method: "DELETE",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        window.location.href = "/forum.html";
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>
-@import url('../../styles/main.css');
+@import url("../../styles/main.css");
 .white-btn {
     font-weight: bold;
     background-color: white;
-    color:black;
+    color: black;
     border-radius: 5px;
     white-space: normal;
     text-align: center;
@@ -214,7 +258,7 @@ export default {
     padding: 0;
 }
 
-#forum-header-container{
+#forum-header-container {
     --group-icon-size: 100px;
     --above-margin-left: calc(var(--group-icon-size) - 10px);
     background-color: var(--primary);
@@ -341,28 +385,28 @@ export default {
     padding: 3px !important;
 }
 @media screen and (max-width: 768px) {
-#forum-header-below {
-    column-gap: 0;
-    padding-left: 0;
-}
-#forum-header-above {
-    top: -20% !important;
-}
-#normal-options {
-    display: flex;
-    flex-direction: column;
-}
-#forum-header-subscribers {
-    margin-right: 15px !important;
-}
-#normal-options button {
-    min-width: 20vw;
-    margin-right: 5vw;
-    font-size: 10px;
-}
-#forum-header-subscribers {
-    flex: none;
-    margin-right: 10vw;
-}
+    #forum-header-below {
+        column-gap: 0;
+        padding-left: 0;
+    }
+    #forum-header-above {
+        top: -20% !important;
+    }
+    #normal-options {
+        display: flex;
+        flex-direction: column;
+    }
+    #forum-header-subscribers {
+        margin-right: 15px !important;
+    }
+    #normal-options button {
+        min-width: 20vw;
+        margin-right: 5vw;
+        font-size: 10px;
+    }
+    #forum-header-subscribers {
+        flex: none;
+        margin-right: 10vw;
+    }
 }
 </style>

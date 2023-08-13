@@ -79,27 +79,27 @@
             <div id="alert-content-text">
                 <h4 id="alert-message"><slot></slot></h4>
             </div>
-            <button id="alert-close" type="button" @click="handleConfirm">OK</button>
+            <button id="alert-close" type="button" @click="handleConfirm">
+                OK
+            </button>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    emits: [
-        'close-alert'
-    ],
+    emits: ["close-alert"],
     mounted() {
         // auto focus on the 'OK' button
-        document.getElementById('alert-close').focus();
+        document.getElementById("alert-close").focus();
     },
     methods: {
         // close alert prompt
         handleConfirm() {
-            this.$emit('close-alert');
-        }
-    }
-}
+            this.$emit("close-alert");
+        },
+    },
+};
 </script>
 
 <style>
@@ -157,11 +157,12 @@ export default {
     color: white;
 }
 
-#alert-close:focus, #alert-close:hover {
+#alert-close:focus,
+#alert-close:hover {
     background-color: white;
     outline: none;
     color: var(--blue);
     font-weight: bold;
     border: 2px solid var(--blue);
 }
-</style>    
+</style>

@@ -1,11 +1,21 @@
 <template>
-    <LoadingOverlay v-if="showLoading" :center="true" :backgroundColor="'rgba(0, 0, 0, 0.5)'" />
-    
-    <AlertPrompt v-if="showAlert && alertMsg.length > 0" @close-alert="closeAlert">
+    <LoadingOverlay
+        v-if="showLoading"
+        :center="true"
+        :backgroundColor="'rgba(0, 0, 0, 0.5)'"
+    />
+
+    <AlertPrompt
+        v-if="showAlert && alertMsg.length > 0"
+        @close-alert="closeAlert"
+    >
         {{ alertMsg }}
     </AlertPrompt>
 
-    <ConfirmPrompt v-if="showConfirm && confirmMsg.length > 0" @close-confirm="closeConfirm">
+    <ConfirmPrompt
+        v-if="showConfirm && confirmMsg.length > 0"
+        @close-confirm="closeConfirm"
+    >
         {{ confirmMsg }}
     </ConfirmPrompt>
 
@@ -19,32 +29,44 @@
                 </template>
             </AdminBanner>
 
-            <AnnoucementLayout @edit-event="handleEditEvent" @show-loading="(show) => toggleLoading(show)"/>
+            <AnnoucementLayout
+                @edit-event="handleEditEvent"
+                @show-loading="(show) => toggleLoading(show)"
+            />
 
-            <div class="create-event" @click="togglePopup(true)" @mouseover="expandBtn(true)" @mouseleave="expandBtn(false)">
-                <div class="minimized-btn" id="expanded-btn">
-                    Create Event
-                </div>
-                <div class="plus-btn">
-                    +
-                </div>
+            <div
+                class="create-event"
+                @click="togglePopup(true)"
+                @mouseover="expandBtn(true)"
+                @mouseleave="expandBtn(false)"
+            >
+                <div class="minimized-btn" id="expanded-btn">Create Event</div>
+                <div class="plus-btn">+</div>
             </div>
 
-            <EventsFormLayout v-if="showForm" @close-event-form="() => { togglePopup(false) }" :event="eventToEdit"/>
+            <EventsFormLayout
+                v-if="showForm"
+                @close-event-form="
+                    () => {
+                        togglePopup(false);
+                    }
+                "
+                :event="eventToEdit"
+            />
         </div>
     </div>
 </template>
 
 <script>
-import NavSidebar from '../../../components/general/NavSidebar.vue';
-import AnnoucementLayout from '../../../components/announcement/AnnoucementLayout.vue';
-import EventsFormLayout from '../../../components/admin/Events/EventsFormLayout.vue';
-import { useAlertStore } from '../../../stores/AlertStore.js';
-import AlertPrompt from '../../../components/general/AlertPrompt.vue';
-import { useConfirmStore } from '../../../stores/ConfirmStore.js';
-import ConfirmPrompt from '../../../components/general/ConfirmPrompt.vue';
-import LoadingOverlay from '../../../components/general/LoadingOverlay.vue';
-import AdminBanner from '../../../components/admin/AdminBanner.vue';
+import NavSidebar from "../../../components/general/NavSidebar.vue";
+import AnnoucementLayout from "../../../components/announcement/AnnoucementLayout.vue";
+import EventsFormLayout from "../../../components/admin/Events/EventsFormLayout.vue";
+import { useAlertStore } from "../../../stores/AlertStore.js";
+import AlertPrompt from "../../../components/general/AlertPrompt.vue";
+import { useConfirmStore } from "../../../stores/ConfirmStore.js";
+import ConfirmPrompt from "../../../components/general/ConfirmPrompt.vue";
+import LoadingOverlay from "../../../components/general/LoadingOverlay.vue";
+import AdminBanner from "../../../components/admin/AdminBanner.vue";
 
 export default {
     components: {
@@ -54,7 +76,7 @@ export default {
         AlertPrompt,
         ConfirmPrompt,
         LoadingOverlay,
-        AdminBanner
+        AdminBanner,
     },
     data() {
         return {
@@ -63,8 +85,8 @@ export default {
             alertStore: useAlertStore(),
             confirmStore: useConfirmStore(),
             showLoading: false,
-            eventToEdit: null
-        }
+            eventToEdit: null,
+        };
     },
     methods: {
         // to toggle loading wheel
@@ -81,9 +103,11 @@ export default {
         },
         expandBtn(bool) {
             if (bool) {
-                document.getElementById("expanded-btn").className = "expanded-btn";
+                document.getElementById("expanded-btn").className =
+                    "expanded-btn";
             } else {
-                document.getElementById("expanded-btn").className = "minimized-btn";
+                document.getElementById("expanded-btn").className =
+                    "minimized-btn";
             }
         },
         // to close alert prompt
@@ -91,14 +115,14 @@ export default {
             this.alertStore.closeAlert();
         },
         // to close confirm prompt
-        closeConfirm(decision){
+        closeConfirm(decision) {
             this.confirmStore.closeConfirm(decision);
         },
         // to handle edit event
         handleEditEvent(event) {
             this.eventToEdit = event;
             this.togglePopup(true);
-        }
+        },
     },
     computed: {
         // to get showAlert value
@@ -116,13 +140,13 @@ export default {
         // to get confirmMsg value
         confirmMsg() {
             return this.confirmStore.confirmMsg;
-        }
+        },
     },
-}
+};
 </script>
 
 <style>
-@import url('../../../styles/main.css');
+@import url("../../../styles/main.css");
 
 .create-event {
     cursor: pointer;
@@ -195,6 +219,4 @@ export default {
         width: 50px;
     }
 }
-
-
 </style>

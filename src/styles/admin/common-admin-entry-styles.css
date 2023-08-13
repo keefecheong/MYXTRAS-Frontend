@@ -1,249 +1,252 @@
 /* category toggle styles */
 .banner-toggle-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    column-gap: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  column-gap: 30px;
 
-    > .active {
-        border-color: white;
-    }
+  > .active {
+    border-color: white;
+  }
 
-    > .active:hover {
-        border-color: var(--primary);
-    }
+  > .active:hover {
+    border-color: var(--primary);
+  }
 }
 
 .no-items {
-    text-align: center;
-    margin: 30px;
-    font-size: 1.3em;
+  text-align: center;
+  margin: 30px;
+  font-size: 1.3em;
 }
 
 /* brief layout styles */
 .parent-layout-container {
-    > .header {
-        display: none;
-    }
+  > .header {
+    display: none;
+  }
 
-    > .display-header {
-        display: flex;
-    }
+  > .display-header {
+    display: flex;
+  }
 }
 
-.layout-container, .layout-container > div {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    align-items: center;
-    padding: 15px 30px;
-    padding-left: 10px;
-    border-bottom: 1px solid lightgray;
+.layout-container,
+.layout-container > div {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  padding: 15px 30px;
+  padding-left: 10px;
+  border-bottom: 1px solid lightgray;
 }
 
 .layout-container {
-    flex-wrap: wrap;
-    column-gap: 30px;
+  flex-wrap: wrap;
+  column-gap: 30px;
 
-    > div {
-        column-gap: 15px;
-        justify-content: start;
-        border: none;
-        flex: 1 0 90%;
-        margin-right: auto;
-    }
+  > div {
+    column-gap: 15px;
+    justify-content: start;
+    border: none;
+    flex: 1 0 90%;
+    margin-right: auto;
+  }
 }
 
 .layout-container.header {
-    background-color: lightgray;
+  background-color: lightgray;
 
-    > div > span {
-        font-weight: bold;
-        font-size: 1.2em;
-    }
+  > div > span {
+    font-weight: bold;
+    font-size: 1.2em;
+  }
 
-    > button, > a {
-        visibility: hidden;
-        height: 0;
-        border-top-width: 0;
-        border-bottom-width: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-    }
+  > button,
+  > a {
+    visibility: hidden;
+    height: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 }
 
 .details-button {
-    width: fit-content;
-    height: fit-content;
-    border: 2px solid transparent;
-    outline: none;
-    color: white;
-    padding: 5px 15px;
-    cursor: pointer;
-    user-select: none;
+  width: fit-content;
+  height: fit-content;
+  border: 2px solid transparent;
+  outline: none;
+  color: white;
+  padding: 5px 15px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .details-button:hover {
-    background: transparent;
-    color: black;
-    border: 2px solid var(--primary);
+  background: transparent;
+  color: black;
+  border: 2px solid var(--primary);
 }
 
 .details-button.hover-contrast:hover {
-    background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 /* media query for new layout when screen size medium or smaller */
 @media (max-width: 992px) {
-    .parent-layout-container {
+  .parent-layout-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    > div.layout-container {
+      flex-grow: 1;
+      flex-direction: row !important;
+      align-items: start;
+      border-color: black;
+
+      > div {
+        flex-direction: column;
+        align-items: start;
+        row-gap: 10px;
+        flex: 1 0 50%;
+
+        > span {
+          font-size: 1.2em;
+          width: max-content;
+        }
+      }
+
+      > button {
         display: flex;
-        flex-direction: row;
-        width: 100%;
-
-        > div.layout-container {
-            flex-grow: 1;
-            flex-direction: row !important;
-            align-items: start;
-            border-color: black;
-
-            > div {
-                flex-direction: column;
-                align-items: start;
-                row-gap: 10px;
-                flex: 1 0 50%;
-                
-                > span {
-                    font-size: 1.2em;
-                    width: max-content;
-                }
-            }
-
-            > button {
-                display: flex;
-                flex-direction: column;
-                align-self: flex-end;
-            }
-        }
-
-        > div.layout-container.header {
-            display: flex;
-            flex: 0 0 30%;
-        }
+        flex-direction: column;
+        align-self: flex-end;
+      }
     }
+
+    > div.layout-container.header {
+      display: flex;
+      flex: 0 0 30%;
+    }
+  }
 }
 
 /* flex classes for simplified flex configuration */
 .flex-5 {
-    flex: 0 0 5%;
+  flex: 0 0 5%;
 }
 
 .flex-10 {
-    flex: 0 0 10%;
+  flex: 0 0 10%;
 }
 
 .flex-15 {
-    flex: 0 0 15%;
+  flex: 0 0 15%;
 }
 
 .flex-20 {
-    flex: 0 0 20%;
+  flex: 0 0 20%;
 }
 
 .flex-25 {
-    flex: 0 0 25%;
+  flex: 0 0 25%;
 }
 
 .flex-30 {
-    flex: 0 0 30%;
+  flex: 0 0 30%;
 }
 
 /* detailed layout styles */
 .detailed-layout-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
 }
 
 .detailed-layout-side-container {
-    padding-top: 5dvh;
+  padding-top: 5dvh;
 }
 
 .detailed-layout-side-container.close {
-    padding-left: 5dvw;
+  padding-left: 5dvw;
 
-    > span {
-        color: black;
-        font-size: 2em;
-    }
+  > span {
+    color: black;
+    font-size: 2em;
+  }
 }
 
 .detailed-layout-side-container.right {
-    padding-right: 5dvw;
+  padding-right: 5dvw;
 
-    > div {
-        display: flex;
-        flex-direction: column;
-        row-gap: 20px;
-        position: sticky;
-        top: 140px;
-    }
+  > div {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    position: sticky;
+    top: 140px;
+  }
 
-    > button, > div > button {
-        font-size: large;
-        position: sticky;
-        top: 140px;
-        width: 100%;
-    }
+  > button,
+  > div > button {
+    font-size: large;
+    position: sticky;
+    top: 140px;
+    width: 100%;
+  }
 }
 
 .detailed-layout-content-container {
-    flex-grow: 1;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 40px;
+  padding: 20px 0;
+  margin-bottom: 50px;
+
+  > div:not([id]) {
+    width: 60%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    row-gap: 40px;
-    padding: 20px 0;
-    margin-bottom: 50px;
+    row-gap: 8px;
 
-    > div:not([id]) {
-        width: 60%;
-        display: flex;
-        flex-direction: column;
-        row-gap: 8px;
+    > div {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      column-gap: 30px;
+      font-size: 1.2rem;
 
-        > div {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            flex-wrap: wrap;
-            column-gap: 30px;
-            font-size: 1.2rem;
-    
-            > *:first-child {
-                flex: 0 0 50%;
-                font-weight: bold;
-            }
-    
-            > a > img {
-                max-width: 100%;
-            }
-        }
+      > *:first-child {
+        flex: 0 0 50%;
+        font-weight: bold;
+      }
+
+      > a > img {
+        max-width: 100%;
+      }
     }
+  }
 
-    .detailed-layout-view-button {
-        margin-top: 100px;
-    }
+  .detailed-layout-view-button {
+    margin-top: 100px;
+  }
 }
 
 .details-layout-profile-link {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .details-layout-profile-link:hover {
-    color: var(--primary);
-    text-decoration: underline;
+  color: var(--primary);
+  text-decoration: underline;
 }

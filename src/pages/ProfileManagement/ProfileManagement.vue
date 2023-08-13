@@ -2,82 +2,161 @@
     <div id="main-container">
         <NavSidebar />
         <div id="main-content">
-            <LoadingOverlay v-if="loading || childLoading" :center="true" :backgroundColor="'rgba(0, 0, 0, 0.5)'" />
+            <LoadingOverlay
+                v-if="loading || childLoading"
+                :center="true"
+                :backgroundColor="'rgba(0, 0, 0, 0.5)'"
+            />
 
             <div class="banner">
                 <img :src="banner" alt="Banner" id="banner-picture" />
                 <div class="content">
-                    <input ref="bannerInput" type="file" @change="upload($event, 'banner')" style="display: none"
-                        accept=".jpg, .jpeg, .png">
-                    <button class="banner-button" @click="chooseFile('banner')">Customize banner</button>
+                    <input
+                        ref="bannerInput"
+                        type="file"
+                        @change="upload($event, 'banner')"
+                        style="display: none"
+                        accept=".jpg, .jpeg, .png"
+                    />
+                    <button class="banner-button" @click="chooseFile('banner')">
+                        Customize banner
+                    </button>
                 </div>
             </div>
 
             <div id="profile-picture-container">
                 <div class="content">
                     <div class="image-container">
-                        <img :src="profilePicture" alt="Profile Picture" id="profile-picture" />
+                        <img
+                            :src="profilePicture"
+                            alt="Profile Picture"
+                            id="profile-picture"
+                        />
                     </div>
-                    <input ref="fileInput" type="file" @change="upload($event, 'profilePicture')" style="display: none"
-                        accept=".jpg, .jpeg, .png" />
-                    <button v-if="!showBtn" class="profile-picture-button" @click="chooseFile('profilePicture')">Change Profile Picture</button>
+                    <input
+                        ref="fileInput"
+                        type="file"
+                        @change="upload($event, 'profilePicture')"
+                        style="display: none"
+                        accept=".jpg, .jpeg, .png"
+                    />
+                    <button
+                        v-if="!showBtn"
+                        class="profile-picture-button"
+                        @click="chooseFile('profilePicture')"
+                    >
+                        Change Profile Picture
+                    </button>
                 </div>
             </div>
 
             <div v-if="showPopup" id="popup-container">
                 <div>
-                    <button type="button" id="close-add-interest" class="material-symbols-outlined"
-                        @click="() => togglePopup(false)">Close</button>
+                    <button
+                        type="button"
+                        id="close-add-interest"
+                        class="material-symbols-outlined"
+                        @click="() => togglePopup(false)"
+                    >
+                        Close
+                    </button>
 
                     <div id="popup-content">
                         <div id="selection-header">
                             <slot>Crop Image</slot>
                         </div>
-                        <img :src="profilePicture" alt="Profile Picture" id="profile-picture" ref="cropperImage" />
+                        <img
+                            :src="profilePicture"
+                            alt="Profile Picture"
+                            id="profile-picture"
+                            ref="cropperImage"
+                        />
                         <div id="button-cotainer">
-                            <button id="confirm-btn" @click="confirmCropping">Confirm Crop</button>
+                            <button id="confirm-btn" @click="confirmCropping">
+                                Confirm Crop
+                            </button>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-
             <div class="mb-3 row" id="position">
-                <label for="inputUsername" class="col-md-1 offset-md-4 col-form-label">Username: @</label>
+                <label
+                    for="inputUsername"
+                    class="col-md-1 offset-md-4 col-form-label"
+                    >Username: @</label
+                >
                 <div class="col-sm-4">
-                    <input type="username" v-model="username" class="form-control" id="inputUsername" placeholder="Username"
-                        @input="verifyUsername" :maxlength="25">
-                    <p style="color: red; margin-top: 20px; margin-left: 125px;">{{ this.usernameErr }}</p>
+                    <input
+                        type="username"
+                        v-model="username"
+                        class="form-control"
+                        id="inputUsername"
+                        placeholder="Username"
+                        @input="verifyUsername"
+                        :maxlength="25"
+                    />
+                    <p style="color: red; margin-top: 20px; margin-left: 125px">
+                        {{ this.usernameErr }}
+                    </p>
                 </div>
             </div>
 
             <div class="mb-3 row" id="position">
-                <label for="inputBio" class="col-md-1 offset-md-4 col-form-label">Bio: </label>
+                <label
+                    for="inputBio"
+                    class="col-md-1 offset-md-4 col-form-label"
+                    >Bio:
+                </label>
                 <div class="col-sm-4">
-                    <input type="biography" v-model="biography" class="form-control" id="inputBio" placeholder="Biography">
+                    <input
+                        type="biography"
+                        v-model="biography"
+                        class="form-control"
+                        id="inputBio"
+                        placeholder="Biography"
+                    />
                 </div>
             </div>
 
             <div class="mb-3 row" id="position">
-                <label for="inputInterest" class="col-md-1 offset-md-4 col-form-label">Interest: </label>
+                <label
+                    for="inputInterest"
+                    class="col-md-1 offset-md-4 col-form-label"
+                    >Interest:
+                </label>
                 <div class="col-sm-4" v-if="dataRetrieved">
-                    <AddInterestButton :selectedOption="selectedOption" @selectedInterests="handleSelectedInterests"/>
+                    <AddInterestButton
+                        :selectedOption="selectedOption"
+                        @selectedInterests="handleSelectedInterests"
+                    />
                 </div>
             </div>
-
 
             <div id="profile">
                 <div class="warningbox col-md-4 offset-md-1">
-                    <p><b>Personal Information</b> - This will only be recorded for user analytics. This will not be shown
-                        to the public.</p>
+                    <p>
+                        <b>Personal Information</b> - This will only be recorded
+                        for user analytics. This will not be shown to the
+                        public.
+                    </p>
                 </div>
             </div>
 
             <div class="mb-3 row" id="position">
-                <label for="inputGender" class="col-md-1 offset-md-4 col-form-label">Gender: </label>
+                <label
+                    for="inputGender"
+                    class="col-md-1 offset-md-4 col-form-label"
+                    >Gender:
+                </label>
                 <div class="col-sm-4">
-                    <input type="gender" v-model="gender" class="form-control" id="inputGender" placeholder="Gender">
+                    <input
+                        type="gender"
+                        v-model="gender"
+                        class="form-control"
+                        id="inputGender"
+                        placeholder="Gender"
+                    />
                 </div>
             </div>
 
@@ -88,24 +167,27 @@
                 </div>
             </div> -->
 
-            <div class="submitbutton" style="margin: 30px;" id="profile">
-                <button class="submit-button" @click="updateProfile()" :disabled="!verifiedUsername"
-                    :class="{ 'disabled': !verifiedUsername }">Update</button>
+            <div class="submitbutton" style="margin: 30px" id="profile">
+                <button
+                    class="submit-button"
+                    @click="updateProfile()"
+                    :disabled="!verifiedUsername"
+                    :class="{ disabled: !verifiedUsername }"
+                >
+                    Update
+                </button>
             </div>
         </div>
-
     </div>
 </template>
 
-  
 <script>
-import AddInterestButton from '../../components/general/AddInterestButton.vue'
-import ngeeann from '../../assets/NgeeAnnLogo.png'
-import banner from '../../assets/CustomBanner.png'
-import Cropper from 'cropperjs';
-import { debounce } from 'lodash';
-import LoadingOverlay from '../../components/general/LoadingOverlay.vue';
-
+import AddInterestButton from "../../components/general/AddInterestButton.vue";
+import ngeeann from "../../assets/NgeeAnnLogo.png";
+import banner from "../../assets/CustomBanner.png";
+import Cropper from "cropperjs";
+import { debounce } from "lodash";
+import LoadingOverlay from "../../components/general/LoadingOverlay.vue";
 
 export default {
     components: {
@@ -113,7 +195,7 @@ export default {
         Cropper,
         ngeeann,
         banner,
-        LoadingOverlay
+        LoadingOverlay,
     },
 
     data() {
@@ -123,9 +205,9 @@ export default {
             cropper: null,
             profilePicture: ngeeann,
             banner: banner,
-            username: '',
-            biography: '',
-            gender: '',
+            username: "",
+            biography: "",
+            gender: "",
             // secondaryEmail: '',
             showBtn: false,
             dataRetrieved: false,
@@ -136,12 +218,14 @@ export default {
             verifiedUsername: true,
             previousUsername: null,
             loading: false,
-
-        }
+        };
     },
     created() {
         // set debounce functions
-        this.debouncedVerifyUsername = debounce(this.debounceVerifyUsernameFunction, 1000);
+        this.debouncedVerifyUsername = debounce(
+            this.debounceVerifyUsernameFunction,
+            1000,
+        );
     },
     mounted() {
         this.checkAuth();
@@ -153,37 +237,37 @@ export default {
             fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
                 method: "GET",
                 headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
+                    "Content-Type": "application/json; charset=UTF-8",
                 },
                 credentials: "include",
-            }).then(response => {
-                if (response.ok) {
-                    response.json().then(data => {
-                        if (data.is_profile_setup === false) {
-                            window.location.href = '/setupProfile.html';
-                            return;
-                        }
-                        else {
-                            this.username = data.username;
-                            this.previousUsername = this.username;
-                            this.biography = data.biography;
-                            this.selectedOption = data.interests;
-                            this.gender = data.gender;
-                            this.userId = data._id;
-                            this.profilePicture = data.profile_pic_link;
-                            this.banner = data.banner_pic_link
-                            this.dataRetrieved = true
-                        }
-                    })
-                } else {
-                    console.log('Error:', response);
-                }
             })
-                .then(data => {
-                    console.log('Success:', data);
+                .then((response) => {
+                    if (response.ok) {
+                        response.json().then((data) => {
+                            if (data.is_profile_setup === false) {
+                                window.location.href = "/setupProfile.html";
+                                return;
+                            } else {
+                                this.username = data.username;
+                                this.previousUsername = this.username;
+                                this.biography = data.biography;
+                                this.selectedOption = data.interests;
+                                this.gender = data.gender;
+                                this.userId = data._id;
+                                this.profilePicture = data.profile_pic_link;
+                                this.banner = data.banner_pic_link;
+                                this.dataRetrieved = true;
+                            }
+                        });
+                    } else {
+                        console.log("Error:", response);
+                    }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
+                .then((data) => {
+                    console.log("Success:", data);
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
                 });
         },
 
@@ -211,7 +295,7 @@ export default {
 
         chooseFile(imageType) {
             if (imageType === "profilePicture") {
-                this.$refs.fileInput.value = ''; // Reset the file input value
+                this.$refs.fileInput.value = ""; // Reset the file input value
                 this.$nextTick(() => {
                     this.$refs.fileInput.click(); // Open the file input dialog
                 });
@@ -221,19 +305,22 @@ export default {
         },
 
         upload(event, imageType) {
-
             // clear errors, invalidFiles and selectedLinks
             this.errors = [];
             this.invalidFiles = [];
             this.selectedLinks = [];
 
             // valid conditions
-            const acceptedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            const acceptedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
             const maxImageSize = 2 * 1024 * 1024;
 
             // error messages
-            const illegalFileType = `Illegal file type, allowed file types: ${acceptedFileTypes.join(', ')}`;
-            const largeFile = `File is too large, maximum file size is ${maxImageSize / 1024 / 1024}MB.`;
+            const illegalFileType = `Illegal file type, allowed file types: ${acceptedFileTypes.join(
+                ", ",
+            )}`;
+            const largeFile = `File is too large, maximum file size is ${
+                maxImageSize / 1024 / 1024
+            }MB.`;
 
             const file = event.target.files[0];
             if (file.size > maxImageSize) {
@@ -250,14 +337,14 @@ export default {
                 return;
             }
 
-            if (imageType === 'profilePicture') {
+            if (imageType === "profilePicture") {
                 this.profilePicture = URL.createObjectURL(file);
                 this.showBtn = true;
                 this.$nextTick(() => {
                     this.showPopup = true;
                     this.$nextTick(() => {
                         this.initializeCropper();
-                    })
+                    });
                 });
             } else {
                 this.banner = URL.createObjectURL(file);
@@ -269,24 +356,22 @@ export default {
                     .then((response) => response.blob())
                     .then((blob) => {
                         // Create a new File object with the cropped image data
-                        const croppedFile = new File([blob], originalName, { type: originalType });
+                        const croppedFile = new File([blob], originalName, {
+                            type: originalType,
+                        });
 
                         // Assign the cropped File object to a separate variable
                         this.croppedBannerFile = croppedFile;
-
-
-                })
-                console.log(this.croppedBannerFile)
-
+                    });
+                console.log(this.croppedBannerFile);
             }
-
         },
 
         confirmCropping() {
             const croppedCanvas = this.cropper.getCroppedCanvas({
                 width: 142,
                 height: 142,
-                fillColor: '#fff',
+                fillColor: "#fff",
             });
             const croppedImage = croppedCanvas.toDataURL(); // Get the cropped image as a data URL
 
@@ -297,7 +382,9 @@ export default {
                 .then((response) => response.blob())
                 .then((blob) => {
                     // Create a new File object with the cropped image data
-                    const croppedFile = new File([blob], originalName, { type: originalType });
+                    const croppedFile = new File([blob], originalName, {
+                        type: originalType,
+                    });
 
                     // Assign the cropped File object to a separate variable
                     this.croppedImageFile = croppedFile;
@@ -307,22 +394,25 @@ export default {
                     this.cropper = null; // Set the cropper variable to null
                     this.togglePopup(false);
                     this.showBtn = false;
-
                 });
-            console.log(this.croppedImageFile)
+            console.log(this.croppedImageFile);
         },
-
 
         async debounceVerifyUsernameFunction() {
             try {
-                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/verify/username`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json; charset=UTF-8',
+                const response = await fetch(
+                    `${
+                        import.meta.env.VITE_APP_SERVER_URL
+                    }/api/users/verify/username`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8",
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({ username: this.username }),
                     },
-                    credentials: "include",
-                    body: JSON.stringify({ username: this.username })
-                });
+                );
 
                 if (response.ok) {
                     this.verifiedUsername = true;
@@ -331,16 +421,16 @@ export default {
                 } else if (response.status === 400) {
                     const data = await response.json();
 
-                    if (data.message === 'Username already exists') {
+                    if (data.message === "Username already exists") {
                         this.verifiedUsername = false;
                         this.usernameErr = "Username already taken";
                         return;
                     } else {
-                        throw new Error('Error: ' + response.status);
+                        throw new Error("Error: " + response.status);
                     }
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error("Error:", error);
             }
         },
         async verifyUsername() {
@@ -357,51 +447,54 @@ export default {
             let formData = new FormData();
 
             this.userObject = {
-                'userName': this.username,
-                'biography': this.biography,
-                'selectedInterests': this.selectedOption,
-                'gender': this.gender,
-
+                userName: this.username,
+                biography: this.biography,
+                selectedInterests: this.selectedOption,
+                gender: this.gender,
             };
-            formData.append('userObject', JSON.stringify(this.userObject));
+            formData.append("userObject", JSON.stringify(this.userObject));
             const files = [];
 
-            try{
-                formData.append('selectedImages', this.croppedImageFile, 'profilePicture');
+            try {
+                formData.append(
+                    "selectedImages",
+                    this.croppedImageFile,
+                    "profilePicture",
+                );
+            } catch (error) {
+                console.log(error);
             }
-            catch(error){
-                console.log(error)
-            }
-
-            try{
-                formData.append('selectedImages', this.croppedBannerFile, 'banner');
-            }
-            catch (error){
-                console.log(error)
-            }
-
-            
 
             try {
-                const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
-                    method: 'PATCH',
-                    body: formData,
-                    credentials: 'include',
-                });
+                formData.append(
+                    "selectedImages",
+                    this.croppedBannerFile,
+                    "banner",
+                );
+            } catch (error) {
+                console.log(error);
+            }
+
+            try {
+                const response = await fetch(
+                    `${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`,
+                    {
+                        method: "PATCH",
+                        body: formData,
+                        credentials: "include",
+                    },
+                );
 
                 if (response.ok) {
-                    window.location.href = '/profilePage.html';
+                    window.location.href = "/profilePage.html";
+                } else {
+                    console.log("Error:", response.statusText);
                 }
-                else {
-                    console.log('Error:', response.statusText);
-                }
-            }
-            catch (error) {
-                console.log('Error:', error);
+            } catch (error) {
+                console.log("Error:", error);
             }
 
             this.loading = true;
-
         },
 
         handleSelectedInterests(selectedOption) {
@@ -416,11 +509,8 @@ export default {
         toggleChildLoading(loading) {
             this.childLoading = loading;
         },
-
-
-
     },
-}
+};
 </script>
 
 <style scoped>
@@ -458,7 +548,7 @@ body {
 }
 
 .banner-button {
-    background-color: #E53A73;
+    background-color: #e53a73;
     border: none;
     color: white;
     padding: 10px 20px;
@@ -470,19 +560,19 @@ body {
 
 .profile-picture-button {
     background-color: transparent;
-    color: #E53A73;
+    color: #e53a73;
     padding: 10px 20px;
     text-align: center;
     border-radius: 10px;
     /* position: absolute;
     top: 355px; */
     font-weight: bold;
-    border: 2px solid #E53A73;
+    border: 2px solid #e53a73;
 }
 
 .confirm-button {
     background-color: transparent;
-    color: #E53A73;
+    color: #e53a73;
     padding: 10px 20px;
     text-align: center;
     font-size: 10px;
@@ -490,11 +580,11 @@ body {
     position: absolute;
     margin-top: 235px;
     font-weight: bold;
-    border: 2px solid #E53A73;
+    border: 2px solid #e53a73;
 }
 
 .submit-button {
-    background-color: #E53A73;
+    background-color: #e53a73;
     border: none;
     color: white;
     padding: 20px 50px;
@@ -565,7 +655,7 @@ body {
     z-index: 2;
 }
 
-#popup-container>div {
+#popup-container > div {
     position: relative;
 }
 
@@ -580,7 +670,7 @@ body {
     width: 10em;
     color: white;
     border: none;
-    background: linear-gradient(45deg, #FF6363, #E53A73);
+    background: linear-gradient(45deg, #ff6363, #e53a73);
     border-radius: 10px;
     padding: 10px 12px;
 }

@@ -13,13 +13,15 @@
             arrow-left - show arrow for every first received message
             arrow-right - show arrow for every first sent message
         -->
-        <div 
-            class="message" 
+        <div
+            class="message"
             :class="{
-                'sent': message.is_sender,
-                'received': !message.is_sender,
-                'arrow-left': (isFirstMessage || isNewDate) && !message.is_sender,
-                'arrow-right': (isFirstMessage || isNewDate) && message.is_sender
+                sent: message.is_sender,
+                received: !message.is_sender,
+                'arrow-left':
+                    (isFirstMessage || isNewDate) && !message.is_sender,
+                'arrow-right':
+                    (isFirstMessage || isNewDate) && message.is_sender,
             }"
             @mouseenter="showMore"
             @mouseleave="hideMore"
@@ -38,8 +40,8 @@
 
                     <!-- displayed if message has file -->
                     <div v-if="hasFile">
-                        <ChatFileLayout 
-                            :fileLink="message.file_link" 
+                        <ChatFileLayout
+                            :fileLink="message.file_link"
                             :originalName="message.original_name"
                             :fileType="message.file_type"
                             :inMessage="true"
@@ -53,43 +55,83 @@
 
                     <!-- displays creation time and 'Edited' if edited (hover over 'Edited' to see last modified time) -->
                     <div class="message-timestamp-container">
-                        <span class="message-timestamp last-modified-timestamp" v-if="isEdited" :title="'Last modified at ' + lastModifiedTimestamp">Edited</span>
+                        <span
+                            class="message-timestamp last-modified-timestamp"
+                            v-if="isEdited"
+                            :title="'Last modified at ' + lastModifiedTimestamp"
+                            >Edited</span
+                        >
                         <span class="message-timestamp">{{ timestamp }}</span>
                     </div>
                 </div>
-    
-                <div class="message-actions-container" v-if="!this.blocked && displayMore">
-                    <span class="material-symbols-outlined" @click="toggleMessageActions" title="More actions">more_vert</span>
-                    
-                    <div class="message-actions" v-if="displayMore && displayActions">
+
+                <div
+                    class="message-actions-container"
+                    v-if="!this.blocked && displayMore"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        @click="toggleMessageActions"
+                        title="More actions"
+                        >more_vert</span
+                    >
+
+                    <div
+                        class="message-actions"
+                        v-if="displayMore && displayActions"
+                    >
                         <!-- actions for all users -->
                         <div>
                             <!-- reply to message -->
-                            <div @click.stop="replyToMessage" title="Reply to this message" class="message-action-button">
-                                <span class="material-symbols-outlined">reply</span>
+                            <div
+                                @click.stop="replyToMessage"
+                                title="Reply to this message"
+                                class="message-action-button"
+                            >
+                                <span class="material-symbols-outlined"
+                                    >reply</span
+                                >
                                 <span>Reply</span>
                             </div>
                         </div>
-                        
+
                         <!-- privileged actions only for sender -->
                         <div v-if="message.is_sender">
                             <!-- edit message -->
-                            <div @click.stop="enterEdit" title="Edit this message" class="message-action-button">
-                                <span class="material-symbols-outlined">edit</span>
+                            <div
+                                @click.stop="enterEdit"
+                                title="Edit this message"
+                                class="message-action-button"
+                            >
+                                <span class="material-symbols-outlined"
+                                    >edit</span
+                                >
                                 <span>Edit</span>
                             </div>
-        
+
                             <!-- delete message -->
-                            <div @click="deleteMessage" title="Delete this message" class="message-action-button">
-                                <span class="material-symbols-outlined">delete</span>
+                            <div
+                                @click="deleteMessage"
+                                title="Delete this message"
+                                class="message-action-button"
+                            >
+                                <span class="material-symbols-outlined"
+                                    >delete</span
+                                >
                                 <span>Delete</span>
                             </div>
                         </div>
 
                         <!-- report button only for receivers -->
                         <div v-else>
-                            <div @click.stop="reportMessage" title="Report this message" class="message-action-button report-button">
-                                <span class="material-symbols-outlined">flag</span>
+                            <div
+                                @click.stop="reportMessage"
+                                title="Report this message"
+                                class="message-action-button report-button"
+                            >
+                                <span class="material-symbols-outlined"
+                                    >flag</span
+                                >
                                 <span>Report</span>
                             </div>
                         </div>
@@ -98,9 +140,12 @@
             </div>
 
             <!-- layout for editing message (only for senders) -->
-            <div class="edit-message" v-if="!this.blocked && editMode && message.is_sender">
+            <div
+                class="edit-message"
+                v-if="!this.blocked && editMode && message.is_sender"
+            >
                 <form :id="'form-' + index">
-                    <DynamicTextarea 
+                    <DynamicTextarea
                         title="Enter your message"
                         :maxRows="5"
                         :placeholder="'New message...'"
@@ -109,10 +154,18 @@
                     />
 
                     <div>
-                        <button class="cancel" @click="exitEdit" title="Discard changes">
+                        <button
+                            class="cancel"
+                            @click="exitEdit"
+                            title="Discard changes"
+                        >
                             <span class="material-symbols-outlined">close</span>
                         </button>
-                        <button class="submit" @click.prevent="editMessage" title="Save changes">
+                        <button
+                            class="submit"
+                            @click.prevent="editMessage"
+                            title="Save changes"
+                        >
                             <span class="material-symbols-outlined">check</span>
                         </button>
                     </div>
@@ -123,9 +176,9 @@
 </template>
 
 <script>
-import ChatFileLayout from './ChatFileLayout.vue';
-import DynamicTextarea from '../general/DynamicTextarea.vue';
-import ChatReplyMessageLayout from './ChatReplyMessageLayout.vue';
+import ChatFileLayout from "./ChatFileLayout.vue";
+import DynamicTextarea from "../general/DynamicTextarea.vue";
+import ChatReplyMessageLayout from "./ChatReplyMessageLayout.vue";
 
 export default {
     data() {
@@ -133,27 +186,27 @@ export default {
             displayMore: false,
             displayActions: false,
             editMode: false,
-            editedMessage: '',
-            index: ''
-        }
+            editedMessage: "",
+            index: "",
+        };
     },
     props: [
-        'message',
-        'previous_is_sender',
-        'previous_creation_time',
-        'name',
-        'blocked'
+        "message",
+        "previous_is_sender",
+        "previous_creation_time",
+        "name",
+        "blocked",
     ],
     components: {
         ChatFileLayout,
         DynamicTextarea,
-        ChatReplyMessageLayout
+        ChatReplyMessageLayout,
     },
     emits: [
-        'edit-message',
-        'delete-message',
-        'reply-to-message',
-        'report-message'
+        "edit-message",
+        "delete-message",
+        "reply-to-message",
+        "report-message",
     ],
     created() {
         this.index = this.message._id;
@@ -166,7 +219,7 @@ export default {
         showMore() {
             // only change displayMore to true if not in edit mode
             if (!this.blocked && !this.editMode) {
-                this.displayMore = true;                
+                this.displayMore = true;
             }
         },
         // to hide more actions menu
@@ -195,22 +248,25 @@ export default {
         // to hide edit message interface
         exitEdit() {
             // remove event listener on window
-            window.removeEventListener('click', this.offEdit);
-            window.removeEventListener('focusin', this.offEdit);
-            
+            window.removeEventListener("click", this.offEdit);
+            window.removeEventListener("focusin", this.offEdit);
+
             this.editMode = false;
         },
         // to handle edit message
         editMessage() {
             // only process the edited message if it is not equal to the original message or is not empty
-            if (this.editedMessage != this.message.content && this.editedMessage.trim().length > 0) {
-                this.$emit('edit-message', {
+            if (
+                this.editedMessage != this.message.content &&
+                this.editedMessage.trim().length > 0
+            ) {
+                this.$emit("edit-message", {
                     messageId: this.message._id,
                     editedMessage: this.editedMessage,
-                    lastModifiedTime: new Date().toISOString()
+                    lastModifiedTime: new Date().toISOString(),
                 });
             }
-            
+
             this.exitEdit();
         },
         // perform changes to the DOM after editMode is true
@@ -218,17 +274,21 @@ export default {
             if (this.editMode) {
                 // set focus on edit input box
                 document.getElementById(`edit-${this.index}`).focus();
-    
+
                 // set listener on window to exit edit mode if any other part of the window is given focus or clicked
-                window.addEventListener('click', this.offEdit);
-                window.addEventListener('focusin', this.offEdit);
+                window.addEventListener("click", this.offEdit);
+                window.addEventListener("focusin", this.offEdit);
             }
         },
         // callback for window click listener
         offEdit(e) {
             if (this.editMode) {
                 // exit edit mode if user focuses on any element or click outside the form
-                if (!document.getElementById(`form-${this.index}`).contains(e.target)) {
+                if (
+                    !document
+                        .getElementById(`form-${this.index}`)
+                        .contains(e.target)
+                ) {
                     this.exitEdit();
                 }
             }
@@ -236,35 +296,35 @@ export default {
         // to handle delete message
         deleteMessage() {
             const data = {
-                messageId: this.message._id
-            }
+                messageId: this.message._id,
+            };
 
             if (this.hasFile) {
                 data.fileLink = this.message.file_link;
             }
-            
-            this.$emit('delete-message', data);
+
+            this.$emit("delete-message", data);
         },
         // to reply to message
         replyToMessage() {
-            const emitMessage = {...this.message};
+            const emitMessage = { ...this.message };
 
             delete emitMessage.creation_time;
             delete emitMessage.last_modified_time;
             delete emitMessage.reply_message;
 
-            this.$emit('reply-to-message', emitMessage);
+            this.$emit("reply-to-message", emitMessage);
         },
         // to report message
         reportMessage() {
-            this.$emit('report-message', this.message._id);
-        }
+            this.$emit("report-message", this.message._id);
+        },
     },
     computed: {
         // check if the creation date of the current message is different from the previous message
         isNewDate() {
-            const currentDate = this.message.creation_time.split('T')[0];
-            const previousDate = this.previous_creation_time.split('T')[0];
+            const currentDate = this.message.creation_time.split("T")[0];
+            const previousDate = this.previous_creation_time.split("T")[0];
 
             if (currentDate != previousDate) {
                 return true;
@@ -275,10 +335,10 @@ export default {
         // return formatted new date to display
         newDate() {
             const date = new Date(this.message.creation_time);
-            
+
             // formatted date: 'MMMM D, YYYY' eg. January 1, 2023
             return date.toLocaleDateString([], {
-                dateStyle: 'long'
+                dateStyle: "long",
             });
         },
         // check if the message is the first message
@@ -292,7 +352,7 @@ export default {
 
             // formatted timestamp: 'h:mmA' eg. 9:10AM
             return date.toLocaleTimeString([], {
-                timeStyle: 'short'
+                timeStyle: "short",
             });
         },
         // check if message is edited based on last_modified_time
@@ -301,28 +361,34 @@ export default {
         },
         // format last_modified_time for display
         lastModifiedTimestamp() {
-            const creationDate = new Date(this.message.creation_time).toLocaleDateString([], {
-                dateStyle: 'short'
+            const creationDate = new Date(
+                this.message.creation_time,
+            ).toLocaleDateString([], {
+                dateStyle: "short",
             });
-            
+
             const lastModifiedTime = new Date(this.message.last_modified_time);
 
             const lastModifiedDate = lastModifiedTime.toLocaleDateString([], {
-                dateStyle: 'short'
+                dateStyle: "short",
             });
 
-            return creationDate == lastModifiedDate ? lastModifiedTime.toLocaleTimeString([], { timeStyle: 'short' }) : lastModifiedTime.toString();
+            return creationDate == lastModifiedDate
+                ? lastModifiedTime.toLocaleTimeString([], {
+                      timeStyle: "short",
+                  })
+                : lastModifiedTime.toString();
         },
         // check if message has text content
         hasText() {
-            return this.message.content != '';
+            return this.message.content != "";
         },
         // check if message has file
         hasFile() {
             return this.message.file_link || null;
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>
@@ -377,12 +443,13 @@ export default {
     background-color: var(--dark);
 }
 
-.message.arrow-left, .message.arrow-right {
+.message.arrow-left,
+.message.arrow-right {
     margin-top: 20px;
 }
 
 .message.arrow-left:before {
-    content: '';
+    content: "";
     position: absolute;
     left: -10px;
     top: 5px;
@@ -393,7 +460,7 @@ export default {
 }
 
 .message.arrow-right:before {
-    content: '';
+    content: "";
     position: absolute;
     right: -10px;
     top: 5px;
@@ -510,5 +577,4 @@ export default {
 .edit-message form .submit {
     background-color: var(--dark);
 }
-
 </style>

@@ -1,27 +1,58 @@
 <template>
     <div class="comment-container" :id="comment._id">
         <!-- creator profile pic -->
-        <img class="comment-profile-pic" :src="comment.creator_id.profile_pic_link" @click="viewUser" title="View user"/>
+        <img
+            class="comment-profile-pic"
+            :src="comment.creator_id.profile_pic_link"
+            @click="viewUser"
+            title="View user"
+        />
 
         <div class="right-content">
             <div class="top-content">
                 <!-- creator username -->
-                <div class="comment-username-container hide-overflow-text" @click="viewUser" title="View user">
-                    <span class="username-text">{{ comment.creator_id.username }}</span>
+                <div
+                    class="comment-username-container hide-overflow-text"
+                    @click="viewUser"
+                    title="View user"
+                >
+                    <span class="username-text">{{
+                        comment.creator_id.username
+                    }}</span>
                 </div>
 
                 <!-- creation time (time difference) -->
                 <div class="comment-creation-time hide-overflow-text">
-                    <span :title="new Date(comment.creation_time)">{{ dateCreated }}</span>
+                    <span :title="new Date(comment.creation_time)">{{
+                        dateCreated
+                    }}</span>
                 </div>
 
                 <!-- only if the comment is posted by the current user -->
                 <div class="comment-actions">
-                    <div v-if="comment.isOwner" data-tooltip="Delete comment" data-tooltip-position="top">
-                        <span  class="material-symbols-outlined" @click="deleteComment" title="Delete this comment">delete</span>
+                    <div
+                        v-if="comment.isOwner"
+                        data-tooltip="Delete comment"
+                        data-tooltip-position="top"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            @click="deleteComment"
+                            title="Delete this comment"
+                            >delete</span
+                        >
                     </div>
-                    <div v-else data-tooltip="Report comment" data-tooltip-position="top">
-                        <span class="report-button material-symbols-outlined" @click="reportComment" title="Report this comment">flag</span>
+                    <div
+                        v-else
+                        data-tooltip="Report comment"
+                        data-tooltip-position="top"
+                    >
+                        <span
+                            class="report-button material-symbols-outlined"
+                            @click="reportComment"
+                            title="Report this comment"
+                            >flag</span
+                        >
                     </div>
                 </div>
             </div>
@@ -36,29 +67,26 @@
 </template>
 
 <script>
-import calcDateDifference from '../../utils/general/calcDateDifference.js';
-import { useAlertStore } from '../../stores/AlertStore.js';
-import { useConfirmStore } from '../../stores/ConfirmStore.js';
-import viewUser from '../../utils/general/viewUser.js';
+import calcDateDifference from "../../utils/general/calcDateDifference.js";
+import { useAlertStore } from "../../stores/AlertStore.js";
+import { useConfirmStore } from "../../stores/ConfirmStore.js";
+import viewUser from "../../utils/general/viewUser.js";
 
 export default {
     data() {
         return {
-            dateCreated: ''
-        }
+            dateCreated: "",
+        };
     },
     props: [
-        'forPost',
-        'blogCreatorId',
-        'postId',
-        'forumId',
-        'threadId',
-        'comment'
+        "forPost",
+        "blogCreatorId",
+        "postId",
+        "forumId",
+        "threadId",
+        "comment",
     ],
-    emits: [
-        'comment-deleted',
-        'report-comment'
-    ],
+    emits: ["comment-deleted", "report-comment"],
     mounted() {
         // get time difference from when the comment was created and current datetime
         this.dateCreated = calcDateDifference(this.comment.creation_time);
@@ -66,31 +94,39 @@ export default {
     methods: {
         // handle delete comment
         async deleteComment() {
-            const confirmDelete = await useConfirmStore().confirm('Are you sure you want to delete this comment? This action is irreversible!');
-            
+            const confirmDelete = await useConfirmStore().confirm(
+                "Are you sure you want to delete this comment? This action is irreversible!",
+            );
+
             if (!confirmDelete) {
                 return;
             }
 
-            const url = this.forPost ? 
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${this.blogCreatorId}/post/${this.postId}/comments/${this.comment._id}` : 
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${this.forumId}/thread/${this.threadId}/comments/${this.comment._id}`;
+            const url = this.forPost
+                ? `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${
+                      this.blogCreatorId
+                  }/post/${this.postId}/comments/${this.comment._id}`
+                : `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                      this.forumId
+                  }/thread/${this.threadId}/comments/${this.comment._id}`;
 
             await fetch(url, {
-                mode: 'cors',
-                method: 'DELETE',
-                credentials: 'include'
-            }).then(async (res) => {
-                await res.json().then(async(data) => {
-                    await useAlertStore().alert(data.message);
+                mode: "cors",
+                method: "DELETE",
+                credentials: "include",
+            })
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        await useAlertStore().alert(data.message);
 
-                    if (res.ok) {
-                        this.$emit('commentDeleted', this.comment._id);
-                    }
+                        if (res.ok) {
+                            this.$emit("commentDeleted", this.comment._id);
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
-            }).catch((error) => {
-                console.log(error);
-            });
         },
         // view user profile of comment creator
         viewUser() {
@@ -98,14 +134,14 @@ export default {
         },
         // to report comment
         reportComment() {
-            this.$emit('report-comment');
-        }
-    }
-}
+            this.$emit("report-comment");
+        },
+    },
+};
 </script>
 
 <style>
-@import url('../../styles/main.css');
+@import url("../../styles/main.css");
 
 .comment-container {
     --comment-profile-pic-size: clamp(35px, 5dvw, 48px);
@@ -154,7 +190,8 @@ export default {
     }
 }
 
-.comment-profile-pic:hover~div .username-text, .comment-username-container:hover .username-text {
+.comment-profile-pic:hover ~ div .username-text,
+.comment-username-container:hover .username-text {
     color: var(--primary);
 }
 
@@ -168,7 +205,7 @@ export default {
 
 .comment-actions .material-symbols-outlined {
     color: black;
-    font-variation-settings: 'FILL' 0;
+    font-variation-settings: "FILL" 0;
     user-select: none;
     display: inline;
 }

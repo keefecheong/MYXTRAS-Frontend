@@ -2,21 +2,17 @@
 export default function calculateSize(bytes) {
     if (bytes < 1024) {
         return `${bytes}B`;
-    }
-    else {
+    } else {
         const kilobytes = Math.floor(bytes / 1024);
 
         if (kilobytes < 1024) {
             return `${kilobytes}KB`;
-        }
-        else {
+        } else {
             const megabytes = Math.floor(kilobytes / 1024);
 
             if (megabytes < 1024) {
                 return `${megabytes}MB`;
-            }
-
-            else {
+            } else {
                 return `${Math.floor(megabytes / 1024)}GB`;
             }
         }

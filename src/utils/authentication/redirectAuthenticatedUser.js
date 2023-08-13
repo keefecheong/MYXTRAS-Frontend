@@ -8,10 +8,9 @@ export default async function redirectUser() {
     // go to feed if user is authenticated and completed profile setup
     if (result.authenticated) {
         if (result.is_profile_setup) {
-            location.href = '/feed.html';
-        }
-        else {
-            location.href = '/setupProfile.html';
+            location.href = "/feed.html";
+        } else {
+            location.href = "/setupProfile.html";
         }
     }
 }

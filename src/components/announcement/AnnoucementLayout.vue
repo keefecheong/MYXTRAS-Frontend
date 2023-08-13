@@ -2,67 +2,99 @@
     <div class="event-container" v-for="(event, index) in events" :key="index">
         <div class="event-brief">
             <div class="event-header col-md-4">
-                <span class="date-box" :style="{ backgroundColor: event.event_color }">
-                    <p class="month">{{ new Date(event.event_date).toLocaleString('en-US', { month: 'short' }) }}</p>
-                    <p class="day">{{ new Date(event.event_date).getDate() }}</p>
+                <span
+                    class="date-box"
+                    :style="{ backgroundColor: event.event_color }"
+                >
+                    <p class="month">
+                        {{
+                            new Date(event.event_date).toLocaleString("en-US", {
+                                month: "short",
+                            })
+                        }}
+                    </p>
+                    <p class="day">
+                        {{ new Date(event.event_date).getDate() }}
+                    </p>
                 </span>
-                
+
                 <div class="title-box">
-                    <h1 class="event-name">{{  event.event_name }}</h1>
-                    <p class="time">{{ new Date(event.event_date).toLocaleTimeString([], { timeStyle: 'short' }) }}</p>
+                    <h1 class="event-name">{{ event.event_name }}</h1>
+                    <p class="time">
+                        {{
+                            new Date(event.event_date).toLocaleTimeString([], {
+                                timeStyle: "short",
+                            })
+                        }}
+                    </p>
                 </div>
             </div>
-            
+
             <p class="event-desc">
                 {{ event.event_desc }}
             </p>
-            
+
             <div class="toggle-event-details">
-                <span 
+                <span
                     class="material-symbols-outlined"
-                    :title="`${ showDetails ? 'Hide' : 'View' } event details`"
+                    :title="`${showDetails ? 'Hide' : 'View'} event details`"
                     @click="() => toggleEventDetails(index)"
                 >
-                    {{ showDetails.includes(index) ? 'expand_less' : 'expand_more' }}
+                    {{
+                        showDetails.includes(index)
+                            ? "expand_less"
+                            : "expand_more"
+                    }}
                 </span>
             </div>
 
             <div v-if="showPrivilegedActions" class="privilege-event-actions">
-                <span class="material-symbols-outlined" title="Edit this event" @click="() => editEvent(index)">edit</span>
-                <span class="material-symbols-outlined" title="Delete this event" @click="() => deleteEvent(index)">delete</span>
+                <span
+                    class="material-symbols-outlined"
+                    title="Edit this event"
+                    @click="() => editEvent(index)"
+                    >edit</span
+                >
+                <span
+                    class="material-symbols-outlined"
+                    title="Delete this event"
+                    @click="() => deleteEvent(index)"
+                    >delete</span
+                >
             </div>
         </div>
-        
+
         <div v-if="showDetails.includes(index)" class="more-info">
-            <img class="a-image col-md-5" :src="event.banner_link" alt="event banner">
+            <img
+                class="a-image col-md-5"
+                :src="event.banner_link"
+                alt="event banner"
+            />
             <p class="location">Location: {{ event.event_location }}</p>
         </div>
     </div>
 </template>
 
 <script>
-import { useConfirmStore } from '../../stores/ConfirmStore.js';
-import { useAlertStore } from '../../stores/AlertStore.js';
+import { useConfirmStore } from "../../stores/ConfirmStore.js";
+import { useAlertStore } from "../../stores/AlertStore.js";
 
-export default { 
+export default {
     data() {
         return {
             events: [],
-            showDetails: []
-        }
+            showDetails: [],
+        };
     },
-    emits: [
-        'edit-event',
-        'show-loading'
-    ],
+    emits: ["edit-event", "show-loading"],
     computed: {
         showPrivilegedActions() {
-            return location.pathname.startsWith('/admin/events');
-        }
+            return location.pathname.startsWith("/admin/events");
+        },
     },
     mounted() {
         this.autoScroll = () => {
-            setInterval(this.checkScroll, 100)
+            setInterval(this.checkScroll, 100);
         };
         this.autoScroll();
         this.getEvents();
@@ -70,43 +102,47 @@ export default {
     methods: {
         // to toggle loading wheel
         toggleLoading(show) {
-            this.$emit('show-loading', show);
+            this.$emit("show-loading", show);
         },
         // to toggle event details
         toggleEventDetails(index) {
-            const existingIndex = this.showDetails.findIndex(entry => entry == index);
+            const existingIndex = this.showDetails.findIndex(
+                (entry) => entry == index,
+            );
 
             if (existingIndex != -1) {
                 this.showDetails.splice(existingIndex, 1);
-            }
-            else {
+            } else {
                 this.showDetails.push(index);
             }
         },
         // get events
         async getEvents() {
             await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/events`, {
-                mode: 'cors',
-                method: 'GET',
-                credentials: 'include'
-            }).then(async res => {
-                if (res.ok) {
-                    await res.json().then(data => {
-                        this.events = data.events;
-                    });
-                }
-                else {
-                    throw new Error('Response not OK');
-                }
-            }).catch(error => console.log('Could not retrieve events.'));
+                mode: "cors",
+                method: "GET",
+                credentials: "include",
+            })
+                .then(async (res) => {
+                    if (res.ok) {
+                        await res.json().then((data) => {
+                            this.events = data.events;
+                        });
+                    } else {
+                        throw new Error("Response not OK");
+                    }
+                })
+                .catch((error) => console.log("Could not retrieve events."));
         },
         // to edit events
         editEvent(index) {
-            this.$emit('edit-event', this.events[index]);
+            this.$emit("edit-event", this.events[index]);
         },
         // to delete events
         async deleteEvent(index) {
-            const confirmDelete = await useConfirmStore().confirm('Are you sure you want to delete this event?');
+            const confirmDelete = await useConfirmStore().confirm(
+                "Are you sure you want to delete this event?",
+            );
 
             if (!confirmDelete) {
                 return;
@@ -115,31 +151,38 @@ export default {
             this.toggleLoading(true);
 
             // delete event
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/events/${this.events[index]._id}`, {
-                method: 'DELETE',
-                mode: 'cors',
-                credentials: 'include'
-            }).then(async res => {
-                await res.json().then(async data => {
-                    await useAlertStore().alert(data.message);
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/events/${
+                    this.events[index]._id
+                }`,
+                {
+                    method: "DELETE",
+                    mode: "cors",
+                    credentials: "include",
+                },
+            )
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        await useAlertStore().alert(data.message);
 
-                    if (res.ok) {
-                        this.events.splice(index, 1);
-                    }
-                });
-            }).catch(error => console.log('Could not delete event.'));
+                        if (res.ok) {
+                            this.events.splice(index, 1);
+                        }
+                    });
+                })
+                .catch((error) => console.log("Could not delete event."));
 
             this.toggleLoading(false);
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>
-@import url('../../styles/main.css');
+@import url("../../styles/main.css");
 
 .event-container {
-    border-bottom: #133B5B 1px solid;
+    border-bottom: #133b5b 1px solid;
     padding: 10px 7%;
     display: flex;
     flex-direction: column;
@@ -217,7 +260,7 @@ export default {
     height: 100px;
     text-align: center;
     place-self: center;
-    background-color: #133B5B;
+    background-color: #133b5b;
 }
 
 .month {

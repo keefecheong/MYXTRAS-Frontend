@@ -2,18 +2,16 @@
 // newTab, postId, and commentId parameters to link directly to the reported content
 export default function viewUser(userId, openNewTab, postId, commentId) {
     var profilePageHref = `${import.meta.env.VITE_BASE_URL}/profilePage.html/`;
-    
+
     if (!openNewTab) {
-        sessionStorage.setItem('user', userId);
-    
+        sessionStorage.setItem("user", userId);
+
         if (window.location.href != profilePageHref) {
-            window.location.href = '/profilePage.html';
-        }
-        else {
+            window.location.href = "/profilePage.html";
+        } else {
             location.reload();
         }
-    }
-    else {
+    } else {
         if (postId) {
             profilePageHref += `?post=${postId}`;
 
@@ -23,16 +21,15 @@ export default function viewUser(userId, openNewTab, postId, commentId) {
         }
 
         // open in new tab
-        const newTab = window.open(profilePageHref, '_blank');
+        const newTab = window.open(profilePageHref, "_blank");
 
         // set userId in sessionStorage
         if (newTab) {
-            newTab.addEventListener('load', () => {
-                newTab.sessionStorage.setItem('user', userId);
+            newTab.addEventListener("load", () => {
+                newTab.sessionStorage.setItem("user", userId);
             });
-        }
-        else {
-            console.log('Could not open resource in new tab.');
+        } else {
+            console.log("Could not open resource in new tab.");
         }
     }
 }

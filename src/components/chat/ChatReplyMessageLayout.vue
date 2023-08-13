@@ -1,7 +1,13 @@
 <template>
-    <div class="reply-to-message-container" :class="{ 'replying': replying }">
-        <div class="reply-message-content-container" :class="{ 'self': message.is_sender }" @click="viewOriginal">
-            <span class="reply-message-name hide-overflow-text">{{ message.is_sender ? 'You' : name }}</span>
+    <div class="reply-to-message-container" :class="{ replying: replying }">
+        <div
+            class="reply-message-content-container"
+            :class="{ self: message.is_sender }"
+            @click="viewOriginal"
+        >
+            <span class="reply-message-name hide-overflow-text">{{
+                message.is_sender ? "You" : name
+            }}</span>
 
             <ChatFileLayout
                 v-if="message.file_link"
@@ -11,66 +17,68 @@
                 class="reply-to-message-file"
             />
 
-            <span class="reply-message-content hide-overflow-text">{{ message.content }}</span>
+            <span class="reply-message-content hide-overflow-text">{{
+                message.content
+            }}</span>
         </div>
-        
+
         <div class="close-reply-message-container" v-if="showClose">
-            <span class="material-symbols-outlined" title="Close" @click="closeReplyTo">close</span>
+            <span
+                class="material-symbols-outlined"
+                title="Close"
+                @click="closeReplyTo"
+                >close</span
+            >
         </div>
     </div>
 </template>
 
 <script>
-import ChatFileLayout from './ChatFileLayout.vue';
-import { debounce } from 'lodash';
+import ChatFileLayout from "./ChatFileLayout.vue";
+import { debounce } from "lodash";
 
 export default {
     data() {
         return {
-            debouncedClearAnimation: null
-        }
+            debouncedClearAnimation: null,
+        };
     },
-    props: [
-        'message',
-        'showClose',
-        'name',
-        'replying'
-    ],
-    emits: [
-        'close-reply-to'
-    ],
+    props: ["message", "showClose", "name", "replying"],
+    emits: ["close-reply-to"],
     components: {
-        ChatFileLayout
+        ChatFileLayout,
     },
     methods: {
         // to close reply to layout (when replying)
         closeReplyTo() {
-            this.$emit('close-reply-to');
+            this.$emit("close-reply-to");
         },
         // to scroll to the original message
         viewOriginal() {
             const target = document.getElementById(this.message._id);
             if (target) {
                 target.scrollIntoView({
-                    block: 'center',
-                    behavior: 'smooth'
+                    block: "center",
+                    behavior: "smooth",
                 });
 
-                const className = this.message.is_sender ? 'highlight-self' : 'highlight-other';
+                const className = this.message.is_sender
+                    ? "highlight-self"
+                    : "highlight-other";
 
                 if (!this.debouncedClearAnimation) {
                     this.debouncedClearAnimation = debounce(() => {
                         target.classList.remove(className);
                     }, 1000);
                 }
-                
+
                 target.classList.add(className);
 
                 this.debouncedClearAnimation();
             }
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>

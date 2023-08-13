@@ -1,8 +1,12 @@
 <template>
-    <div class="chatlist-item" :class="{selectedChat: selected}" @click="selectChat">
+    <div
+        class="chatlist-item"
+        :class="{ selectedChat: selected }"
+        @click="selectChat"
+    >
         <!-- other user's profile pic -->
         <div class="profile-pic-container">
-            <img class="profile-pic" :src="chat.pic"/>
+            <img class="profile-pic" :src="chat.pic" />
         </div>
 
         <!-- other user's username -->
@@ -13,25 +17,22 @@
 </template>
 
 <script>
-import { useChatStore } from '../../stores/ChatStore.js';
+import { useChatStore } from "../../stores/ChatStore.js";
 
 export default {
     data() {
         return {
-            store: useChatStore()
-        }
+            store: useChatStore(),
+        };
     },
-    props: [
-        'chat',
-        'selected'
-    ],
+    props: ["chat", "selected"],
     methods: {
         // select chat to send/view messages
         selectChat() {
             this.store.currentChat = this.chat;
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>

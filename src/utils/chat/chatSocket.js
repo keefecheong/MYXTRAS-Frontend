@@ -1,8 +1,8 @@
 // to allow all components to share a common chat socket instance
 
-import { io } from 'socket.io-client';
-import pinia from '../../stores/store.js';
-import { useChatStore } from '../../stores/ChatStore.js';
+import { io } from "socket.io-client";
+import pinia from "../../stores/store.js";
+import { useChatStore } from "../../stores/ChatStore.js";
 
 // define chat socket
 class ChatSocket {
@@ -10,14 +10,14 @@ class ChatSocket {
         // initiate socket connection with backend
         this.socket = io(`${import.meta.env.VITE_APP_SERVER_URL}/chatSocket`, {
             withCredentials: true,
-            reconnection: true
+            reconnection: true,
         });
 
         const store = useChatStore(pinia);
 
         // handle 'receive-message' events
         // when socket receives new messages
-        this.socket.on('receive-message', (data) => {
+        this.socket.on("receive-message", (data) => {
             // add chat and message
             store.newChat(data.chat);
 
@@ -27,13 +27,18 @@ class ChatSocket {
 
         // handle 'receive-edit-message' events
         // when a message is edited
-        this.socket.on('receive-edit-message', (data) => {
-            store.editMessage(data.message.chat_id, data.message._id, data.message.content, data.message.last_modified_time);
+        this.socket.on("receive-edit-message", (data) => {
+            store.editMessage(
+                data.message.chat_id,
+                data.message._id,
+                data.message.content,
+                data.message.last_modified_time,
+            );
         });
 
         // handle 'receive-delete-message' events
         // when a message is deleted
-        this.socket.on('receive-delete-message', (data) => {
+        this.socket.on("receive-delete-message", (data) => {
             store.deleteMessage(data.message.chat_id, data.message._id);
         });
     }

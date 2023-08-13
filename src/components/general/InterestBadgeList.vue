@@ -27,8 +27,11 @@
             v-for="option in displayOptions"
             class="badge"
             :class="[
-                { 'selection': selection },
-                { 'selected': selection && selectedOption.includes(option.interest) }
+                { selection: selection },
+                {
+                    selected:
+                        selection && selectedOption.includes(option.interest),
+                },
             ]"
             :style="{ backgroundColor: option.color }"
             @click="() => handleChoice(option.interest)"
@@ -39,29 +42,23 @@
 </template>
 
 <script>
-import interests from '../../assets/interest-badge-config.json';
+import interests from "../../assets/interest-badge-config.json";
 
 export default {
-    props: [
-        'selectedOption',
-        'selection',
-        'maxWidth'
-    ],
+    props: ["selectedOption", "selection", "maxWidth"],
     data() {
         return {
-            options: interests.interestColors.map(item => item.interest)
-        }
+            options: interests.interestColors.map((item) => item.interest),
+        };
     },
-    emits: [
-        'interest-selected'
-    ],
+    emits: ["interest-selected"],
     methods: {
         // handle when user selects the interest
-        handleChoice(option){
+        handleChoice(option) {
             if (this.selection) {
-                this.$emit('interest-selected', option);
+                this.$emit("interest-selected", option);
             }
-        }
+        },
     },
     computed: {
         // get correct list to display interests
@@ -75,11 +72,13 @@ export default {
             if (this.selection) {
                 return interests.interestColors;
             } else {
-                return interests.interestColors.filter(item => this.selectedOption.includes(item.interest));
+                return interests.interestColors.filter((item) =>
+                    this.selectedOption.includes(item.interest),
+                );
             }
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style scoped>
@@ -91,19 +90,19 @@ div {
 }
 /* Track */
 ::-webkit-scrollbar-track {
-background: #ffffff; 
-border-radius: 15px;
+    background: #ffffff;
+    border-radius: 15px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-background: #c9c9c9c4;
-border-radius: 15px;
+    background: #c9c9c9c4;
+    border-radius: 15px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-background: #c9c9c98d;
+    background: #c9c9c98d;
 }
 .badge {
     padding: 10px;

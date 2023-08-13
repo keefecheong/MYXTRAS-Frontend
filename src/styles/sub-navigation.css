@@ -10,46 +10,47 @@ usage:
 */
 
 .sub-navigation-container {
-    height: fit-content;
-    position: sticky;
-    top: clamp(80px, 15dvh, 100px);
+  height: fit-content;
+  position: sticky;
+  top: clamp(80px, 15dvh, 100px);
 }
 
 .sub-navigation-links {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    row-gap: 5px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 5px;
 }
 
 .sub-navigation {
-    background-color: #ffffff;
-    border: #e53a73 solid 3.5px;
-    border-radius: 10px;
-    color: black;
-    height: clamp(40px, 6dvh, 60px);
-    width: clamp(70px, 10dvw, 200px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(16px, 1dvw, 24px);
-    transition: all 0.3s;
-    text-decoration: none;
-    text-align: center;
+  background-color: #ffffff;
+  border: #e53a73 solid 3.5px;
+  border-radius: 10px;
+  color: black;
+  height: clamp(40px, 6dvh, 60px);
+  width: clamp(70px, 10dvw, 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(16px, 1dvw, 24px);
+  transition: all 0.3s;
+  text-decoration: none;
+  text-align: center;
 }
 
 .sub-navigation:hover {
-    background-color: #e53a73;
-    color: white;
-    cursor: pointer;
-    font-size: clamp(18px, 1dvw, 26px);
-    font-weight: bold;
+  background-color: #e53a73;
+  color: white;
+  cursor: pointer;
+  font-size: clamp(18px, 1dvw, 26px);
+  font-weight: bold;
 }
 
-.sub-navigation.active, .router-link-active .sub-navigation {
-    background-color: #e53a73;
-    color: white;
-    font-size: clamp(18px, 1dvw, 26px);
-    font-weight: bold;
+.sub-navigation.active,
+.router-link-active .sub-navigation {
+  background-color: #e53a73;
+  color: white;
+  font-size: clamp(18px, 1dvw, 26px);
+  font-weight: bold;
 }

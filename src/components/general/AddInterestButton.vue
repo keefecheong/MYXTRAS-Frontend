@@ -21,15 +21,20 @@
 
 <template>
     <div id="current-interests-container">
-        <InterestBadgeList 
-            :selectedOption="workingSelectedOption" 
+        <InterestBadgeList
+            :selectedOption="workingSelectedOption"
             :selection="false"
             :maxWidth="'80%'"
             @interest-selected="handleSelection"
         />
 
         <!-- button to open popup -->
-        <button type="button" class="btn" id="add-interest-plus-button" @click="() => togglePopup(true)">
+        <button
+            type="button"
+            class="btn"
+            id="add-interest-plus-button"
+            @click="() => togglePopup(true)"
+        >
             <span class="material-symbols-outlined">add_circle</span>
         </button>
     </div>
@@ -37,23 +42,42 @@
     <!-- popup to select interests -->
     <div v-if="showPopup" id="popup-container">
         <div>
-            <button type="button" id="close-add-interest" class="material-symbols-outlined" @click="() => togglePopup(false)">Close</button>
+            <button
+                type="button"
+                id="close-add-interest"
+                class="material-symbols-outlined"
+                @click="() => togglePopup(false)"
+            >
+                Close
+            </button>
 
             <div id="popup-content">
                 <div id="selection-header">
                     <slot>What are you interested in?</slot>
                 </div>
 
-                <InterestBadgeList 
-                    :selectedOption="workingSelectedOption" 
+                <InterestBadgeList
+                    :selectedOption="workingSelectedOption"
                     :selection="true"
                     @interest-selected="handleSelection"
                     style="margin-bottom: 15px"
                 />
 
                 <div id="button-container">
-                    <button @click="clearSelection" type="button" id="clear-all-btn">Clear All</button>
-                    <button @click="confirmSelection" type="button" id="confirm-btn">Confirm</button>
+                    <button
+                        @click="clearSelection"
+                        type="button"
+                        id="clear-all-btn"
+                    >
+                        Clear All
+                    </button>
+                    <button
+                        @click="confirmSelection"
+                        type="button"
+                        id="confirm-btn"
+                    >
+                        Confirm
+                    </button>
                 </div>
             </div>
         </div>
@@ -61,22 +85,19 @@
 </template>
 
 <script>
-import InterestBadgeList from './InterestBadgeList.vue';
-import handleSelectedInterests from '../../utils/general/defaultInterestSelectedCallback';
+import InterestBadgeList from "./InterestBadgeList.vue";
+import handleSelectedInterests from "../../utils/general/defaultInterestSelectedCallback";
 
-export default{
-    props: [
-        'selectedOption',
-        'maxWidth'
-    ],
+export default {
+    props: ["selectedOption", "maxWidth"],
     components: {
-        InterestBadgeList
+        InterestBadgeList,
     },
-    data(){
-        return{
+    data() {
+        return {
             showPopup: false,
-            workingSelectedOption: []
-        }
+            workingSelectedOption: [],
+        };
     },
     created() {
         // if there are existing options selected set workingSelectionOption to the existing values
@@ -84,18 +105,16 @@ export default{
             this.workingSelectedOption = this.selectedOption;
         }
     },
-    emits: [
-        'selectedInterests'
-    ],
-    methods:{
+    emits: ["selectedInterests"],
+    methods: {
         // toggle interest selection popup
-        togglePopup(show){
+        togglePopup(show) {
             this.showPopup = show;
         },
         // confirm selected interests and close popup
         confirmSelection() {
-            this.$emit('selectedInterests', this.workingSelectedOption);
-            
+            this.$emit("selectedInterests", this.workingSelectedOption);
+
             this.togglePopup(false);
         },
 
@@ -107,11 +126,9 @@ export default{
         // add/remove selected interest
         handleSelection(option) {
             handleSelectedInterests(option, this.workingSelectedOption);
-        }
+        },
     },
-    
-}
-
+};
 </script>
 
 <style scoped>
@@ -126,7 +143,12 @@ export default{
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5) !important; /* Semi-transparent background */
+    background-color: rgba(
+        0,
+        0,
+        0,
+        0.5
+    ) !important; /* Semi-transparent background */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -150,17 +172,18 @@ export default{
     column-gap: 20px;
 }
 
-#confirm-btn, #clear-all-btn {
+#confirm-btn,
+#clear-all-btn {
     width: 10em;
     color: white;
     border: none;
-    background: linear-gradient(45deg,#FF6363, #E53A73);
+    background: linear-gradient(45deg, #ff6363, #e53a73);
     border-radius: 10px;
     padding: 10px 12px;
 }
 
-#add-interest-plus-button{
-    color: #E53A73;
+#add-interest-plus-button {
+    color: #e53a73;
     border: none;
     outline: none;
 }

@@ -1,13 +1,23 @@
 <!-- layout for complete user details -->
 
 <template>
-    <LoadingOverlay v-if="showLoading" :backgroundColor="'rgba(0, 0, 0, 0.5)'" :center="true" />
+    <LoadingOverlay
+        v-if="showLoading"
+        :backgroundColor="'rgba(0, 0, 0, 0.5)'"
+        :center="true"
+    />
 
     <div class="detailed-layout-container">
         <div class="detailed-layout-side-container close">
-            <span class="material-symbols-outlined" id="close-user-details-button" title="Back" @click="closeDetailedView">arrow_back</span>
+            <span
+                class="material-symbols-outlined"
+                id="close-user-details-button"
+                title="Back"
+                @click="closeDetailedView"
+                >arrow_back</span
+            >
         </div>
-        
+
         <div class="detailed-layout-content-container">
             <h1>User Details</h1>
 
@@ -29,12 +39,12 @@
 
                 <div>
                     <span>Role:</span>
-                    <span>{{ user.is_admin ? 'Admin' : 'User' }}</span>
+                    <span>{{ user.is_admin ? "Admin" : "User" }}</span>
                 </div>
 
                 <div>
                     <span>Profile Setup:</span>
-                    <span>{{ user.is_profile_setup ? 'True' : 'False' }}</span>
+                    <span>{{ user.is_profile_setup ? "True" : "False" }}</span>
                 </div>
             </div>
 
@@ -51,12 +61,16 @@
 
                 <div>
                     <span>Biography:</span>
-                    <span>{{ user.biography || 'Empty' }}</span>
+                    <span>{{ user.biography || "Empty" }}</span>
                 </div>
-    
+
                 <div>
                     <span>Interests:</span>
-                    <InterestBadgeList v-if="user.interests.length > 0" :selectedOption="user.interests" :selection="false" />
+                    <InterestBadgeList
+                        v-if="user.interests.length > 0"
+                        :selectedOption="user.interests"
+                        :selection="false"
+                    />
                     <span v-else>None</span>
                 </div>
             </div>
@@ -64,9 +78,16 @@
             <div>
                 <div>
                     <span>Followers:</span>
-                    
+
                     <ul v-if="user.followers.length > 0">
-                        <li v-for="follower in user.followers" class="details-layout-profile-link" title="Click to view user" @click="() => viewUser(follower)">{{ follower }}</li>
+                        <li
+                            v-for="follower in user.followers"
+                            class="details-layout-profile-link"
+                            title="Click to view user"
+                            @click="() => viewUser(follower)"
+                        >
+                            {{ follower }}
+                        </li>
                     </ul>
 
                     <span v-else>None</span>
@@ -76,9 +97,16 @@
             <div>
                 <div>
                     <span>Blocked Users:</span>
-                    
+
                     <ul v-if="user.blocked_users.length > 0">
-                        <li v-for="entry in user.blocked_users" class="details-layout-profile-link" title="Click to view user" @click="() => viewUser(entry.user_id)">{{ entry.user_id }}</li>
+                        <li
+                            v-for="entry in user.blocked_users"
+                            class="details-layout-profile-link"
+                            title="Click to view user"
+                            @click="() => viewUser(entry.user_id)"
+                        >
+                            {{ entry.user_id }}
+                        </li>
                     </ul>
 
                     <span v-else>None</span>
@@ -88,7 +116,7 @@
             <div>
                 <div>
                     <span>Status:</span>
-                    <span>{{ user.status?.status || 'Active' }}</span>
+                    <span>{{ user.status?.status || "Active" }}</span>
                 </div>
 
                 <div v-if="user.status?.status == 'Suspended'">
@@ -103,7 +131,12 @@
 
                 <div v-if="user.status?.status">
                     <span>Admin ID:</span>
-                    <span class="details-layout-profile-link" title="Click to view user" @click="() => viewUser(user.status.performed_by._id)">{{ user.status.performed_by._id }}</span>
+                    <span
+                        class="details-layout-profile-link"
+                        title="Click to view user"
+                        @click="() => viewUser(user.status.performed_by._id)"
+                        >{{ user.status.performed_by._id }}</span
+                    >
                 </div>
             </div>
 
@@ -111,19 +144,28 @@
                 <div>
                     <span>Warnings:</span>
 
-                    <div v-if="user.warnings.length > 0" id="user-details-warnings-container">
+                    <div
+                        v-if="user.warnings.length > 0"
+                        id="user-details-warnings-container"
+                    >
                         <WarningLayout
                             v-for="warning in user.warnings"
                             :warning="warning"
                             :admin="true"
                         />
                     </div>
-                    
+
                     <span v-else>None</span>
                 </div>
             </div>
 
-            <button class="use-primary-secondary-gradient details-button detailed-layout-view-button" title="View User" @click="viewUser(user._id)">View User</button>
+            <button
+                class="use-primary-secondary-gradient details-button detailed-layout-view-button"
+                title="View User"
+                @click="viewUser(user._id)"
+            >
+                View User
+            </button>
         </div>
 
         <div class="detailed-layout-side-container right">
@@ -140,19 +182,25 @@
                 </button>
 
                 <!-- to suspend/unsuspend user -->
-                <button 
-                    v-if="showSuspend.show" 
-                    class="suspend-btn" 
-                    :title="`${showSuspend.title} User`" 
-                    @click="() => { showSuspend.suspended ? performAction(showSuspend) : toggleSuspendForm(true) }"
+                <button
+                    v-if="showSuspend.show"
+                    class="suspend-btn"
+                    :title="`${showSuspend.title} User`"
+                    @click="
+                        () => {
+                            showSuspend.suspended
+                                ? performAction(showSuspend)
+                                : toggleSuspendForm(true);
+                        }
+                    "
                 >
                     {{ showSuspend.title }}
                 </button>
 
                 <!-- to terminate/unterminate user -->
-                <button 
-                    class="terminate-btn" 
-                    :title="`${showTerminate.title} User`" 
+                <button
+                    class="terminate-btn"
+                    :title="`${showTerminate.title} User`"
                     @click="() => performAction(showTerminate)"
                 >
                     {{ showTerminate.title }}
@@ -162,8 +210,16 @@
     </div>
 
     <div class="form-overlay" v-if="showSuspendForm">
-        <form class="form-overlay-content" id="suspend-form" @submit.prevent="performAction(showSuspend)">
-            <button class="form-overlay-close" @click="() => toggleSuspendForm(false)" type="button">
+        <form
+            class="form-overlay-content"
+            id="suspend-form"
+            @submit.prevent="performAction(showSuspend)"
+        >
+            <button
+                class="form-overlay-close"
+                @click="() => toggleSuspendForm(false)"
+                type="button"
+            >
                 <span class="material-symbols-outlined">Close</span>
             </button>
 
@@ -172,27 +228,37 @@
             <div id="suspend-duration-container">
                 <label id="suspend-duration-label" for="suspend-duration">
                     <span>Suspend user for:</span>
-                    <input type="number" id="suspend-duration" min="0" step="1" v-model="suspendDuration"/>
+                    <input
+                        type="number"
+                        id="suspend-duration"
+                        min="0"
+                        step="1"
+                        v-model="suspendDuration"
+                    />
                     <span>(minutes)</span>
                 </label>
-
             </div>
 
-            <button class="form-overlay-control-button" :disabled="suspendDuration <= 0">Suspend</button>
+            <button
+                class="form-overlay-control-button"
+                :disabled="suspendDuration <= 0"
+            >
+                Suspend
+            </button>
         </form>
     </div>
 </template>
 
 <script>
-import LoadingOverlay from '../../general/LoadingOverlay.vue';
-import InterestBadgeList from '../../general/InterestBadgeList.vue';
-import WarningLayout from './WarningLayout.vue';
+import LoadingOverlay from "../../general/LoadingOverlay.vue";
+import InterestBadgeList from "../../general/InterestBadgeList.vue";
+import WarningLayout from "./WarningLayout.vue";
 
-import getFormattedTime from '../../../utils/general/getFormattedTime.js';
-import viewUser from '../../../utils/general/viewUser.js';
+import getFormattedTime from "../../../utils/general/getFormattedTime.js";
+import viewUser from "../../../utils/general/viewUser.js";
 
-import { useAlertStore } from '../../../stores/AlertStore.js';
-import { useConfirmStore } from '../../../stores/ConfirmStore.js';
+import { useAlertStore } from "../../../stores/AlertStore.js";
+import { useConfirmStore } from "../../../stores/ConfirmStore.js";
 
 export default {
     data() {
@@ -200,60 +266,56 @@ export default {
             showLoading: false,
             showSuspendForm: false,
             suspendDuration: 0,
-            
+
             alert: useAlertStore().alert,
-            confirm: useConfirmStore().confirm
-        }
+            confirm: useConfirmStore().confirm,
+        };
     },
     components: {
         LoadingOverlay,
         InterestBadgeList,
-        WarningLayout
+        WarningLayout,
     },
-    props: [
-        'user'
-    ],
-    emits: [
-        'close-user-details'
-    ],
+    props: ["user"],
+    emits: ["close-user-details"],
     computed: {
         // get title of button to promote/demote user and show promote/demote button if the user is an admin or the user is not terminated nor suspended
         showPromote() {
             return {
-                title: this.user.is_admin ? 'Demote' : 'Promote',
+                title: this.user.is_admin ? "Demote" : "Promote",
                 show: this.user.is_admin || !this.user.status?.status,
-                method: this.user.is_admin ? 'DELETE' : 'POST',
-                url: `/admin/${this.user._id}`
+                method: this.user.is_admin ? "DELETE" : "POST",
+                url: `/admin/${this.user._id}`,
             };
         },
         // get title of button to terminate/unterminate user
         showTerminate() {
-            const check = this.user.status?.status == 'Terminated';
+            const check = this.user.status?.status == "Terminated";
 
             return {
-                title: check ? 'Unterminate' : 'Terminate',
+                title: check ? "Unterminate" : "Terminate",
                 show: true,
-                method: check ? 'DELETE' : 'POST',
-                url: `/terminate/${this.user._id}`
+                method: check ? "DELETE" : "POST",
+                url: `/terminate/${this.user._id}`,
             };
         },
         // get title of button to suspend/unsuspend user and show suspend button if user is not terminated
         showSuspend() {
-            const check = this.user.status?.status == 'Suspended';
+            const check = this.user.status?.status == "Suspended";
 
             return {
                 suspended: check,
-                title: check ? 'Unsuspend' : 'Suspend',
-                show: this.user.status?.status != 'Terminated',
-                method: check ? 'DELETE' : 'POST',
-                url: `/suspend/${this.user._id}`
+                title: check ? "Unsuspend" : "Suspend",
+                show: this.user.status?.status != "Terminated",
+                method: check ? "DELETE" : "POST",
+                url: `/suspend/${this.user._id}`,
             };
-        }
+        },
     },
     methods: {
         // to close detailed user view
         closeDetailedView() {
-            this.$emit('close-user-details');
+            this.$emit("close-user-details");
         },
         // to get formatted time
         getTimeToDisplay(timeString) {
@@ -279,7 +341,9 @@ export default {
                 return;
             }
 
-            const confirmAction = await this.confirm(`Are you sure you want to ${action.title} this user?`);
+            const confirmAction = await this.confirm(
+                `Are you sure you want to ${action.title} this user?`,
+            );
 
             if (!confirmAction) {
                 return;
@@ -293,30 +357,39 @@ export default {
 
             const options = {
                 method: action.method,
-                mode: 'cors',
-                credentials: 'include'
+                mode: "cors",
+                credentials: "include",
             };
 
-            if (action.title == 'Suspend') {
+            if (action.title == "Suspend") {
                 options.body = JSON.stringify({
-                    duration: tempDuration * 60 * 1000
+                    duration: tempDuration * 60 * 1000,
                 });
 
                 options.headers = {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
                 };
             }
 
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/admin/accounts${action.url}`, options).then(async res => {
-                await res.json().then(async data => {
-                    await this.alert(data.message);
+            await fetch(
+                `${import.meta.env.VITE_APP_SERVER_URL}/api/admin/accounts${
+                    action.url
+                }`,
+                options,
+            )
+                .then(async (res) => {
+                    await res.json().then(async (data) => {
+                        await this.alert(data.message);
 
-                    if (res.ok) {
-                        location.reload();
-                    }
-                });
-            }).catch(error => console.log(`Could not ${action.title} user.`));
-            
+                        if (res.ok) {
+                            location.reload();
+                        }
+                    });
+                })
+                .catch((error) =>
+                    console.log(`Could not ${action.title} user.`),
+                );
+
             this.showLoading = false;
         },
         // to toggle form to input suspend duration
@@ -326,13 +399,13 @@ export default {
             if (!show) {
                 this.suspendDuration = 0;
             }
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style>
-@import url('../../../styles/forms/form-overlay-styles.css');
+@import url("../../../styles/forms/form-overlay-styles.css");
 
 #user-details-warnings-container {
     width: 100%;
