@@ -88,7 +88,7 @@ export default {
                     background-size: ${this.selectedPet.width / 3}px ${
                         this.selectedPet.height / 3
                     }px;
-                } 
+                }
 
                 @keyframes walk {
                     0% {

@@ -375,8 +375,8 @@ export default {
 
             return creationDate == lastModifiedDate
                 ? lastModifiedTime.toLocaleTimeString([], {
-                      timeStyle: "short",
-                  })
+                        timeStyle: "short",
+                })
                 : lastModifiedTime.toString();
         },
         // check if message has text content

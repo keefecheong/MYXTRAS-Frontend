@@ -2,10 +2,10 @@
     <div id="main-container">
         <NavSidebar />
         <div id="main-content" class="use-primary-secondary-gradient">
-            
+
             <div id="about-content">
                 <h1>About Us</h1>
-                
+
                 <hr />
 
                 <p>

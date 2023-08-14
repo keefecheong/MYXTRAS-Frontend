@@ -1,4 +1,4 @@
-<!-- 
+<!--
     layout for displaying interest options
 
     usage:
@@ -10,7 +10,7 @@
             maxWidth: to set max width on interest list (useful if interest list gets too long)
         events:
             interest-selected: returns the new selected/removed option
-    
+
     eg.
     to list all interests for selection
     <InterestBadgeList
@@ -18,7 +18,7 @@
         :selection="true"
         @interest-selected="handleInterestSelected"
     />
- -->
+-->
 
 <template>
     <!-- layout for selection -->

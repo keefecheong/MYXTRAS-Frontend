@@ -1,4 +1,4 @@
-<!-- 
+<!--
     custom confirm prompt to replace confirm()
 
     usage:
@@ -6,7 +6,7 @@
             close-confirm: emitted when user clicks 'OK' or 'Cancel', decision: true ('OK') or false ('Cancel')
         slots:
             pass in message to display
-        
+
     example:
         (put in root at parent components (eg. feed.vue) that have child components using confirm)
         === parent ===
@@ -19,7 +19,7 @@
                 ...
             </div>
         </template>
-        
+
         <script>
         import { useConfirmStore } from '../../stores/ConfirmStore.js';
 

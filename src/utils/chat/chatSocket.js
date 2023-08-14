@@ -1,7 +1,7 @@
 // to allow all components to share a common chat socket instance
 
 import { io } from "socket.io-client";
-import pinia from "../../stores/store.js";
+import pinia from "../../stores/Store.js";
 import { useChatStore } from "../../stores/ChatStore.js";
 
 // define chat socket
