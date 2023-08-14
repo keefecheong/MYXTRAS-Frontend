@@ -31,7 +31,7 @@ const redirectPlugin = {
             // if not the above pages/routes then check if exists in file system
             else {
                 const path = join(__dirname, 'public/', req.url.split('?')[0]);
-                
+
                 try {
                     await fs.access(path, fs.F_OK);
                 }
@@ -40,7 +40,7 @@ const redirectPlugin = {
                     req.url = '/error.html';
                 }
             }
-            
+
             next();
         });
     }

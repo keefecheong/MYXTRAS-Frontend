@@ -1,9 +1,9 @@
-<!-- 
+<!--
     loading animation (simple spinning wheel)
 
     usage: import and use as normal component
 
-    props (all optional): 
+    props (all optional):
         backgroundColor: defines background color of loader container (useful for blurring background to create overlay effect)
         loaderSize: defines width and height of loader
         loaderBorderWidth: defines border width of loader (width of wheel)
@@ -11,9 +11,9 @@
         verticalCenter: vertically center the loader (recommended if container height is larger than wheel)
         center: sets both verticalCenter and horizontalCenter to true
 
-    eg. 
+    eg.
     <LoadingOverlay :backgroundColor="'rgba(0, 0, 0, 0.5)'" :loaderSize="'20px'" :loaderBorderWidth="'5px'" :horizontalCenter="true" :verticalCenter="true" />
- -->
+-->
 
 <template>
     <div

@@ -1,4 +1,4 @@
-<!-- 
+<!--
     custom alert prompt to replace alert()
 
     usage:
@@ -6,7 +6,7 @@
             close-alert: emitted when user clicks 'OK'
         slots:
             pass in message to display
-        
+
     example:
         (put in root at parent components (eg. feed.vue) that have child components using alerts)
         === parent ===
@@ -19,7 +19,7 @@
                 ...
             </div>
         </template>
-        
+
         <script>
         import { useAlertStore } from '../../stores/AlertStore.js';
 

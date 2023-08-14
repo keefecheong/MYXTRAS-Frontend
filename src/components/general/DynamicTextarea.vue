@@ -1,4 +1,4 @@
-<!-- 
+<!--
     dynamic height textarea (grows to specified max number of rows and shrinks based on text entered)
 
     usage:
@@ -9,10 +9,10 @@
             maxlength: specify maxlength for textarea
             border: specify css border (default none)
             padding: specify css padding (default 10px)  (or define css in parent styles)
-    
+
     eg.
     <DynamicTextarea v-model="commentText" :maxRows="5" :placeholder="Enter comment" />
- -->
+-->
 
 <template>
     <textarea

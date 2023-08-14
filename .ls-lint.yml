@@ -1,12 +1,23 @@
 # .ls-lint.yml
- 
+  
 ls:
   .js: camelCase
   .vue: PascalCase
   .html: camelCase
- 
+
+  src/pages:
+    .js: PascalCase
+  
+  src/components/gamification:
+    .vue: kebab-case
+
+  src/router:
+    .js: PascalCase
+
+  src/stores:
+    .js: PascalCase
+
 ignore:
   - node_modules
   - .git
-  - src/pages
   - vite.config.js

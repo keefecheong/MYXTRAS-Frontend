@@ -1,4 +1,4 @@
-<!-- 
+<!--
     layout to select interests/display current interests
 
     usage:
@@ -17,7 +17,7 @@
     >
         Select tags for your post:   *displayed in place of original "What are you interested in?"
     </AddInterestButton>
- -->
+-->
 
 <template>
     <div id="current-interests-container">

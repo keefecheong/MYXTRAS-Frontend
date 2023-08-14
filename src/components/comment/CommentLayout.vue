@@ -104,11 +104,11 @@ export default {
 
             const url = this.forPost
                 ? `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${
-                      this.blogCreatorId
-                  }/post/${this.postId}/comments/${this.comment._id}`
+                    this.blogCreatorId
+                    }/post/${this.postId}/comments/${this.comment._id}`
                 : `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
-                      this.forumId
-                  }/thread/${this.threadId}/comments/${this.comment._id}`;
+                    this.forumId
+                    }/thread/${this.threadId}/comments/${this.comment._id}`;
 
             await fetch(url, {
                 mode: "cors",
@@ -190,7 +190,7 @@ export default {
 .comment-username-container {
     flex-grow: 1;
     cursor: pointer;
-    
+
     .username-text {
         text-decoration: underline;
     }

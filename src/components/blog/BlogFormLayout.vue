@@ -161,8 +161,8 @@
                     value="Clear All"
                     @click="resetAll"
                 />
-                <!-- 
-                    disable submit button if 
+                <!--
+                    disable submit button if
                     1. not in edit mode and no files are selected
                     2. files are selected but there are errors
                     3. in edit mode and no fields are changed and no files are changed
