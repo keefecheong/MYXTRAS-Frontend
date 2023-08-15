@@ -56,19 +56,13 @@ export default defineConfig(({ command, mode }) => {
     const env = loadEnv(mode, process.cwd(), "");
 
     return {
+        define: {
+            "process.env": env,
+        },
         plugins: [vue(), redirectPlugin],
         server: {
             host: "0.0.0.0",
-            port: env.VITE_PORT,
-        },
-        build: {
-            target: "esnext",
-            rollupOptions: {
-                input: {
-                    main: resolve(__dirname, "public/login.html"),
-                    nested: resolve(__dirname, "public/admin/reports.html"),
-                },
-            },
-        },
+            port: env.PORT,
+        }
     };
 });

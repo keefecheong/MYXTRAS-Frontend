@@ -151,7 +151,7 @@ export default {
         // to send request to subscribe/unsubscribe
         async updateSubscribe() {
             const targetURL = `${
-                import.meta.env.VITE_APP_SERVER_URL
+                process.env.APP_SERVER_URL
             }/api/forums/${this.forum._id}/subscribe`;
             const options = {
                 mode: "cors",
@@ -205,7 +205,7 @@ export default {
                 return;
             }
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${
+                `${process.env.APP_SERVER_URL}/api/forums/${
                     this.forum._id
                 }`,
                 {

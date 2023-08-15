@@ -148,7 +148,7 @@ export default {
         async initData() {
             // request to get user's chats
             const chatRequest = fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/chats`,
+                `${process.env.APP_SERVER_URL}/api/chats`,
                 {
                     mode: "cors",
                     credentials: "include",
@@ -167,7 +167,7 @@ export default {
             // request to get latest 50 messages from user's last 5 used chats
             const messageRequest = fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/chats/latestMessages`,
                 {
                     mode: "cors",
@@ -204,7 +204,7 @@ export default {
         // send request to retrieve up to 50 stored messages for specified chat
         async retrieveMessages(chatId) {
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/chats/${chatId}/50`,
+                `${process.env.APP_SERVER_URL}/api/chats/${chatId}/50`,
                 {
                     mode: "cors",
                     credentials: "include",

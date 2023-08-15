@@ -574,7 +574,7 @@ export default {
             // get user's pets and their related data
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/gamification/gachapon`,
                 {
                     methods: "GET",
@@ -620,7 +620,7 @@ export default {
             this.deduction = cost;
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/gamification/gachapon/${numOfRolls}`,
                 {
                     mode: "cors",
@@ -678,7 +678,7 @@ export default {
         async enablePets() {
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/gamification/gachapon/enabled`,
                 {
                     mode: "cors",
@@ -696,7 +696,7 @@ export default {
 
         async selectPet(pet) {
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/gamification/pets/${
+                `${process.env.APP_SERVER_URL}/api/gamification/pets/${
                     pet.name
                 }`,
                 {

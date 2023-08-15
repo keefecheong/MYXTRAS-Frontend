@@ -8,10 +8,10 @@ import firebase from "firebase";
 const app = createApp(App);
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
-    appId: import.meta.env.VITE_FIREBASE_APPID,
+    apiKey: process.env.FIREBASE_APIKEY,
+    authDomain: process.env.FIREBASE_AUTHDOMAIN,
+    projectId: process.env.FIREBASE_PROJECTID,
+    appId: process.env.FIREBASE_APPID,
 };
 firebase.initializeApp(firebaseConfig);
 

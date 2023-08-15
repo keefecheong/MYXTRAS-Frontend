@@ -134,7 +134,7 @@ export default {
         async getUsers() {
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/admin/accounts/admin`,
                 {
                     method: "GET",

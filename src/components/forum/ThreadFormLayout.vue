@@ -244,7 +244,7 @@ export default {
 
                 // send request to server with data
                 const baseURL = `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/threads`;
                 const targetURL = this.editMode
                     ? `${baseURL}/forum/${this.thread.parent_id._id}/thread/${this.thread._id}`

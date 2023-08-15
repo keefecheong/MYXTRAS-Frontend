@@ -241,7 +241,7 @@ export default {
             }
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/forums/verify-forumID`,
                 {
                     method: "POST",
@@ -429,7 +429,7 @@ export default {
 
                 // send request to server with data
                 const baseURL = `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/forums`;
                 const targetURL = this.editMode
                     ? `${baseURL}/${this.forum._id}`

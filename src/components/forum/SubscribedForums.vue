@@ -105,7 +105,7 @@ export default {
     methods: {
         async retrieveSubbedForums() {
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/subscribed`,
+                `${process.env.APP_SERVER_URL}/api/forums/subscribed`,
                 {
                     method: "GET",
                     credentials: "include",

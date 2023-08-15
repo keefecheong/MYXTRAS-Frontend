@@ -165,7 +165,7 @@ export default {
 
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/report/user/submitted`,
                 {
                     mode: "GET",

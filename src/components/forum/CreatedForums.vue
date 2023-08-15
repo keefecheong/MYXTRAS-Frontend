@@ -108,7 +108,7 @@ export default {
 
         async retrieveCreatedForums() {
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/created`,
+                `${process.env.APP_SERVER_URL}/api/forums/created`,
                 {
                     method: "GET",
                     credentials: "include",

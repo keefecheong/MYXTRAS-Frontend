@@ -234,7 +234,7 @@ export default {
     methods: {
         checkAuth() {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`, {
+            fetch(`${process.env.APP_SERVER_URL}/api/users/profile`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json; charset=UTF-8",
@@ -402,7 +402,7 @@ export default {
             try {
                 const response = await fetch(
                     `${
-                        import.meta.env.VITE_APP_SERVER_URL
+                        process.env.APP_SERVER_URL
                     }/api/users/verify/username`,
                     {
                         method: "POST",
@@ -477,7 +477,7 @@ export default {
 
             try {
                 const response = await fetch(
-                    `${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile`,
+                    `${process.env.APP_SERVER_URL}/api/users/profile`,
                     {
                         method: "PATCH",
                         body: formData,

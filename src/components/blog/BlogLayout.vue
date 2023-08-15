@@ -714,7 +714,7 @@ export default {
         // handle updating of like status to backend
         async updateLike() {
             const targetURL = `${
-                import.meta.env.VITE_APP_SERVER_URL
+                process.env.APP_SERVER_URL
             }/api/posts/user/${this.blog.creator_id._id}/post/${
                 this.blog._id
             }/likes`;
@@ -770,7 +770,7 @@ export default {
         // handle updating of save status to backend
         async updateSave() {
             const targetURL = `${
-                import.meta.env.VITE_APP_SERVER_URL
+                process.env.APP_SERVER_URL
             }/api/posts/user/${this.blog.creator_id._id}/post/${
                 this.blog._id
             }/save`;
@@ -826,7 +826,7 @@ export default {
             }
 
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${
+                `${process.env.APP_SERVER_URL}/api/posts/user/${
                     this.blog.creator_id._id
                 }/post/${this.blog._id}`,
                 {
@@ -855,7 +855,7 @@ export default {
         // retrieve comments for the post
         async getComments() {
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${
+                `${process.env.APP_SERVER_URL}/api/posts/user/${
                     this.blog.creator_id._id
                 }/post/${this.blog._id}/comments`,
                 {
@@ -893,7 +893,7 @@ export default {
 
             // upload comment
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/user/${
+                `${process.env.APP_SERVER_URL}/api/posts/user/${
                     this.blog.creator_id._id
                 }/post/${this.blog._id}/comments`,
                 {

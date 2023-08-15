@@ -158,7 +158,7 @@ export default {
             }
 
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                `${process.env.APP_SERVER_URL}/api/threads/forum/${
                     this.thread.parent_id._id
                 }/thread/${this.thread._id}`,
                 {

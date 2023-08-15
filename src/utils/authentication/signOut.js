@@ -4,7 +4,7 @@ export default async function signOut() {
     let success = false;
 
     await fetch(
-        `${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/remove`,
+        `${process.env.APP_SERVER_URL}/api/users/cookie/remove`,
         {
             method: "GET",
             mode: "cors",

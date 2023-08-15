@@ -248,7 +248,7 @@ export default {
         // to get forum details
         getForumPage() {
             return fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/${
+                `${process.env.APP_SERVER_URL}/api/forums/${
                     this.forumID
                 }`,
                 {
@@ -275,7 +275,7 @@ export default {
         // to get threads
         getThreads() {
             return fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                `${process.env.APP_SERVER_URL}/api/threads/forum/${
                     this.forumID
                 }`,
                 {

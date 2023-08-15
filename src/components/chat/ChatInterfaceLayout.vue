@@ -614,7 +614,7 @@ export default {
 
             // send request to backend to get previous messages
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/chats/${
+                `${process.env.APP_SERVER_URL}/api/chats/${
                     this.chat._id
                 }/${encodedTimestamp}/100`,
                 {

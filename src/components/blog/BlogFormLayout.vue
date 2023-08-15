@@ -296,7 +296,7 @@ export default {
                 credentials: "include",
             };
 
-            const baseURL = `${import.meta.env.VITE_APP_SERVER_URL}/api/posts`;
+            const baseURL = `${process.env.APP_SERVER_URL}/api/posts`;
             const targetURL = this.editMode
                 ? `${baseURL}/user/${this.blog.creator_id._id}/post/${this.blog._id}`
                 : baseURL;

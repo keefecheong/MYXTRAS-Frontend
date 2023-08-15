@@ -8,7 +8,7 @@ import { useChatStore } from "../../stores/ChatStore.js";
 class ChatSocket {
     constructor() {
         // initiate socket connection with backend
-        this.socket = io(`${import.meta.env.VITE_APP_SERVER_URL}/chatSocket`, {
+        this.socket = io(`${process.env.APP_SERVER_URL}/chatSocket`, {
             withCredentials: true,
             reconnection: true,
         });

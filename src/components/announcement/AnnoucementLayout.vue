@@ -118,7 +118,7 @@ export default {
         },
         // get events
         async getEvents() {
-            await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/events`, {
+            await fetch(`${process.env.APP_SERVER_URL}/api/events`, {
                 mode: "cors",
                 method: "GET",
                 credentials: "include",
@@ -152,7 +152,7 @@ export default {
 
             // delete event
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/events/${
+                `${process.env.APP_SERVER_URL}/api/events/${
                     this.events[index]._id
                 }`,
                 {

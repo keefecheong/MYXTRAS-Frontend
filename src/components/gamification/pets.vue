@@ -34,7 +34,7 @@ export default {
             // get user profile and follow status
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/gamification/gachapon`,
                 {
                     methods: "GET",
@@ -117,7 +117,7 @@ export default {
             // get user profile and follow status
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/gamification/gachapon`,
                 {
                     methods: "GET",

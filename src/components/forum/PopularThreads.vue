@@ -89,7 +89,7 @@ export default {
         },
         async getPopularThreads() {
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/popular`,
+                `${process.env.APP_SERVER_URL}/api/threads/popular`,
                 {
                     mode: "cors",
                     method: "GET",

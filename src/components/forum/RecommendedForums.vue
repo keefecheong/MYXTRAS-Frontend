@@ -62,7 +62,7 @@ export default {
 
         async getRecommendations() {
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/recommended`,
+                `${process.env.APP_SERVER_URL}/api/forums/recommended`,
                 {
                     mode: "cors",
                     method: "GET",

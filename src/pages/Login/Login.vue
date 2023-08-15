@@ -154,7 +154,7 @@ export default {
 
             try {
                 const response = await fetch(
-                    `${import.meta.env.VITE_APP_SERVER_URL}/api/users/login`,
+                    `${process.env.APP_SERVER_URL}/api/users/login`,
                     {
                         method: "POST",
                         headers: {

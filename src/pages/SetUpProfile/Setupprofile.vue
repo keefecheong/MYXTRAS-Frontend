@@ -273,7 +273,7 @@ export default {
         },
         // get school and course information
         getSchools() {
-            fetch(`${import.meta.env.VITE_APP_SERVER_URL}/api/schools`, {
+            fetch(`${process.env.APP_SERVER_URL}/api/schools`, {
                 method: "GET",
                 mode: "cors",
             })
@@ -323,7 +323,7 @@ export default {
 
             fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/users/profile/setup`,
                 {
                     method: "PATCH",
@@ -360,7 +360,7 @@ export default {
             try {
                 const response = await fetch(
                     `${
-                        import.meta.env.VITE_APP_SERVER_URL
+                        process.env.APP_SERVER_URL
                     }/api/users/verify/username`,
                     {
                         method: "POST",

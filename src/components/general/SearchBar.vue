@@ -358,7 +358,7 @@ export default {
             try {
                 await fetch(
                     `${
-                        import.meta.env.VITE_APP_SERVER_URL
+                        process.env.APP_SERVER_URL
                     }/api/search/${searchObject}?term=${this.searchTerm.trim()}`,
                     {
                         method: "GET",
@@ -379,7 +379,7 @@ export default {
             // Ensure that its 127.0.0.1 and not localhost as Google Chrome may not send cookies for cross-site requests on localhost.
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/users/cookie/verify`,
                 {
                     method: "GET",

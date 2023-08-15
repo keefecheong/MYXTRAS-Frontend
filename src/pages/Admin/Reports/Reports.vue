@@ -114,7 +114,7 @@ export default {
         // to get reports
         async getReports() {
             const baseURL = `${
-                import.meta.env.VITE_APP_SERVER_URL
+                process.env.APP_SERVER_URL
             }/api/admin/report`;
             const options = {
                 method: "GET",

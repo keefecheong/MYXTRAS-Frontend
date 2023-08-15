@@ -326,7 +326,7 @@ export default {
 
             if (this.resolve) {
                 url = `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/admin/report/resolve`;
 
                 if (failedReport) {
@@ -336,7 +336,7 @@ export default {
                 }
             } else {
                 url = `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/report/submit`;
             }
 

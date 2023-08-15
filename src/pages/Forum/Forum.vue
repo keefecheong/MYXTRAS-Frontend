@@ -215,7 +215,7 @@ export default {
         },
         async retrieveRecentThreads() {
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/recent`,
+                `${process.env.APP_SERVER_URL}/api/threads/recent`,
                 {
                     mode: "cors",
                     method: "GET",

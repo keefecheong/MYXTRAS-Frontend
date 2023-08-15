@@ -3,7 +3,7 @@ export default async function validateUser() {
     let result;
 
     await fetch(
-        `${import.meta.env.VITE_APP_SERVER_URL}/api/users/cookie/verify`,
+        `${process.env.APP_SERVER_URL}/api/users/cookie/verify`,
         {
             method: "get",
             credentials: "include",

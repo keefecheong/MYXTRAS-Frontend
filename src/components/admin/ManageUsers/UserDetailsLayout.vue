@@ -372,7 +372,7 @@ export default {
             }
 
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/admin/accounts${
+                `${process.env.APP_SERVER_URL}/api/admin/accounts${
                     action.url
                 }`,
                 options,

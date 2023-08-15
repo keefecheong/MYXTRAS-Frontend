@@ -238,7 +238,7 @@ export default {
         },
         retrieveExploreThreads() {
             fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/explore`,
+                `${process.env.APP_SERVER_URL}/api/threads/explore`,
                 {
                     mode: "cors",
                     method: "GET",
@@ -268,7 +268,7 @@ export default {
         },
         retrieveForums() {
             fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/forums/categorized`,
+                `${process.env.APP_SERVER_URL}/api/forums/categorized`,
                 {
                     mode: "cors",
                     method: "GET",

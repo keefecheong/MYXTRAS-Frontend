@@ -391,7 +391,7 @@ export default {
             // get user profile and follow status
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/gamification/missions`,
                 {
                     methods: "GET",
@@ -412,7 +412,7 @@ export default {
                 });
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/gamification/daily-checkin`,
                 {
                     mode: "cors",
@@ -433,7 +433,7 @@ export default {
         async checkIn() {
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/gamification/daily-checkin`,
                 {
                     mode: "cors",
@@ -454,7 +454,7 @@ export default {
         async claimMission(targetTitle) {
             await fetch(
                 `${
-                    import.meta.env.VITE_APP_SERVER_URL
+                    process.env.APP_SERVER_URL
                 }/api/gamification/missions/${targetTitle}`,
                 {
                     mode: "cors",

@@ -342,7 +342,7 @@ export default {
         // to get comment data
         async initData() {
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                `${process.env.APP_SERVER_URL}/api/threads/forum/${
                     this.thread.parent_id._id
                 }/thread/${this.thread._id}/comments`,
                 {
@@ -381,7 +381,7 @@ export default {
 
             // upload comment
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                `${process.env.APP_SERVER_URL}/api/threads/forum/${
                     this.thread.parent_id._id
                 }/thread/${this.thread._id}/comments`,
                 {
@@ -458,7 +458,7 @@ export default {
         // handle updating of like status to backend
         async updateLike() {
             const url = `${
-                import.meta.env.VITE_APP_SERVER_URL
+                process.env.APP_SERVER_URL
             }/api/threads/forum/${this.thread.parent_id._id}/thread/${
                 this.thread._id
             }/like`;
@@ -501,7 +501,7 @@ export default {
         // handle updating of dislike status to backend
         async updateDislike() {
             const url = `${
-                import.meta.env.VITE_APP_SERVER_URL
+                process.env.APP_SERVER_URL
             }/api/threads/forum/${this.thread.parent_id._id}/thread/${
                 this.thread._id
             }/dislike`;
@@ -569,7 +569,7 @@ export default {
             }
 
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/threads/forum/${
+                `${process.env.APP_SERVER_URL}/api/threads/forum/${
                     this.thread.parent_id._id
                 }/thread/${this.thread._id}`,
                 {

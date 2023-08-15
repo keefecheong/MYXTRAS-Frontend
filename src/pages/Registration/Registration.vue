@@ -531,7 +531,7 @@ export default {
             try {
                 const response = await fetch(
                     `${
-                        import.meta.env.VITE_APP_SERVER_URL
+                        process.env.APP_SERVER_URL
                     }/api/users/verify/email`,
                     {
                         mode: "cors",
@@ -571,7 +571,7 @@ export default {
             try {
                 const response = await fetch(
                     `${
-                        import.meta.env.VITE_APP_SERVER_URL
+                        process.env.APP_SERVER_URL
                     }/api/users/verify/phone`,
                     {
                         method: "POST",
@@ -625,7 +625,7 @@ export default {
             };
 
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/users/register`,
+                `${process.env.APP_SERVER_URL}/api/users/register`,
                 {
                     method: "POST",
                     headers: {

@@ -96,7 +96,7 @@ export default {
         async initData() {
             // get user profile and follow status
             const userPromise = fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/users/profile/${
+                `${process.env.APP_SERVER_URL}/api/users/profile/${
                     this.targetUserId
                 }`,
                 {
@@ -116,7 +116,7 @@ export default {
 
             // get user's posts
             const postPromise = fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/by/${
+                `${process.env.APP_SERVER_URL}/api/posts/by/${
                     this.targetUserId
                 }`,
                 {

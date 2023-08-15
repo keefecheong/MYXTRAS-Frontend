@@ -437,7 +437,7 @@ export default {
 
                         await fetch(
                             `${
-                                import.meta.env.VITE_APP_SERVER_URL
+                                process.env.APP_SERVER_URL
                             }/api/admin/report/user/${
                                 this.report.reporter.id?._id ||
                                 this.report.reporter.id

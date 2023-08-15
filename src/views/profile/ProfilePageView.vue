@@ -416,7 +416,7 @@ export default {
         // to get user's saved posts if user is viewing his own profile
         async getSavedPosts() {
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/posts/saved`,
+                `${process.env.APP_SERVER_URL}/api/posts/saved`,
                 {
                     mode: "cors",
                     method: "GET",
@@ -471,7 +471,7 @@ export default {
             }
 
             const targetURL = `${
-                import.meta.env.VITE_APP_SERVER_URL
+                process.env.APP_SERVER_URL
             }/api/users/${this.user._id}/follow`;
             const options = {
                 mode: "cors",
@@ -533,7 +533,7 @@ export default {
             let target = null;
 
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/chats/check/${
+                `${process.env.APP_SERVER_URL}/api/chats/check/${
                     this.user._id
                 }`,
                 {
@@ -598,7 +598,7 @@ export default {
             this.toggleChildLoading(true);
 
             await fetch(
-                `${import.meta.env.VITE_APP_SERVER_URL}/api/users/${
+                `${process.env.APP_SERVER_URL}/api/users/${
                     this.user._id
                 }/block`,
                 {
