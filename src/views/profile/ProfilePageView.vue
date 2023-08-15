@@ -185,7 +185,7 @@
             </div>
         </div>
 
-        <div id="right-content" :class="{ 'hide': onSmallScreen }">
+        <div id="right-content" :class="{ hide: onSmallScreen }">
             <!-- view warnings and submitted reports -->
             <router-link to="/support">
                 <button
@@ -198,7 +198,9 @@
             </router-link>
 
             <div class="card card-body card-position">
-                <button class="pink-btn" @click="toggleFollowing">{{ showFollowing ? "View Followers" : "View Following" }}</button>
+                <button class="pink-btn" @click="toggleFollowing">
+                    {{ showFollowing ? "View Followers" : "View Following" }}
+                </button>
 
                 <div>
                     <h5 class="card-title">
@@ -209,10 +211,17 @@
                         v-if="followersToDisplay.length === 0"
                         class="row center-align"
                     >
-                        <p id="no-followers">{{ showFollowing ? 'Not following anyone' : 'No followers ☹' }}</p>
+                        <p id="no-followers">
+                            {{
+                                showFollowing
+                                    ? "Not following anyone"
+                                    : "No followers ☹"
+                            }}
+                        </p>
                         <p id="no-followers">
                             Head to the
-                            <a class="a-link" href="/explore.html">Xplore</a> page!
+                            <a class="a-link" href="/explore.html">Xplore</a>
+                            page!
                         </p>
                     </div>
                     <div
@@ -223,7 +232,10 @@
                         :key="follower.username"
                         @click="viewFollower(follower._id)"
                     >
-                        <img class="profilepic" :src="follower.profile_pic_link" />
+                        <img
+                            class="profilepic"
+                            :src="follower.profile_pic_link"
+                        />
                         <span class="follower-username">{{
                             follower.username
                         }}</span>
@@ -607,8 +619,10 @@ export default {
         },
         // to get the list of users to display under followers/following
         followersToDisplay() {
-            return this.showFollowing ? this.userData.followingUsers : this.user.followers;
-        }
+            return this.showFollowing
+                ? this.userData.followingUsers
+                : this.user.followers;
+        },
     },
 };
 </script>

@@ -96,14 +96,12 @@ export default {
         async initData() {
             // get user profile and follow status
             const userPromise = fetch(
-                `${process.env.APP_SERVER_URL}/api/users/profile/${
-                    this.targetUserId
-                }`,
+                `${process.env.APP_SERVER_URL}/api/users/profile/${this.targetUserId}`,
                 {
                     methods: "GET",
                     credentials: "include",
                     mode: "cors",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
@@ -116,14 +114,12 @@ export default {
 
             // get user's posts
             const postPromise = fetch(
-                `${process.env.APP_SERVER_URL}/api/posts/by/${
-                    this.targetUserId
-                }`,
+                `${process.env.APP_SERVER_URL}/api/posts/by/${this.targetUserId}`,
                 {
                     mode: "cors",
                     method: "GET",
                     credentials: "include",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
