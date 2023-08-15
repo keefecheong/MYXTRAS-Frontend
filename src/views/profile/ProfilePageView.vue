@@ -185,7 +185,7 @@
             </div>
         </div>
 
-        <div id="right-content">
+        <div id="right-content" :class="{ 'hide': onSmallScreen }">
             <!-- view warnings and submitted reports -->
             <router-link to="/support">
                 <button
@@ -387,11 +387,6 @@ export default {
         window.addEventListener("beforeunload", this.completeFollowRequest);
     },
     mounted() {
-        // Check if the current view is mobile or not
-        this.checkIsMobileView();
-        // Listen for window resize events to update the left/right-content classes
-        window.addEventListener("resize", this.handleWindowResize);
-
         if (!this.postId) return;
 
         // if postId is set then scroll to and highlight the post and remove highlight after 5 seconds
@@ -410,30 +405,9 @@ export default {
     beforeUnmount() {
         this.completeFollowRequest();
     },
-    beforeDestroy() {
-        // Remove the event listener to avoid memory leaks
-        window.removeEventListener("resize", this.checkIsMobileView());
-    },
     methods: {
         toggleFollowing() {
             this.toggledFollowing = !this.toggledFollowing;
-        },
-        checkIsMobileView() {
-            const left_content = document.getElementById("left-content");
-            const right_content = document.getElementById("right-content");
-            // Use the window innerWidth to determine if it's mobile or not
-            if (window.innerWidth <= 767) {
-                right_content.classList.add("hide");
-                left_content.classList.remove("hide");
-            } else {
-                this.viewingProfile = true;
-                left_content.classList.remove("hide");
-                right_content.classList.remove("hide");
-            }
-        },
-        handleWindowResize() {
-            // Update the isMobileView property whenever the window is resized
-            this.checkIsMobileView();
         },
         toggleBetween() {
             const left_content = document.getElementById("left-content");
@@ -658,7 +632,7 @@ export default {
         // to get the correct set of blogs to display
         blogsToDisplay() {
             return this.viewingSaved ? this.savedBlogs : this.blogs;
-        },
+        }
     },
 };
 </script>
