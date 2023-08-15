@@ -1030,7 +1030,9 @@ export default {
     p {
         font-size: 14px;
     }
-
+    .pink-btn {
+        font-size: 11px;
+    }
     #white-container {
         max-width: 100vw;
     }
