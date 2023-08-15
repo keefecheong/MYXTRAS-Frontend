@@ -33,7 +33,9 @@
     flex-direction: column;
     align-items: center;
 }
-
+.recommended-forum-name {
+    padding: 2vh 2vw 0 2vw;
+}
 .recommended-forum-name:hover {
     color: var(--primary);
     cursor: pointer;
