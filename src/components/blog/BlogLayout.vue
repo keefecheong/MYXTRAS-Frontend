@@ -211,6 +211,7 @@
                     v-model="commentText"
                     :placeholder="'Add a comment...'"
                     :maxRows="5"
+                    maxlength="500"
                 />
                 <hr />
                 <div class="create-comment-submit-container">
@@ -490,6 +491,7 @@
 /* comment section styles */
 .blog-comments-container {
     padding: 10px;
+    max-width: 50vw;
 }
 
 .create-comment-form {

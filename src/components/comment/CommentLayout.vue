@@ -155,6 +155,7 @@ export default {
     border-bottom-right-radius: 0;
     padding: 10px;
     transition: background-color 1s ease-out;
+    max-width: 100%;
 }
 
 .comment-profile-pic {
@@ -166,10 +167,16 @@ export default {
     user-select: none;
 }
 
-.bottom-content {
+.bottom-content, .comment-content {
     word-wrap: break-word;
+    max-width: 100%;
 }
-
+.comment-content > p {
+    max-width: 100%;
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+}
 .right-content {
     display: flex;
     flex-direction: column;
@@ -183,7 +190,7 @@ export default {
     flex-direction: row;
     align-items: center;
     column-gap: 20px;
-    width: 100%;
+    max-width: 100%;
 }
 
 

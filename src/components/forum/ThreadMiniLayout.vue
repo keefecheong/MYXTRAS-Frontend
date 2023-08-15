@@ -24,15 +24,15 @@
                             <span
                                 v-if="showForumDetails"
                                 @click.stop="viewForum"
-                                class="thread-layout-forum-name"
+                                class="thread-layout-forum-name a-link"
                                 title="View forum"
-                                >x/{{ thread.parent_id.forum_id }} ~
+                                >x/{{ thread.parent_id.forum_id }}
                             </span>
                             <span
                                 class="thread-layout-creator-name"
                                 @click.stop="viewUser"
                                 title="View user"
-                                >Posted by: @{{
+                                > ~ Posted by: @{{
                                     thread.creator_id.username
                                 }}</span
                             >

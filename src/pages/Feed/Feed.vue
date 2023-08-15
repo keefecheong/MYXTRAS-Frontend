@@ -27,7 +27,7 @@
                 <div v-if="blogs.length <= 0" class="no-more-blogs">
                     <p>No new activity.</p>
                     <p>
-                        Follow more people? <a href="/explore.html">Explore!</a>
+                        Follow more people? <a class="a-link" href="/explore.html">Explore!</a>
                     </p>
                 </div>
 
@@ -44,7 +44,7 @@
                         <p>That's the end. You're all catched up!</p>
                         <p>
                             Follow more people?
-                            <a href="/explore.html">Explore!</a>
+                            <a class="a-link" href="/explore.html">Explore!</a>
                         </p>
                     </div>
                 </div>
