@@ -5,7 +5,7 @@
                 <h5 class="card-title">Your Subscribed Forums</h5>
                 <div class="row center-align" v-if="subbedForums.length === 0">
                     <p>No subscribed forums ☹</p>
-                    <p>Head to the <a href="/explore.html">Xplore</a> page!</p>
+                    <p>Head to the <a class="a-link" href="/explore.html">Xplore</a> page!</p>
                 </div>
 
                 <div v-else id="subscribed-forum-container">

@@ -43,7 +43,7 @@
                             <div class="center-align whiteBox">
                                 <p>
                                     No new threads,
-                                    <a href="/explore.html">Xplore</a> now!
+                                    <a class="a-link" href="/explore.html">Xplore</a> now!
                                 </p>
                             </div>
                         </div>
