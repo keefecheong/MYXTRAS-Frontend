@@ -526,8 +526,7 @@ export default {
         },
         // to view follower user profile
         viewFollower(userId) {
-            console.log("view follower");
-            viewUser(userId);
+            viewUser(userId, true);
         },
         // to create chat with the user and go to chat.html
         async createChat() {
@@ -669,7 +668,7 @@ export default {
 #right-content {
     background-color: var(--primary);
     padding: 25px;
-    flex: 0 0 20%;
+    flex: 0 0 25%;
     display: flex;
     flex-direction: column;
     align-items: center;
