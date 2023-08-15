@@ -198,34 +198,64 @@
             </router-link>
 
             <div class="card card-body card-position">
-                <h5 class="card-title">
-                    Followers: {{ user.followers.length }}
-                </h5>
+                <button class="pink-btn" @click="toggleFollowing">{{ toggledFollowing ? "View Followers" : "View Following" }}</button>
+                <div v-if="!toggledFollowing">
+                    <h5 class="card-title">
+                        Followers: {{ user.followers.length }}
+                    </h5>
 
-                <div
-                    v-if="user.followers.length === 0"
-                    class="row center-align"
-                >
-                    <p id="no-followers">No followers ☹</p>
-                    <p id="no-followers">
-                        Head to the
-                        <a class="a-link" href="/explore.html">Xplore</a> page!
-                    </p>
+                    <div
+                        v-if="user.followers.length === 0"
+                        class="row center-align"
+                    >
+                        <p id="no-followers">No followers ☹</p>
+                        <p id="no-followers">
+                            Head to the
+                            <a class="a-link" href="/explore.html">Xplore</a> page!
+                        </p>
+                    </div>
+                    <div
+                        class="view-user-follower"
+                        title="View user"
+                        v-else
+                        v-for="follower in user.followers"
+                        :key="follower.username"
+                        @click="viewFollower(follower._id)"
+                    >
+                        <img class="profilepic" :src="follower.profile_pic_link" />
+                        <span class="follower-username">{{
+                            follower.username
+                        }}</span>
+                    </div>
+                </div>
+                <div v-else>
+                    <h5 class="card-title">
+                        Following: {{ user.followers.length }}
+                    </h5>
+
+                    <div
+                        v-if="user.followers.length === 0"
+                        class="row center-align"
+                    >
+                        <p id="no-followers">Not following anyone ☹</p>
+                        <p id="no-followers">
+                            Head to the
+                            <a class="a-link" href="/explore.html">Xplore</a> page!
+                        </p>
+                    </div>
+                    <div
+                        v-if="user.followers.length !== 0"
+                        class="row center-align"
+                    >
+                        <p id="no-followers">Not following anyone ☹</p>
+                        <p id="no-followers">
+                            Head to the
+                            <a class="a-link" href="/explore.html">Xplore</a> page!
+                        </p>
+                    </div>
                 </div>
 
-                <div
-                    class="view-user-follower"
-                    title="View user"
-                    v-else
-                    v-for="follower in user.followers"
-                    :key="follower.username"
-                    @click="viewFollower(follower._id)"
-                >
-                    <img class="profilepic" :src="follower.profile_pic_link" />
-                    <span class="follower-username">{{
-                        follower.username
-                    }}</span>
-                </div>
+                
             </div>
 
             <CreatedForums />
@@ -309,6 +339,7 @@ export default {
             showCreateBlog: false,
             showReportForm: false,
 
+            toggledFollowing: false,
             alert: useAlertStore().alert,
         };
     },
@@ -375,6 +406,9 @@ export default {
         this.completeFollowRequest();
     },
     methods: {
+        toggleFollowing() {
+            this.toggledFollowing = !this.toggledFollowing;
+        },
         toggleBetween() {
             const left_content = document.getElementById("left-content");
             const right_content = document.getElementById("right-content");
@@ -650,8 +684,11 @@ export default {
         border: none;
         padding: 20px;
         font-size: 1.5em;
+        font-weight: bold;
         width: 100%;
         border-radius: 15px;
+        text-decoration: underline;
+        color: var(--dark-blue);
     }
 
     #support-request-button:hover {
@@ -935,9 +972,30 @@ export default {
 .hide {
     display: none !important;
 }
-
+.pink-btn {
+    font-weight: bold;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 5px;
+    margin: 0 2vw;
+    white-space: normal;
+    text-align: center;
+    font-size: 1vw;
+    transition: all 0.3s;
+    margin-bottom: 5%;
+    text-decoration: none;
+}
+.pink-btn > p {
+    margin: 1vh 0;
+}
+.pink-btn:hover {
+    background-color: transparent;
+    border: 3px solid var(--primary);
+    cursor: pointer;
+    color: var(--primary);
+}
 /* medium screens and smaller */
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 768px) {
     body {
         text-align: center !important;
         font-size: 14px !important;
