@@ -664,7 +664,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('../../styles/main.css');
 .card {
     padding: 40px 0;
     border-radius: 15px;
@@ -999,9 +998,30 @@ export default {
 .hide {
     display: none !important;
 }
-
+.pink-btn {
+    font-weight: bold;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 5px;
+    margin: 0 2vw;
+    white-space: normal;
+    text-align: center;
+    font-size: 1vw;
+    transition: all 0.3s;
+    margin-bottom: 5%;
+    text-decoration: none;
+}
+.pink-btn > p {
+    margin: 1vh 0;
+}
+.pink-btn:hover {
+    background-color: transparent;
+    border: 3px solid var(--primary);
+    cursor: pointer;
+    color: var(--primary);
+}
 /* medium screens and smaller */
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 768px) {
     body {
         text-align: center !important;
         font-size: 14px !important;
