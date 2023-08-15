@@ -35,16 +35,16 @@
                     <h1 id="forum-header">Latest Updates!</h1>
                 </div>
                 <div class="col-md-6 forum-middle-content">
-                    <div class="row" v-if="!showDetailedThread">
+                    <div v-if="!showDetailedThread">
                         <div
-                            class="card shadow"
+                            class="recent-threads-container card shadow"
                             v-if="recentThreads.length === 0"
                         >
                             <div class="center-align whiteBox">
-                                <p>
+                                <h4>
                                     No new threads,
                                     <a class="a-link" href="/explore.html">Xplore</a> now!
-                                </p>
+                                </h4>
                             </div>
                         </div>
 
@@ -111,11 +111,19 @@
 #forum-view-container {
     padding: 20px;
 }
+.whiteBox {
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+}
 .whiteBox p {
     margin: 5vh;
     text-align: center;
+    min-height: 50vh;
 }
-
+.recent-threads-container {
+    min-height: 50vh;
+}
 @media screen and (max-width: 768px) {
     .whiteBox {
         margin: 5vh 0;

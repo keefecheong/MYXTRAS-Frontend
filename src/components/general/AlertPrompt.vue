@@ -157,7 +157,6 @@ export default {
     color: white;
 }
 
-#alert-close:focus,
 #alert-close:hover {
     background-color: white;
     outline: none;
