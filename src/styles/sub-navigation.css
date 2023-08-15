@@ -22,7 +22,11 @@ usage:
   align-items: center;
   row-gap: 5px;
 }
-
+@media screen and (max-width: 768px) {
+  .sub-navigation-container {
+    position: static;
+  }
+}
 .sub-navigation {
   background-color: #ffffff;
   border: #e53a73 solid 3.5px;

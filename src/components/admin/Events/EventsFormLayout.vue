@@ -117,6 +117,7 @@
                         :format="'YYYY-MM-DDTHH:mm:ssZ'"
                         :formatted="'DD-MM-YYYY HH:mm'"
                         :firstDayOfWeek="1"
+                        :min-date="new Date()"
                     />
                 </div>
                 <div class="color-picker"></div>
