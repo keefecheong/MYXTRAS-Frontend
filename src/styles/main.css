@@ -85,6 +85,7 @@ button {
   text-decoration: none;
   font-size: 1vw;
   color: black;
+  
 }
 
 .white-btn:hover {
@@ -293,4 +294,11 @@ h1 {
 
 .card {
   border-radius: 15px;
+}
+
+@media screen and (max-width: 768px) {
+
+  .white-btn, .pink-btn{
+    font-size: 11px;
+  }
 }

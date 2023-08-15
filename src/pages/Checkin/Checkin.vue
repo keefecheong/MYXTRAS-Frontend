@@ -99,7 +99,7 @@
                                         >lock</span
                                     >
                                 </button>
-                                <btn
+                                <button
                                     class="white-btn"
                                     :class="{ claimed: mission.claimed }"
                                     v-else="!missions.locked"
@@ -110,7 +110,7 @@
                                                 ? "Claimed"
                                                 : "Claim"
                                         }}
-                                    </p></btn
+                                    </p></button
                                 >
                             </div>
                         </div>
@@ -141,12 +141,12 @@
                                         >lock</span
                                     >
                                 </button>
-                                <btn
+                                <button
                                     class="white-btn"
                                     :class="{ claimed: allClaimed.claimed }"
                                     v-else="!allClaimed.locked"
                                     @click="claimMission('allClaim')"
-                                    ><p>Claim</p></btn
+                                    >Claim</button
                                 >
                             </div>
                         </div>
