@@ -183,6 +183,7 @@
                             <DynamicTextarea
                                 :id="'thread-comment-input'"
                                 :maxRows="4"
+                                :maxlength="500"
                                 :placeholder="'Add a comment...'"
                                 v-model="commentText"
                             />

@@ -208,7 +208,7 @@
                 >
                     <p id="no-followers">No followers ☹</p>
                     <p id="no-followers">
-                        Head to the <a href="/explore.html">Xplore</a> page!
+                        Head to the <a class="a-link" href="/explore.html">Xplore</a> page!
                     </p>
                 </div>
 
