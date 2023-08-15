@@ -198,17 +198,18 @@
             </router-link>
 
             <div class="card card-body card-position">
-                <button class="pink-btn" @click="toggleFollowing">{{ toggledFollowing ? "View Followers" : "View Following" }}</button>
-                <div v-if="!toggledFollowing">
+                <button class="pink-btn" @click="toggleFollowing">{{ showFollowing ? "View Followers" : "View Following" }}</button>
+
+                <div>
                     <h5 class="card-title">
-                        Followers: {{ user.followers.length }}
+                        Followers: {{ followersToDisplay.length }}
                     </h5>
 
                     <div
-                        v-if="user.followers.length === 0"
+                        v-if="followersToDisplay.length === 0"
                         class="row center-align"
                     >
-                        <p id="no-followers">No followers ☹</p>
+                        <p id="no-followers">{{ showFollowing ? 'Not following anyone' : 'No followers ☹' }}</p>
                         <p id="no-followers">
                             Head to the
                             <a class="a-link" href="/explore.html">Xplore</a> page!
@@ -218,7 +219,7 @@
                         class="view-user-follower"
                         title="View user"
                         v-else
-                        v-for="follower in user.followers"
+                        v-for="follower in followersToDisplay"
                         :key="follower.username"
                         @click="viewFollower(follower._id)"
                     >
@@ -228,34 +229,6 @@
                         }}</span>
                     </div>
                 </div>
-                <div v-else>
-                    <h5 class="card-title">
-                        Following: {{ user.followers.length }}
-                    </h5>
-
-                    <div
-                        v-if="user.followers.length === 0"
-                        class="row center-align"
-                    >
-                        <p id="no-followers">Not following anyone ☹</p>
-                        <p id="no-followers">
-                            Head to the
-                            <a class="a-link" href="/explore.html">Xplore</a> page!
-                        </p>
-                    </div>
-                    <div
-                        v-if="user.followers.length !== 0"
-                        class="row center-align"
-                    >
-                        <p id="no-followers">Not following anyone ☹</p>
-                        <p id="no-followers">
-                            Head to the
-                            <a class="a-link" href="/explore.html">Xplore</a> page!
-                        </p>
-                    </div>
-                </div>
-
-                
             </div>
 
             <CreatedForums />
@@ -339,7 +312,7 @@ export default {
             showCreateBlog: false,
             showReportForm: false,
 
-            toggledFollowing: false,
+            showFollowing: false,
             alert: useAlertStore().alert,
         };
     },
@@ -407,7 +380,7 @@ export default {
     },
     methods: {
         toggleFollowing() {
-            this.toggledFollowing = !this.toggledFollowing;
+            this.showFollowing = !this.showFollowing;
         },
         toggleBetween() {
             const left_content = document.getElementById("left-content");
@@ -631,6 +604,10 @@ export default {
         // to get the correct set of blogs to display
         blogsToDisplay() {
             return this.viewingSaved ? this.savedBlogs : this.blogs;
+        },
+        // to get the list of users to display under followers/following
+        followersToDisplay() {
+            return this.showFollowing ? this.userData.followingUsers : this.user.followers;
         }
     },
 };
