@@ -444,6 +444,8 @@ export default {
             }
         },
         async updateProfile() {
+            this.loading = true;
+
             let formData = new FormData();
 
             this.userObject = {
@@ -452,30 +454,22 @@ export default {
                 selectedInterests: this.selectedOption,
                 gender: this.gender,
             };
-            formData.append("userObject", JSON.stringify(this.userObject));
-            const files = [];
 
             try {
+                formData.append("userObject", JSON.stringify(this.userObject));
+
                 formData.append(
                     "selectedImages",
                     this.croppedImageFile,
                     "profilePicture",
                 );
-            } catch (error) {
-                console.log(error);
-            }
 
-            try {
                 formData.append(
                     "selectedImages",
                     this.croppedBannerFile,
                     "banner",
                 );
-            } catch (error) {
-                console.log(error);
-            }
 
-            try {
                 const response = await fetch(
                     `${process.env.APP_SERVER_URL}/api/users/profile`,
                     {
@@ -494,7 +488,7 @@ export default {
                 console.log("Error:", error);
             }
 
-            this.loading = true;
+            this.loading = false;
         },
 
         handleSelectedInterests(selectedOption) {
