@@ -114,7 +114,8 @@
                 <div class="event-date-time-picker">
                     <VueCtkDateTimePicker
                         v-model="selectedDateTime"
-                        :format="'DD-MM-YYYY HH:mm'"
+                        :format="'YYYY-MM-DDTHH:mm:ssZ'"
+                        :formatted="'DD-MM-YYYY HH:mm'"
                         :firstDayOfWeek="1"
                     />
                 </div>
@@ -181,7 +182,7 @@ export default {
             alert: useAlertStore().alert,
             pickr: null,
             bannerUpdated: false,
-            selectedDateTime: new Date(),
+            selectedDateTime: Date.now(),
             dataInitialized: false,
         };
     },
@@ -310,7 +311,7 @@ export default {
                     event_name: this.name.trim(),
                     event_desc: this.description.trim(),
                     event_location: this.location.trim(),
-                    event_date: Date(this.selectedDateTime),
+                    event_date: new Date(this.selectedDateTime),
                     event_color: this.color.trim(),
                 };
 
