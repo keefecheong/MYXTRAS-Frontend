@@ -352,7 +352,7 @@ export default {
         this.debouncedFollowUpdate = debounce(this.updateFollowing, 3000);
 
         // set event listener to complete pending request when page is closed
-        window.addEventListener("beforeunload", this.handleWindowResize);
+        window.addEventListener("beforeunload", this.completeFollowRequest);
     },
     mounted() {
         // Check if the current view is mobile or not
