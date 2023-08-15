@@ -95,6 +95,7 @@
                     :id="'image-caption'"
                     :placeholder="'Provide a caption (Optional)'"
                     v-model="caption"
+                    maxlength="500"
                 />
             </div>
 

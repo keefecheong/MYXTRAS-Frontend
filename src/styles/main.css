@@ -15,6 +15,7 @@
   --red: #dc0000;
   --grey-overlay: #00000080;
   --blue: #398fff;
+  --dark-blue: #0059ce;
   --orange: #ff841f;
   /* important z-index values */
   --nav-z-index: 80;
@@ -102,13 +103,19 @@ button {
 }
 
 a {
-  text-decoration: none !important;
+  text-decoration: none;
 }
 
 a:hover {
   color: var(--primary);
 }
-
+.a-link {
+  color: var(--dark-blue) !important;
+  text-decoration: underline !important;
+}
+.a-link:hover {
+  color: var(--primary) !important;
+}
 .imageContainer {
   width: 100%;
 }
