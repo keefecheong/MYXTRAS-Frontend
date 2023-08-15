@@ -937,7 +937,7 @@ export default {
         // go to profile page to view the creator's profile
         viewUser() {
             // only redirect if not already at profile page
-            if (location.pathname != "/profilePage.html") {
+            if (!location.pathname.startsWith("/profilePage.html")) {
                 viewUser(this.blog.creator_id._id);
             }
         },

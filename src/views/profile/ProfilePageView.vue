@@ -668,7 +668,7 @@ export default {
 #right-content {
     background-color: var(--primary);
     padding: 25px;
-    flex: 0 0 20%;
+    flex: 0 0 25%;
     display: flex;
     flex-direction: column;
     align-items: center;
