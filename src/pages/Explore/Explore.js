@@ -4,7 +4,7 @@ import "bootstrap/dist/js/bootstrap.js";
 import router from "../../router/ExploreRouter.js";
 import { createPinia } from "pinia";
 import dynamicMount from "../../utils/authentication/authAccessControl.js";
-import GlobalComponentsPlugin from "../../utils/general/globalComponenet.js";
+import GlobalComponentsPlugin from "../../utils/general/globalComponent.js";
 
 const app = await dynamicMount(App);
 app.use(GlobalComponentsPlugin);

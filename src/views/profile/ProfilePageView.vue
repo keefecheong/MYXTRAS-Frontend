@@ -265,12 +265,12 @@ import ReportFormLayout from "../../components/report/ReportFormLayout.vue";
 import ObjectID from "bson-objectid";
 import { debounce } from "lodash";
 import viewUser from "../../utils/general/viewUser.js";
-import signOut from "../../utils/authentication/signOut";
+import signOut from "../../utils/authentication/signOut.js";
 
 import highlightElement from "../../utils/general/highlightElement.js";
 
-import { useConfirmStore } from "../../stores/ConfirmStore";
-import { useAlertStore } from "../../stores/AlertStore";
+import { useConfirmStore } from "../../stores/ConfirmStore.js";
+import { useAlertStore } from "../../stores/AlertStore.js";
 
 export default {
     components: {

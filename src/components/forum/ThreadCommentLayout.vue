@@ -63,10 +63,10 @@
 </template>
 
 <script>
-import calcDateDifference from "../../utils/general/calcDateDifference";
+import calcDateDifference from "../../utils/general/calcDateDifference.js";
 import viewUser from "../../utils/general/viewUser.js";
 import { useConfirmStore } from "../../stores/ConfirmStore.js";
-import { useAlertStore } from "../../stores/AlertStore";
+import { useAlertStore } from "../../stores/AlertStore.js";
 
 export default {
     data() {

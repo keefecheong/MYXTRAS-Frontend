@@ -241,7 +241,7 @@
 <script>
 import InterestBadgeList from "../general/InterestBadgeList.vue";
 
-import { useAlertStore } from "../../stores/AlertStore";
+import { useAlertStore } from "../../stores/AlertStore.js";
 import { useConfirmStore } from "../../stores/ConfirmStore.js";
 
 import LoadingOverlay from "../general/LoadingOverlay.vue";

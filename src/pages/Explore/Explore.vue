@@ -79,7 +79,7 @@
 
 <script>
 import SearchBar from "../../components/general/SearchBar.vue";
-import { useAlertStore } from "../../stores/AlertStore";
+import { useAlertStore } from "../../stores/AlertStore.js";
 import AlertPrompt from "../../components/general/AlertPrompt.vue";
 import { useConfirmStore } from "../../stores/ConfirmStore.js";
 import ConfirmPrompt from "../../components/general/ConfirmPrompt.vue";

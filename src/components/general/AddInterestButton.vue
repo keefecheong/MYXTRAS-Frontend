@@ -86,7 +86,7 @@
 
 <script>
 import InterestBadgeList from "./InterestBadgeList.vue";
-import handleSelectedInterests from "../../utils/general/defaultInterestSelectedCallback";
+import handleSelectedInterests from "../../utils/general/defaultInterestSelectedCallback.js";
 
 export default {
     props: ["selectedOption", "maxWidth"],
