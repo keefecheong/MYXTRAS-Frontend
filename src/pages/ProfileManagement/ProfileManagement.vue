@@ -3,7 +3,7 @@
         <NavSidebar />
         <div id="main-content">
             <LoadingOverlay
-                v-if="loading || childLoading"
+                v-if="loading"
                 :center="true"
                 :backgroundColor="'rgba(0, 0, 0, 0.5)'"
             />
@@ -224,7 +224,7 @@ export default {
         // set debounce functions
         this.debouncedVerifyUsername = debounce(
             this.debounceVerifyUsernameFunction,
-            1000,
+            1000
         );
     },
     mounted() {
@@ -316,7 +316,7 @@ export default {
 
             // error messages
             const illegalFileType = `Illegal file type, allowed file types: ${acceptedFileTypes.join(
-                ", ",
+                ", "
             )}`;
             const largeFile = `File is too large, maximum file size is ${
                 maxImageSize / 1024 / 1024
@@ -401,9 +401,7 @@ export default {
         async debounceVerifyUsernameFunction() {
             try {
                 const response = await fetch(
-                    `${
-                        process.env.APP_SERVER_URL
-                    }/api/users/verify/username`,
+                    `${process.env.APP_SERVER_URL}/api/users/verify/username`,
                     {
                         method: "POST",
                         headers: {
@@ -411,7 +409,7 @@ export default {
                         },
                         credentials: "include",
                         body: JSON.stringify({ username: this.username }),
-                    },
+                    }
                 );
 
                 if (response.ok) {
@@ -458,17 +456,21 @@ export default {
             try {
                 formData.append("userObject", JSON.stringify(this.userObject));
 
-                formData.append(
-                    "selectedImages",
-                    this.croppedImageFile,
-                    "profilePicture",
-                );
+                if (this.croppedImageFile) {
+                    formData.append(
+                        "selectedImages",
+                        this.croppedImageFile,
+                        "profilePicture"
+                    );
+                }
 
-                formData.append(
-                    "selectedImages",
-                    this.croppedBannerFile,
-                    "banner",
-                );
+                if (this.croppedBannerFile) {
+                    formData.append(
+                        "selectedImages",
+                        this.croppedBannerFile,
+                        "banner"
+                    );
+                }
 
                 const response = await fetch(
                     `${process.env.APP_SERVER_URL}/api/users/profile`,
@@ -476,7 +478,7 @@ export default {
                         method: "PATCH",
                         body: formData,
                         credentials: "include",
-                    },
+                    }
                 );
 
                 if (response.ok) {

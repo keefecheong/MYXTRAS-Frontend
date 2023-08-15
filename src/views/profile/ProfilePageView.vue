@@ -204,7 +204,8 @@
 
                 <div>
                     <h5 class="card-title">
-                        Followers: {{ followersToDisplay.length }}
+                        {{ showFollowing ? "Following" : "Followers" }}:
+                        {{ followersToDisplay.length }}
                     </h5>
 
                     <div
@@ -224,6 +225,7 @@
                             page!
                         </p>
                     </div>
+
                     <div
                         class="view-user-follower"
                         title="View user"
