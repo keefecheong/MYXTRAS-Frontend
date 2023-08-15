@@ -526,8 +526,7 @@ export default {
         },
         // to view follower user profile
         viewFollower(userId) {
-            console.log("view follower");
-            viewUser(userId);
+            viewUser(userId, true);
         },
         // to create chat with the user and go to chat.html
         async createChat() {
