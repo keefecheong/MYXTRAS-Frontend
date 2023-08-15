@@ -117,6 +117,7 @@
                         :format="'YYYY-MM-DDTHH:mm:ssZ'"
                         :formatted="'DD-MM-YYYY HH:mm'"
                         :firstDayOfWeek="1"
+                        :min-date="new Date()"
                     />
                 </div>
                 <div class="color-picker"></div>
@@ -182,7 +183,7 @@ export default {
             alert: useAlertStore().alert,
             pickr: null,
             bannerUpdated: false,
-            selectedDateTime: Date.now(),
+            selectedDateTime: new Date(),
             dataInitialized: false,
         };
     },
@@ -202,7 +203,6 @@ export default {
     },
     mounted() {
         this.initColorPicker();
-        this.setDateTime();
     },
     methods: {
         // to close the form
@@ -399,20 +399,7 @@ export default {
                 this.color = color.toHEXA().toString();
                 document.querySelector(".color-result").value = this.color;
             });
-        },
-        setDateTime() {
-            const now = new Date();
-            const options = {
-                timeZone: "Asia/Singapore",
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-            };
-            this.selectedDateTime = now.toLocaleString("en-SG", options);
-        },
+        }
     },
     computed: {
         // check if required fields are all filled up
