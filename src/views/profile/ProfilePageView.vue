@@ -208,7 +208,8 @@
                 >
                     <p id="no-followers">No followers ☹</p>
                     <p id="no-followers">
-                        Head to the <a class="a-link" href="/explore.html">Xplore</a> page!
+                        Head to the
+                        <a class="a-link" href="/explore.html">Xplore</a> page!
                     </p>
                 </div>
 
@@ -415,14 +416,11 @@ export default {
         },
         // to get user's saved posts if user is viewing his own profile
         async getSavedPosts() {
-            await fetch(
-                `${process.env.APP_SERVER_URL}/api/posts/saved`,
-                {
-                    mode: "cors",
-                    method: "GET",
-                    credentials: "include",
-                },
-            )
+            await fetch(`${process.env.APP_SERVER_URL}/api/posts/saved`, {
+                mode: "cors",
+                method: "GET",
+                credentials: "include",
+            })
                 .then(async (res) => {
                     await res.json().then((data) => {
                         this.savedBlogs = data;
@@ -457,7 +455,7 @@ export default {
                 this.followerCount -= 1;
 
                 const index = this.user.followers.findIndex(
-                    (follower) => follower._id == this.self._id,
+                    (follower) => follower._id == this.self._id
                 );
                 this.user.followers.splice(index, 1);
             }
@@ -470,9 +468,7 @@ export default {
                 return;
             }
 
-            const targetURL = `${
-                process.env.APP_SERVER_URL
-            }/api/users/${this.user._id}/follow`;
+            const targetURL = `${process.env.APP_SERVER_URL}/api/users/${this.user._id}/follow`;
             const options = {
                 mode: "cors",
                 credentials: "include",
@@ -533,14 +529,12 @@ export default {
             let target = null;
 
             await fetch(
-                `${process.env.APP_SERVER_URL}/api/chats/check/${
-                    this.user._id
-                }`,
+                `${process.env.APP_SERVER_URL}/api/chats/check/${this.user._id}`,
                 {
                     mode: "cors",
                     methods: "GET",
                     credentials: "include",
-                },
+                }
             ).then(async (res) => {
                 await res.json().then(async (data) => {
                     if (res.ok) {
@@ -588,7 +582,7 @@ export default {
             const confirmBlock = await useConfirmStore().confirm(
                 `Are you sure you want to ${
                     this.blockingUser ? "unblock" : "block"
-                } this user?`,
+                } this user?`
             );
 
             if (!confirmBlock) {
@@ -598,14 +592,12 @@ export default {
             this.toggleChildLoading(true);
 
             await fetch(
-                `${process.env.APP_SERVER_URL}/api/users/${
-                    this.user._id
-                }/block`,
+                `${process.env.APP_SERVER_URL}/api/users/${this.user._id}/block`,
                 {
                     method: this.blockingUser ? "DELETE" : "POST",
                     mode: "cors",
                     credentials: "include",
-                },
+                }
             ).then(async (res) => {
                 await res.json().then(async (data) => {
                     await this.alert(data.message);
