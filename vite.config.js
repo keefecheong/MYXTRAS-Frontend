@@ -63,6 +63,35 @@ export default defineConfig(({ command, mode }) => {
         server: {
             host: "0.0.0.0",
             port: env.PORT,
+        },
+        build: {
+            target: 'esnext',
+            outDir: 'dist',
+            emptyOutDir: true,
+            copyPublicDir: false,
+            assetsDir: 'assets',
+            rollupOptions: {
+                input: {
+                    adminEvents: resolve(__dirname, "public/admin/events.html"),
+                    adminmanageAccounts: resolve(__dirname, "public/admin/manageAccounts.html"),
+                    adminReports: resolve(__dirname, "public/admin/reports.html"),
+                    about: resolve(__dirname, "public/about.html"),
+                    chat: resolve(__dirname, "public/chat.html"),
+                    checkin: resolve(__dirname, "public/checkin.html"),
+                    error: resolve(__dirname, "public/error.html"),
+                    events: resolve(__dirname, "public/events.html"),
+                    explore: resolve(__dirname, "public/explore.html"),
+                    feed: resolve(__dirname, "public/feed.html"),
+                    forum: resolve(__dirname, "public/forum.html"),
+                    forumGroup: resolve(__dirname, "public/forumGroup.html"),
+                    gachapon: resolve(__dirname, "public/gachapon.html"),
+                    login: resolve(__dirname, "public/login.html"),
+                    profileManagement: resolve(__dirname, "public/profileManagement.html"),
+                    profilePage: resolve(__dirname, "public/profilePage.html"),
+                    registration: resolve(__dirname, "public/registration.html"),
+                    setupProfile: resolve(__dirname, "public/setupProfile.html"),
+                }
+            }
         }
     };
 });
