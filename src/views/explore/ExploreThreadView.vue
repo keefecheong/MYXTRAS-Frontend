@@ -144,6 +144,7 @@
                     </div>
                 </div>
             </div>
+            <p></p>
             <hr />
             <div id="no-more-blogs">
                 <p>That's the end. Check again later for more content!</p>
