@@ -47,7 +47,6 @@
 .card {
     padding: 1em 0 1em 0;
     border-radius: 15px;
-    margin-bottom: 60px;
     min-height: 50vh;
     max-height: 60vh;
 }
