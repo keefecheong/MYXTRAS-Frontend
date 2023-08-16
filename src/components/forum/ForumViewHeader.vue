@@ -71,8 +71,10 @@
                         v-if="showCreateThreadButton"
                         @click="showCreateThread"
                         class="white-btn"
+                        id="create-thread-button"
                     >
-                        Create Thread!
+                        Create Thread
+                        <i class="bi bi-plus plus-icon"></i>
                     </button>
                     <div data-tooltip="Report" data-tooltip-position="top">
                         <span
@@ -241,6 +243,7 @@ export default {
     width: 10vw !important;
     font-size: 14px;
 }
+
 #banner-picture {
     width: 100%;
     height: 150px;
@@ -261,7 +264,18 @@ export default {
     padding: 15px 5%;
     position: relative;
 }
-
+#create-thread-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 5em;
+    margin-bottom: 0;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+#create-thread-button > i {
+    transition: all 0.3s;
+}
 #forum-header-above {
     position: absolute;
     display: flex;

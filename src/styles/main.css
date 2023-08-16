@@ -97,6 +97,18 @@ button {
 .white-btn:hover > .material-symbols-outlined {
   color: white;
 }
+
+.white-btn > i {
+  color: black !important;
+  min-height: 100%;
+  min-width: 100%;
+  text-align: center;
+  font-size: 1.5em !important;
+  justify-content: center;
+}
+i {
+  transition: all 0.3s !important;
+}
 .card-title {
   font-size: 2rem;
   text-align: center;
