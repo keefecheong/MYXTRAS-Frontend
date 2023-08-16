@@ -28,11 +28,12 @@
                                 title="View forum"
                                 >x/{{ thread.parent_id.forum_id }}
                             </span>
+                            <span v-if="showForumDetails"> ~ </span>
                             <span
-                                class="thread-layout-creator-name"
+                                class="thread-layout-creator-name a-link"
                                 @click.stop="viewUser"
                                 title="View user"
-                                > ~ Posted by: @{{
+                                >Posted by: @{{
                                     thread.creator_id.username
                                 }}</span
                             >
@@ -187,7 +188,7 @@ export default {
 @import url("../../styles/forums/similar-thread-layout-styles.css");
 
 .thread-layout-forum-name {
-    color: rgb(0, 102, 204);
+    color: var(--blue);
 }
 
 .pinkHover:hover {

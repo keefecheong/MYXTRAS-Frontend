@@ -103,14 +103,11 @@ export default {
     methods: {
         // method to get blog data
         async getPosts() {
-            await fetch(
-                `${process.env.APP_SERVER_URL}/api/posts/explore`,
-                {
-                    mode: "cors",
-                    method: "GET",
-                    credentials: "include",
-                },
-            )
+            await fetch(`${process.env.APP_SERVER_URL}/api/posts/explore`, {
+                mode: "cors",
+                method: "GET",
+                credentials: "include",
+            })
                 .then(async (res) => {
                     await res.json().then((data) => {
                         this.blogs = data;

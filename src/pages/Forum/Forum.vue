@@ -43,7 +43,10 @@
                             <div class="center-align whiteBox">
                                 <h4>
                                     No new threads,
-                                    <a class="a-link" href="/explore.html">Xplore</a> now!
+                                    <a class="a-link" href="/explore.html"
+                                        >Xplore</a
+                                    >
+                                    now!
                                 </h4>
                             </div>
                         </div>
@@ -222,14 +225,11 @@ export default {
             this.showForumForm = show;
         },
         async retrieveRecentThreads() {
-            await fetch(
-                `${process.env.APP_SERVER_URL}/api/threads/recent`,
-                {
-                    mode: "cors",
-                    method: "GET",
-                    credentials: "include",
-                },
-            )
+            await fetch(`${process.env.APP_SERVER_URL}/api/threads/recent`, {
+                mode: "cors",
+                method: "GET",
+                credentials: "include",
+            })
                 .then((res) => {
                     if (res.ok) {
                         return res.json();
@@ -242,7 +242,7 @@ export default {
                 .catch((error) => {
                     console.log(
                         "The recent threads could not be loaded: ",
-                        error,
+                        error
                     );
                 });
         },

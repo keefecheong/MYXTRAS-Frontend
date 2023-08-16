@@ -27,7 +27,8 @@
                 <div v-if="blogs.length <= 0" class="no-more-blogs">
                     <p>No new activity.</p>
                     <p>
-                        Follow more people? <a class="a-link" href="/explore.html">Explore!</a>
+                        Follow more people?
+                        <a class="a-link" href="/explore.html">Explore!</a>
                     </p>
                 </div>
 
@@ -121,14 +122,11 @@ export default {
     methods: {
         // method to get blog data
         async getPosts() {
-            await fetch(
-                `${process.env.APP_SERVER_URL}/api/posts/following`,
-                {
-                    mode: "cors",
-                    method: "GET",
-                    credentials: "include",
-                },
-            )
+            await fetch(`${process.env.APP_SERVER_URL}/api/posts/following`, {
+                mode: "cors",
+                method: "GET",
+                credentials: "include",
+            })
                 .then(async (res) => {
                     await res.json().then((data) => {
                         this.blogs = data;

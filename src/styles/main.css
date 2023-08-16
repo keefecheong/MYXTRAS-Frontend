@@ -87,7 +87,6 @@ button {
   color: black;
   
 }
-
 .white-btn:hover {
   background-color: transparent;
   color: white;
@@ -97,6 +96,18 @@ button {
 }
 .white-btn:hover > .material-symbols-outlined {
   color: white;
+}
+
+.white-btn > i {
+  color: black !important;
+  min-height: 100%;
+  min-width: 100%;
+  text-align: center;
+  font-size: 1.5em !important;
+  justify-content: center;
+}
+i {
+  transition: all 0.3s !important;
 }
 .card-title {
   font-size: 2rem;
@@ -111,11 +122,11 @@ a:hover {
   color: var(--primary);
 }
 .a-link {
-  color: var(--dark-blue) !important;
-  text-decoration: underline !important;
+  color: var(--blue) !important;
 }
 .a-link:hover {
   color: var(--primary) !important;
+  text-decoration: underline !important;
 }
 .imageContainer {
   width: 100%;
