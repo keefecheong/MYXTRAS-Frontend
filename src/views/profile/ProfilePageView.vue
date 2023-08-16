@@ -125,7 +125,6 @@
 
             <div id="profile-page-content">
                 <div v-if="isSelf" id="profile-post-toggle-container">
-                    <span>Posts:</span>
                     <span
                         class="sub-navigation"
                         :class="{ active: !viewingSaved }"
