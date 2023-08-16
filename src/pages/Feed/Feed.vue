@@ -94,6 +94,7 @@
 </style>
 
 <script>
+import SearchBar from "../../components/general/SearchBar.vue";
 import BlogLayout from "../../components/blog/BlogLayout.vue";
 import { useAlertStore } from "../../stores/AlertStore.js";
 import AlertPrompt from "../../components/general/AlertPrompt.vue";
@@ -109,6 +110,7 @@ export default {
         };
     },
     components: {
+        SearchBar,
         BlogLayout,
         AlertPrompt,
         ConfirmPrompt,
