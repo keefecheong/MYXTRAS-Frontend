@@ -676,6 +676,13 @@ body {
     font-size: 1.2em;
 }
 
+.cropper-modal {
+    height: 75%;
+    margin-top: 25px;
+}
+</style>
+
+<style>
 .cropper-crop-box,
 .cropper-view-box {
     border-radius: 50%;
@@ -684,10 +691,5 @@ body {
 .cropper-view-box {
     box-shadow: 0 0 0 1px #39f;
     outline: 0;
-}
-
-.cropper-modal {
-    height: 75%;
-    margin-top: 25px;
 }
 </style>
