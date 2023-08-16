@@ -111,9 +111,7 @@ p {
     font-size: 1.5em !important;
     justify-content: center;
 }
-i {
-    transition: all 0.3s !important;
-}
+
 .white-btn:hover > i {
     color: white !important;
 }
