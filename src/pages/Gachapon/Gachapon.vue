@@ -365,9 +365,7 @@ ul {
     top: 0;
     border-radius: 50%;
     background: #ffffff;
-    box-shadow:
-        0px 3px 8px rgba(0, 0, 0, 0.15),
-        0px 3px 1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
     transition: all 0.2s ease-out;
     cursor: pointer;
 }
@@ -382,24 +380,15 @@ ul {
 }
 @keyframes neonGlow {
     0% {
-        box-shadow:
-            0 0 5px #ffffff,
-            0 0 10px #c5c5c5,
-            0 0 30px #fefffb,
+        box-shadow: 0 0 5px #ffffff, 0 0 10px #c5c5c5, 0 0 30px #fefffb,
             0 0 60px #c5c5c5;
     }
     50% {
-        box-shadow:
-            0 0 5px #ffffff,
-            0 0 10px #c5c5c5,
-            0 0 30px #fefffb,
+        box-shadow: 0 0 5px #ffffff, 0 0 10px #c5c5c5, 0 0 30px #fefffb,
             0 0 60px #c5c5c5;
     }
     100% {
-        box-shadow:
-            0 0 5px #ffffff,
-            0 0 10px #c5c5c5,
-            0 0 30px #fefffb,
+        box-shadow: 0 0 5px #ffffff, 0 0 10px #c5c5c5, 0 0 30px #fefffb,
             0 0 60px #c5c5c5;
     }
 }
@@ -573,21 +562,19 @@ export default {
         async initData() {
             // get user's pets and their related data
             await fetch(
-                `${
-                    process.env.APP_SERVER_URL
-                }/api/gamification/gachapon`,
+                `${process.env.APP_SERVER_URL}/api/gamification/gachapon`,
                 {
                     methods: "GET",
                     credentials: "include",
                     mode: "cors",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
                         this.gems = data.gems;
                         this.enabled = data.pets.enabled;
                         this.inventoryPets = data.pets.inventory.sort((a, b) =>
-                            a.name.localeCompare(b.name),
+                            a.name.localeCompare(b.name)
                         );
                         this.inventoryPets = this.inventoryPets.sort((a, b) => {
                             const rarityOrder = {
@@ -619,14 +606,12 @@ export default {
             this.gems -= cost;
             this.deduction = cost;
             await fetch(
-                `${
-                    process.env.APP_SERVER_URL
-                }/api/gamification/gachapon/${numOfRolls}`,
+                `${process.env.APP_SERVER_URL}/api/gamification/gachapon/${numOfRolls}`,
                 {
                     mode: "cors",
                     method: "POST",
                     credentials: "include",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
@@ -646,15 +631,15 @@ export default {
                             (obj, index, arr) => {
                                 return (
                                     arr.findIndex(
-                                        (item) => item.name === obj.name,
+                                        (item) => item.name === obj.name
                                     ) === index
                                 );
-                            },
+                            }
                         );
 
                         // Sort by alphabetical order
                         this.inventoryPets = this.inventoryPets.sort((a, b) =>
-                            a.name.localeCompare(b.name),
+                            a.name.localeCompare(b.name)
                         );
 
                         // sort by rarity
@@ -677,14 +662,12 @@ export default {
 
         async enablePets() {
             await fetch(
-                `${
-                    process.env.APP_SERVER_URL
-                }/api/gamification/gachapon/enabled`,
+                `${process.env.APP_SERVER_URL}/api/gamification/gachapon/enabled`,
                 {
                     mode: "cors",
                     method: "POST",
                     credentials: "include",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {});
@@ -696,14 +679,12 @@ export default {
 
         async selectPet(pet) {
             await fetch(
-                `${process.env.APP_SERVER_URL}/api/gamification/pets/${
-                    pet.name
-                }`,
+                `${process.env.APP_SERVER_URL}/api/gamification/pets/${pet.name}`,
                 {
                     mode: "cors",
                     method: "POST",
                     credentials: "include",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {

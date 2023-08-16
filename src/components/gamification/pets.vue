@@ -28,19 +28,16 @@ export default {
     updated() {
         this.updatePet();
     },
-
     methods: {
         async initData() {
             // get user profile and follow status
             await fetch(
-                `${
-                    process.env.APP_SERVER_URL
-                }/api/gamification/gachapon`,
+                `${process.env.APP_SERVER_URL}/api/gamification/gachapon`,
                 {
                     methods: "GET",
                     credentials: "include",
                     mode: "cors",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
@@ -55,7 +52,11 @@ export default {
         },
 
         checkPage() {
-            const currentPage = "/gachapon.html";
+            const currentPage =
+                process.env.BASE_URL +
+                ":" +
+                process.env.PORT +
+                "/gachapon.html";
             if (window.location.href == currentPage) {
                 return this.enabled;
             }
@@ -86,8 +87,8 @@ export default {
                         this.selectedPet.number
                     }) infinite;
                     background-size: ${this.selectedPet.width / 3}px ${
-                        this.selectedPet.height / 3
-                    }px;
+                this.selectedPet.height / 3
+            }px;
                 }
 
                 @keyframes walk {
@@ -116,14 +117,12 @@ export default {
         async updatePet() {
             // get user profile and follow status
             await fetch(
-                `${
-                    process.env.APP_SERVER_URL
-                }/api/gamification/gachapon`,
+                `${process.env.APP_SERVER_URL}/api/gamification/gachapon`,
                 {
                     methods: "GET",
                     credentials: "include",
                     mode: "cors",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
