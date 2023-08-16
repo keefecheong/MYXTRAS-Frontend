@@ -104,13 +104,13 @@
                                     :class="{ claimed: mission.claimed }"
                                     v-else="!missions.locked"
                                     @click="claimMission(mission.title)"
-                                    ><p>
+                                    >
                                         {{
                                             mission.claimed
                                                 ? "Claimed"
                                                 : "Claim"
                                         }}
-                                    </p></button
+                                    </button
                                 >
                             </div>
                         </div>
@@ -168,7 +168,6 @@ body {
 }
 
 h1 {
-    margin: 1em 0;
     text-align: left !important;
 }
 h3 {
