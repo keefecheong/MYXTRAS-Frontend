@@ -111,7 +111,7 @@ a:hover {
   color: var(--primary);
 }
 .a-link {
-  color: var(--dark-blue) !important;
+  color: var(--blue) !important;
 }
 .a-link:hover {
   color: var(--primary) !important;
