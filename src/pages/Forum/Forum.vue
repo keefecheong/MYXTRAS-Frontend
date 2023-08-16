@@ -140,6 +140,7 @@
 </style>
 
 <script>
+import SearchBar from "../../components/general/SearchBar.vue";
 import SubscribedForums from "../../components/forum/SubscribedForums.vue";
 import CreatedForums from "../../components/forum/CreatedForums.vue";
 import PopularThreads from "../../components/forum/PopularThreads.vue";
@@ -153,6 +154,7 @@ import ConfirmPrompt from "../../components/general/ConfirmPrompt.vue";
 
 export default {
     components: {
+        SearchBar,
         CreatedForums,
         SubscribedForums,
         PopularThreads,

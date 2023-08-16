@@ -78,6 +78,7 @@
 </style>
 
 <script>
+import SearchBar from "../../components/general/SearchBar.vue";
 import { useAlertStore } from "../../stores/AlertStore.js";
 import AlertPrompt from "../../components/general/AlertPrompt.vue";
 import { useConfirmStore } from "../../stores/ConfirmStore.js";
@@ -92,6 +93,7 @@ export default {
         };
     },
     components: {
+        SearchBar,
         AlertPrompt,
         ConfirmPrompt,
     },
