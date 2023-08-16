@@ -235,13 +235,12 @@ export default {
     font-weight: bold;
     background-color: white;
     color: black;
-    border-radius: 5px;
     white-space: normal;
     text-align: center;
     font-size: 1vw;
     color: black;
     width: 10vw !important;
-    font-size: 14px;
+    border-radius: 10px !important;
 }
 
 #banner-picture {
@@ -270,10 +269,13 @@ export default {
     align-items: center;
     padding: 0 5em;
     margin-bottom: 0;
+    border-radius: 10px;
     box-sizing: border-box;
     white-space: nowrap;
+    text-align: center;
 }
 #create-thread-button > i {
+    margin: 1vh 0 0 0;
     transition: all 0.3s;
 }
 #forum-header-above {
