@@ -139,7 +139,7 @@ export default {
     min-width: 20%;
     max-width: 30%;
     background-color: white;
-    border-radius: 20px;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -189,7 +189,7 @@ export default {
     border: 2px solid var(--green) !important;
     color: white;
 }
-#confirm-controls-container button:focus,
+
 #confirm-controls-container button:hover {
     background-color: white;
     outline: none;

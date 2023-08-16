@@ -45,7 +45,8 @@
                     class="white-btn"
                     @click="showForumForm"
                 >
-                    Create Forum
+                Create Forum
+                <i class="bi bi-plus plus-icon"></i>
                 </button>
                 <div v-if="isMobile" class="mobile-create-container">
                     <p>Create Forum</p>
@@ -89,6 +90,7 @@ p {
 <style>
 @import url("../../styles/main.css");
 @import url("../../styles/banner-styles.css");
+
 .white-btn {
     font-weight: bold;
     background-color: white;
@@ -99,6 +101,21 @@ p {
     text-align: center;
     font-size: 1vw;
     color: black;
+    transition: all 0.3s !important;
+}
+.white-btn > i {
+    color: black !important;
+    min-height: 100%;
+    min-width: 100%;
+    text-align: center;
+    font-size: 1.5em !important;
+    justify-content: center;
+}
+i {
+    transition: all 0.3s !important;
+}
+.white-btn:hover > i {
+    color: white !important;
 }
 #searchbar-container {
     --ideal-right-content-height: 10dvh;

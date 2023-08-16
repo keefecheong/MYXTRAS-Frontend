@@ -37,9 +37,9 @@
                 </p>
 
                 <!-- Password Field -->
-                <div class="password-field-container">
+                <div class="password-field-container" data-tooltip="Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters" data-tooltip-position="bottom">
                     <input
-                        title="Hint: At least 1 uppercase character, 1 numerical character, 1 special character, more than 8 characters"
+                        title=""
                         :type="showPassword ? 'text' : 'password'"
                         v-model="password"
                         placeholder="Password"
@@ -75,7 +75,7 @@
 
                 <div class="password-field-container">
                     <input
-                        title="Confirm your password"
+                        title=""
                         :type="showRepeatPassword ? 'text' : 'password'"
                         v-model="repeatedPassword"
                         placeholder="Confirm Password"
@@ -96,9 +96,9 @@
                 </div>
 
                 <!-- Phone Number Field -->
-                <div class="phone-number-field-container">
+                <div class="phone-number-field-container" data-tooltip="Enter a +65 phone number" data-tooltip-position="bottom">
                     <input
-                        title="Please enter your phone number"
+                        title=""
                         v-model="phoneNumber"
                         type="text"
                         placeholder="Phone Number (+65)"
@@ -200,7 +200,9 @@
 #password-strength-info p {
     margin: 0;
 }
-
+.password-field-container, .phone-number-field-container {
+    padding: 0;
+}
 .registration-otp-button {
     width: 6.5em;
     height: 2em;
