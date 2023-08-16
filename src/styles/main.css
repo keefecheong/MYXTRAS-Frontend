@@ -112,10 +112,10 @@ a:hover {
 }
 .a-link {
   color: var(--dark-blue) !important;
-  text-decoration: underline !important;
 }
 .a-link:hover {
   color: var(--primary) !important;
+  text-decoration: underline !important;
 }
 .imageContainer {
   width: 100%;

@@ -28,11 +28,12 @@
                                 title="View forum"
                                 >x/{{ thread.parent_id.forum_id }}
                             </span>
+                            <span> ~ </span>
                             <span
                                 class="thread-layout-creator-name"
                                 @click.stop="viewUser"
                                 title="View user"
-                                > ~ Posted by: @{{
+                                >Posted by: @{{
                                     thread.creator_id.username
                                 }}</span
                             >

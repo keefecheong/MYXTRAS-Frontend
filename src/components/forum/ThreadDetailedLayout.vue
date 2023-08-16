@@ -55,7 +55,7 @@
                                     >x/{{ thread.parent_id.forum_id }} ~
                                 </span>
                                 <span
-                                    class="thread-layout-creator-name"
+                                    class="thread-layout-creator-name a-link"
                                     @click="viewUser"
                                     title="View user"
                                     >Posted by: @{{
