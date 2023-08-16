@@ -336,10 +336,10 @@ export default {
                 ) {
                     link.classList.add("current");
                 }
-                // set current for admin home page link if path is /
+                // set current for admin reports page link if path is /
                 else if (
                     (pathname == "/admin" || pathname == "/admin/") &&
-                    href == "/admin/home.html"
+                    href == "/admin/reports.html"
                 ) {
                     link.classList.add("current");
                 } else {
