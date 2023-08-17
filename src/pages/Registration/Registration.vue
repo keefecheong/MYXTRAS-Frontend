@@ -30,6 +30,7 @@
                     placeholder="Email Address"
                     required
                     @input="verifyEmail"
+                    maxlength="50"
                 />
 
                 <p class="registration-error" v-if="showEmailErr">
