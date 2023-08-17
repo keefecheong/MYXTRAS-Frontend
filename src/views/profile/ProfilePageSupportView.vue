@@ -55,7 +55,7 @@
     <div v-else>
         <div v-if="reportsLoaded && reports.length > 0">
             <div v-if="!viewDetails">
-                <h1 class="profile-support-page-header">Pending</h1>
+                <h1 class="profile-support-page-header" v-if="pendingReports.length > 0">Pending</h1>
                 <ReportLayout
                     v-for="(report, index) in pendingReports"
                     :report="report"
@@ -67,7 +67,7 @@
                     "
                 />
 
-                <h1 class="profile-support-page-header">Reviewed</h1>
+                <h1 class="profile-support-page-header" v-if="reviewedReports.length > 0">Reviewed</h1>
                 <ReportLayout
                     v-for="(report, index) in reviewedReports"
                     :report="report"
