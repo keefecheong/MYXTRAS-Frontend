@@ -93,10 +93,6 @@ export default {
         },
     },
     mounted() {
-        this.autoScroll = () => {
-            setInterval(this.checkScroll, 100);
-        };
-        this.autoScroll();
         this.getEvents();
     },
     methods: {
