@@ -619,7 +619,7 @@ export default {
         if (this.highlightComment) {
             setTimeout(() => {
                 const targetComment = document.getElementById(
-                    this.highlightComment,
+                    this.highlightComment
                 );
 
                 if (targetComment) {
@@ -715,11 +715,7 @@ export default {
         },
         // handle updating of like status to backend
         async updateLike() {
-            const targetURL = `${
-                process.env.APP_SERVER_URL
-            }/api/posts/user/${this.blog.creator_id._id}/post/${
-                this.blog._id
-            }/likes`;
+            const targetURL = `${process.env.APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/likes`;
             const options = {
                 mode: "cors",
                 credentials: "include",
@@ -771,11 +767,7 @@ export default {
         },
         // handle updating of save status to backend
         async updateSave() {
-            const targetURL = `${
-                process.env.APP_SERVER_URL
-            }/api/posts/user/${this.blog.creator_id._id}/post/${
-                this.blog._id
-            }/save`;
+            const targetURL = `${process.env.APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/save`;
             const options = {
                 mode: "cors",
                 credentials: "include",
@@ -820,7 +812,7 @@ export default {
         async deletePost() {
             // ask for confirmation
             const confirmDelete = await this.confirm(
-                "Are you sure you want to delete this post? This action is irreversible!",
+                "Are you sure you want to delete this post? This action is irreversible!"
             );
 
             if (!confirmDelete) {
@@ -828,14 +820,12 @@ export default {
             }
 
             await fetch(
-                `${process.env.APP_SERVER_URL}/api/posts/user/${
-                    this.blog.creator_id._id
-                }/post/${this.blog._id}`,
+                `${process.env.APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}`,
                 {
                     mode: "cors",
                     method: "DELETE",
                     credentials: "include",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then(async (data) => {
@@ -857,14 +847,12 @@ export default {
         // retrieve comments for the post
         async getComments() {
             await fetch(
-                `${process.env.APP_SERVER_URL}/api/posts/user/${
-                    this.blog.creator_id._id
-                }/post/${this.blog._id}/comments`,
+                `${process.env.APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/comments`,
                 {
                     mode: "cors",
                     method: "GET",
                     credentials: "include",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
@@ -895,9 +883,7 @@ export default {
 
             // upload comment
             await fetch(
-                `${process.env.APP_SERVER_URL}/api/posts/user/${
-                    this.blog.creator_id._id
-                }/post/${this.blog._id}/comments`,
+                `${process.env.APP_SERVER_URL}/api/posts/user/${this.blog.creator_id._id}/post/${this.blog._id}/comments`,
                 {
                     mode: "cors",
                     method: "POST",
@@ -908,7 +894,7 @@ export default {
                         "Content-Type": "application/json",
                     },
                     credentials: "include",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then(async (data) => {
