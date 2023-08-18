@@ -895,13 +895,8 @@ export default {
 #chat-interface-input button,
 #chat-file-upload-container button {
     border: none;
+    outline: none;
     background-color: transparent;
-}
-
-#chat-interface-input button:focus,
-#chat-file-upload-container button:focus {
-    border-radius: 20px;
-    outline: 1px solid black;
 }
 
 #chat-interface-input .material-symbols-outlined,
@@ -930,11 +925,12 @@ export default {
     padding: 15px;
     border-radius: 20px;
     min-width: 50%;
-    min-height: 50%;
     max-width: 75%;
     max-height: 75%;
     position: relative;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 #chat-file-upload .container-fluid,
@@ -957,6 +953,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     margin: 0 auto;
+    width: 100%;
 }
 
 #upload-file-container {
@@ -977,6 +974,7 @@ export default {
 }
 
 #chat-add-file-label {
+    cursor: pointer;
     text-align: center;
     margin: 0 auto;
     width: 75%;

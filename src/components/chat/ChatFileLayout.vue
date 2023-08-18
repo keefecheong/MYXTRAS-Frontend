@@ -47,13 +47,7 @@ export default {
         async downloadFile() {
             this.downloadingFile = true;
 
-            await fetch(this.fileLink, {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    Origin: '127.0.0.1'
-                }
-            })
+            await fetch(this.fileLink)
                 .then(async (res) => {
                     if (res.status == 200) {
                         await res.blob().then((blob) => {
