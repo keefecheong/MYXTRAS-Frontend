@@ -104,14 +104,9 @@
                                     :class="{ claimed: mission.claimed }"
                                     v-else="!missions.locked"
                                     @click="claimMission(mission.title)"
-                                    >
-                                        {{
-                                            mission.claimed
-                                                ? "Claimed"
-                                                : "Claim"
-                                        }}
-                                    </button
                                 >
+                                    {{ mission.claimed ? "Claimed" : "Claim" }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -146,8 +141,9 @@
                                     :class="{ claimed: allClaimed.claimed }"
                                     v-else="!allClaimed.locked"
                                     @click="claimMission('allClaim')"
-                                    >Claim</button
                                 >
+                                    Claim
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -290,27 +286,16 @@ h3 {
 }
 @keyframes neonGlow {
     0% {
-        box-shadow:
-            0 0 5px #d81515,
-            0 0 10px #ff0000,
-            0 0 30px #fefffb,
-            0 0 60px var(--primary),
-            0 0 80px var(--primary);
+        box-shadow: 0 0 5px #d81515, 0 0 10px #ff0000, 0 0 30px #fefffb,
+            0 0 60px var(--primary), 0 0 80px var(--primary);
     }
     50% {
-        box-shadow:
-            0 0 5px #d81515,
-            0 0 10px #ff0000,
-            0 0 30px var(--primary),
-            0 0 60px var(--primary),
-            0 0 80px var(--primary);
+        box-shadow: 0 0 5px #d81515, 0 0 10px #ff0000, 0 0 30px var(--primary),
+            0 0 60px var(--primary), 0 0 80px var(--primary);
     }
     100% {
-        box-shadow:
-            0 0 5px #d81515,
-            0 0 10px var(--primary),
-            0 0 30px var(--primary),
-            0 0 60px var(--primary),
+        box-shadow: 0 0 5px #d81515, 0 0 10px var(--primary),
+            0 0 30px var(--primary), 0 0 60px var(--primary),
             0 0 80px var(--primary);
     }
 }
@@ -389,14 +374,12 @@ export default {
         async initData() {
             // get user profile and follow status
             await fetch(
-                `${
-                    process.env.APP_SERVER_URL
-                }/api/gamification/missions`,
+                `${process.env.APP_SERVER_URL}/api/gamification/missions`,
                 {
                     methods: "GET",
                     credentials: "include",
                     mode: "cors",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
@@ -410,14 +393,12 @@ export default {
                     console.log(error);
                 });
             await fetch(
-                `${
-                    process.env.APP_SERVER_URL
-                }/api/gamification/daily-checkin`,
+                `${process.env.APP_SERVER_URL}/api/gamification/daily-checkin`,
                 {
                     mode: "cors",
                     method: "GET",
                     credentials: "include",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
@@ -431,14 +412,12 @@ export default {
         },
         async checkIn() {
             await fetch(
-                `${
-                    process.env.APP_SERVER_URL
-                }/api/gamification/daily-checkin`,
+                `${process.env.APP_SERVER_URL}/api/gamification/daily-checkin`,
                 {
                     mode: "cors",
                     method: "POST",
                     credentials: "include",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
@@ -452,14 +431,12 @@ export default {
 
         async claimMission(targetTitle) {
             await fetch(
-                `${
-                    process.env.APP_SERVER_URL
-                }/api/gamification/missions/${targetTitle}`,
+                `${process.env.APP_SERVER_URL}/api/gamification/missions/${targetTitle}`,
                 {
                     mode: "cors",
                     method: "POST",
                     credentials: "include",
-                },
+                }
             )
                 .then(async (res) => {
                     await res.json().then((data) => {
@@ -467,7 +444,7 @@ export default {
                             this.allClaimed.claimed = true;
                         } else {
                             const targetMission = this.missions.find(
-                                (mission) => mission.title === targetTitle,
+                                (mission) => mission.title === targetTitle
                             );
                             if (targetMission) {
                                 // Update the claimed property to true
@@ -486,7 +463,7 @@ export default {
 
         checkAllClaimed() {
             const allLockedAreFalse = this.missions.every(
-                (item) => item.locked === false,
+                (item) => item.locked === false
             );
             console.log(allLockedAreFalse);
             if (allLockedAreFalse) {
