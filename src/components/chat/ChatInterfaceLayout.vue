@@ -462,6 +462,7 @@ export default {
             }
 
             socket.emit("edit-message", {
+                chat: this.chat,
                 message: {
                     _id: data.messageId,
                     content: data.editedMessage,
@@ -496,7 +497,8 @@ export default {
             }
 
             socket.emit("delete-message", {
-                message: message,
+                chat: this.chat,
+                message,
                 targetUserId: this.chat.targetUserId,
             });
 
