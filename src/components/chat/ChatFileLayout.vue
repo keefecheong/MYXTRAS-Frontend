@@ -20,7 +20,7 @@
         <div style="position: relative" v-if="inMessage">
             <span
                 class="material-symbols-outlined"
-                :class="{ 'hide-download': isDownloadingFile }"
+                :class="{ 'hide-download': downloadingFile }"
                 title="Download file"
                 @click="downloadFile"
                 >Download</span
