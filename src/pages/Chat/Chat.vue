@@ -279,6 +279,10 @@ export default {
 <style>
 @import url("../../styles/main.css");
 
+#main-container {
+    height: 100dvh;
+}
+
 /* chat list styles */
 #chatlist-container {
     border-right: 1px solid lightgray;
