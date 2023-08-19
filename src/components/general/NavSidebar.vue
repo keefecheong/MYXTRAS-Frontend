@@ -466,7 +466,7 @@ h1 {
 }
 
 #main-container.narrow {
-    display: initial;
+    flex-direction: column;
 }
 
 #main-content {
