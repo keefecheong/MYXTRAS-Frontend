@@ -68,6 +68,13 @@
 <style>
 @import url("../../styles/main.css");
 @import url("../../styles/login-register-styles.css");
+.redirect-link {
+    color: var(--blue);
+    transition: all 0.3s ease;
+}
+.redirect-link:hover {
+    color: var(--primary);
+}
 @media screen and (max-width: 768px) {
     #ngee-ann-banner {
         display: none;
