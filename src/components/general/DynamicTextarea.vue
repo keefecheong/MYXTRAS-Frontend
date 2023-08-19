@@ -22,6 +22,7 @@
         :maxlength="maxlength"
         :id="workingID"
         @input="resizeTextarea"
+        @keyup.enter="resizeTextarea"
     ></textarea>
 </template>
 

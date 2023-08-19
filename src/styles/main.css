@@ -61,6 +61,7 @@ body,
   min-width: 100dvw;
   min-height: 100dvh;
 }
+
 .center-align {
   display: flex;
   flex-direction: column;
@@ -85,7 +86,6 @@ button {
   text-decoration: none;
   font-size: 1vw;
   color: black;
-  
 }
 .white-btn:hover {
   background-color: transparent;
@@ -314,8 +314,8 @@ h1 {
   color: var(--primary);
 }
 @media screen and (max-width: 768px) {
-
-  .white-btn, .pink-btn{
+  .white-btn,
+  .pink-btn {
     font-size: 11px;
   }
 }

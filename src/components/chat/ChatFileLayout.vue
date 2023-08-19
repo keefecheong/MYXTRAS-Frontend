@@ -20,12 +20,23 @@
         <div style="position: relative" v-if="inMessage">
             <span
                 class="material-symbols-outlined"
-                :class="{ 'hide-download': isDownloadingFile }"
+                :class="{ 'hide-download': downloadingFile }"
                 title="Download file"
                 @click="downloadFile"
                 >Download</span
             >
-            <LoadingOverlay v-if="isDownloadingFile" />
+
+            <!-- custom styles for loading wheel -->
+            <LoadingOverlay
+                v-if="downloadingFile"
+                style="
+                    height: 100%;
+                    width: 100%;
+                    position: absolute;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    border-radius: 50%;
+                "
+            />
         </div>
     </div>
 </template>
@@ -71,9 +82,6 @@ export default {
     computed: {
         isImageFile() {
             return this.fileType.startsWith("image/");
-        },
-        isDownloadingFile() {
-            return this.downloadingFile;
         },
     },
 };

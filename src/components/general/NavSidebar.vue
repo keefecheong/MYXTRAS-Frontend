@@ -116,6 +116,8 @@
 
 <script>
 import sidebarLinks from "../../assets/sidebar-link-config.json";
+// keep socket for online status on all pages
+import { socket } from "../../utils/chat/chatSocket.js";
 
 export default {
     created() {
@@ -211,7 +213,7 @@ export default {
                     .getElementById("main-content")
                     .classList.remove(
                         "compensateMaximizedSidebar",
-                        "compensateMinimizedSidebar",
+                        "compensateMinimizedSidebar"
                     );
             } else {
                 this.narrow = false;
@@ -250,7 +252,7 @@ export default {
                     sidebar.style.left = "";
                     mainContent.classList.remove(
                         "compensateMaximizedSidebar",
-                        "compensateMinimizedSidebar",
+                        "compensateMinimizedSidebar"
                     );
                 }
             }
@@ -270,7 +272,7 @@ export default {
                 sidebar.classList.remove("stickToTop");
                 sidebar.style.position = "absolute";
                 sidebar.style.top = `${Math.abs(
-                    sidebar.getBoundingClientRect().top,
+                    sidebar.getBoundingClientRect().top
                 )}px`;
                 sidebar.style.left = "0";
 
@@ -299,12 +301,12 @@ export default {
                     if (document.getElementById("minimized")) {
                         mainContent.classList.add("compensateMinimizedSidebar");
                         mainContent.classList.remove(
-                            "compensateMaximizedSidebar",
+                            "compensateMaximizedSidebar"
                         );
                     } else {
                         mainContent.classList.add("compensateMaximizedSidebar");
                         mainContent.classList.remove(
-                            "compensateMinimizedSidebar",
+                            "compensateMinimizedSidebar"
                         );
                     }
                 }
@@ -313,13 +315,12 @@ export default {
         // to check for the current page and set the 'current' class for sidebar links corresponding to the current page
         setCurrent() {
             const links = document.querySelectorAll(
-                ".sidebar-link, .navbar-link",
+                ".sidebar-link, .navbar-link"
             );
             for (var i = 0; i < links.length; i++) {
                 const link = links[i];
 
-                const href = link
-                    .getAttribute("href");
+                const href = link.getAttribute("href");
                 const pathname = window.location.pathname;
 
                 if (pathname.startsWith(href)) {
@@ -465,7 +466,7 @@ h1 {
 }
 
 #main-container.narrow {
-    display: initial;
+    flex-direction: column;
 }
 
 #main-content {
