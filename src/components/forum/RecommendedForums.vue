@@ -35,6 +35,7 @@
 }
 .recommended-forum-name {
     padding: 2vh 2vw 0 2vw;
+    text-align: center;
 }
 .recommended-forum-name:hover {
     color: var(--primary);
