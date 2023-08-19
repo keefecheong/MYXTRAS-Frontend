@@ -323,8 +323,8 @@ export default {
     computed: {
         // check if the creation date of the current message is different from the previous message
         isNewDate() {
-            const currentDate = this.message.creation_time.split("T")[0];
-            const previousDate = this.previous_creation_time.split("T")[0];
+            const currentDate = new Date(this.message.creation_time).toDateString();
+            const previousDate = new Date (this.previous_creation_time).toDateString();
 
             if (currentDate != previousDate) {
                 return true;
