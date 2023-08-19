@@ -306,7 +306,13 @@ h1 {
 .card {
   border-radius: 15px;
 }
-
+.redirect-link {
+  color: var(--blue);
+  transition: all 0.3s ease;
+}
+.redirect-link:hover {
+  color: var(--primary);
+}
 @media screen and (max-width: 768px) {
 
   .white-btn, .pink-btn{
