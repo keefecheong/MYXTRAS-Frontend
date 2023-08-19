@@ -116,6 +116,7 @@
 
 <script>
 import sidebarLinks from "../../assets/sidebar-link-config.json";
+// keep socket for online status on all pages
 import { socket } from "../../utils/chat/chatSocket.js";
 
 export default {
