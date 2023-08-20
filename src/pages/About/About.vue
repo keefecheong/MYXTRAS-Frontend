@@ -18,6 +18,20 @@
                     schools in Ngee Ann Polytechnic through this safe and secure
                     environment.
                 </p>
+                <h2>Members</h2>
+                <hr />
+                <p class="left-align">
+                    <b>Lee Wee Kang</b> - Team Lead, Lead UI/UX designer, Asst. Lead Developer
+                </p>
+                <p class="left-align">
+                    <b>Keefe Cheong</b> - Lead developer, Cloud Engineer
+                </p>
+                <p class="left-align">
+                    <b>Lim Long Teck</b> - Assistant UI/UX Designer, Full Stack Developer, UA Tester
+                </p>
+                <p class="left-align"> 
+                    <b>Yong Zi Ren</b> - Scrum Master, Full Stack Developer, UA Tester
+                </p>
             </div>
             <Pets />
         </div>
@@ -33,7 +47,7 @@
     text-align: center;
     color: white;
     position: relative;
-
+    
     #about-content {
         position: absolute;
         top: 50%;
@@ -41,5 +55,8 @@
         transform: translate(-50%, -50%);
         font-size: 1.5em;
     }
+}
+.left-align {
+    text-align: left;
 }
 </style>
