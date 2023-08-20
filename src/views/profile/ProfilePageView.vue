@@ -186,7 +186,7 @@
 
         <div id="right-content" :class="{ hide: onSmallScreen }">
             <!-- view warnings and submitted reports -->
-            <router-link to="/support">
+            <router-link to="/support" v-if="isSelf">
                 <button
                     type="button"
                     title="View Support Requests"
