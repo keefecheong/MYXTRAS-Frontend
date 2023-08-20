@@ -395,7 +395,6 @@ export default {
                     this.togglePopup(false);
                     this.showBtn = false;
                 });
-            console.log(this.croppedImageFile);
         },
 
         async debounceVerifyUsernameFunction() {
