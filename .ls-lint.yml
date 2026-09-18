@@ -20,4 +20,5 @@ ls:
 ignore:
   - node_modules
   - .git
+  - dist
   - vite.config.js
