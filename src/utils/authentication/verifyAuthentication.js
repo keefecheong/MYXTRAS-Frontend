@@ -28,7 +28,7 @@ export default async function validateUser() {
             }
         })
         .catch((error) => {
-            console.log(error);
+            void error;
         });
 
     return result;

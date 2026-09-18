@@ -109,7 +109,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
 
             // get user's posts
@@ -127,11 +127,11 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
 
             await Promise.all([userPromise, postPromise]).catch((error) => {
-                console.log(error);
+                void error;
             });
 
             this.loading = false;

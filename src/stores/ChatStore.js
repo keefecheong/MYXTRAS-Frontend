@@ -41,7 +41,6 @@ export const useChatStore = defineStore("chatStore", {
         },
         // check if passed chat exists and only add to chats if does not exist
         newChat(chat) {
-            console.log(chat);
             const existingChat = this.chatExists(chat._id);
 
             if (!existingChat) {

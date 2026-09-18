@@ -117,8 +117,6 @@ export default {
                         await response.json().then((data) => {
                             this.subbedForums = data;
                         });
-                    } else {
-                        console.log("Error:", response);
                     }
                 })
                 .catch((error) => {

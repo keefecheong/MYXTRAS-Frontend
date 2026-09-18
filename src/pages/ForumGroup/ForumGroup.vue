@@ -211,7 +211,6 @@ export default {
         handleResize() {
             // Update the view when the window width changes
             this.isMobile = window.innerWidth <= 768;
-            console.log("test");
         },
         // handle toggling of detailed thread view
         toggleDetailedView(show, index, id) {
@@ -260,8 +259,6 @@ export default {
                 .then((res) => {
                     if (res.ok) {
                         return res.json();
-                    } else {
-                        console.log("An error occured");
                     }
                 })
                 .then((data) => {
@@ -269,7 +266,7 @@ export default {
                     this.contentLoaded = true;
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // to get threads
@@ -294,7 +291,7 @@ export default {
                     this.threads = data;
                 })
                 .catch((error) => {
-                    console.log("The threads could not be loaded: ", error);
+                    void error;
                 });
         },
         // to close alert prompt

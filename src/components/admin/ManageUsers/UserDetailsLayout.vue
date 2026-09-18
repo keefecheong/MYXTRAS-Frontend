@@ -386,9 +386,7 @@ export default {
                         }
                     });
                 })
-                .catch((error) =>
-                    console.log(`Could not ${action.title} user.`),
-                );
+                .catch(() => undefined);
 
             this.showLoading = false;
         },

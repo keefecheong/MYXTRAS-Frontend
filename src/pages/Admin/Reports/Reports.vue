@@ -138,8 +138,8 @@ export default {
                 },
             );
 
-            await Promise.all([getPending, getReviewed]).catch((error) =>
-                console.log("Could not retrieve reports."),
+            await Promise.all([getPending, getReviewed]).catch(
+                () => undefined,
             );
         },
         // to view report details

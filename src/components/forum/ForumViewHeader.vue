@@ -168,13 +168,9 @@ export default {
                     .then((res) => {
                         if (res.ok) {
                             this.savedSubscribe = true;
-                        } else {
-                            console.log("An error occurred.");
                         }
                     })
-                    .catch((error) => {
-                        console.log("Unable to subscribe to forum.");
-                    });
+                    .catch(() => undefined);
             }
             // only send request to unsubscribe if saved value is true and new value is false
             else if (!this.workingSubscribe && this.savedSubscribe) {
@@ -184,13 +180,9 @@ export default {
                     .then((res) => {
                         if (res.ok) {
                             this.savedSubscribe = false;
-                        } else {
-                            console.log("An error occurred.");
                         }
                     })
-                    .catch((error) => {
-                        console.log("Unable to unsubscribe from forum.");
-                    });
+                    .catch(() => undefined);
             }
         },
         // handle updating of subscribe status if pending
@@ -222,7 +214,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
     },

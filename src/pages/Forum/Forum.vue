@@ -240,10 +240,7 @@ export default {
                     this.recentThreads = data;
                 })
                 .catch((error) => {
-                    console.log(
-                        "The recent threads could not be loaded: ",
-                        error
-                    );
+                    void error;
                 });
         },
         // to close alert prompt

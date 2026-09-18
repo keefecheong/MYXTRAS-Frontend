@@ -119,8 +119,6 @@ export default {
                         await response.json().then((data) => {
                             this.createdForums = data;
                         });
-                    } else {
-                        console.log("Error:", response);
                     }
                 })
                 .catch((error) => {

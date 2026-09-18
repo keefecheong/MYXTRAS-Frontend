@@ -160,7 +160,6 @@ export default {
         },
         // to fetch submitted reports
         async getReports() {
-            console.log("getting reports");
             this.toggleChildLoading(true);
 
             await fetch(
@@ -179,7 +178,7 @@ export default {
                         this.reportsLoaded = true;
                     });
                 })
-                .catch((error) => console.log("Could not retrieve reports."));
+                .catch(() => undefined);
 
             this.toggleChildLoading(false);
         },

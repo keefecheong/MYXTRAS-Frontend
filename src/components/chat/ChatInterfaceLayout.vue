@@ -637,16 +637,15 @@ export default {
                                 );
                             } else {
                                 // if there are no more history messages then tell user no more messages found
-                                // TODO: update UI (set up dialog box component and display messages)
                                 await this.alert("No more messages found.");
                             }
                         } else {
-                            console.log("Could not retrieve messages.");
+                            await this.alert("Could not retrieve messages.");
                         }
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
 
             this.loadingPrevious = false;

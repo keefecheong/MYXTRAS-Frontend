@@ -590,7 +590,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         async rollGacha(numOfRolls) {
@@ -656,7 +656,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
 
@@ -673,7 +673,7 @@ export default {
                     await res.json().then((data) => {});
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
 
@@ -692,7 +692,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
     },

@@ -432,10 +432,7 @@ export default {
             "register-button",
             {
                 size: "invisible",
-                callback: (response) => {
-                    // reCAPTCHA solved, allow signInWithPhoneNumber.
-                    console.log(response);
-                },
+                callback: () => undefined,
             },
         );
     },
@@ -474,9 +471,7 @@ export default {
                     .then(() => {
                         this.showLoading = false;
                     })
-                    .catch((error) =>
-                        console.log("Could not render recaptcha"),
-                    );
+                    .catch(() => undefined);
 
                 let phoneNum = "+65" + this.phoneNumber;
                 firebase
@@ -491,10 +486,7 @@ export default {
                         await this.alert("OTP Sent!");
                         this.recaptchaVerifier.clear();
                     })
-                    .catch((error) => {
-                        // Error; SMS not sent
-                        console.log("Could not send OTP");
-                    });
+                    .catch(() => undefined);
             }
         },
         async verifyOTP() {

@@ -363,7 +363,7 @@ export default {
                     this.dataInitialized = true;
                 })
                 .catch((error) => {
-                    console.log("This page could not be loaded: ", error);
+                    void error;
                 });
         },
         // to close detailed view
@@ -411,7 +411,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // toggle like status of thread
@@ -477,11 +477,11 @@ export default {
                         if (res.status == 201) {
                             this.savedLike = true;
                         } else {
-                            await res.json().then((data) => console.log(data));
+                            await res.json();
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
+                        void error;
                     });
             } else if (!this.liked && this.savedLike) {
                 options.method = "DELETE";
@@ -491,11 +491,11 @@ export default {
                         if (res.status == 204) {
                             this.savedLike = false;
                         } else {
-                            await res.json().then((data) => console.log(data));
+                            await res.json();
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
+                        void error;
                     });
             }
         },
@@ -520,11 +520,11 @@ export default {
                         if (res.status == 201) {
                             this.savedDislike = true;
                         } else {
-                            await res.json().then((data) => console.log(data));
+                            await res.json();
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
+                        void error;
                     });
             } else if (!this.disliked && this.savedDislike) {
                 options.method = "DELETE";
@@ -534,11 +534,11 @@ export default {
                         if (res.status == 204) {
                             this.savedDislike = false;
                         } else {
-                            await res.json().then((data) => console.log(data));
+                            await res.json();
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
+                        void error;
                     });
             }
         },
@@ -587,7 +587,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // to toggle thread form

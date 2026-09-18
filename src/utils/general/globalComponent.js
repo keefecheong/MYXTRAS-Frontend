@@ -1,4 +1,3 @@
-// import { createApp } from 'vue';
 import Pets from "../../components/gamification/pets.vue";
 import NavSidebar from "../../components/general/NavSidebar.vue";
 

@@ -422,7 +422,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // to sign out and clear cookies
@@ -431,8 +431,6 @@ export default {
 
             if (success) {
                 location.href = "/login.html";
-            } else {
-                console.log("Failed to log out.");
             }
         },
         // toggle following user
@@ -478,11 +476,11 @@ export default {
                         if (res.status == 201) {
                             this.savedFollowing = true;
                         } else {
-                            await res.json().then((data) => console.log(data));
+                            await res.json();
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
+                        void error;
                     });
             }
             // only send request to unfollow user if new following value is false and currently saved following value is true
@@ -494,11 +492,11 @@ export default {
                         if (res.status == 204) {
                             this.savedFollowing = false;
                         } else {
-                            await res.json().then((data) => console.log(data));
+                            await res.json();
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
+                        void error;
                     });
             }
         },
