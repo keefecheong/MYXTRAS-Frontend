@@ -73,6 +73,25 @@ Run the frontend:
 npm run dev
 ```
 
+## Docker
+
+Build the production image, passing the API and Firebase web configuration at
+build time because Vite embeds these values in the browser bundle:
+
+```bash
+docker build -t myxtras-frontend .
+docker run --rm -p 3123:80 myxtras-frontend
+```
+
+or run
+
+```bash
+bash runDocker.sh
+```
+
+Open <http://localhost:3123>. On Linux, `host.docker.internal` may require
+adding `--add-host=host.docker.internal:host-gateway` to `docker run`.
+
 The documented example frontend port is `3123`; any available port can be used
 if `PORT` and related URLs are changed consistently. Set `APP_SERVER_URL` to
 the running backend (the documented example is `http://127.0.0.1:3124`). For
