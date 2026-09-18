@@ -128,7 +128,7 @@ export default {
                         throw new Error("Response not OK");
                     }
                 })
-                .catch((error) => console.log("Could not retrieve events."));
+                .catch(() => undefined);
         },
         // to edit events
         editEvent(index) {
@@ -166,7 +166,7 @@ export default {
                         }
                     });
                 })
-                .catch((error) => console.log("Could not delete event."));
+                .catch(() => undefined);
 
             this.toggleLoading(false);
         },
