@@ -55,7 +55,7 @@ Edit `.env` before starting the application:
 
 ```dotenv
 PORT=3123
-BASE_URL=http://127.0.0.1
+BASE_URL=http://127.0.0.1:3123
 APP_SERVER_URL=http://127.0.0.1:3124
 FIREBASE_APIKEY=<your_firebase_api_key>
 FIREBASE_AUTHDOMAIN=<your_firebase_auth_domain>
