@@ -73,7 +73,7 @@ export default defineConfig(({ command, mode }) => {
             rollupOptions: {
                 input: {
                     adminEvents: resolve(__dirname, "public/admin/events.html"),
-                    adminmanageAccounts: resolve(__dirname, "public/admin/manageAccounts.html"),
+                    adminManageAccounts: resolve(__dirname, "public/admin/manageAccounts.html"),
                     adminReports: resolve(__dirname, "public/admin/reports.html"),
                     about: resolve(__dirname, "public/about.html"),
                     chat: resolve(__dirname, "public/chat.html"),

@@ -82,7 +82,7 @@ export default {
                     this.recommendations = data;
                 })
                 .catch((error) => {
-                    console.log("This page could not be loaded: ", error);
+                    void error;
                 });
         },
     },

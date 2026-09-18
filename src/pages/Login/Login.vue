@@ -127,10 +127,7 @@ export default {
                     // reCAPTCHA verified, handle the callback
                     self.recaptchaClicked = true;
                 },
-                "expired-callback": () => {
-                    // reCAPTCHA expired, handle the expired callback
-                    console.log("reCAPTCHA expired!");
-                },
+                "expired-callback": () => undefined,
             },
         );
         this.recaptchaVerifier.render().then((widgetId) => {

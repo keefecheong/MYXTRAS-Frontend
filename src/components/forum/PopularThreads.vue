@@ -104,10 +104,9 @@ export default {
                 })
                 .then((data) => {
                     this.popularThreads = data;
-                    console.log();
                 })
                 .catch((error) => {
-                    console.log("This page could not be loaded: ", error);
+                    void error;
                 });
         },
     },

@@ -28,8 +28,6 @@ export default function viewUser(userId, openNewTab, postId, commentId) {
             newTab.addEventListener("load", () => {
                 newTab.sessionStorage.setItem("user", userId);
             });
-        } else {
-            console.log("Could not open resource in new tab.");
         }
     }
 }

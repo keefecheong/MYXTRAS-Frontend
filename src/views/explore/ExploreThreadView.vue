@@ -256,7 +256,7 @@ export default {
                     this.threads = data;
                 })
                 .catch((error) => {
-                    console.log("This page could not be loaded: ", error);
+                    void error;
                 });
         },
         handleInterestSelected(option) {
@@ -287,7 +287,7 @@ export default {
                     this.tagsLoaded = true;
                 })
                 .catch((error) => {
-                    console.log("This page could not be loaded: ", error);
+                    void error;
                 });
         },
         viewForum(forum) {

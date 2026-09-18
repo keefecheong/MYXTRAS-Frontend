@@ -390,7 +390,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
             await fetch(
                 `${process.env.APP_SERVER_URL}/api/gamification/daily-checkin`,
@@ -407,7 +407,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         async checkIn() {
@@ -425,7 +425,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
 
@@ -454,7 +454,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         gachapon() {
@@ -465,7 +465,6 @@ export default {
             const allLockedAreFalse = this.missions.every(
                 (item) => item.locked === false
             );
-            console.log(allLockedAreFalse);
             if (allLockedAreFalse) {
                 this.allClaimed.locked = false;
             }

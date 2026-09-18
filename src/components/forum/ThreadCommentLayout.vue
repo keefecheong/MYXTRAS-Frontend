@@ -113,7 +113,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // to report comment

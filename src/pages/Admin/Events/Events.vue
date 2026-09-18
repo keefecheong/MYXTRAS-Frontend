@@ -29,7 +29,7 @@
                 </template>
             </AdminBanner>
 
-            <AnnoucementLayout
+            <AnnouncementLayout
                 @edit-event="handleEditEvent"
                 @show-loading="(show) => toggleLoading(show)"
             />
@@ -59,7 +59,7 @@
 
 <script>
 import NavSidebar from "../../../components/general/NavSidebar.vue";
-import AnnoucementLayout from "../../../components/announcement/AnnoucementLayout.vue";
+import AnnouncementLayout from "../../../components/announcement/AnnouncementLayout.vue";
 import EventsFormLayout from "../../../components/admin/Events/EventsFormLayout.vue";
 import { useAlertStore } from "../../../stores/AlertStore.js";
 import AlertPrompt from "../../../components/general/AlertPrompt.vue";
@@ -71,7 +71,7 @@ import AdminBanner from "../../../components/admin/AdminBanner.vue";
 export default {
     components: {
         NavSidebar,
-        AnnoucementLayout,
+        AnnouncementLayout,
         EventsFormLayout,
         AlertPrompt,
         ConfirmPrompt,

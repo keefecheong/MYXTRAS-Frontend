@@ -269,8 +269,6 @@ export default {
                             viewForum(
                                 this.forumID || this.thread.parent_id._id,
                             );
-                        } else {
-                            console.log("An error occurred.");
                         }
 
                         this.submitting = false;

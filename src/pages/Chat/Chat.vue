@@ -159,7 +159,7 @@ export default {
                     if (data.chats) {
                         this.store.newChatBulk(data.chats);
                     } else {
-                        console.log("Could not retrieve chats.");
+                        this.alertStore.alert("Could not retrieve chats.");
                     }
                 });
             });
@@ -187,7 +187,7 @@ export default {
                             }
                         }
                     } else {
-                        console.log("Could not retrieve messages.");
+                        this.alertStore.alert("Could not retrieve messages.");
                     }
                 });
             });
@@ -198,7 +198,7 @@ export default {
                     this.dataInitialized = true;
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // send request to retrieve up to 50 stored messages for specified chat
@@ -221,12 +221,12 @@ export default {
                             // update retrievedChatIds with the chat id requested
                             this.retrievedChatIds.push(chatId);
                         } else {
-                            console.log("Could not retrieve messages.");
+                            this.alertStore.alert("Could not retrieve messages.");
                         }
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // to close alert prompt

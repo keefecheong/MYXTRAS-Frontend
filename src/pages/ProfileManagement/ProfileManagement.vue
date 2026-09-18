@@ -259,12 +259,7 @@ export default {
                                 this.dataRetrieved = true;
                             }
                         });
-                    } else {
-                        console.log("Error:", response);
                     }
-                })
-                .then((data) => {
-                    console.log("Success:", data);
                 })
                 .catch((error) => {
                     console.error("Error:", error);
@@ -363,7 +358,6 @@ export default {
                         // Assign the cropped File object to a separate variable
                         this.croppedBannerFile = croppedFile;
                     });
-                console.log(this.croppedBannerFile);
             }
         },
 
@@ -482,11 +476,9 @@ export default {
 
                 if (response.ok) {
                     window.location.href = "/profilePage.html";
-                } else {
-                    console.log("Error:", response.statusText);
                 }
             } catch (error) {
-                console.log("Error:", error);
+                console.error("Error:", error);
             }
 
             this.loading = false;

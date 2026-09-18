@@ -68,12 +68,10 @@ export default {
                             aElement.target = "_blank";
                             aElement.click();
                         });
-                    } else {
-                        console.log("Failed to retrieve image.");
                     }
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
 
             this.downloadingFile = false;

@@ -416,8 +416,6 @@ export default {
                                 this.login = true;
                             }
                         });
-                    } else {
-                        console.log("Error:", response);
                     }
                 })
                 .catch((error) => {

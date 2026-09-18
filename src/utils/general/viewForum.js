@@ -21,8 +21,6 @@ export default function viewForum(forumId, openNewTab, threadId, commentId) {
             newTab.addEventListener("load", () => {
                 newTab.sessionStorage.setItem("forum_id", forumId);
             });
-        } else {
-            console.log("Could not open resource in new tab.");
         }
     }
 }

@@ -147,7 +147,7 @@ export default {
                         this.users = data;
                     });
                 })
-                .catch((error) => console.log("Could not retrieve users."));
+                .catch(() => undefined);
         },
         // to toggle between user list and user details
         toggleUserDetails(show, index) {

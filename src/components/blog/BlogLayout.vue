@@ -730,11 +730,11 @@ export default {
                         if (res.status == 201) {
                             this.savedLike = true;
                         } else {
-                            await res.json().then((data) => console.log(data));
+                            await res.json();
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
+                        void error;
                     });
             }
             // only send to remove like if new like value is false and currently saved like value is true
@@ -746,11 +746,11 @@ export default {
                         if (res.status == 204) {
                             this.savedLike = false;
                         } else {
-                            await res.json().then((data) => console.log(data));
+                            await res.json();
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
+                        void error;
                     });
             }
         },
@@ -780,11 +780,11 @@ export default {
                         if (res.status == 201) {
                             this.savedSaved = true;
                         } else {
-                            await res.json().then((data) => console.log(data));
+                            await res.json();
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
+                        void error;
                     });
             }
             // only send to remove post from saved if new saved value is false and currently saved saved value is true
@@ -795,11 +795,11 @@ export default {
                         if (res.status == 204) {
                             this.savedSaved = false;
                         } else {
-                            await res.json().then((data) => console.log(data));
+                            await res.json();
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
+                        void error;
                     });
             }
         },
@@ -836,7 +836,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // toggle edit post
@@ -861,7 +861,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // toggle comments for the post if comments are enabled
@@ -910,7 +910,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // remove deleted comment's id from the comments list to update the dom immediately

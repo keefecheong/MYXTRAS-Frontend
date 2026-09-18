@@ -493,7 +493,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
 
             this.submitting = false;

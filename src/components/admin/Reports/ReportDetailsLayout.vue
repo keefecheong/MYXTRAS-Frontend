@@ -454,9 +454,7 @@ export default {
                                     this.showLoading = false;
                                 });
                             })
-                            .catch((error) =>
-                                console.log("Could not retrieve messages"),
-                            );
+                            .catch(() => undefined);
                     }
 
                     this.viewMessages = true;

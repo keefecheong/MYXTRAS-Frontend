@@ -133,7 +133,7 @@ export default {
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    void error;
                 });
         },
         // to close alert prompt
