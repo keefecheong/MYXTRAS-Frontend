@@ -1,0 +1,12 @@
+# Frontend development configuration.
+PORT=3123
+BASE_URL=http://127.0.0.1:3123
+APP_SERVER_URL=http://127.0.0.1:3124
+
+# Firebase web configuration.
+# The historical project is no longer available. Create your own Firebase
+# project and replace these placeholders if you need login/registration flows.
+FIREBASE_APIKEY=<your_firebase_api_key>
+FIREBASE_AUTHDOMAIN=<your_firebase_auth_domain>
+FIREBASE_PROJECTID=<your_firebase_project_id>
+FIREBASE_APPID=<your_firebase_app_id>
