@@ -30,7 +30,7 @@ of this index.
 | `src/assets/` | Images, SVGs, and JSON UI configuration | Fonts are in the adjacent `src/fonts/` directory. |
 | `vite.config.js` | Development redirects and production entry map | Explicitly lists all 18 HTML inputs. |
 | `env_template` | Historical environment-variable example | Uses unprefixed variables exposed through `process.env` by Vite configuration. |
-| `.github/workflows/lint.yaml` | Push-to-`main` lint workflow | Uses Node 18 and pinned older checkout/setup actions. |
+| `.github/workflows/lint.yaml` | Push-to-`main` lint and build workflow | Uses Node 18 with current checkout/setup actions. |
 
 ## Page and entry-point index
 
@@ -57,7 +57,7 @@ authentication gate at mount time.
 | `/profilePage.html` | `ProfilePage.js` → `ProfilePageView.vue` | Protected | Own/other profile, posts, forums, social actions, and messaging entry. |
 | `/profilePage.html/support` | `ProfilePage.js` → `ProfilePageSupportView.vue` | Protected | User-submitted report/support history and detail. |
 | `/registration.html` | `Registration.js` / `Registration.vue` | Public | Firebase OTP/reCAPTCHA flow and backend registration. |
-| `/setupProfile.html` | `SetUpProfile/SetupProfile.js` / `Setupprofile.vue` | Protected, incomplete-profile mode | School/course/profile completion after registration. |
+| `/setupProfile.html` | `SetupProfile/SetupProfile.js` / `SetupProfile.vue` | Protected, incomplete-profile mode | School/course/profile completion after registration. |
 | `/admin/events.html` | `Admin/Events/Events.js` / `Events.vue` | Admin | Event creation and editing. |
 | `/admin/manageAccounts.html` | `Admin/ManageAccounts/ManageAccounts.js` / `ManageAccounts.vue` | Admin | Account discovery and administration. |
 | `/admin/reports.html` | `Admin/Reports/Reports.js` / `Reports.vue` | Admin | Pending/reviewed reports and moderation actions. |
@@ -91,7 +91,7 @@ components on the page roots that opt into it.
 | Forums/threads | `CreatedForums`, `SubscribedForums`, `RecommendedForums`, `PopularThreads`, `ForumViewHeader`, `ForumFormLayout`, `ThreadMiniLayout`, `ThreadDetailedLayout`, `ThreadFormLayout`, `ThreadCommentLayout` | Forum discovery/subscription plus thread creation, reading, reactions, and comments. |
 | Chat | `ChatListLayout`, `ChatInterfaceLayout`, `ChatMessageLayout`, `ChatReplyMessageLayout`, `ChatFileLayout` | Conversation selection, real-time messaging, replies, attachments, edit/delete, and reports. |
 | Reports | `ReportFormLayout` | Submission UI reused by posts, forums, threads, chat, and profiles. |
-| Events | `announcement/AnnoucementLayout` | Event card/list behavior. The filename contains the historical `Annoucement` typo. |
+| Events | `announcement/AnnouncementLayout` | Event card/list behavior. |
 | Admin events | `AdminBanner`, `EventsFormLayout` | Admin navigation and event form. |
 | Admin accounts | `UserLayout`, `UserDetailsLayout`, `WarningLayout` | User list/detail, warning, suspension, role, and termination presentation. |
 | Admin reports | `ReportLayout`, `ReportDetailsLayout` | Moderation queue and evidence/detail handling. |

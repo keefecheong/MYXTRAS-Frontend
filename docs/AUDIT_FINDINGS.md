@@ -25,37 +25,28 @@ must be re-run with Node 18.
 
 | Check | Result | Interpretation / proposed response |
 | --- | --- | --- |
-| `npm ci` | Pass | Installed 389 packages. npm reported 36 audit findings (4 low, 8 moderate, 21 high, 3 critical) in this old dependency graph. Do not apply force upgrades blindly. |
+| `npm ci` | Pass | After removing five verified unused direct dependencies, a clean install added 365 packages. The old dependency graph still reports deprecation/audit risk; do not apply force upgrades blindly. |
 | `npm run lint:js` | Pass as the first lint stage after local install | The earlier workspace-only attempt accidentally used a system ESLint because dependencies were absent; clean-install result is authoritative. |
 | `npm run lint:ls` | Pass as the second lint stage | Historical naming rules permit intentional exceptions but do not catch the HTML path casing error. |
 | `npm run lint:editorconfig` | Environment-blocked | `editorconfig-checker@5.1.1` could not download an `ec-linux-arm64` binary. Re-run on the Node 18/x64 CI target; consider a narrow checker update only if necessary. |
 | `npm run lint:css` | Not part of aggregate `lint` | The script exists but `npm run lint` never invokes it. Add it only after evaluating/fixing its existing baseline; do not make undocumented mass formatting changes. |
-| `npm run build` | Fail | `public/setupProfile.html` imports `/src/pages/SetupProfile/SetupProfile.js`, but the tracked directory is `src/pages/SetUpProfile`. Fix the casing consistently and build again. |
+| `npm run build` | Pass after polish correction | Setup Profile directory/component/import casing is now consistent on case-sensitive filesystems. |
 | Frontend automated tests | None | No frontend test script or test files are tracked. Prefer a compact manual smoke-test record for this archival pass. |
 
 ## High-priority presentation blockers
 
-### 1. README is not usable
+### 1. README and setup documentation
 
-The root README currently contains a title, one-line description, and one
-environment instruction. It does not explain the product, feature set,
-architecture, screenshots, stack, local prerequisites, companion backend,
-project status, contributors, validation, or limitations.
+**Resolved in this polish pass:** the root README now describes the academic
+context, implemented feature set, Node 18 setup, Firebase ownership boundary,
+example ports, backend continuation link, scripts, validation limitations, and
+the documentation set. No unavailable screenshots or demo links are implied.
 
-**Recommendation:** replace it with a portfolio-facing README using the outline
-in the implementation plan. Link deeper architecture/decision documents rather
-than overloading the landing page.
+### 2. Production build path casing
 
-### 2. Production build fails on path casing
-
-The Setup Profile HTML path and tracked directory disagree on capitalization.
-This is likely hidden on case-insensitive developer machines and is the first
-failure on Linux.
-
-**Recommendation:** choose one spelling/casing and update all references in one
-small commit. The least disruptive choice is to align the HTML reference with
-the existing tracked `SetUpProfile` directory, then validate both development
-navigation and production build.
+**Resolved in this polish pass:** the Setup Profile directory, component,
+bootstrap import, and HTML entry now consistently use `SetupProfile`. A clean
+production build succeeds on a case-sensitive filesystem.
 
 ### 3. Local setup is underspecified
 
@@ -77,24 +68,24 @@ use placeholders or imply otherwise.
 
 ### Debug and stale markers
 
-- 116 `console.log`, `console.warn`, `console.error`, or `console.debug` calls
-  exist under `src/` despite the final commit message “remove console.log”.
-- One explicit TODO remains in `ChatInterfaceLayout.vue`, asking for a dialog
-  component for an error path. The project already has alert UI; resolution
-  should reuse current behavior or convert the note into an honest known
-  limitation, not build a new subsystem.
-- Four commented-out imports and one commented-out router mount were observed.
+- The baseline contained 116 `console.log`, `console.warn`, `console.error`, or
+  `console.debug` calls under `src/` despite the final commit message “remove
+  console.log”. The polish pass removes debug-only output and retains 19 concise
+  `console.error` calls for unexpected failures.
+- The `ChatInterfaceLayout.vue` TODO was removed after reusing the existing
+  alert prompt for the already-implemented “no more messages” state.
+- Two commented usage examples and one commented-out router mount remain as
+  explanatory source comments; stale commented imports were removed.
 - Numerous console calls are actual fallback error reporting, not debug noise.
   Review by behavior: remove payload dumps and tracing; retain or replace user-
   relevant error paths rather than deleting all logging mechanically.
 
 ### Naming and consistency candidates
 
-- `AnnoucementLayout.vue` misspells “Announcement”.
-- `SetUpProfile/Setupprofile.vue`, `SetupProfile.js`, and the HTML import use
-  inconsistent word boundaries/casing.
-- The Rollup key `adminmanageAccounts` is inconsistent with neighboring keys
-  but does not affect the URL.
+- Announcement and Setup Profile names were normalized to their current
+  `AnnouncementLayout.vue` and `SetupProfile/SetupProfile.*` forms.
+- The Rollup key `adminmanageAccounts` was normalized to `adminManageAccounts`;
+  the public URL remains `manageAccounts.html`.
 - `bootstrap` and `bootstrap5` are both declared; code imports `bootstrap`, not
   `bootstrap5`.
 - Page bootstraps mix shared `Store.js` and newly created Pinia instances. This
@@ -106,11 +97,11 @@ tracked case-only renames carefully and validate every import.
 
 ### Dependency candidates requiring verification
 
-Static import searches found no frontend use of the following direct
-dependencies: `axios`, `bootstrap5`, `dotenv`, `jsonwebtoken`, and `v-tooltip`.
-They are likely removable because Fetch, Vite's `loadEnv`, and cookie-based auth
-are used instead. Confirm with build and targeted search before editing the
-manifest and lockfile.
+Static import searches found no frontend use of `axios`, `bootstrap5`, `dotenv`,
+`jsonwebtoken`, or `v-tooltip`. These five direct dependencies were removed
+from `package.json` and `package-lock.json`; Fetch, Vite's `loadEnv`, and
+cookie-based auth remain the implemented alternatives. Clean installation and
+production build were re-run afterward.
 
 Other dependencies have clear owners:
 
@@ -149,9 +140,8 @@ documentation.
 
 ## Lower-priority observations
 
-- Internal folder README files are only one or two lines and mostly restate
-  naming conventions. Once the repository has a proper codebase index, either
-  make them genuinely useful or remove them to reduce clutter.
+- The nine one-line folder README files were removed after their useful naming
+  guidance was consolidated into the codebase index.
 - HTML pages have titles but no description metadata; portfolio discoverability
   matters mainly on the repository README because no deployment is planned.
 - `copyPublicDir: false` is purposeful for multi-page inputs but deserves a

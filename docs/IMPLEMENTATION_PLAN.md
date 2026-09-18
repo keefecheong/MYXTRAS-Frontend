@@ -48,15 +48,14 @@ boundary.
 
 ## Phase 1 — restore deterministic validation
 
-### 1.1 Resolve Setup Profile path casing
+### 1.1 Resolve Setup Profile path casing (completed)
 
-- Update `public/setupProfile.html` to reference the tracked
-  `src/pages/SetUpProfile/SetupProfile.js`, or perform a deliberate tracked
-  directory/file rename if a single naming convention is preferred.
+- Update `public/setupProfile.html` and the tracked source names so the
+  `SetupProfile/SetupProfile.*` casing is consistent on case-sensitive systems.
 - Search for every spelling before and after the change.
 - Validate direct development navigation, the protected redirect, and build.
 
-### 1.2 Establish the supported runtime
+### 1.2 Establish the supported runtime (completed)
 
 - Add an `.nvmrc` containing the confirmed Node major, or declare `engines.node`
   in `package.json` (one source is sufficient; both only if tooling benefits).
@@ -66,18 +65,18 @@ boundary.
   compatible patch/minor updates that are clearly low-risk and necessary for
   install/tool execution.
 
-### 1.3 Make checks match the source
+### 1.3 Make checks match the source (partially completed)
 
 - Evaluate CSS lint and Vue-aware ESLint output separately.
-- Add `lint:css` to aggregate lint only after bringing the existing files to a
-  stable baseline; avoid mass reformatting mixed with logic changes.
-- Prefer adding/configuring `eslint-plugin-vue` so scripts inside `.vue` files
-  are checked. If that produces an excessive historical backlog, document the
-  scoped compromise instead of disabling rules wholesale.
-- Address the ARM64 EditorConfig checker issue through a compatible narrow
-  update or document x64/CI-only execution.
-- Update the GitHub workflow action majors and run both lint and build on the
-  confirmed Node version.
+- Keep `lint:css` separate: its historical stylesheet baseline includes vendor
+  CSS and naming violations, so adding it to aggregate lint would create noisy
+  formatting churn outside this revision.
+- Keep JavaScript lint scoped to `.js` files; adding a Vue-aware ESLint stack
+  would be a new toolchain surface and is not necessary for this presentation
+  pass.
+- Document the ARM64 EditorConfig checker limitation; the workflow remains the
+  supported x64/Node 18 validation target.
+- Update the GitHub workflow action majors and run lint/build in CI.
 
 Acceptance criteria:
 
@@ -87,7 +86,7 @@ Acceptance criteria:
   environment; and
 - no page/feature code has been redesigned.
 
-## Phase 2 — replace the root README
+## Phase 2 — replace the root README (completed)
 
 Create a concise portfolio landing page with this order:
 
@@ -142,7 +141,7 @@ Acceptance criteria:
 - the absence of screenshots and a hosted demo is represented honestly rather
   than filled with placeholders.
 
-## Phase 3 — retain and refine durable documentation
+## Phase 3 — retain and refine durable documentation (completed)
 
 The documents created during this audit can remain in `docs/`, but update them
 after source revisions so file names, counts, and validation results stay true.
@@ -160,11 +159,11 @@ after source revisions so file names, counts, and validation results stay true.
 Optional diagram refinement should remain text/Mermaid stored in the repository
 unless a polished visual materially improves the README.
 
-## Phase 4 — behavior-preserving code cleanup
+## Phase 4 — behavior-preserving code cleanup (completed)
 
-### 4.1 Console and stale-comment pass
+### 4.1 Console and stale-comment pass (completed)
 
-Classify all 116 console calls:
+The baseline contained 116 console calls. Classify and reduce them as follows:
 
 - remove debugging payloads, progress traces, and redundant response dumps;
 - replace user-relevant failure logs with the existing alert/prompt mechanism
@@ -178,7 +177,7 @@ Review commented-out imports/router mounts and delete those with no documented
 purpose. Do not delete explanatory comments that describe non-obvious state or
 protocol behavior.
 
-### 4.2 Naming consistency
+### 4.2 Naming consistency (completed)
 
 In a dedicated rename commit:
 
@@ -191,7 +190,7 @@ Do not rename public `.html` URLs unless all navigation references and the
 historical URL contract are intentionally updated. Keeping existing public URLs
 is the safer portfolio choice.
 
-### 4.3 Dependency cleanup
+### 4.3 Dependency cleanup (completed)
 
 For each candidate (`axios`, `bootstrap5`, `dotenv`, `jsonwebtoken`,
 `v-tooltip`):
